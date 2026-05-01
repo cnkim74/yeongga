@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { saveMemberAction, type MemberFormState } from "./actions";
 import type { User } from "@/lib/users-db";
 
@@ -13,6 +13,17 @@ export function MemberForm({ user }: { user?: User }) {
   const [avatarUrl, setAvatarUrl] = useState(user?.avatar_url ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  // 방어막: state가 바뀔 때마다 DOM input.value도 강제로 동기화.
+  // controlled input이 정상이면 중복이지만, 일부 모바일 브라우저에서
+  // controlled value가 늦게 반영되는 경우를 막기 위함.
+  useEffect(() => {
+    if (avatarInputRef.current) {
+      avatarInputRef.current.value = avatarUrl;
+    }
+  }, [avatarUrl]);
 
   async function handleFile(file: File) {
     setUploadError(null);
@@ -43,9 +54,30 @@ export function MemberForm({ user }: { user?: User }) {
   }
 
   return (
-    <form action={formAction} className="space-y-6 max-w-2xl pb-20">
+    <form
+      ref={formRef}
+      action={formAction}
+      onSubmit={(e) => {
+        // 업로드 중엔 절대 제출 금지 (모바일에서 disabled 누락 대비)
+        if (uploading) {
+          e.preventDefault();
+          alert("사진 업로드가 끝날 때까지 잠시만 기다려 주세요.");
+          return;
+        }
+        // FormData 직전 한 번 더 강제 동기화
+        if (avatarInputRef.current) {
+          avatarInputRef.current.value = avatarUrl;
+        }
+      }}
+      className="space-y-6 max-w-2xl pb-20"
+    >
       {user && <input type="hidden" name="id" value={user.id} />}
-      <input type="hidden" name="avatar_url" value={avatarUrl} />
+      <input
+        ref={avatarInputRef}
+        type="hidden"
+        name="avatar_url"
+        defaultValue={avatarUrl}
+      />
 
       <div>
         <Label>프로필 사진</Label>
