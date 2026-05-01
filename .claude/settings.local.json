@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(kill 92717)",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill *)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Bash(npm run *)",
+      "Bash(echo \"started pid=$!\")",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000__TRACKED_VAR__)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/admin)",
+      "Bash(curl -s http://localhost:3000/admin/photos)",
+      "Bash(curl -sI \"https://images.unsplash.com/photo-1538485399081-7c8ed7e98e90?w=400\")",
+      "Bash(curl -sI \"https://picsum.photos/seed/test/400/300\")",
+      "Bash(curl -sLI \"https://picsum.photos/seed/yeongga1/2400/1350\" -o /dev/null -w \"%{http_code} -> %{url_effective}\\\\n\")",
+      "Bash(curl -sLI \"https://source.unsplash.com/featured/2400x1350/?korea,traditional\" -o /dev/null -w \"%{http_code} -> %{url_effective}\\\\n\")",
+      "Bash(curl -sLI \"https://source.unsplash.com/random/2400x1350/?hanok\" -o /dev/null -w \"%{http_code} -> %{url_effective}\\\\n\")",
+      "Bash(curl -sL \"https://picsum.photos/seed/yeongga1/800/450\" -o test1.jpg -w \"%{http_code} size=%{size_download}\\\\n\")",
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git add *)"
+    ]
+  }
+}
