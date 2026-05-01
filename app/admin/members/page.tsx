@@ -21,12 +21,21 @@ export default async function AdminMembers() {
           { label: "👥 회원 명부" },
         ]}
         right={
-          <Link
-            href="/admin/members/new"
-            className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf]"
-          >
-            + 새 회원
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/admin/members/import"
+              className="notion-icon-btn border border-[var(--color-notion-rule)]"
+              title="엑셀로 한 번에 여러 명 등록"
+            >
+              📥 엑셀 일괄
+            </Link>
+            <Link
+              href="/admin/members/new"
+              className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf]"
+            >
+              + 새 회원
+            </Link>
+          </div>
         }
       />
 
