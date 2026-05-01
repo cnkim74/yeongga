@@ -7,8 +7,11 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Youtube from "@tiptap/extension-youtube";
 import { FigureImage } from "./extensions/FigureImage";
+import { ImageGallery, type GalleryImage } from "./extensions/ImageGallery";
+import { Ornament, type OrnamentStyle } from "./extensions/Ornament";
+import { EmojiPicker } from "./EmojiPicker";
 
-async function uploadImage(file: File): Promise<string | null> {
+async function uploadOne(file: File): Promise<string | null> {
   const fd = new FormData();
   fd.append("file", file);
   const res = await fetch("/api/upload/article-image", {
@@ -24,6 +27,11 @@ async function uploadImage(file: File): Promise<string | null> {
   return data.url;
 }
 
+async function uploadMany(files: File[]): Promise<string[]> {
+  const urls = await Promise.all(files.map(uploadOne));
+  return urls.filter((u): u is string => Boolean(u));
+}
+
 export function ArticleEditor({
   initialHTML,
   onChange,
@@ -32,9 +40,11 @@ export function ArticleEditor({
   onChange: (html: string) => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [emojiOpen, setEmojiOpen] = useState(false);
+  const [ornamentMenuOpen, setOrnamentMenuOpen] = useState(false);
 
   const editor = useEditor({
-    immediatelyRender: false, // SSR 안전
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
@@ -47,6 +57,8 @@ export function ArticleEditor({
         placeholder: "본문을 시작하세요…",
       }),
       FigureImage.configure({ inline: false }),
+      ImageGallery,
+      Ornament,
       Youtube.configure({
         nocookie: true,
         controls: true,
@@ -59,37 +71,22 @@ export function ArticleEditor({
     editorProps: {
       attributes: {
         class:
-          "tiptap article-editor min-h-[420px] outline-none px-6 py-6 prose-body",
+          "tiptap article-editor min-h-[480px] outline-none px-6 py-6 prose-body",
       },
       handlePaste(_view, event) {
         const items = event.clipboardData?.items;
         if (!items) return false;
+        const files: File[] = [];
         for (const item of Array.from(items)) {
           if (item.type.startsWith("image/")) {
             const file = item.getAsFile();
-            if (file) {
-              event.preventDefault();
-              uploadImage(file).then((url) => {
-                if (url) {
-                  editor
-                    ?.chain()
-                    .focus()
-                    .insertContent({
-                      type: "image",
-                      attrs: {
-                        src: url,
-                        align: "center",
-                        width: "medium",
-                      },
-                    })
-                    .run();
-                }
-              });
-              return true;
-            }
+            if (file) files.push(file);
           }
         }
-        return false;
+        if (files.length === 0) return false;
+        event.preventDefault();
+        insertImages(files);
+        return true;
       },
       handleDrop(_view, event) {
         const files = event.dataTransfer?.files;
@@ -99,24 +96,7 @@ export function ArticleEditor({
         );
         if (imageFiles.length === 0) return false;
         event.preventDefault();
-        imageFiles.forEach((file) => {
-          uploadImage(file).then((url) => {
-            if (url) {
-              editor
-                ?.chain()
-                .focus()
-                .insertContent({
-                  type: "image",
-                  attrs: {
-                    src: url,
-                    align: "center",
-                    width: "medium",
-                  },
-                })
-                .run();
-            }
-          });
-        });
+        insertImages(imageFiles);
         return true;
       },
     },
@@ -125,6 +105,32 @@ export function ArticleEditor({
     },
   });
 
+  // 1장이면 단일 이미지, 2장 이상이면 갤러리로 삽입
+  async function insertImages(files: File[]) {
+    if (!editor || files.length === 0) return;
+    const urls = await uploadMany(files);
+    if (urls.length === 0) return;
+
+    if (urls.length === 1) {
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: "image",
+          attrs: { src: urls[0], align: "center", width: "medium" },
+        })
+        .run();
+    } else {
+      const images: GalleryImage[] = urls.map((src) => ({
+        src,
+        alt: "",
+        caption: null,
+      }));
+      const layout = urls.length >= 4 ? "grid-2" : urls.length === 3 ? "row-3" : "row-2";
+      editor.chain().focus().insertImageGallery({ images, layout }).run();
+    }
+  }
+
   useEffect(() => {
     return () => editor?.destroy();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,7 +138,7 @@ export function ArticleEditor({
 
   if (!editor) {
     return (
-      <div className="border border-[var(--color-notion-rule)] rounded-md min-h-[420px] flex items-center justify-center text-[var(--color-notion-mute)]">
+      <div className="border border-[var(--color-notion-rule)] rounded-md min-h-[480px] flex items-center justify-center text-[var(--color-notion-mute)]">
         에디터를 불러오는 중…
       </div>
     );
@@ -140,10 +146,15 @@ export function ArticleEditor({
 
   const isImageActive = editor.isActive("image");
 
+  const insertOrnament = (style: OrnamentStyle) => {
+    editor.chain().focus().insertOrnament(style).run();
+    setOrnamentMenuOpen(false);
+  };
+
   return (
-    <div className="border border-[var(--color-notion-rule)] rounded-md overflow-hidden bg-white">
+    <div className="border border-[var(--color-notion-rule)] rounded-md overflow-hidden bg-white relative">
       {/* 메인 툴바 */}
-      <div className="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-[var(--color-notion-rule)] bg-[var(--color-notion-sidebar)]">
+      <div className="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-[var(--color-notion-rule)] bg-[var(--color-notion-sidebar)] sticky top-0 z-10">
         <ToolBtn
           onClick={() => editor.chain().focus().toggleBold().run()}
           active={editor.isActive("bold")}
@@ -210,14 +221,54 @@ export function ArticleEditor({
         >
           1.
         </ToolBtn>
-        <ToolBtn
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          title="구분선"
-        >
-          ─
-        </ToolBtn>
+
+        {/* 장식 구분선 드롭다운 */}
+        <div className="relative">
+          <ToolBtn
+            onClick={() => setOrnamentMenuOpen((s) => !s)}
+            active={ornamentMenuOpen}
+            title="구분선·장식"
+          >
+            ─
+          </ToolBtn>
+          {ornamentMenuOpen && (
+            <div className="absolute z-30 mt-1 bg-white border border-[var(--color-notion-rule)] rounded-md shadow-lg py-1 w-[180px]">
+              <OrnamentItem onClick={() => insertOrnament("line")} preview="─────">
+                실선
+              </OrnamentItem>
+              <OrnamentItem onClick={() => insertOrnament("dots")} preview="·  ·  ·">
+                점
+              </OrnamentItem>
+              <OrnamentItem onClick={() => insertOrnament("diamond")} preview="◆  ◆  ◆">
+                마름모
+              </OrnamentItem>
+              <OrnamentItem onClick={() => insertOrnament("asterism")} preview="※  ※  ※">
+                별표
+              </OrnamentItem>
+              <OrnamentItem onClick={() => insertOrnament("wave")} preview="～  ～  ～">
+                물결
+              </OrnamentItem>
+            </div>
+          )}
+        </div>
 
         <Sep />
+
+        {/* 이모티콘 */}
+        <div className="relative">
+          <ToolBtn
+            onClick={() => setEmojiOpen((s) => !s)}
+            active={emojiOpen}
+            title="이모티콘"
+          >
+            😊
+          </ToolBtn>
+          <EmojiPicker
+            open={emojiOpen}
+            onClose={() => setEmojiOpen(false)}
+            onPick={(e) => editor.chain().focus().insertContent(e).run()}
+          />
+        </div>
 
         <ToolBtn
           onClick={() => {
@@ -244,7 +295,7 @@ export function ArticleEditor({
         </ToolBtn>
         <ToolBtn
           onClick={() => fileInputRef.current?.click()}
-          title="이미지 추가 (드래그·붙여넣기도 됨)"
+          title="이미지 / 갤러리 (여러 장 선택 가능)"
         >
           🖼️
         </ToolBtn>
@@ -278,12 +329,10 @@ export function ArticleEditor({
         </ToolBtn>
       </div>
 
-      {/* 이미지 선택 시 인라인 컨트롤 */}
+      {/* 단일 이미지 선택 시 인라인 컨트롤 */}
       {isImageActive && (
-        <div className="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-[var(--color-notion-rule)] bg-[#fff8e6] text-xs">
-          <span className="text-[var(--color-notion-mute)] mr-2">
-            선택된 이미지
-          </span>
+        <div className="flex flex-wrap items-center gap-1 px-3 py-2 border-b border-[var(--color-notion-rule)] bg-[#fff8e6] text-xs sticky top-[44px] z-10">
+          <span className="text-[var(--color-notion-mute)] mr-2">선택된 이미지</span>
           <span className="text-[var(--color-notion-mute)]">정렬</span>
           {(["left", "center", "right"] as const).map((a) => (
             <ToolBtn
@@ -293,9 +342,7 @@ export function ArticleEditor({
                 editor.chain().focus().updateAttributes("image", { align: a }).run()
               }
               active={editor.getAttributes("image").align === a}
-              title={`정렬: ${
-                a === "left" ? "왼쪽" : a === "right" ? "오른쪽" : "가운데"
-              }`}
+              title={`정렬: ${a === "left" ? "왼쪽" : a === "right" ? "오른쪽" : "가운데"}`}
             >
               {a === "left" ? "←" : a === "right" ? "→" : "↔"}
             </ToolBtn>
@@ -354,23 +401,14 @@ export function ArticleEditor({
       <input
         ref={fileInputRef}
         type="file"
+        multiple
         accept="image/jpeg,image/png,image/webp,image/gif"
         className="hidden"
         onChange={async (e) => {
-          const file = e.target.files?.[0];
+          const files = e.target.files ? Array.from(e.target.files) : [];
           e.target.value = "";
-          if (!file) return;
-          const url = await uploadImage(file);
-          if (url) {
-            editor
-              .chain()
-              .focus()
-              .insertContent({
-                type: "image",
-                attrs: { src: url, align: "center", width: "medium" },
-              })
-              .run();
-          }
+          if (files.length === 0) return;
+          await insertImages(files);
         }}
       />
     </div>
@@ -412,4 +450,27 @@ function ToolBtn({
 
 function Sep() {
   return <span className="w-px h-5 bg-[var(--color-notion-rule)] mx-1" />;
+}
+
+function OrnamentItem({
+  onClick,
+  preview,
+  children,
+}: {
+  onClick: () => void;
+  preview: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full px-3 py-2 text-left hover:bg-[var(--color-notion-hover)] flex items-center gap-3 text-sm"
+    >
+      <span className="text-[var(--color-notion-mute)] font-mono w-20">
+        {preview}
+      </span>
+      <span>{children}</span>
+    </button>
+  );
 }
