@@ -129,56 +129,115 @@ async function init(client: Client) {
     await insert("jeong", "정인규", "yeongga", "member", "2010-09-14", "");
   }
 
-  // ─── ensureAdmin: 매 부팅마다 admin 계정 보장 + email 동기화 ──
-  // - cnkim74@gmail.com 을 admin 의 email 로 박아 두면, 추후 Google OAuth 가
-  //   같은 이메일로 로그인해 들어올 때 자동으로 이 admin 계정과 연결됨.
-  // - ADMIN_PASSWORD env 가 있으면 비밀번호도 그 값으로 동기화 (env 바꾸면 자동 리셋).
+  // ─── ensureAdmin: 매 부팅마다 admin 단일 계정 보장 + 중복 자동 병합 ──
+  // 보장 사항
+  //   1) ADMIN_USERNAME 으로 식별되는 canonical admin 한 명이 존재
+  //   2) 그 사람의 email = ADMIN_EMAIL, role = 'admin'
+  //   3) (env가 있으면) password_hash = hash(ADMIN_PASSWORD)
+  //   4) 같은 ADMIN_EMAIL 로 다른 admin 행이 있으면 그쪽의 Google 연결 정보·
+  //      avatar_url 을 canonical 로 흡수한 뒤 그 행을 삭제 (멱등).
   const adminUsername = process.env.ADMIN_USERNAME ?? "admin";
   const adminEmail = process.env.ADMIN_EMAIL ?? "cnkim74@gmail.com";
   const adminPassEnv = process.env.ADMIN_PASSWORD;
 
-  const adminRow = await client.execute({
-    sql: "SELECT id FROM users WHERE username = ? OR email = ?",
-    args: [adminUsername, adminEmail],
+  // Step 1) canonical 찾기 또는 생성
+  let canonicalId: number;
+  const byUsername = await client.execute({
+    sql: "SELECT id FROM users WHERE username = ? LIMIT 1",
+    args: [adminUsername],
   });
 
-  if (adminRow.rows.length === 0) {
-    // 새로 생성
-    await client.execute({
-      sql: `INSERT INTO users
-            (username, name, email, password_hash, role, auth_provider, joined_at, note)
-            VALUES (?, ?, ?, ?, 'admin', 'local', ?, ?)`,
-      args: [
-        adminUsername,
-        "관리자",
-        adminEmail,
-        hashPassword(adminPassEnv ?? "yeongga"),
-        new Date().toISOString().slice(0, 10),
-        "초기 관리자 계정",
-      ],
-    });
+  if (byUsername.rows.length > 0) {
+    canonicalId = Number(byUsername.rows[0].id);
   } else {
-    // 이메일 동기화 + (env 비밀번호가 있으면) 비밀번호도 동기화
-    if (adminPassEnv) {
+    // username 매칭 실패 — 같은 이메일의 admin이 있으면 그걸 canonical 로 채택하고
+    // username만 ADMIN_USERNAME 으로 리네임. 없으면 새로 생성.
+    const byEmail = await client.execute({
+      sql: "SELECT id FROM users WHERE email = ? AND role = 'admin' ORDER BY id LIMIT 1",
+      args: [adminEmail],
+    });
+    if (byEmail.rows.length > 0) {
+      canonicalId = Number(byEmail.rows[0].id);
       await client.execute({
-        sql: `UPDATE users
-              SET email = ?, password_hash = ?, role = 'admin'
-              WHERE username = ? OR email = ?`,
-        args: [
-          adminEmail,
-          hashPassword(adminPassEnv),
-          adminUsername,
-          adminEmail,
-        ],
+        sql: "UPDATE users SET username = ? WHERE id = ?",
+        args: [adminUsername, canonicalId],
       });
     } else {
+      const ins = await client.execute({
+        sql: `INSERT INTO users
+              (username, name, email, password_hash, role, auth_provider, joined_at, note)
+              VALUES (?, ?, ?, ?, 'admin', 'local', ?, ?)`,
+        args: [
+          adminUsername,
+          "관리자",
+          adminEmail,
+          hashPassword(adminPassEnv ?? "yeongga"),
+          new Date().toISOString().slice(0, 10),
+          "초기 관리자 계정",
+        ],
+      });
+      canonicalId = Number(ins.lastInsertRowid);
+    }
+  }
+
+  // Step 2) 같은 email 로 매달려 있는 다른 admin 행 흡수 + 삭제
+  const dups = await client.execute({
+    sql: `SELECT id, auth_provider, provider_id, avatar_url
+          FROM users
+          WHERE email = ? AND role = 'admin' AND id != ?`,
+    args: [adminEmail, canonicalId],
+  });
+
+  for (const dup of dups.rows) {
+    const canon = (
       await client.execute({
-        sql: `UPDATE users
-              SET email = ?, role = 'admin'
-              WHERE username = ? OR email = ?`,
-        args: [adminEmail, adminUsername, adminEmail],
+        sql: "SELECT auth_provider, provider_id, avatar_url FROM users WHERE id = ?",
+        args: [canonicalId],
+      })
+    ).rows[0];
+
+    const sets: string[] = [];
+    const args: (string | number | null)[] = [];
+
+    if (canon.auth_provider === "local" && dup.auth_provider === "google") {
+      sets.push("auth_provider = 'google'");
+      sets.push("provider_id = ?");
+      args.push(dup.provider_id == null ? null : String(dup.provider_id));
+    }
+    if (!canon.avatar_url && dup.avatar_url) {
+      sets.push("avatar_url = ?");
+      args.push(String(dup.avatar_url));
+    }
+    if (sets.length > 0) {
+      args.push(canonicalId);
+      await client.execute({
+        sql: `UPDATE users SET ${sets.join(", ")} WHERE id = ?`,
+        args,
       });
     }
+
+    await client.execute({
+      sql: "DELETE FROM users WHERE id = ?",
+      args: [Number(dup.id)],
+    });
+    console.log(
+      `[ensureAdmin] merged duplicate admin id=${dup.id} into canonical id=${canonicalId}`
+    );
+  }
+
+  // Step 3) email/role/password 동기화
+  if (adminPassEnv) {
+    await client.execute({
+      sql: `UPDATE users
+            SET email = ?, password_hash = ?, role = 'admin'
+            WHERE id = ?`,
+      args: [adminEmail, hashPassword(adminPassEnv), canonicalId],
+    });
+  } else {
+    await client.execute({
+      sql: `UPDATE users SET email = ?, role = 'admin' WHERE id = ?`,
+      args: [adminEmail, canonicalId],
+    });
   }
 
   // 시드: 슬라이드
