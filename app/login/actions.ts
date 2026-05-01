@@ -18,7 +18,7 @@ export async function loginAction(
     return { error: "아이디와 비밀번호를 입력해 주세요." };
   }
 
-  const user = authenticate(username, password);
+  const user = await authenticate(username, password);
   if (!user) {
     return { error: "아이디 또는 비밀번호가 올바르지 않습니다." };
   }

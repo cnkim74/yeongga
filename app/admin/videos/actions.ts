@@ -36,9 +36,9 @@ export async function saveVideoAction(
     return { error: "유튜브/비메오 URL을 붙여 넣어 주세요." };
 
   if (id) {
-    updateVideo(id, { kicker, title, description, inputUrl, featured });
+    await updateVideo(id, { kicker, title, description, inputUrl, featured });
   } else {
-    const r = createVideo({ kicker, title, description, inputUrl, featured });
+    const r = await createVideo({ kicker, title, description, inputUrl, featured });
     if (!r.ok) return { error: r.error };
   }
 
@@ -48,12 +48,12 @@ export async function saveVideoAction(
 
 export async function setFeaturedAction(formData: FormData) {
   await requireAdmin();
-  setFeatured(Number(formData.get("id")));
+  await setFeatured(Number(formData.get("id")));
   refresh();
 }
 
 export async function deleteVideoAction(formData: FormData) {
   await requireAdmin();
-  deleteVideo(Number(formData.get("id")));
+  await deleteVideo(Number(formData.get("id")));
   refresh();
 }

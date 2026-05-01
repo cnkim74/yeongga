@@ -10,8 +10,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export default function AdminSlides() {
-  const slides = listSlides();
+export default async function AdminSlides() {
+  const slides = await listSlides();
   const activeCount = slides.filter((s) => s.active).length;
 
   return (

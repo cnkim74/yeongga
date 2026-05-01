@@ -8,8 +8,8 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default function VideosPage() {
-  const videos = listVideos();
+export default async function VideosPage() {
+  const videos = await listVideos();
   const featured = videos.find((v) => v.featured);
   const others = videos.filter((v) => v.id !== featured?.id);
 

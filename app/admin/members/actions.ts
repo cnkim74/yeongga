@@ -40,7 +40,7 @@ export async function saveMemberAction(
   }
 
   if (id) {
-    updateUser(id, {
+    await updateUser(id, {
       name,
       role,
       joined_at,
@@ -48,7 +48,7 @@ export async function saveMemberAction(
       newPassword: password || null,
     });
   } else {
-    const r = createUser({
+    const r = await createUser({
       username,
       name,
       password,
@@ -70,6 +70,6 @@ export async function deleteMemberAction(formData: FormData) {
     // 본인 삭제는 막음 — 안전장치
     return;
   }
-  deleteUser(id);
+  await deleteUser(id);
   refresh();
 }

@@ -11,7 +11,7 @@ export default async function EditSlidePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const slide = getSlide(Number(id));
+  const slide = await getSlide(Number(id));
   if (!slide) notFound();
 
   return (

@@ -8,8 +8,8 @@ import { getFeaturedVideo } from "@/lib/videos-db";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
-  const dbSlides = listActiveSlides();
+export default async function HomePage() {
+  const dbSlides = await listActiveSlides();
   const slides: HeroSlide[] = dbSlides.map((s) => ({
     id: `db-${s.id}`,
     kicker: s.kicker ?? "",
@@ -20,7 +20,7 @@ export default function HomePage() {
     cta: s.cta ?? undefined,
   }));
 
-  const featuredVideo = getFeaturedVideo();
+  const featuredVideo = await getFeaturedVideo();
 
   // 교차 쇼케이스에 쓸 — 5개 장 중 글이 있는 것만, 최신순
   const showcases = chapters

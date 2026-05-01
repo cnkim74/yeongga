@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminMembers() {
   const me = await getCurrentUser();
-  const users = listUsers();
+  const users = await listUsers();
   const adminCount = users.filter((u) => u.role === "admin").length;
   const memberCount = users.filter((u) => u.role === "member").length;
 

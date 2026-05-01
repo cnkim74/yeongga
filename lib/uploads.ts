@@ -2,8 +2,7 @@ import "server-only";
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
-
-const UPLOADS_ROOT = path.join(process.cwd(), "public", "uploads");
+import { put, del } from "@vercel/blob";
 
 const MIME_EXT: Record<string, string> = {
   "image/jpeg": "jpg",
@@ -17,6 +16,10 @@ const MAX_BYTES = 12 * 1024 * 1024; // 12MB
 export type UploadResult =
   | { ok: true; publicPath: string; bytes: number }
   | { ok: false; error: string };
+
+function useBlob() {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+}
 
 export async function saveUpload(
   bucket: "slides",
@@ -39,17 +42,27 @@ export async function saveUpload(
     };
   }
 
-  const dir = path.join(UPLOADS_ROOT, bucket);
-  await fs.mkdir(dir, { recursive: true });
-
   const filename = `${Date.now().toString(36)}-${crypto
     .randomBytes(6)
     .toString("hex")}.${ext}`;
-  const fullPath = path.join(dir, filename);
 
+  if (useBlob()) {
+    // Vercel Blob — 절대 URL 반환 (https://...)
+    const blob = await put(`${bucket}/${filename}`, file, {
+      access: "public",
+      contentType: file.type,
+      addRandomSuffix: false,
+    });
+    return { ok: true, publicPath: blob.url, bytes: file.size };
+  }
+
+  // 로컬 — public/uploads 에 저장 (상대 경로 반환)
+  const uploadsRoot = path.join(process.cwd(), "public", "uploads");
+  const dir = path.join(uploadsRoot, bucket);
+  await fs.mkdir(dir, { recursive: true });
+  const fullPath = path.join(dir, filename);
   const buf = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(fullPath, buf);
-
   return {
     ok: true,
     publicPath: `/uploads/${bucket}/${filename}`,
@@ -58,7 +71,16 @@ export async function saveUpload(
 }
 
 export async function deleteUploadIfLocal(publicPath: string) {
-  // 시드 파일(/slides/, /chapters/) 같은 외부는 건드리지 않음
+  // Vercel Blob URL — 원격 삭제
+  if (publicPath.startsWith("https://") && useBlob()) {
+    try {
+      await del(publicPath);
+    } catch {
+      // 이미 없으면 무시
+    }
+    return;
+  }
+  // 로컬 업로드 경로
   if (!publicPath.startsWith("/uploads/")) return;
   const full = path.join(process.cwd(), "public", publicPath);
   try {

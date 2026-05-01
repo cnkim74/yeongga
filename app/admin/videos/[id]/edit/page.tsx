@@ -11,7 +11,7 @@ export default async function EditVideoPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const video = getVideo(Number(id));
+  const video = await getVideo(Number(id));
   if (!video) notFound();
 
   return (

@@ -10,9 +10,9 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
   const me = await getCurrentUser();
-  const slides = listSlides();
-  const videos = listVideos();
-  const users = listUsers();
+  const slides = await listSlides();
+  const videos = await listVideos();
+  const users = await listUsers();
   const totalArticles = chapters
     .map((c) => getChapterArticles(c.slug).length)
     .reduce((a, b) => a + b, 0);

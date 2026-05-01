@@ -43,7 +43,7 @@ export async function saveSlideAction(
     const upload = await saveUpload("slides", file);
     if (!upload.ok) return { error: upload.error };
     if (id) {
-      const existing = getSlide(id);
+      const existing = await getSlide(id);
       if (existing) await deleteUploadIfLocal(existing.image_path);
     }
     imagePath = upload.publicPath;
@@ -54,7 +54,7 @@ export async function saveSlideAction(
   }
 
   if (id) {
-    updateSlide(id, {
+    await updateSlide(id, {
       image_path: imagePath,
       kicker,
       title,
@@ -64,7 +64,7 @@ export async function saveSlideAction(
       active,
     });
   } else {
-    createSlide({
+    await createSlide({
       image_path: imagePath,
       kicker,
       title,
@@ -83,7 +83,7 @@ export async function toggleSlideAction(formData: FormData) {
   await requireAdmin();
   const id = Number(formData.get("id"));
   const active = formData.get("active") === "1";
-  toggleActive(id, active);
+  await toggleActive(id, active);
   refresh();
 }
 
@@ -91,15 +91,15 @@ export async function moveSlideAction(formData: FormData) {
   await requireAdmin();
   const id = Number(formData.get("id"));
   const dir = String(formData.get("dir")) as "up" | "down";
-  moveSlide(id, dir);
+  await moveSlide(id, dir);
   refresh();
 }
 
 export async function deleteSlideAction(formData: FormData) {
   await requireAdmin();
   const id = Number(formData.get("id"));
-  const existing = getSlide(id);
+  const existing = await getSlide(id);
   if (existing) await deleteUploadIfLocal(existing.image_path);
-  deleteSlide(id);
+  await deleteSlide(id);
   refresh();
 }

@@ -1,22 +1,28 @@
-import Database from "better-sqlite3";
+import "server-only";
+import { createClient, type Client } from "@libsql/client";
 import fs from "node:fs";
 import path from "node:path";
 import { hashPassword } from "./passwords";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const DB_PATH = path.join(DATA_DIR, "yeongga.db");
+let _client: Client | null = null;
+let _initPromise: Promise<void> | null = null;
 
-let _db: Database.Database | null = null;
+function makeClient(): Client {
+  const url = process.env.TURSO_DATABASE_URL;
+  const authToken = process.env.TURSO_AUTH_TOKEN;
 
-function ensureDir(dir: string) {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  if (url && url.startsWith("libsql://")) {
+    return createClient({ url, authToken });
+  }
+
+  // 로컬 개발 — 파일 SQLite
+  const dataDir = path.join(process.cwd(), "data");
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+  return createClient({ url: `file:${path.join(dataDir, "yeongga.db")}` });
 }
 
-function init(db: Database.Database) {
-  db.pragma("journal_mode = WAL");
-  db.pragma("foreign_keys = ON");
-
-  db.exec(`
+async function init(client: Client) {
+  await client.executeMultiple(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
@@ -47,78 +53,73 @@ function init(db: Database.Database) {
       title TEXT NOT NULL,
       description TEXT,
       embed_url TEXT NOT NULL,
-      provider TEXT,             -- 'youtube' | 'vimeo' | 'other'
-      video_id TEXT,             -- 추출한 식별자
-      thumbnail_url TEXT,        -- 자동 추정
+      provider TEXT,
+      video_id TEXT,
+      thumbnail_url TEXT,
       featured INTEGER NOT NULL DEFAULT 0,
       position INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
   `);
 
-  // 시드: 관리자 계정 + 회원 샘플
-  const userCount = db.prepare("SELECT COUNT(*) as n FROM users").get() as {
-    n: number;
-  };
-  if (userCount.n === 0) {
+  // 시드: 관리자 + 회원 샘플
+  const userCount = (
+    await client.execute("SELECT COUNT(*) as n FROM users")
+  ).rows[0].n as number;
+
+  if (userCount === 0) {
     const adminUser = process.env.ADMIN_USERNAME ?? "admin";
     const adminPass = process.env.ADMIN_PASSWORD ?? "yeongga";
-    const insert = db.prepare(
-      `INSERT INTO users (username, name, password_hash, role, joined_at, note)
-       VALUES (?, ?, ?, ?, ?, ?)`
-    );
-    insert.run(
+    const insert = (
+      username: string,
+      name: string,
+      pass: string,
+      role: "admin" | "member",
+      joined: string | null,
+      note: string
+    ) =>
+      client.execute({
+        sql: `INSERT INTO users (username, name, password_hash, role, joined_at, note)
+              VALUES (?, ?, ?, ?, ?, ?)`,
+        args: [username, name, hashPassword(pass), role, joined, note],
+      });
+
+    await insert(
       adminUser,
       "관리자",
-      hashPassword(adminPass),
+      adminPass,
       "admin",
       "1998-10-12",
       "초기 관리자 계정 — 비밀번호를 반드시 변경하세요"
     );
-    insert.run(
-      "kim",
-      "김영석",
-      hashPassword("yeongga"),
-      "member",
-      "1998-10-12",
-      "초대 회원 · 회장"
-    );
-    insert.run(
-      "park",
-      "박정자",
-      hashPassword("yeongga"),
-      "member",
-      "1998-10-12",
-      "서기"
-    );
-    insert.run(
-      "lee",
-      "이숙자",
-      hashPassword("yeongga"),
-      "member",
-      "2003-04-05",
-      ""
-    );
-    insert.run(
-      "jeong",
-      "정인규",
-      hashPassword("yeongga"),
-      "member",
-      "2010-09-14",
-      ""
-    );
+    await insert("kim", "김영석", "yeongga", "member", "1998-10-12", "초대 회원 · 회장");
+    await insert("park", "박정자", "yeongga", "member", "1998-10-12", "서기");
+    await insert("lee", "이숙자", "yeongga", "member", "2003-04-05", "");
+    await insert("jeong", "정인규", "yeongga", "member", "2010-09-14", "");
   }
 
-  // 시드: 슬라이드 (현재 하드코딩과 동일)
-  const slideCount = db.prepare("SELECT COUNT(*) as n FROM slides").get() as {
-    n: number;
-  };
-  if (slideCount.n === 0) {
-    const insert = db.prepare(
-      `INSERT INTO slides (image_path, kicker, title, excerpt, cta, href, position, active)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 1)`
-    );
-    insert.run(
+  // 시드: 슬라이드
+  const slideCount = (
+    await client.execute("SELECT COUNT(*) as n FROM slides")
+  ).rows[0].n as number;
+
+  if (slideCount === 0) {
+    const insert = (
+      image: string,
+      kicker: string,
+      title: string,
+      excerpt: string,
+      cta: string,
+      href: string,
+      pos: number
+    ) =>
+      client.execute({
+        sql: `INSERT INTO slides (image_path, kicker, title, excerpt, cta, href, position, active)
+              VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
+        args: [image, kicker, title, excerpt, cta, href, pos],
+      });
+
+    await insert(
       "/slides/cover-mountain.jpg",
       "卷頭言 · 권두언",
       "오래된 인연의\n새로운 기록",
@@ -127,7 +128,7 @@ function init(db: Database.Database) {
       "/archive/yeon-gi/hoejang-insa",
       1
     );
-    insert.run(
+    await insert(
       "/slides/cover-sea.jpg",
       "이번 호 · 모임",
       "양평에 모인\n가을의 하루",
@@ -136,7 +137,7 @@ function init(db: Database.Database) {
       "/archive/moim/2025-chu-moim",
       2
     );
-    insert.run(
+    await insert(
       "/slides/cover-lake.jpg",
       "사람 · 회원의 글",
       "멀리 있는\n너에게",
@@ -147,53 +148,70 @@ function init(db: Database.Database) {
     );
   }
 
-  // 시드: 동영상 (영가회 정서에 맞을 만한 클래식한 영상 2편)
-  const videoCount = db.prepare("SELECT COUNT(*) as n FROM videos").get() as {
-    n: number;
-  };
-  if (videoCount.n === 0) {
-    const insert = db.prepare(
-      `INSERT INTO videos
-        (kicker, title, description, embed_url, provider, video_id, thumbnail_url, featured, position)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    );
-    // 더미: 자연/한국 분위기 — 실제 운영 시 회원이 보낸 영상으로 교체
-    const yt1 = parseEmbed("https://www.youtube.com/watch?v=2OEL4P1Rz04");
-    insert.run(
+  // 시드: 동영상
+  const videoCount = (
+    await client.execute("SELECT COUNT(*) as n FROM videos")
+  ).rows[0].n as number;
+
+  if (videoCount === 0) {
+    const insert = (
+      kicker: string,
+      title: string,
+      desc: string,
+      url: string,
+      featured: 0 | 1,
+      pos: number
+    ) => {
+      const p = parseEmbed(url);
+      return client.execute({
+        sql: `INSERT INTO videos
+              (kicker, title, description, embed_url, provider, video_id, thumbnail_url, featured, position)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        args: [
+          kicker,
+          title,
+          desc,
+          p.embedUrl,
+          p.provider,
+          p.videoId,
+          p.thumbnailUrl,
+          featured,
+          pos,
+        ],
+      });
+    };
+
+    await insert(
       "이번 호 영상",
       "둘러앉은 자리 — 가을 모임 영상",
       "양평 두물머리 가을 모임에서 회원들이 둘러앉아 나눈 이야기를 짧게 묶었습니다.",
-      yt1.embedUrl,
-      yt1.provider,
-      yt1.videoId,
-      yt1.thumbnailUrl,
+      "https://www.youtube.com/watch?v=2OEL4P1Rz04",
       1,
       1
     );
-    const yt2 = parseEmbed("https://www.youtube.com/watch?v=jfKfPfyJRdk");
-    insert.run(
+    await insert(
       "회상 · 자료",
       "1998년 첫 모임 — 흑백 기록",
       "회의 시작이 된 가을 저녁의 흔적. 사진과 짧은 글을 영상으로 엮었습니다.",
-      yt2.embedUrl,
-      yt2.provider,
-      yt2.videoId,
-      yt2.thumbnailUrl,
+      "https://www.youtube.com/watch?v=jfKfPfyJRdk",
       0,
       2
     );
   }
 }
 
-export function getDb(): Database.Database {
-  if (_db) return _db;
-  ensureDir(DATA_DIR);
-  _db = new Database(DB_PATH);
-  init(_db);
-  return _db;
+export async function getDb(): Promise<Client> {
+  if (_client) {
+    if (_initPromise) await _initPromise;
+    return _client;
+  }
+  _client = makeClient();
+  _initPromise = init(_client);
+  await _initPromise;
+  return _client;
 }
 
-// ─── 임베드 URL 파서 ─────────────────────────────────────
+// ─── 임베드 URL 파서 ────────────────────────────
 export type ParsedEmbed = {
   embedUrl: string;
   provider: "youtube" | "vimeo" | "other";
@@ -203,10 +221,9 @@ export type ParsedEmbed = {
 
 export function parseEmbed(input: string): ParsedEmbed {
   const url = input.trim();
-
-  // YouTube
-  const yt =
-    url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  const yt = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/
+  );
   if (yt) {
     const id = yt[1];
     return {
@@ -216,8 +233,6 @@ export function parseEmbed(input: string): ParsedEmbed {
       thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
     };
   }
-
-  // Vimeo
   const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (vm) {
     const id = vm[1];
@@ -228,7 +243,6 @@ export function parseEmbed(input: string): ParsedEmbed {
       thumbnailUrl: null,
     };
   }
-
   return {
     embedUrl: url,
     provider: "other",

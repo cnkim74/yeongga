@@ -20,7 +20,10 @@
       "Bash(curl -sL \"https://picsum.photos/seed/yeongga1/800/450\" -o test1.jpg -w \"%{http_code} size=%{size_download}\\\\n\")",
       "Bash(git init *)",
       "Bash(git config *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
     ]
   }
 }

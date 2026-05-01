@@ -11,7 +11,7 @@ export default async function EditMemberPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = getUser(Number(id));
+  const user = await getUser(Number(id));
   if (!user) notFound();
 
   return (

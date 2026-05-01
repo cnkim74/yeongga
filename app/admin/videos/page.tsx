@@ -6,8 +6,8 @@ import { deleteVideoAction, setFeaturedAction } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminVideos() {
-  const videos = listVideos();
+export default async function AdminVideos() {
+  const videos = await listVideos();
   const featured = videos.find((v) => v.featured);
 
   return (
