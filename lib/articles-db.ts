@@ -1,11 +1,6 @@
 import "server-only";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkGfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
-import rehypeSlug from "rehype-slug";
-import rehypeStringify from "rehype-stringify";
 import { getDb } from "./db";
+import { looksLikeHTML, renderMarkdown } from "./markdown";
 
 export type Visibility = "public" | "members-only";
 
@@ -49,15 +44,9 @@ function rowToMeta(row: Record<string, unknown>): ArticleMeta {
   };
 }
 
-export async function renderMarkdown(md: string): Promise<string> {
-  const processed = await unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkRehype)
-    .use(rehypeSlug)
-    .use(rehypeStringify)
-    .process(md);
-  return String(processed);
+// 본문이 HTML이면 그대로, 마크다운이면 렌더해서 HTML로 (마이그레이션 전 호환)
+async function bodyToHTML(body: string): Promise<string> {
+  return looksLikeHTML(body) ? body : await renderMarkdown(body);
 }
 
 export async function listAllArticles(): Promise<ArticleMeta[]> {
@@ -99,7 +88,7 @@ export async function getArticleBySlug(
   const rec = row as unknown as Record<string, unknown>;
   const meta = rowToMeta(rec);
   const body = String(rec.body);
-  return { ...meta, body, html: await renderMarkdown(body) };
+  return { ...meta, body, html: await bodyToHTML(body) };
 }
 
 export async function getArticleById(id: number): Promise<Article | null> {
@@ -113,7 +102,7 @@ export async function getArticleById(id: number): Promise<Article | null> {
   const rec = row as unknown as Record<string, unknown>;
   const meta = rowToMeta(rec);
   const body = String(rec.body);
-  return { ...meta, body, html: await renderMarkdown(body) };
+  return { ...meta, body, html: await bodyToHTML(body) };
 }
 
 export type ArticleInput = {

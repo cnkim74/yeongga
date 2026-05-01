@@ -476,3 +476,129 @@ html[data-reading="5"] { --reading-size: var(--reading-5); }
   border-top: 1px solid var(--color-notion-rule);
   margin: 16px 0;
 }
+
+/* ─── 본문 figure (이미지) — 공개 페이지 + 에디터 공통 ─────────────── */
+.article-figure {
+  margin: 1.5em 0;
+}
+.article-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.article-figure figcaption {
+  font-size: 0.875em;
+  color: var(--color-ink-mute);
+  text-align: center;
+  margin-top: 0.5em;
+  line-height: 1.5;
+}
+
+/* 정렬 */
+.article-figure.align-left {
+  margin-left: 0;
+  margin-right: auto;
+}
+.article-figure.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+.article-figure.align-right {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* 크기 */
+.article-figure.size-small  { max-width: 35%; }
+.article-figure.size-medium { max-width: 60%; }
+.article-figure.size-large  { max-width: 85%; }
+.article-figure.size-full   { max-width: 100%; width: 100%; }
+
+@media (max-width: 640px) {
+  /* 모바일에선 작은 크기도 가로폭 채우게 */
+  .article-figure.size-small,
+  .article-figure.size-medium,
+  .article-figure.size-large {
+    max-width: 100%;
+  }
+}
+
+/* YouTube 임베드 — 본문에 들어간 iframe */
+.prose-body iframe[data-youtube-video],
+.tiptap iframe[data-youtube-video] {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  border-radius: 4px;
+  margin: 1.5em 0;
+}
+
+/* ─── TipTap 에디터 영역 — 어드민 글쓰기 ───────────────────────────── */
+.tiptap.article-editor {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--color-notion-text);
+}
+
+.tiptap.article-editor > * + * {
+  margin-top: 0.85em;
+}
+
+.tiptap.article-editor h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin-top: 1.3em;
+  line-height: 1.4;
+}
+
+.tiptap.article-editor h3 {
+  font-size: 1.25em;
+  font-weight: 700;
+  margin-top: 1.2em;
+  line-height: 1.4;
+}
+
+.tiptap.article-editor blockquote {
+  border-left: 3px solid var(--color-notion-rule);
+  padding-left: 1em;
+  margin-left: 0;
+  color: var(--color-notion-mute);
+  font-style: italic;
+}
+
+.tiptap.article-editor ul,
+.tiptap.article-editor ol {
+  padding-left: 1.5em;
+}
+
+.tiptap.article-editor ul { list-style: disc; }
+.tiptap.article-editor ol { list-style: decimal; }
+
+.tiptap.article-editor a {
+  color: var(--color-notion-accent);
+  text-decoration: underline;
+}
+
+.tiptap.article-editor hr {
+  border: none;
+  border-top: 1px solid var(--color-notion-rule);
+  margin: 1.5em 0;
+}
+
+/* placeholder */
+.tiptap.article-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--color-notion-mute);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* 선택된 이미지 표시 */
+.tiptap.article-editor figure.ProseMirror-selectednode {
+  outline: 2px solid var(--color-notion-accent);
+  outline-offset: 2px;
+}

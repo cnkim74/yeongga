@@ -22,7 +22,7 @@ function useBlob() {
 }
 
 export async function saveUpload(
-  bucket: "slides",
+  bucket: "slides" | "articles",
   file: File
 ): Promise<UploadResult> {
   if (!(file instanceof File) || file.size === 0) {

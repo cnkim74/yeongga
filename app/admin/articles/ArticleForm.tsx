@@ -1,15 +1,17 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { saveArticleAction, type ArticleFormState } from "./actions";
 import { chapters } from "@/lib/chapters";
 import type { Article } from "@/lib/articles-db";
+import { ArticleEditor } from "./ArticleEditor";
 
 export function ArticleForm({ article }: { article?: Article }) {
   const [state, formAction, pending] = useActionState<ArticleFormState, FormData>(
     saveArticleAction,
     {}
   );
+  const [bodyHTML, setBodyHTML] = useState(article?.body ?? "");
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -139,17 +141,12 @@ export function ArticleForm({ article }: { article?: Article }) {
       </div>
 
       <div>
-        <Label>본문 (Markdown)</Label>
-        <textarea
-          name="body"
-          rows={20}
-          required
-          defaultValue={article?.body ?? ""}
-          placeholder="# 제목&#10;&#10;본문을 마크다운으로 작성하세요."
-          className="notion-input w-full border border-[var(--color-notion-rule)] focus:border-[var(--color-notion-accent)] font-mono text-sm leading-relaxed"
-        />
-        <div className="text-xs text-[var(--color-notion-mute)] mt-1">
-          GFM(GitHub Flavored Markdown) 지원. 헤더는 ## 부터 권장.
+        <Label>본문</Label>
+        <input type="hidden" name="body" value={bodyHTML} />
+        <ArticleEditor initialHTML={bodyHTML} onChange={setBodyHTML} />
+        <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">
+          이미지: 끌어다 놓거나 붙여넣기(Cmd/Ctrl+V) — 자동 업로드. 선택하면
+          정렬·크기·캡션 변경 가능. YouTube: ▶ 버튼에 URL 붙여넣기.
         </div>
       </div>
 

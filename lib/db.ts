@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { hashPassword } from "./passwords";
+import { looksLikeHTML, renderMarkdown } from "./markdown";
 
 let _client: Client | null = null;
 let _initPromise: Promise<void> | null = null;
@@ -234,6 +235,21 @@ async function init(client: Client) {
   await client.execute(
     "UPDATE articles SET chapter = 'jachwi' WHERE chapter = 'natnal'"
   );
+
+  // 마이그레이션: 마크다운 본문 → HTML (멱등 — 이미 HTML인 행은 건너뜀)
+  const mdRows = await client.execute(
+    "SELECT id, body FROM articles"
+  );
+  for (const row of mdRows.rows) {
+    const id = Number(row.id);
+    const body = String(row.body);
+    if (looksLikeHTML(body)) continue;
+    const html = await renderMarkdown(body);
+    await client.execute({
+      sql: "UPDATE articles SET body = ?, updated_at = updated_at WHERE id = ?",
+      args: [html, id],
+    });
+  }
 
   // 시드: 글 (기존 content/articles/<chapter>/*.md 파일을 DB로 일회 이관)
   const articleCount = (

@@ -50,7 +50,10 @@ function readInput(formData: FormData): ArticleInput | { _error: string } {
   }
   if (!title) return { _error: "제목은 비워둘 수 없습니다." };
   if (!date) return { _error: "날짜를 입력해 주세요." };
-  if (!body.trim()) return { _error: "본문이 비어 있습니다." };
+  // HTML 본문 — 빈 단락만 있으면 비어 있다고 판정. 이미지나 영상이 있으면 통과.
+  const hasMedia = /<img|<iframe/i.test(body);
+  const hasText = body.replace(/<[^>]+>/g, "").trim().length > 0;
+  if (!hasMedia && !hasText) return { _error: "본문이 비어 있습니다." };
 
   return {
     chapter,
