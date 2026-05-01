@@ -6,6 +6,10 @@ export type User = {
   id: number;
   username: string;
   name: string;
+  email: string | null;
+  avatar_url: string | null;
+  auth_provider: "local" | "google" | "naver";
+  provider_id: string | null;
   role: "admin" | "member";
   joined_at: string | null;
   note: string | null;
@@ -19,6 +23,10 @@ function rowToUser(row: Record<string, unknown>): User {
     id: Number(row.id),
     username: String(row.username),
     name: String(row.name),
+    email: row.email == null ? null : String(row.email),
+    avatar_url: row.avatar_url == null ? null : String(row.avatar_url),
+    auth_provider: (row.auth_provider as User["auth_provider"]) ?? "local",
+    provider_id: row.provider_id == null ? null : String(row.provider_id),
     role: row.role as "admin" | "member",
     joined_at: row.joined_at == null ? null : String(row.joined_at),
     note: row.note == null ? null : String(row.note),
@@ -32,7 +40,7 @@ export async function authenticate(
 ): Promise<User | null> {
   const db = await getDb();
   const r = await db.execute({
-    sql: `SELECT id, username, name, password_hash, role, joined_at, note, created_at
+    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, password_hash, role, joined_at, note, created_at
           FROM users WHERE username = ?`,
     args: [username],
   });
@@ -45,7 +53,7 @@ export async function authenticate(
 export async function listUsers(): Promise<User[]> {
   const db = await getDb();
   const r = await db.execute(
-    `SELECT id, username, name, role, joined_at, note, created_at
+    `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, joined_at, note, created_at
      FROM users ORDER BY role DESC, joined_at ASC, id ASC`
   );
   return r.rows.map((r) => rowToUser(r as unknown as Record<string, unknown>));
@@ -54,7 +62,7 @@ export async function listUsers(): Promise<User[]> {
 export async function getUser(id: number): Promise<User | null> {
   const db = await getDb();
   const r = await db.execute({
-    sql: `SELECT id, username, name, role, joined_at, note, created_at
+    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, joined_at, note, created_at
           FROM users WHERE id = ?`,
     args: [id],
   });

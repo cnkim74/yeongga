@@ -63,14 +63,33 @@ async function init(client: Client) {
     );
   `);
 
+  // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──
+  const userCols = await client.execute("PRAGMA table_info(users)");
+  const colNames = userCols.rows.map((r) => String(r.name));
+  const addCol = async (name: string, def: string) => {
+    if (!colNames.includes(name)) {
+      await client.execute(`ALTER TABLE users ADD COLUMN ${name} ${def}`);
+    }
+  };
+  await addCol("email", "TEXT");
+  await addCol("avatar_url", "TEXT");
+  await addCol("auth_provider", "TEXT NOT NULL DEFAULT 'local'");
+  await addCol("provider_id", "TEXT");
+
+  // email + provider_id 에 인덱스 (OAuth 로 빠르게 매칭)
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`
+  );
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_users_provider ON users(auth_provider, provider_id)`
+  );
+
   // 시드: 관리자 + 회원 샘플
   const userCount = (
     await client.execute("SELECT COUNT(*) as n FROM users")
   ).rows[0].n as number;
 
   if (userCount === 0) {
-    const adminUser = process.env.ADMIN_USERNAME ?? "admin";
-    const adminPass = process.env.ADMIN_PASSWORD ?? "yeongga";
     const insert = (
       username: string,
       name: string,
@@ -85,18 +104,62 @@ async function init(client: Client) {
         args: [username, name, hashPassword(pass), role, joined, note],
       });
 
-    await insert(
-      adminUser,
-      "관리자",
-      adminPass,
-      "admin",
-      "1998-10-12",
-      "초기 관리자 계정 — 비밀번호를 반드시 변경하세요"
-    );
     await insert("kim", "김영석", "yeongga", "member", "1998-10-12", "초대 회원 · 회장");
     await insert("park", "박정자", "yeongga", "member", "1998-10-12", "서기");
     await insert("lee", "이숙자", "yeongga", "member", "2003-04-05", "");
     await insert("jeong", "정인규", "yeongga", "member", "2010-09-14", "");
+  }
+
+  // ─── ensureAdmin: 매 부팅마다 admin 계정 보장 + email 동기화 ──
+  // - cnkim74@gmail.com 을 admin 의 email 로 박아 두면, 추후 Google OAuth 가
+  //   같은 이메일로 로그인해 들어올 때 자동으로 이 admin 계정과 연결됨.
+  // - ADMIN_PASSWORD env 가 있으면 비밀번호도 그 값으로 동기화 (env 바꾸면 자동 리셋).
+  const adminUsername = process.env.ADMIN_USERNAME ?? "admin";
+  const adminEmail = process.env.ADMIN_EMAIL ?? "cnkim74@gmail.com";
+  const adminPassEnv = process.env.ADMIN_PASSWORD;
+
+  const adminRow = await client.execute({
+    sql: "SELECT id FROM users WHERE username = ? OR email = ?",
+    args: [adminUsername, adminEmail],
+  });
+
+  if (adminRow.rows.length === 0) {
+    // 새로 생성
+    await client.execute({
+      sql: `INSERT INTO users
+            (username, name, email, password_hash, role, auth_provider, joined_at, note)
+            VALUES (?, ?, ?, ?, 'admin', 'local', ?, ?)`,
+      args: [
+        adminUsername,
+        "관리자",
+        adminEmail,
+        hashPassword(adminPassEnv ?? "yeongga"),
+        new Date().toISOString().slice(0, 10),
+        "초기 관리자 계정",
+      ],
+    });
+  } else {
+    // 이메일 동기화 + (env 비밀번호가 있으면) 비밀번호도 동기화
+    if (adminPassEnv) {
+      await client.execute({
+        sql: `UPDATE users
+              SET email = ?, password_hash = ?, role = 'admin'
+              WHERE username = ? OR email = ?`,
+        args: [
+          adminEmail,
+          hashPassword(adminPassEnv),
+          adminUsername,
+          adminEmail,
+        ],
+      });
+    } else {
+      await client.execute({
+        sql: `UPDATE users
+              SET email = ?, role = 'admin'
+              WHERE username = ? OR email = ?`,
+        args: [adminEmail, adminUsername, adminEmail],
+      });
+    }
   }
 
   // 시드: 슬라이드
