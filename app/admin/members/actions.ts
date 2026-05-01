@@ -31,6 +31,12 @@ export async function saveMemberAction(
 
   // 프로필 사진 — 폼은 URL만 들고 옴 (실제 업로드는 /api/upload/member-avatar)
   const avatarUrl = String(formData.get("avatar_url") ?? "") || null;
+  console.log("[member save]", {
+    id,
+    name,
+    avatarUrlLen: avatarUrl?.length ?? 0,
+    avatarUrlPrefix: avatarUrl?.slice(0, 60) ?? null,
+  });
   if (id) {
     const existing = await getUser(id);
     if (existing?.avatar_url && existing.avatar_url !== avatarUrl) {
