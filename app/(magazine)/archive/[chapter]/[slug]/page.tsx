@@ -1,21 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getChapter } from "@/lib/chapters";
 import {
-  chapters,
-  getArticle,
-  getChapterArticles,
-  getChapterMeta,
-} from "@/lib/content";
+  getArticleBySlug,
+  listChapterArticles,
+} from "@/lib/articles-db";
 import { getCurrentUser } from "@/lib/auth";
 
-export function generateStaticParams() {
-  return chapters.flatMap((c) =>
-    getChapterArticles(c.slug).map((a) => ({
-      chapter: c.slug,
-      slug: a.slug,
-    }))
-  );
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -23,11 +15,11 @@ export async function generateMetadata({
   params: Promise<{ chapter: string; slug: string }>;
 }) {
   const { chapter, slug } = await params;
-  const article = await getArticle(chapter, slug);
+  const article = await getArticleBySlug(chapter, slug);
   if (!article) return {};
   return {
     title: `${article.title} — 영가회 아카이브`,
-    description: article.excerpt,
+    description: article.excerpt ?? undefined,
   };
 }
 
@@ -37,15 +29,14 @@ export default async function ArticlePage({
   params: Promise<{ chapter: string; slug: string }>;
 }) {
   const { chapter, slug } = await params;
-  const meta = getChapterMeta(chapter);
-  const article = await getArticle(chapter, slug);
+  const meta = getChapter(chapter);
+  const article = await getArticleBySlug(chapter, slug);
   if (!meta || !article) notFound();
 
   const user = await getCurrentUser();
-  const isLocked =
-    article.visibility === "members-only" && !user;
+  const isLocked = article.visibility === "members-only" && !user;
 
-  const all = getChapterArticles(chapter);
+  const all = await listChapterArticles(chapter);
   const idx = all.findIndex((a) => a.slug === slug);
   const prev = idx >= 0 ? all[idx + 1] : undefined;
   const next = idx > 0 ? all[idx - 1] : undefined;
@@ -97,13 +88,13 @@ export default async function ArticlePage({
             <MemberGate
               chapter={chapter}
               slug={slug}
-              excerpt={article.excerpt}
+              excerpt={article.excerpt ?? undefined}
             />
           ) : (
-          <div
-            className="prose-body"
-            dangerouslySetInnerHTML={{ __html: article.html }}
-          />
+            <div
+              className="prose-body"
+              dangerouslySetInnerHTML={{ __html: article.html }}
+            />
           )}
 
           <hr className="border-[var(--color-rule)] my-16" />

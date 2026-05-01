@@ -4,7 +4,7 @@ import { listSlides } from "@/lib/slides-db";
 import { listVideos } from "@/lib/videos-db";
 import { listUsers } from "@/lib/users-db";
 import { getCurrentUser } from "@/lib/auth";
-import { chapters, getChapterArticles } from "@/lib/content";
+import { countAllArticles } from "@/lib/articles-db";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +13,7 @@ export default async function AdminHome() {
   const slides = await listSlides();
   const videos = await listVideos();
   const users = await listUsers();
-  const totalArticles = chapters
-    .map((c) => getChapterArticles(c.slug).length)
-    .reduce((a, b) => a + b, 0);
+  const totalArticles = await countAllArticles();
 
   const activeSlides = slides.filter((s) => s.active).length;
   const featuredVideo = videos.find((v) => v.featured);

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
-import { chapters, getChapterArticles } from "@/lib/content";
+import { chapters } from "@/lib/chapters";
+import { listChapterArticles } from "@/lib/articles-db";
 import { listActiveSlides } from "@/lib/slides-db";
 import { getFeaturedVideo } from "@/lib/videos-db";
 
@@ -23,9 +24,13 @@ export default async function HomePage() {
   const featuredVideo = await getFeaturedVideo();
 
   // 교차 쇼케이스에 쓸 — 5개 장 중 글이 있는 것만, 최신순
-  const showcases = chapters
-    .map((c) => ({ chapter: c, latest: getChapterArticles(c.slug)[0] }))
-    .filter((x) => x.latest);
+  const chapterLatests = await Promise.all(
+    chapters.map(async (c) => ({
+      chapter: c,
+      latest: (await listChapterArticles(c.slug))[0],
+    }))
+  );
+  const showcases = chapterLatests.filter((x) => x.latest);
 
   return (
     <>

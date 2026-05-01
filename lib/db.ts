@@ -2,6 +2,7 @@ import "server-only";
 import { createClient, type Client } from "@libsql/client";
 import fs from "node:fs";
 import path from "node:path";
+import matter from "gray-matter";
 import { hashPassword } from "./passwords";
 
 let _client: Client | null = null;
@@ -60,6 +61,23 @@ async function init(client: Client) {
       featured INTEGER NOT NULL DEFAULT 0,
       position INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS articles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      chapter TEXT NOT NULL,
+      slug TEXT NOT NULL,
+      title TEXT NOT NULL,
+      subtitle TEXT,
+      author TEXT,
+      excerpt TEXT,
+      cover TEXT,
+      date TEXT NOT NULL,
+      visibility TEXT NOT NULL DEFAULT 'public' CHECK(visibility IN ('public','members-only')),
+      body TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(chapter, slug)
     );
   `);
 
@@ -210,6 +228,49 @@ async function init(client: Client) {
       "/archive/geul/oedongttal-pyeonji",
       3
     );
+  }
+
+  // 시드: 글 (기존 content/articles/<chapter>/*.md 파일을 DB로 일회 이관)
+  const articleCount = (
+    await client.execute("SELECT COUNT(*) as n FROM articles")
+  ).rows[0].n as number;
+
+  if (articleCount === 0) {
+    const articlesDir = path.join(process.cwd(), "content", "articles");
+    if (fs.existsSync(articlesDir)) {
+      for (const chapterSlug of fs.readdirSync(articlesDir)) {
+        const chapterDir = path.join(articlesDir, chapterSlug);
+        if (!fs.statSync(chapterDir).isDirectory()) continue;
+        for (const file of fs.readdirSync(chapterDir)) {
+          if (!file.endsWith(".md")) continue;
+          const slug = file.replace(/\.md$/, "");
+          const raw = fs.readFileSync(path.join(chapterDir, file), "utf8");
+          const { data, content } = matter(raw);
+          const v = String(data.visibility ?? "public").toLowerCase();
+          const visibility =
+            v === "members-only" || v === "members" || v === "private"
+              ? "members-only"
+              : "public";
+          await client.execute({
+            sql: `INSERT INTO articles
+                  (chapter, slug, title, subtitle, author, excerpt, cover, date, visibility, body)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            args: [
+              chapterSlug,
+              slug,
+              String(data.title ?? slug),
+              data.subtitle ? String(data.subtitle) : null,
+              data.author ? String(data.author) : null,
+              data.excerpt ? String(data.excerpt) : null,
+              data.cover ? String(data.cover) : null,
+              String(data.date ?? "1970-01-01"),
+              visibility,
+              content,
+            ],
+          });
+        }
+      }
+    }
   }
 
   // 시드: 동영상

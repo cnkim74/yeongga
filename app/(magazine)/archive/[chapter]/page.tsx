@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChapterIcon } from "@/components/ChapterIcon";
-import {
-  chapters,
-  getChapterArticles,
-  getChapterMeta,
-} from "@/lib/content";
+import { chapters, getChapter } from "@/lib/chapters";
+import { listChapterArticles } from "@/lib/articles-db";
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return chapters.map((c) => ({ chapter: c.slug }));
@@ -17,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ chapter: string }>;
 }) {
   const { chapter } = await params;
-  const c = getChapterMeta(chapter);
+  const c = getChapter(chapter);
   if (!c) return {};
   return {
     title: `${c.title} — 영가회 아카이브`,
@@ -31,9 +30,9 @@ export default async function ChapterPage({
   params: Promise<{ chapter: string }>;
 }) {
   const { chapter } = await params;
-  const meta = getChapterMeta(chapter);
+  const meta = getChapter(chapter);
   if (!meta) notFound();
-  const articles = getChapterArticles(chapter);
+  const articles = await listChapterArticles(chapter);
 
   return (
     <>
