@@ -15,10 +15,11 @@ function makeClient(): Client {
     return createClient({ url, authToken });
   }
 
-  // 로컬 개발 — 파일 SQLite
+  // 로컬 개발 — 파일 SQLite (file URI는 // 두 개 + 절대 경로)
   const dataDir = path.join(process.cwd(), "data");
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  return createClient({ url: `file:${path.join(dataDir, "yeongga.db")}` });
+  const dbPath = path.resolve(dataDir, "yeongga.db");
+  return createClient({ url: `file://${dbPath}` });
 }
 
 async function init(client: Client) {
