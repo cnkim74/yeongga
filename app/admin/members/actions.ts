@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
-import { createUser, deleteUser, updateUser } from "@/lib/users-db";
+import { createUser, deleteUser, getUser, updateUser } from "@/lib/users-db";
+import { deleteUploadIfLocal, saveUpload } from "@/lib/uploads";
 
 export type MemberFormState = { error?: string };
 
@@ -28,6 +29,22 @@ export async function saveMemberAction(
   const note = String(formData.get("note") ?? "").trim() || null;
   const password = String(formData.get("password") ?? "");
 
+  // 프로필 사진
+  const avatarFile = formData.get("avatar") as File | null;
+  const wantRemoveAvatar = formData.get("remove_avatar") === "on";
+  const currentAvatar = String(formData.get("current_avatar") ?? "") || null;
+  let avatarUrl: string | null = currentAvatar;
+
+  if (avatarFile && avatarFile.size > 0) {
+    const upload = await saveUpload("members", avatarFile);
+    if (!upload.ok) return { error: upload.error };
+    if (id && currentAvatar) await deleteUploadIfLocal(currentAvatar);
+    avatarUrl = upload.publicPath;
+  } else if (wantRemoveAvatar && id && currentAvatar) {
+    await deleteUploadIfLocal(currentAvatar);
+    avatarUrl = null;
+  }
+
   if (!name) return { error: "이름은 비워둘 수 없습니다." };
   if (!id && !username) return { error: "아이디는 비워둘 수 없습니다." };
 
@@ -42,6 +59,7 @@ export async function saveMemberAction(
     const r = await updateUser(id, {
       name,
       email,
+      avatar_url: avatarUrl,
       role,
       joined_at,
       note,
@@ -53,6 +71,7 @@ export async function saveMemberAction(
       username,
       name,
       email,
+      avatar_url: avatarUrl,
       password: password || null,
       role,
       joined_at,
@@ -72,6 +91,8 @@ export async function deleteMemberAction(formData: FormData) {
     // 본인 삭제는 막음 — 안전장치
     return;
   }
+  const existing = await getUser(id);
+  if (existing?.avatar_url) await deleteUploadIfLocal(existing.avatar_url);
   await deleteUser(id);
   refresh();
 }

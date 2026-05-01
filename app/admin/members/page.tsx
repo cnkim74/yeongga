@@ -66,15 +66,20 @@ export default async function AdminMembers() {
                 return (
                   <tr key={u.id}>
                     <td>
-                      <Link
-                        href={`/admin/members/${u.id}/edit`}
-                        className="font-medium hover:underline"
-                      >
-                        {u.name}
-                      </Link>
-                      {isMe && (
-                        <span className="ml-2 notion-tag tag-blue">나</span>
-                      )}
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Avatar src={u.avatar_url} name={u.name} />
+                        <Link
+                          href={`/admin/members/${u.id}/edit`}
+                          className="font-medium hover:underline truncate"
+                        >
+                          {u.name}
+                        </Link>
+                        {isMe && (
+                          <span className="ml-1 notion-tag tag-blue shrink-0">
+                            나
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="font-mono text-xs">{u.username}</td>
                     <td>
@@ -136,6 +141,33 @@ export default async function AdminMembers() {
 
 function Th({ children, w }: { children: React.ReactNode; w?: string }) {
   return <th style={{ width: w ? `${w}px` : undefined }}>{children}</th>;
+}
+
+function Avatar({
+  src,
+  name,
+}: {
+  src: string | null;
+  name: string;
+}) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt=""
+        className="w-7 h-7 rounded-full object-cover bg-[var(--color-notion-hover)] shrink-0"
+      />
+    );
+  }
+  const initial = name.trim().slice(0, 1) || "·";
+  return (
+    <span
+      aria-hidden="true"
+      className="w-7 h-7 rounded-full bg-[var(--color-bg-deep)] text-[var(--color-ink-soft)] grid place-items-center text-xs font-medium shrink-0"
+    >
+      {initial}
+    </span>
+  );
 }
 
 function ProviderTag({ provider }: { provider: string }) {

@@ -75,6 +75,7 @@ export async function createUser(input: {
   username: string;
   name: string;
   email?: string | null;
+  avatar_url?: string | null;
   password?: string | null; // 비워두면 무작위 — Google 전용 계정용
   role: "admin" | "member";
   joined_at?: string | null;
@@ -100,12 +101,13 @@ export async function createUser(input: {
   const passwordToHash = input.password || randomBytes(24).toString("hex");
 
   const r = await db.execute({
-    sql: `INSERT INTO users (username, name, email, password_hash, role, joined_at, note)
-          VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO users (username, name, email, avatar_url, password_hash, role, joined_at, note)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
       input.username,
       input.name,
       input.email ?? null,
+      input.avatar_url ?? null,
       hashPassword(passwordToHash),
       input.role,
       input.joined_at ?? null,
@@ -120,6 +122,7 @@ export async function updateUser(
   input: {
     name: string;
     email?: string | null;
+    avatar_url?: string | null;
     role: "admin" | "member";
     joined_at?: string | null;
     note?: string | null;
@@ -139,10 +142,11 @@ export async function updateUser(
 
   if (input.newPassword) {
     await db.execute({
-      sql: `UPDATE users SET name=?, email=?, role=?, joined_at=?, note=?, password_hash=? WHERE id=?`,
+      sql: `UPDATE users SET name=?, email=?, avatar_url=?, role=?, joined_at=?, note=?, password_hash=? WHERE id=?`,
       args: [
         input.name,
         input.email ?? null,
+        input.avatar_url ?? null,
         input.role,
         input.joined_at ?? null,
         input.note ?? null,
@@ -152,10 +156,11 @@ export async function updateUser(
     });
   } else {
     await db.execute({
-      sql: `UPDATE users SET name=?, email=?, role=?, joined_at=?, note=? WHERE id=?`,
+      sql: `UPDATE users SET name=?, email=?, avatar_url=?, role=?, joined_at=?, note=? WHERE id=?`,
       args: [
         input.name,
         input.email ?? null,
+        input.avatar_url ?? null,
         input.role,
         input.joined_at ?? null,
         input.note ?? null,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { saveMemberAction, type MemberFormState } from "./actions";
 import type { User } from "@/lib/users-db";
 
@@ -10,10 +10,70 @@ export function MemberForm({ user }: { user?: User }) {
     FormData
   >(saveMemberAction, {});
   const isEdit = !!user;
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    user?.avatar_url ?? null
+  );
+  const [removeAvatar, setRemoveAvatar] = useState(false);
 
   return (
     <form action={formAction} className="space-y-6 max-w-2xl">
       {user && <input type="hidden" name="id" value={user.id} />}
+      <input
+        type="hidden"
+        name="current_avatar"
+        value={user?.avatar_url ?? ""}
+      />
+
+      <div>
+        <Label>프로필 사진</Label>
+        <div className="flex items-start gap-4">
+          <div className="w-20 h-20 rounded-full overflow-hidden bg-[var(--color-notion-hover)] border border-[var(--color-notion-rule)] shrink-0">
+            {avatarPreview && !removeAvatar ? (
+              <img
+                src={avatarPreview}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full grid place-items-center text-[var(--color-notion-mute)] text-xs">
+                (없음)
+              </div>
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <input
+              name="avatar"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={(e) => {
+                const f = e.currentTarget.files?.[0];
+                if (f) {
+                  setAvatarPreview(URL.createObjectURL(f));
+                  setRemoveAvatar(false);
+                }
+              }}
+              className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-[var(--color-notion-text)] file:text-white file:cursor-pointer"
+            />
+            <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">
+              jpg / png / webp / gif · 최대 12MB · 정사각형 권장 (원형으로 표시).
+              {user?.avatar_url && " 교체하지 않으려면 비워 두세요."}
+            </div>
+            {user?.avatar_url && (
+              <label className="inline-flex items-center gap-2 mt-2 text-xs">
+                <input
+                  type="checkbox"
+                  name="remove_avatar"
+                  checked={removeAvatar}
+                  onChange={(e) => setRemoveAvatar(e.target.checked)}
+                />
+                <span className="text-[var(--color-notion-mute)]">
+                  기존 사진 삭제
+                </span>
+              </label>
+            )}
+          </div>
+        </div>
+      </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
         <Field
