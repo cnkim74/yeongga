@@ -1,4 +1,5 @@
 import "server-only";
+import { randomBytes } from "node:crypto";
 import { getDb } from "./db";
 import { hashPassword, verifyPassword } from "./passwords";
 
@@ -73,7 +74,8 @@ export async function getUser(id: number): Promise<User | null> {
 export async function createUser(input: {
   username: string;
   name: string;
-  password: string;
+  email?: string | null;
+  password?: string | null; // 비워두면 무작위 — Google 전용 계정용
   role: "admin" | "member";
   joined_at?: string | null;
   note?: string | null;
@@ -86,13 +88,25 @@ export async function createUser(input: {
   if (exists.rows.length > 0)
     return { ok: false, error: "이미 사용 중인 아이디입니다." };
 
+  if (input.email) {
+    const emailDup = await db.execute({
+      sql: "SELECT id FROM users WHERE email = ?",
+      args: [input.email],
+    });
+    if (emailDup.rows.length > 0)
+      return { ok: false, error: "이미 등록된 이메일입니다." };
+  }
+
+  const passwordToHash = input.password || randomBytes(24).toString("hex");
+
   const r = await db.execute({
-    sql: `INSERT INTO users (username, name, password_hash, role, joined_at, note)
-          VALUES (?, ?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO users (username, name, email, password_hash, role, joined_at, note)
+          VALUES (?, ?, ?, ?, ?, ?, ?)`,
     args: [
       input.username,
       input.name,
-      hashPassword(input.password),
+      input.email ?? null,
+      hashPassword(passwordToHash),
       input.role,
       input.joined_at ?? null,
       input.note ?? null,
@@ -105,18 +119,30 @@ export async function updateUser(
   id: number,
   input: {
     name: string;
+    email?: string | null;
     role: "admin" | "member";
     joined_at?: string | null;
     note?: string | null;
     newPassword?: string | null;
   }
-) {
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const db = await getDb();
+
+  if (input.email) {
+    const emailDup = await db.execute({
+      sql: "SELECT id FROM users WHERE email = ? AND id != ?",
+      args: [input.email, id],
+    });
+    if (emailDup.rows.length > 0)
+      return { ok: false, error: "이미 등록된 이메일입니다." };
+  }
+
   if (input.newPassword) {
     await db.execute({
-      sql: `UPDATE users SET name=?, role=?, joined_at=?, note=?, password_hash=? WHERE id=?`,
+      sql: `UPDATE users SET name=?, email=?, role=?, joined_at=?, note=?, password_hash=? WHERE id=?`,
       args: [
         input.name,
+        input.email ?? null,
         input.role,
         input.joined_at ?? null,
         input.note ?? null,
@@ -126,9 +152,10 @@ export async function updateUser(
     });
   } else {
     await db.execute({
-      sql: `UPDATE users SET name=?, role=?, joined_at=?, note=? WHERE id=?`,
+      sql: `UPDATE users SET name=?, email=?, role=?, joined_at=?, note=? WHERE id=?`,
       args: [
         input.name,
+        input.email ?? null,
         input.role,
         input.joined_at ?? null,
         input.note ?? null,
@@ -136,6 +163,7 @@ export async function updateUser(
       ],
     });
   }
+  return { ok: true };
 }
 
 export async function deleteUser(id: number) {

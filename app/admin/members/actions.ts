@@ -20,6 +20,7 @@ export async function saveMemberAction(
   const id = formData.get("id") ? Number(formData.get("id")) : null;
   const username = String(formData.get("username") ?? "").trim();
   const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim().toLowerCase() || null;
   const role = (formData.get("role") === "admin" ? "admin" : "member") as
     | "admin"
     | "member";
@@ -29,8 +30,6 @@ export async function saveMemberAction(
 
   if (!name) return { error: "이름은 비워둘 수 없습니다." };
   if (!id && !username) return { error: "아이디는 비워둘 수 없습니다." };
-  if (!id && !password)
-    return { error: "새 회원은 초기 비밀번호를 설정해 주세요." };
 
   // 본인이 자기 권한을 회원으로 떨어뜨리는 것 방지
   if (id && id === me.id && role !== "admin") {
@@ -40,18 +39,21 @@ export async function saveMemberAction(
   }
 
   if (id) {
-    await updateUser(id, {
+    const r = await updateUser(id, {
       name,
+      email,
       role,
       joined_at,
       note,
       newPassword: password || null,
     });
+    if (!r.ok) return { error: r.error };
   } else {
     const r = await createUser({
       username,
       name,
-      password,
+      email,
+      password: password || null,
       role,
       joined_at,
       note,

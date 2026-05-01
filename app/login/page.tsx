@@ -18,8 +18,9 @@ export default async function LoginPage({
   const initialError = sp.error;
 
   const user = await getCurrentUser();
-  if (user) {
-    // 이미 로그인된 경우 — 권한이 충분하면 next 로 보내고, 부족하면 홈으로
+  // 에러 메시지가 있으면 (예: Google OAuth 실패) 로그인 상태여도 페이지를 그려서
+  // 에러를 보여 줘야 함 — 그냥 리다이렉트하면 사용자는 무슨 일이 있었는지 모름.
+  if (user && !initialError) {
     if (needAdmin && user.role !== "admin") {
       redirect("/");
     }

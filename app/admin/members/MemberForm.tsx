@@ -40,6 +40,20 @@ export function MemberForm({ user }: { user?: User }) {
         </div>
       </div>
 
+      <div>
+        <Label>이메일 (Google 로그인 매칭에 사용)</Label>
+        <input
+          name="email"
+          type="email"
+          defaultValue={user?.email ?? ""}
+          placeholder="user@gmail.com"
+          className="notion-input w-full border border-[var(--color-notion-rule)] focus:border-[var(--color-notion-accent)]"
+        />
+        <div className="text-xs text-[var(--color-notion-mute)] mt-1">
+          이 이메일과 같은 Google 계정으로 첫 로그인하면 자동으로 이 회원에 연결됩니다.
+        </div>
+      </div>
+
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <Label>권한 *</Label>
@@ -61,14 +75,22 @@ export function MemberForm({ user }: { user?: User }) {
       </div>
 
       <div>
-        <Label>{isEdit ? "비밀번호 변경 (비워 두면 유지)" : "초기 비밀번호 *"}</Label>
+        <Label>
+          {isEdit
+            ? "비밀번호 변경 (비워 두면 유지)"
+            : "초기 비밀번호 (Google 전용 계정이면 비워둘 수 있음)"}
+        </Label>
         <input
           name="password"
           type="password"
-          required={!isEdit}
           autoComplete="new-password"
           className="notion-input w-full border border-[var(--color-notion-rule)] focus:border-[var(--color-notion-accent)]"
         />
+        {!isEdit && (
+          <div className="text-xs text-[var(--color-notion-mute)] mt-1">
+            비워두면 무작위 값이 들어가며, 이 계정은 Google 로그인으로만 들어올 수 있습니다.
+          </div>
+        )}
       </div>
 
       <div>
