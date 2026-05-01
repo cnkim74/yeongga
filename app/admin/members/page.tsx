@@ -48,15 +48,16 @@ export default async function AdminMembers() {
         </div>
 
         <div className="overflow-x-auto -mx-2">
-          <table className="notion-table min-w-[820px]">
+          <table className="notion-table min-w-[1020px]">
             <thead>
               <tr>
-                <Th w="180">👤 이름</Th>
-                <Th w="140">🔑 아이디</Th>
+                <Th w="160">👤 이름</Th>
+                <Th w="120">🔑 아이디</Th>
                 <Th w="100">🏷 권한</Th>
-                <Th w="120">📅 가입일</Th>
-                <Th>📝 메모</Th>
-                <Th w="120"> </Th>
+                <Th w="200">✉️ 이메일</Th>
+                <Th w="110">🔐 로그인</Th>
+                <Th w="110">📅 가입일</Th>
+                <Th w="100"> </Th>
               </tr>
             </thead>
             <tbody>
@@ -83,11 +84,14 @@ export default async function AdminMembers() {
                         <span className="notion-tag tag-gray">회원</span>
                       )}
                     </td>
+                    <td className="text-xs text-[var(--color-notion-mute)] font-mono truncate max-w-[200px]">
+                      {u.email ?? <span className="opacity-50">—</span>}
+                    </td>
+                    <td>
+                      <ProviderTag provider={u.auth_provider} />
+                    </td>
                     <td className="text-[var(--color-notion-mute)]">
                       {u.joined_at ?? "—"}
-                    </td>
-                    <td className="text-[var(--color-notion-mute)] truncate max-w-xs">
-                      {u.note ?? "—"}
                     </td>
                     <td>
                       <div className="flex justify-end gap-1">
@@ -116,7 +120,7 @@ export default async function AdminMembers() {
             <tfoot>
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="text-xs text-[var(--color-notion-mute)] py-2"
                 >
                   COUNT {users.length}
@@ -132,6 +136,16 @@ export default async function AdminMembers() {
 
 function Th({ children, w }: { children: React.ReactNode; w?: string }) {
   return <th style={{ width: w ? `${w}px` : undefined }}>{children}</th>;
+}
+
+function ProviderTag({ provider }: { provider: string }) {
+  if (provider === "google") {
+    return <span className="notion-tag tag-blue">Google</span>;
+  }
+  if (provider === "naver") {
+    return <span className="notion-tag tag-green">Naver</span>;
+  }
+  return <span className="notion-tag tag-gray">로컬</span>;
 }
 
 function Prop({ k, v }: { k: string; v: string }) {

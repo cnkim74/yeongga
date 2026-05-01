@@ -179,6 +179,7 @@ export async function findOrLinkGoogleUser(input: {
   picture?: string | null;
 }): Promise<User | null> {
   const db = await getDb();
+  const email = input.email.trim().toLowerCase();
 
   let r = await db.execute({
     sql: `SELECT id FROM users WHERE auth_provider = 'google' AND provider_id = ? LIMIT 1`,
@@ -186,9 +187,10 @@ export async function findOrLinkGoogleUser(input: {
   });
 
   if (r.rows.length === 0) {
+    // 대소문자 무시하고 비교 (DB에 대문자 섞여 있어도 매칭되도록)
     r = await db.execute({
-      sql: `SELECT id FROM users WHERE email = ? LIMIT 1`,
-      args: [input.email],
+      sql: `SELECT id FROM users WHERE LOWER(TRIM(email)) = ? LIMIT 1`,
+      args: [email],
     });
   }
 
@@ -203,7 +205,7 @@ export async function findOrLinkGoogleUser(input: {
               email = ?,
               avatar_url = COALESCE(?, avatar_url)
           WHERE id = ?`,
-    args: [input.googleId, input.email, input.picture ?? null, id],
+    args: [input.googleId, email, input.picture ?? null, id],
   });
 
   return getUser(id);

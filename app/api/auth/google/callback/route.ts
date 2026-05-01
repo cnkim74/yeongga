@@ -50,12 +50,18 @@ export async function GET(req: NextRequest) {
       redirectUri,
     });
     userInfo = await fetchUserInfo(token.access_token);
+    console.log("[google oauth] userinfo", {
+      sub: userInfo.sub,
+      email: userInfo.email,
+      verified: userInfo.email_verified,
+    });
   } catch (e) {
-    console.error("[google oauth]", e);
+    console.error("[google oauth] token/userinfo error", e);
     return loginErrorRedirect(req, "구글 로그인 중 오류가 발생했습니다.");
   }
 
   if (!userInfo.email_verified) {
+    console.warn("[google oauth] email not verified", userInfo.email);
     return loginErrorRedirect(req, "이메일이 검증되지 않은 구글 계정입니다.");
   }
 
@@ -66,11 +72,27 @@ export async function GET(req: NextRequest) {
   });
 
   if (!user) {
+    console.warn(
+      "[google oauth] no matching user for email",
+      userInfo.email,
+      "googleId",
+      userInfo.sub
+    );
     return loginErrorRedirect(
       req,
-      "등록되지 않은 계정입니다. 운영진에게 문의해 주세요."
+      `등록되지 않은 계정입니다 (${userInfo.email}). 운영진에게 문의해 주세요.`
     );
   }
+
+  console.log(
+    "[google oauth] linked",
+    "userId",
+    user.id,
+    "username",
+    user.username,
+    "role",
+    user.role
+  );
 
   const res = NextResponse.redirect(new URL(next, req.url));
   const session = await getIronSession<SessionData>(req, res, sessionOptions);
