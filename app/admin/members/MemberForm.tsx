@@ -10,27 +10,50 @@ export function MemberForm({ user }: { user?: User }) {
     FormData
   >(saveMemberAction, {});
   const isEdit = !!user;
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    user?.avatar_url ?? null
-  );
-  const [removeAvatar, setRemoveAvatar] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(user?.avatar_url ?? "");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleFile(file: File) {
+    setUploadError(null);
+    if (!file.type.startsWith("image/")) {
+      setUploadError("이미지 파일만 올릴 수 있습니다.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload/member-avatar", {
+        method: "POST",
+        body: fd,
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setUploadError(err.error ?? "업로드에 실패했습니다.");
+        return;
+      }
+      const data = await res.json();
+      setAvatarUrl(data.url);
+    } catch (e) {
+      setUploadError(`업로드 중 오류: ${String(e)}`);
+    } finally {
+      setUploading(false);
+    }
+  }
 
   return (
-    <form action={formAction} className="space-y-6 max-w-2xl">
+    <form action={formAction} className="space-y-6 max-w-2xl pb-20">
       {user && <input type="hidden" name="id" value={user.id} />}
-      <input
-        type="hidden"
-        name="current_avatar"
-        value={user?.avatar_url ?? ""}
-      />
+      <input type="hidden" name="avatar_url" value={avatarUrl} />
 
       <div>
         <Label>프로필 사진</Label>
         <div className="flex items-start gap-4">
           <div className="w-20 h-20 rounded-full overflow-hidden bg-[var(--color-notion-hover)] border border-[var(--color-notion-rule)] shrink-0">
-            {avatarPreview && !removeAvatar ? (
+            {avatarUrl ? (
               <img
-                src={avatarPreview}
+                src={avatarUrl}
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -42,34 +65,36 @@ export function MemberForm({ user }: { user?: User }) {
           </div>
           <div className="flex-1 min-w-0">
             <input
-              name="avatar"
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept="image/*"
               onChange={(e) => {
                 const f = e.currentTarget.files?.[0];
-                if (f) {
-                  setAvatarPreview(URL.createObjectURL(f));
-                  setRemoveAvatar(false);
-                }
+                e.currentTarget.value = "";
+                if (f) handleFile(f);
               }}
-              className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-[var(--color-notion-text)] file:text-white file:cursor-pointer"
+              disabled={uploading}
+              className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-[var(--color-notion-text)] file:text-white file:cursor-pointer disabled:opacity-50"
             />
+            {uploading && (
+              <div className="text-xs text-[var(--color-notion-accent)] mt-2">
+                ⏳ 업로드 중…
+              </div>
+            )}
+            {uploadError && (
+              <div className="text-xs text-[#c4554d] mt-2">{uploadError}</div>
+            )}
             <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">
-              jpg / png / webp / gif · 최대 12MB · 정사각형 권장 (원형으로 표시).
-              {user?.avatar_url && " 교체하지 않으려면 비워 두세요."}
+              jpg / png / webp / gif / heic 등 · 최대 12MB · 정사각형 권장.
+              파일을 고르면 즉시 업로드됩니다.
             </div>
-            {user?.avatar_url && (
-              <label className="inline-flex items-center gap-2 mt-2 text-xs">
-                <input
-                  type="checkbox"
-                  name="remove_avatar"
-                  checked={removeAvatar}
-                  onChange={(e) => setRemoveAvatar(e.target.checked)}
-                />
-                <span className="text-[var(--color-notion-mute)]">
-                  기존 사진 삭제
-                </span>
-              </label>
+            {avatarUrl && (
+              <button
+                type="button"
+                onClick={() => setAvatarUrl("")}
+                className="inline-flex items-center gap-2 mt-2 text-xs text-[#c4554d] hover:underline"
+              >
+                ✕ 사진 빼기
+              </button>
             )}
           </div>
         </div>
@@ -169,15 +194,19 @@ export function MemberForm({ user }: { user?: User }) {
         </div>
       )}
 
-      <div className="flex gap-2 pt-2">
+      {/* 모바일에서 항상 보이는 sticky 저장 바 */}
+      <div className="sticky bottom-0 -mx-6 sm:mx-0 px-6 sm:px-0 pt-3 pb-4 sm:pt-2 sm:pb-0 bg-white border-t sm:border-t-0 border-[var(--color-notion-rule)] flex gap-2">
         <button
           type="submit"
-          disabled={pending}
-          className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] disabled:opacity-50 px-4 h-9"
+          disabled={pending || uploading}
+          className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] disabled:opacity-50 px-5 h-10 text-sm font-medium"
         >
-          {pending ? "저장 중…" : "저장"}
+          {pending ? "저장 중…" : uploading ? "업로드 끝나는 중…" : "저장"}
         </button>
-        <a href="/admin/members" className="notion-icon-btn h-9">
+        <a
+          href="/admin/members"
+          className="notion-icon-btn h-10 px-4 text-sm border border-[var(--color-notion-rule)]"
+        >
           취소
         </a>
       </div>
