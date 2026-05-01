@@ -65,6 +65,16 @@ export async function saveMemberAction(
       newPassword: password || null,
     });
     if (!r.ok) return { error: r.error };
+
+    // 사후 검증: DB에 진짜로 들어갔는지 확인
+    const verify = await getUser(id);
+    console.log("[member save] post-update", {
+      id,
+      stored_avatar_url_len: verify?.avatar_url?.length ?? 0,
+      stored_avatar_url_prefix: verify?.avatar_url?.slice(0, 60) ?? null,
+      stored_email: verify?.email,
+      stored_name: verify?.name,
+    });
   } else {
     const r = await createUser({
       username,
@@ -77,6 +87,7 @@ export async function saveMemberAction(
       note,
     });
     if (!r.ok) return { error: r.error };
+    console.log("[member save] post-insert id=", r.id);
   }
 
   refresh();
