@@ -745,5 +745,3 @@ html[data-reading="5"] { --reading-size: var(--reading-5); }
   outline-offset: 2px;
   border-radius: 4px;
 }
-
-.hidden { display: none; }
