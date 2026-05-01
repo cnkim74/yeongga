@@ -7,7 +7,6 @@ export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|css|js|woff|woff2|ttf)).*)",
   ],
-  runtime: "nodejs",
 };
 
 const REALM = "Yeongga Archive (in development)";
@@ -36,7 +35,7 @@ function checkBasicAuth(req: NextRequest, expectedUser: string, expectedPass: st
   }
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   // ─── 1. 사이트 전체 비밀번호 게이트 (개발 중에만 사용) ──────────
   // SITE_PASSWORD 환경변수가 있으면 활성화. 없애면 자동으로 풀림.
   const sitePass = process.env.SITE_PASSWORD;
