@@ -55,7 +55,7 @@ export function ChapterIcon({
           <path d="M34 50c0-6 4-10 10-10s10 4 10 10" />
         </svg>
       );
-    case "natnal": // 낫낱 — 카메라 / 사진
+    case "jachwi": // 자취 — 카메라 / 사진
       return (
         <svg viewBox="0 0 64 64" fill="none" stroke={stroke} strokeWidth={sw}
              strokeLinecap="round" strokeLinejoin="round" className={className}>

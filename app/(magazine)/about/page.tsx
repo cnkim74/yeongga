@@ -41,7 +41,7 @@ export default function AboutPage() {
             <ul>
               <li>
                 글은 다섯 개의 장(章)으로 나누어 두었습니다 — <strong>연기,
-                모임, 글, 사람, 낫낱.</strong> 위쪽의 <em>아카이브</em>
+                모임, 글, 사람, 자취.</strong> 위쪽의 <em>아카이브</em>
                 메뉴에서 장을 골라 들어가실 수 있습니다.
               </li>
               <li>

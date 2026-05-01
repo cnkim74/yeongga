@@ -230,6 +230,11 @@ async function init(client: Client) {
     );
   }
 
+  // 마이그레이션: natnal → jachwi 장 이름 변경 (멱등 — 매칭되는 행이 없으면 no-op)
+  await client.execute(
+    "UPDATE articles SET chapter = 'jachwi' WHERE chapter = 'natnal'"
+  );
+
   // 시드: 글 (기존 content/articles/<chapter>/*.md 파일을 DB로 일회 이관)
   const articleCount = (
     await client.execute("SELECT COUNT(*) as n FROM articles")

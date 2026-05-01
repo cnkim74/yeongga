@@ -11,7 +11,7 @@ content/
     ├── moim/         ← 二. 모임
     ├── geul/         ← 三. 글
     ├── saram/        ← 四. 사람
-    └── natnal/       ← 五. 낫낱
+    └── jachwi/       ← 五. 자취
 ```
 
 ## 글 한 편 추가하기

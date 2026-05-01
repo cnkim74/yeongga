@@ -36,11 +36,11 @@ export const chapters: Chapter[] = [
     description: "한 분 한 분의 이야기를 기록합니다.",
   },
   {
-    slug: "natnal",
+    slug: "jachwi",
     number: "五",
-    title: "낫낱",
+    title: "자취",
     subtitle: "사진과 자료",
-    description: "행사 사진, 자료, 문서 모음.",
+    description: "행사 사진, 자료, 문서 모음. 한 사람·한 모임이 남긴 발자취.",
   },
 ];
 
