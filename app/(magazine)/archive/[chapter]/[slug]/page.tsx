@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { getChapter } from "@/lib/chapters";
 import {
   getArticleBySlug,
   listChapterArticles,
 } from "@/lib/articles-db";
 import { getCurrentUser } from "@/lib/auth";
+import { listUsers } from "@/lib/users-db";
 
 export const dynamic = "force-dynamic";
 
@@ -36,10 +38,16 @@ export default async function ArticlePage({
   const user = await getCurrentUser();
   const isLocked = article.visibility === "members-only" && !user;
 
-  const all = await listChapterArticles(chapter);
+  const [all, users] = await Promise.all([
+    listChapterArticles(chapter),
+    listUsers(),
+  ]);
   const idx = all.findIndex((a) => a.slug === slug);
   const prev = idx >= 0 ? all[idx + 1] : undefined;
   const next = idx > 0 ? all[idx - 1] : undefined;
+  const authorAvatar = article.author
+    ? users.find((u) => u.name === article.author)?.avatar_url ?? null
+    : null;
 
   return (
     <article>
@@ -72,11 +80,20 @@ export default async function ArticlePage({
               {article.subtitle}
             </p>
           )}
-          <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-[var(--color-ink-mute)]">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-ink-mute)]">
             <span className="font-mono tabular-nums">
               {formatDate(article.date)}
             </span>
-            {article.author && <span>글 · {article.author}</span>}
+            {article.author && (
+              <span className="inline-flex items-center gap-2">
+                <AuthorAvatar
+                  src={authorAvatar}
+                  name={article.author}
+                  size={28}
+                />
+                <span>글 · {article.author}</span>
+              </span>
+            )}
           </div>
         </div>
       </header>

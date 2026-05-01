@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChapterIcon } from "@/components/ChapterIcon";
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters, getChapter } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
+import { listUsers } from "@/lib/users-db";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +34,11 @@ export default async function ChapterPage({
   const { chapter } = await params;
   const meta = getChapter(chapter);
   if (!meta) notFound();
-  const articles = await listChapterArticles(chapter);
+  const [articles, users] = await Promise.all([
+    listChapterArticles(chapter),
+    listUsers(),
+  ]);
+  const avatarByName = new Map(users.map((u) => [u.name, u.avatar_url]));
 
   return (
     <>
@@ -117,9 +123,19 @@ export default async function ChapterPage({
                           {a.excerpt}
                         </p>
                       )}
-                      <div className="mt-4 text-sm text-[var(--color-ink-mute)]">
-                        {formatDate(a.date)}
-                        {a.author && ` · ${a.author}`}
+                      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-[var(--color-ink-mute)]">
+                        <span>{formatDate(a.date)}</span>
+                        {a.author && (
+                          <span className="inline-flex items-center gap-2">
+                            <span aria-hidden="true">·</span>
+                            <AuthorAvatar
+                              src={avatarByName.get(a.author)}
+                              name={a.author}
+                              size={22}
+                            />
+                            <span>{a.author}</span>
+                          </span>
+                        )}
                       </div>
                     </Link>
                   </div>

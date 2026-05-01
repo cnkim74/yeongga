@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { ChapterIcon } from "@/components/ChapterIcon";
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
+import { listUsers } from "@/lib/users-db";
 
 export const dynamic = "force-dynamic";
 
@@ -10,12 +12,16 @@ export const metadata = {
 };
 
 export default async function ArchiveIndex() {
-  const sections = await Promise.all(
-    chapters.map(async (c) => ({
-      chapter: c,
-      articles: await listChapterArticles(c.slug),
-    }))
-  );
+  const [sections, users] = await Promise.all([
+    Promise.all(
+      chapters.map(async (c) => ({
+        chapter: c,
+        articles: await listChapterArticles(c.slug),
+      }))
+    ),
+    listUsers(),
+  ]);
+  const avatarByName = new Map(users.map((u) => [u.name, u.avatar_url]));
 
   return (
     <>
@@ -99,10 +105,19 @@ export default async function ArchiveIndex() {
                               </p>
                             )}
                           </div>
-                          <div className="shrink-0 text-right text-xs sm:text-sm text-[var(--color-ink-mute)] font-mono tabular-nums">
-                            <div>{formatDate(a.date)}</div>
+                          <div className="shrink-0 text-right text-xs sm:text-sm text-[var(--color-ink-mute)]">
+                            <div className="font-mono tabular-nums">
+                              {formatDate(a.date)}
+                            </div>
                             {a.author && (
-                              <div className="font-sans">{a.author}</div>
+                              <div className="mt-1 inline-flex items-center gap-1.5">
+                                <AuthorAvatar
+                                  src={avatarByName.get(a.author)}
+                                  name={a.author}
+                                  size={20}
+                                />
+                                <span>{a.author}</span>
+                              </div>
                             )}
                           </div>
                         </Link>
