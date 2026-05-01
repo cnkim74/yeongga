@@ -142,3 +142,41 @@ export async function deleteUser(id: number) {
   const db = await getDb();
   await db.execute({ sql: "DELETE FROM users WHERE id = ?", args: [id] });
 }
+
+// Google OAuth — provider_id 또는 email로 기존 회원을 찾아 연결.
+// 미등록(매칭되는 회원 없음) 이면 null 반환 → 호출자가 거부 처리.
+export async function findOrLinkGoogleUser(input: {
+  googleId: string;
+  email: string;
+  picture?: string | null;
+}): Promise<User | null> {
+  const db = await getDb();
+
+  let r = await db.execute({
+    sql: `SELECT id FROM users WHERE auth_provider = 'google' AND provider_id = ? LIMIT 1`,
+    args: [input.googleId],
+  });
+
+  if (r.rows.length === 0) {
+    r = await db.execute({
+      sql: `SELECT id FROM users WHERE email = ? LIMIT 1`,
+      args: [input.email],
+    });
+  }
+
+  if (r.rows.length === 0) return null;
+
+  const id = Number(r.rows[0].id);
+
+  await db.execute({
+    sql: `UPDATE users
+          SET auth_provider = 'google',
+              provider_id = ?,
+              email = ?,
+              avatar_url = COALESCE(?, avatar_url)
+          WHERE id = ?`,
+    args: [input.googleId, input.email, input.picture ?? null, id],
+  });
+
+  return getUser(id);
+}

@@ -10,11 +10,12 @@ export const metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; need?: string }>;
+  searchParams: Promise<{ next?: string; need?: string; error?: string }>;
 }) {
   const sp = await searchParams;
   const next = sp.next ?? "/";
   const needAdmin = sp.need === "admin";
+  const initialError = sp.error;
 
   const user = await getCurrentUser();
   if (user) {
@@ -74,7 +75,7 @@ export default async function LoginPage({
             영가회 계정으로 들어오세요.
           </p>
 
-          <LoginForm next={next} needAdmin={needAdmin} />
+          <LoginForm next={next} needAdmin={needAdmin} initialError={initialError} />
 
           <div className="mt-8 text-sm text-[var(--color-ink-mute)] text-center">
             계정이 없으신가요? 운영진에게 요청하시면 계정을 발급해 드립니다.
