@@ -35,7 +35,14 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           className="text-white hover:opacity-90 transition-opacity"
           aria-label="영가회 아카이브 — 표지"
         >
-          <Logo variant="horizontal" size="sm" />
+          {/* 모바일: 로고만 (공간 절약) */}
+          <span className="md:hidden">
+            <Logo variant="horizontal" size="sm" />
+          </span>
+          {/* 태블릿+: 키운 로고 + 創立 45周年 부제 노출 */}
+          <span className="hidden md:inline-flex">
+            <Logo variant="horizontal" size="md" showAnniversary />
+          </span>
         </Link>
 
         <ul className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
