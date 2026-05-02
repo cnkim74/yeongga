@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata = {
@@ -7,8 +8,15 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <>
-      <section className="bg-[var(--color-bg-soft)] pt-40 pb-24 sm:pb-32">
-        <div className="mx-auto max-w-4xl px-6">
+      <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-24 sm:pb-32">
+        <Image
+          src="/andong-hahoe-panorama.jpg"
+          alt=""
+          fill
+          className="object-cover opacity-20 select-none pointer-events-none"
+          priority
+        />
+        <div className="relative mx-auto max-w-4xl px-6">
           <div className="kicker text-[var(--color-ink-mute)] mb-5">
             ABOUT · 會 紹介
           </div>
