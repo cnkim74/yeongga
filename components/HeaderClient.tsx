@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ReadingSizeControl } from "./ReadingSizeControl";
 import { UserMenu } from "./UserMenu";
+import { Logo } from "./Logo";
 import type { SessionUser } from "@/lib/session";
 
 const NAV = [
@@ -29,16 +30,12 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
   return (
     <>
       <nav className="pill-nav" aria-label="주 메뉴">
-        <Link href="/" className="flex items-center gap-2 group">
-          <span
-            className="text-white font-bold text-lg tracking-tight"
-            style={{ letterSpacing: "-0.02em" }}
-          >
-            永嘉
-          </span>
-          <span className="hidden sm:inline text-white/70 text-sm font-medium">
-            YEONGGA
-          </span>
+        <Link
+          href="/"
+          className="text-white hover:opacity-90 transition-opacity"
+          aria-label="영가회 아카이브 — 표지"
+        >
+          <Logo variant="horizontal" size="sm" />
         </Link>
 
         <ul className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LogoMark } from "../Logo";
 
 const NAV: { section: string; items: { href: string; icon: string; label: string }[] }[] = [
   {
@@ -35,14 +36,12 @@ export function AdminSidebar() {
 
   return (
     <aside className="notion-sidebar w-[260px] shrink-0 hidden md:flex flex-col h-screen sticky top-0">
-      <div className="px-3 py-3 flex items-center gap-2 border-b border-[var(--color-notion-rule)]">
-        <div className="h-7 w-7 rounded bg-[var(--color-ink)] text-[var(--color-paper)] grid place-items-center text-sm">
-          永
-        </div>
+      <div className="px-3 py-3 flex items-center gap-2.5 border-b border-[var(--color-notion-rule)]">
+        <LogoMark size={32} inverse className="shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold truncate">영가회 관리실</div>
-          <div className="text-xs text-[var(--color-notion-mute)] truncate">
-            workspace · 비공개
+          <div className="text-[10px] text-[var(--color-notion-mute)] truncate font-mono uppercase tracking-wider">
+            YEONGGA · ADMIN
           </div>
         </div>
       </div>
