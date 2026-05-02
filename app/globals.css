@@ -294,8 +294,8 @@ html[data-reading="5"] { --reading-size: var(--reading-5); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 8px 6px 22px;
-  height: 56px;
+  padding: 8px 8px 8px 22px;
+  height: 68px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
 }
 

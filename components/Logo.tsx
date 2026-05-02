@@ -101,20 +101,6 @@ export function Logo({
       >
         YEONGGA · ARCHIVE
       </div>
-      {showAnniversary && (
-        <div
-          style={{
-            fontSize: s.sub2,
-            opacity: 0.55,
-            letterSpacing: `${s.subTracking * 0.85}em`,
-            fontFamily:
-              "'Noto Serif KR','Nanum Myeongjo',var(--font-serif),serif",
-            marginTop: 4,
-          }}
-        >
-          {ANNIVERSARY_LABEL}
-        </div>
-      )}
     </div>
   );
 
@@ -171,6 +157,23 @@ export function Logo({
     >
       <LogoMark size={s.mark} inverse={inverse} />
       {textBlock}
+      {showAnniversary && (
+        <div
+          style={{
+            borderLeft: "1px solid rgba(255,255,255,0.22)",
+            paddingLeft: s.gap,
+            fontSize: s.sub2,
+            opacity: 0.55,
+            letterSpacing: `${s.subTracking * 0.85}em`,
+            fontFamily:
+              "'Noto Serif KR','Nanum Myeongjo',var(--font-serif),serif",
+            lineHeight: 1.5,
+            whiteSpace: "nowrap",
+          }}
+        >
+          創立<br />45周年
+        </div>
+      )}
     </div>
   );
 }

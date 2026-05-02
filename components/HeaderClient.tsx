@@ -94,7 +94,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
 
       {sizeOpen && (
         <div
-          className="fixed top-[76px] right-3 z-50 bg-white border border-[var(--color-rule)] rounded-2xl shadow-lg p-3"
+          className="fixed top-[88px] right-3 z-50 bg-white border border-[var(--color-rule)] rounded-2xl shadow-lg p-3"
           role="dialog"
           aria-label="글자 크기"
         >
