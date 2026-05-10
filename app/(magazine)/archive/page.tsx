@@ -16,7 +16,7 @@ export default async function ArchiveIndex() {
     Promise.all(
       chapters.map(async (c) => ({
         chapter: c,
-        articles: await listChapterArticles(c.slug),
+        articles: c.comingSoon ? [] : await listChapterArticles(c.slug),
       }))
     ),
     listUsers(),
@@ -34,7 +34,7 @@ export default async function ArchiveIndex() {
             장(章)으로 읽는<br />영가회
           </h1>
           <p className="text-base sm:text-lg text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
-            글들은 다섯 개의 장으로 나누어 갈무리해 두었습니다. 장을
+            글들은 여덟 개의 장으로 나누어 갈무리해 두었습니다. 장을
             골라 들어가시면 해당 장에 모인 글들을 한눈에 보실 수 있습니다.
           </p>
         </div>
@@ -54,27 +54,44 @@ export default async function ArchiveIndex() {
                     <div className="kicker text-[var(--color-ink-mute)] mb-2">
                       {c.number} · {c.subtitle}
                     </div>
-                    <Link
-                      href={`/archive/${c.slug}`}
-                      className="display-md text-3xl sm:text-4xl hover:text-[var(--color-accent)] transition"
-                    >
-                      {c.title}
-                    </Link>
+                    {c.comingSoon ? (
+                      <span className="display-md text-3xl sm:text-4xl text-[var(--color-ink-mute)]">
+                        {c.title}
+                      </span>
+                    ) : (
+                      <Link
+                        href={`/archive/${c.slug}`}
+                        className="display-md text-3xl sm:text-4xl hover:text-[var(--color-accent)] transition"
+                      >
+                        {c.title}
+                      </Link>
+                    )}
                   </div>
                 </div>
                 <p className="text-[var(--color-ink-soft)] leading-relaxed mb-6">
                   {c.description}
                 </p>
-                <Link
-                  href={`/archive/${c.slug}`}
-                  className="text-sm underline underline-offset-4 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
-                >
-                  이 장 전체 보기 ({articles.length}편) →
-                </Link>
+                {!c.comingSoon && (
+                  <Link
+                    href={`/archive/${c.slug}`}
+                    className="text-sm underline underline-offset-4 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+                  >
+                    이 장 전체 보기 ({articles.length}편) →
+                  </Link>
+                )}
               </div>
 
               <div className="lg:col-span-8">
-                {articles.length === 0 ? (
+                {c.comingSoon ? (
+                  <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-12 text-center">
+                    <div className="inline-block text-xs tracking-widest text-[var(--color-ink-mute)] border border-[var(--color-rule)] rounded-full px-3 py-1 mb-4">
+                      準備中
+                    </div>
+                    <p className="text-[var(--color-ink-mute)] text-sm leading-relaxed">
+                      {c.description}
+                    </p>
+                  </div>
+                ) : articles.length === 0 ? (
                   <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-12 text-center text-[var(--color-ink-mute)]">
                     아직 등재된 글이 없습니다.
                   </div>

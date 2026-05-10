@@ -267,7 +267,7 @@ async function init(client: Client) {
       "오래된 인연의\n새로운 기록",
       "스물여덟 해 동안 쌓아 온 영가회의 발자취를, 한 권의 매거진처럼 펼쳐 봅니다.",
       "회장의 인사 읽기",
-      "/archive/yeon-gi/hoejang-insa",
+      "/archive/yeongi/hoejang-insa",
       1
     );
     await insert(
@@ -290,9 +290,17 @@ async function init(client: Client) {
     );
   }
 
-  // 마이그레이션: natnal → jachwi 장 이름 변경 (멱등 — 매칭되는 행이 없으면 no-op)
+  // 마이그레이션: natnal → jachwi (멱등)
   await client.execute(
     "UPDATE articles SET chapter = 'jachwi' WHERE chapter = 'natnal'"
+  );
+  // 마이그레이션: yeon-gi → yeongi (멱등)
+  await client.execute(
+    "UPDATE articles SET chapter = 'yeongi' WHERE chapter = 'yeon-gi'"
+  );
+  // 마이그레이션: jachwi → jachui (멱등)
+  await client.execute(
+    "UPDATE articles SET chapter = 'jachui' WHERE chapter = 'jachwi'"
   );
 
   // 마이그레이션: 마크다운 본문 → HTML (멱등 — 이미 HTML인 행은 건너뜀)
