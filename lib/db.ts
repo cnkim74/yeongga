@@ -453,7 +453,7 @@ async function init(client: Client) {
   }
 
   // 시드: 페이지 배경 (멱등 — INSERT OR IGNORE)
-  for (const page of ["home", "archive", "search", "videos", "about"]) {
+  for (const page of ["home", "archive", "search", "videos", "about", "ebooks"]) {
     await client.execute({
       sql: `INSERT OR IGNORE INTO page_backgrounds (page, image_path, opacity, position, active)
             VALUES (?, ?, 0.2, 'center', 0)`,

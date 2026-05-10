@@ -10,7 +10,7 @@ export type PageBackground = {
   active: boolean;
 };
 
-const PAGES = ["home", "archive", "search", "videos", "about"] as const;
+const PAGES = ["home", "archive", "search", "videos", "about", "ebooks"] as const;
 export type PageSlug = (typeof PAGES)[number];
 
 function rowToBg(row: Record<string, unknown>): PageBackground {

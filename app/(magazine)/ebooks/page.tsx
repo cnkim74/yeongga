@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { listEbooks } from "@/lib/ebooks-db";
+import { PageHeroBg } from "@/components/PageHeroBg";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export default async function EbooksPage() {
     <>
       {/* HERO */}
       <section className="relative pt-40 pb-24 sm:pb-32 overflow-hidden bg-[var(--color-bg-soft)]">
+        <PageHeroBg page="ebooks" />
         <div className="mx-auto max-w-6xl px-6">
           <div className="kicker text-[var(--color-ink-mute)] mb-4">서재 · e-Book</div>
           <h1 className="display text-5xl sm:text-7xl mb-6">이북 서재</h1>
