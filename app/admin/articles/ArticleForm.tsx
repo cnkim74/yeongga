@@ -52,7 +52,7 @@ export function ArticleForm({
     }
   }
 
-  // 붙여넣기 등으로 쉼표가 포함된 값이 들어오면 즉시 분리
+  // onChange: 직접 타이핑 중 쉼표가 들어오면 즉시 분리 (IME 외 경우)
   function onTagChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value;
     if (val.includes(",")) {
@@ -61,6 +61,17 @@ export function ArticleForm({
     } else {
       setTagInput(val);
     }
+  }
+
+  // onPaste: 붙여넣기 전용 — 쉼표가 있으면 무조건 분리 등록
+  function onTagPaste(e: React.ClipboardEvent<HTMLInputElement>) {
+    const text = e.clipboardData.getData("text");
+    if (!text.includes(",")) return; // 쉼표 없으면 기본 동작 유지
+    e.preventDefault();
+    // 기존 입력 중인 텍스트가 있으면 함께 처리
+    const combined = tagInput ? `${tagInput},${text}` : text;
+    addTags(combined);
+    setTagInput("");
   }
 
   const today = new Date().toISOString().slice(0, 10);
@@ -220,6 +231,7 @@ export function ArticleForm({
             value={tagInput}
             onChange={onTagChange}
             onKeyDown={onTagKeyDown}
+            onPaste={onTagPaste}
             onBlur={() => {
               if (tagInput.trim()) {
                 addTags(tagInput);
