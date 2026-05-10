@@ -68,7 +68,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           {/* e-Book 바로가기 */}
           <Link
             href="/ebooks"
-            className="pill-nav-icon hidden sm:inline-flex items-center gap-1.5 px-3"
+            className="pill-nav-icon hidden sm:inline-flex items-center gap-1.5 px-3 whitespace-nowrap"
             aria-label="e-Book 서재"
             title="e-Book"
           >
@@ -88,6 +88,9 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
             </svg>
             <span className="text-xs font-medium leading-none">e-Book</span>
           </Link>
+
+          {/* 구분 여백 */}
+          <span className="hidden sm:block w-px h-4 bg-white/25 mx-1" aria-hidden="true" />
 
           <button
             type="button"
