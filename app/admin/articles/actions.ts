@@ -10,6 +10,7 @@ import {
   type ArticleInput,
   type Visibility,
 } from "@/lib/articles-db";
+import { setTagsForArticle } from "@/lib/tags-db";
 import { chapters } from "@/lib/chapters";
 
 export type ArticleFormState = { error?: string };
@@ -81,15 +82,29 @@ export async function saveArticleAction(
   const parsed = readInput(formData);
   if ("_error" in parsed) return { error: parsed._error };
 
+  // 태그 파싱 (쉼표 구분 문자열 → 배열)
+  const tagsRaw = String(formData.get("tags") ?? "");
+  const tags = tagsRaw
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  let articleId: number;
   if (id) {
     const r = await updateArticle(id, parsed);
     if (!r.ok) return { error: r.error };
+    articleId = id;
   } else {
     const r = await createArticle(parsed);
     if (!r.ok) return { error: r.error };
+    articleId = r.id;
   }
 
+  await setTagsForArticle(articleId, tags);
+
   refresh(parsed.chapter, parsed.slug);
+  revalidatePath("/search");
+  revalidatePath("/admin/tags");
   redirect("/admin/articles");
 }
 

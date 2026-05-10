@@ -23,7 +23,32 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(git remote *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git -C /Volumes/CNKim/claude/yeongga/ add -A)",
+      "Bash(git -C /Volumes/CNKim/claude/yeongga/ status)",
+      "Bash(git -C /Volumes/CNKim/claude/yeongga/ reset .claude/settings.local.json)",
+      "Bash(git -C /Volumes/CNKim/claude/yeongga/ commit -m ' *)",
+      "Bash(git -C /Volumes/CNKim/claude/yeongga/ push)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "WebSearch",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "Bash(curl -L \"https://upload.wikimedia.org/wikipedia/commons/6/60/Hahoe_Folk_Village_Panorama.jpg\" -o /Volumes/CNKim/claude/yeongga/public/andong-hahoe-panorama.jpg --progress-bar)",
+      "Bash(curl -L \"https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Hahoe_Folk_Village_Panorama.jpg/1200px-Hahoe_Folk_Village_Panorama.jpg\" -o /Volumes/CNKim/claude/yeongga/public/andong-hahoe-panorama.jpg --progress-bar)",
+      "Bash(xxd /Volumes/CNKim/claude/yeongga/public/andong-hahoe-panorama.jpg)",
+      "Bash(curl -sI \"https://upload.wikimedia.org/wikipedia/commons/4/41/Korea-Andong-Hahoe_Folk_Village-01.jpg\")",
+      "Bash(curl -sI \"https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Korea-Andong-Hahoe_Folk_Village-01.jpg/1280px-Korea-Andong-Hahoe_Folk_Village-01.jpg\")",
+      "Bash(curl -L \"https://upload.wikimedia.org/wikipedia/commons/4/41/Korea-Andong-Hahoe_Folk_Village-01.jpg\" -o /Volumes/CNKim/claude/yeongga/public/andong-hahoe-panorama.jpg)",
+      "Bash(npx next *)",
+      "Bash(npx tsc *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(ls ~/yeongga-archive 2>/dev/null && echo \"EXISTS\" || echo \"NOT_EXISTS\")",
+      "Bash(touch ~/yeongga-archive/images/raw/.gitkeep ~/yeongga-archive/images/processed/.gitkeep ~/yeongga-archive/ocr/.gitkeep ~/yeongga-archive/data/.gitkeep && python3 --version)",
+      "Bash(python3 -m venv .venv)",
+      "Bash(.venv/bin/pip install *)",
+      "Read(//Volumes/CNKim/claude/영가회 자료/**)",
+      "Bash(ln -sf '/Volumes/CNKim/claude/영가회 자료/영가회40년사_마스터_발행계획_260편_v2.xlsx' '~/yeongga-archive/source/master_plan_v2.xlsx')",
+      "Bash(.venv/bin/python3 -)"
     ]
   }
 }

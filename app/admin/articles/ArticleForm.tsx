@@ -1,17 +1,46 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { saveArticleAction, type ArticleFormState } from "./actions";
 import { chapters } from "@/lib/chapters";
 import type { Article } from "@/lib/articles-db";
 import { ArticleEditor } from "./ArticleEditor";
 
-export function ArticleForm({ article }: { article?: Article }) {
+export function ArticleForm({
+  article,
+  initialTags = [],
+}: {
+  article?: Article;
+  initialTags?: string[];
+}) {
   const [state, formAction, pending] = useActionState<ArticleFormState, FormData>(
     saveArticleAction,
     {}
   );
   const [bodyHTML, setBodyHTML] = useState(article?.body ?? "");
+  const [tags, setTags] = useState<string[]>(initialTags);
+  const [tagInput, setTagInput] = useState("");
+  const tagRef = useRef<HTMLInputElement>(null);
+
+  function addTag(raw: string) {
+    const t = raw.trim().replace(/,/g, "");
+    if (!t || tags.includes(t)) return;
+    setTags((prev) => [...prev, t]);
+  }
+
+  function removeTag(t: string) {
+    setTags((prev) => prev.filter((x) => x !== t));
+  }
+
+  function onTagKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addTag(tagInput);
+      setTagInput("");
+    } else if (e.key === "Backspace" && !tagInput && tags.length > 0) {
+      setTags((prev) => prev.slice(0, -1));
+    }
+  }
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -137,6 +166,51 @@ export function ArticleForm({ article }: { article?: Article }) {
             />
             🔒 회원 전용
           </label>
+        </div>
+      </div>
+
+      {/* ─ 키워드 태그 ─ */}
+      <div>
+        <Label>키워드 태그</Label>
+        <input type="hidden" name="tags" value={tags.join(",")} />
+        <div
+          className="notion-input flex flex-wrap gap-1.5 p-2 border border-[var(--color-notion-rule)] focus-within:border-[var(--color-notion-accent)] cursor-text min-h-[40px]"
+          onClick={() => tagRef.current?.focus()}
+        >
+          {tags.map((t) => (
+            <span
+              key={t}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-[var(--color-notion-bg-soft)] border border-[var(--color-notion-rule)] text-[var(--color-notion-ink)]"
+            >
+              {t}
+              <button
+                type="button"
+                onClick={() => removeTag(t)}
+                className="opacity-50 hover:opacity-100 leading-none"
+                aria-label={`태그 "${t}" 제거`}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+          <input
+            ref={tagRef}
+            type="text"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={onTagKeyDown}
+            onBlur={() => {
+              if (tagInput.trim()) {
+                addTag(tagInput);
+                setTagInput("");
+              }
+            }}
+            placeholder={tags.length === 0 ? "태그 입력 후 Enter 또는 쉼표" : ""}
+            className="flex-1 min-w-[120px] bg-transparent outline-none text-sm placeholder:text-[var(--color-notion-mute)]"
+          />
+        </div>
+        <div className="text-xs text-[var(--color-notion-mute)] mt-1">
+          Enter 또는 쉼표(,)로 추가. 검색 및 필터링에 활용됩니다.
         </div>
       </div>
 

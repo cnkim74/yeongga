@@ -80,6 +80,13 @@ async function init(client: Client) {
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       UNIQUE(chapter, slug)
     );
+
+    CREATE TABLE IF NOT EXISTS article_tags (
+      article_id INTEGER NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+      tag TEXT NOT NULL,
+      PRIMARY KEY (article_id, tag)
+    );
+    CREATE INDEX IF NOT EXISTS idx_article_tags_tag ON article_tags(tag);
   `);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──

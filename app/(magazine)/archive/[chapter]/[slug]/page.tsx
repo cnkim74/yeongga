@@ -8,6 +8,7 @@ import {
 } from "@/lib/articles-db";
 import { getCurrentUser } from "@/lib/auth";
 import { listUsers } from "@/lib/users-db";
+import { getTagsForArticle } from "@/lib/tags-db";
 
 export const dynamic = "force-dynamic";
 
@@ -38,9 +39,10 @@ export default async function ArticlePage({
   const user = await getCurrentUser();
   const isLocked = article.visibility === "members-only" && !user;
 
-  const [all, users] = await Promise.all([
+  const [all, users, tags] = await Promise.all([
     listChapterArticles(chapter),
     listUsers(),
+    getTagsForArticle(article.id),
   ]);
   const idx = all.findIndex((a) => a.slug === slug);
   const prev = idx >= 0 ? all[idx + 1] : undefined;
@@ -95,6 +97,19 @@ export default async function ArticlePage({
               </span>
             )}
           </div>
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-5">
+              {tags.map((t) => (
+                <Link
+                  key={t}
+                  href={`/search?tag=${encodeURIComponent(t)}`}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-xs border border-[var(--color-rule)] text-[var(--color-ink-mute)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)] transition"
+                >
+                  # {t}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 

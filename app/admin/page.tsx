@@ -5,15 +5,19 @@ import { listVideos } from "@/lib/videos-db";
 import { listUsers } from "@/lib/users-db";
 import { getCurrentUser } from "@/lib/auth";
 import { countAllArticles } from "@/lib/articles-db";
+import { listAllTags } from "@/lib/tags-db";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
   const me = await getCurrentUser();
-  const slides = await listSlides();
-  const videos = await listVideos();
-  const users = await listUsers();
-  const totalArticles = await countAllArticles();
+  const [slides, videos, users, totalArticles, allTags] = await Promise.all([
+    listSlides(),
+    listVideos(),
+    listUsers(),
+    countAllArticles(),
+    listAllTags(),
+  ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
   const featuredVideo = videos.find((v) => v.featured);
@@ -65,6 +69,13 @@ export default async function AdminHome() {
             title="회원 명부"
             stat={`${users.length}명`}
             sub={`관리자 ${users.filter((u) => u.role === "admin").length}명`}
+          />
+          <DbCard
+            href="/admin/tags"
+            icon="🏷️"
+            title="키워드"
+            stat={`${allTags.length}개`}
+            sub="태그 관리 · 삭제"
           />
         </div>
 
