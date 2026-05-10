@@ -22,10 +22,20 @@ export function ArticleForm({
   const [tagInput, setTagInput] = useState("");
   const tagRef = useRef<HTMLInputElement>(null);
 
-  function addTag(raw: string) {
-    const t = raw.trim().replace(/,/g, "");
-    if (!t || tags.includes(t)) return;
-    setTags((prev) => [...prev, t]);
+  // 쉼표로 분리된 문자열을 받아 여러 태그를 한번에 추가
+  function addTags(raw: string) {
+    const newTags = raw
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => t.length > 0);
+    if (newTags.length === 0) return;
+    setTags((prev) => {
+      const merged = [...prev];
+      for (const t of newTags) {
+        if (!merged.includes(t)) merged.push(t);
+      }
+      return merged;
+    });
   }
 
   function removeTag(t: string) {
@@ -35,10 +45,21 @@ export function ArticleForm({
   function onTagKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
-      addTag(tagInput);
+      addTags(tagInput);
       setTagInput("");
     } else if (e.key === "Backspace" && !tagInput && tags.length > 0) {
       setTags((prev) => prev.slice(0, -1));
+    }
+  }
+
+  // 붙여넣기 등으로 쉼표가 포함된 값이 들어오면 즉시 분리
+  function onTagChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    if (val.includes(",")) {
+      addTags(val);
+      setTagInput("");
+    } else {
+      setTagInput(val);
     }
   }
 
@@ -197,15 +218,15 @@ export function ArticleForm({
             ref={tagRef}
             type="text"
             value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            onChange={onTagChange}
             onKeyDown={onTagKeyDown}
             onBlur={() => {
               if (tagInput.trim()) {
-                addTag(tagInput);
+                addTags(tagInput);
                 setTagInput("");
               }
             }}
-            placeholder={tags.length === 0 ? "태그 입력 후 Enter 또는 쉼표" : ""}
+            placeholder={tags.length === 0 ? "태그 입력 (Enter·쉼표로 구분, 여러 개 붙여넣기 가능)" : ""}
             className="flex-1 min-w-[120px] bg-transparent outline-none text-sm placeholder:text-[var(--color-notion-mute)]"
           />
         </div>
