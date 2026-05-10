@@ -79,7 +79,41 @@ export default async function SearchPage({
       </section>
 
       <div className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
-        {/* 키워드 구름 */}
+
+        {/* ── 베스트 10 키워드 ── */}
+        {allTags.length > 0 && (
+          <div className="mb-10 p-6 sm:p-8 rounded-3xl bg-[var(--color-ink)] text-white">
+            <h2 className="text-xs font-mono tracking-widest text-white/50 mb-5 uppercase">
+              Best 10 · 많이 찾는 키워드
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {allTags.slice(0, 10).map(({ tag: t, count }, i) => {
+                const isActive = t === activeTag;
+                return (
+                  <Link
+                    key={t}
+                    href={isActive ? "/search" : `/search?tag=${encodeURIComponent(t)}`}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition ${
+                      isActive
+                        ? "bg-white text-[var(--color-ink)]"
+                        : "bg-white/10 hover:bg-white/20 text-white"
+                    }`}
+                  >
+                    <span className="text-white/40 text-xs tabular-nums w-4 text-center">
+                      {i + 1}
+                    </span>
+                    {t}
+                    <span className={`text-xs tabular-nums ${isActive ? "text-[var(--color-ink-mute)]" : "text-white/40"}`}>
+                      {count}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* 키워드 전체 */}
         <div className="mb-12">
           <h2 className="text-xs font-mono tracking-widest text-[var(--color-ink-mute)] mb-5 uppercase">
             키워드 전체

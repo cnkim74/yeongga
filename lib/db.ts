@@ -397,6 +397,30 @@ async function init(client: Client) {
             content,
           ],
         });
+
+        // 프론트매터 tags → article_tags (INSERT OR IGNORE 멱등)
+        const rawTags = data.tags;
+        if (rawTags) {
+          const tags = String(rawTags)
+            .split(",")
+            .map((t: string) => t.trim())
+            .filter(Boolean);
+          if (tags.length > 0) {
+            const row = await client.execute({
+              sql: "SELECT id FROM articles WHERE chapter = ? AND slug = ?",
+              args: [chapterSlug, slug],
+            });
+            if (row.rows.length > 0) {
+              const articleId = Number(row.rows[0].id);
+              for (const tag of tags) {
+                await client.execute({
+                  sql: "INSERT OR IGNORE INTO article_tags (article_id, tag) VALUES (?, ?)",
+                  args: [articleId, tag],
+                });
+              }
+            }
+          }
+        }
       }
     }
   }
