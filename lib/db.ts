@@ -115,6 +115,29 @@ async function init(client: Client) {
       slug    TEXT NOT NULL,
       PRIMARY KEY (chapter, slug)
     );
+
+    CREATE TABLE IF NOT EXISTS photo_categories (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
+      description TEXT,
+      cover_url TEXT,
+      position INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS photos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      category_id INTEGER REFERENCES photo_categories(id) ON DELETE SET NULL,
+      title TEXT,
+      description TEXT,
+      image_url TEXT NOT NULL,
+      taken_at TEXT,
+      position INTEGER NOT NULL DEFAULT 0,
+      visibility TEXT NOT NULL DEFAULT 'public' CHECK(visibility IN ('public','members-only')),
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_photos_category ON photos(category_id);
   `);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──
@@ -477,7 +500,7 @@ async function init(client: Client) {
   }
 
   // 시드: 페이지 배경 (멱등 — INSERT OR IGNORE)
-  for (const page of ["home", "archive", "search", "videos", "about", "ebooks"]) {
+  for (const page of ["home", "archive", "gallery", "search", "videos", "about", "ebooks"]) {
     await client.execute({
       sql: `INSERT OR IGNORE INTO page_backgrounds (page, image_path, opacity, position, active)
             VALUES (?, ?, 0.2, 'center', 0)`,

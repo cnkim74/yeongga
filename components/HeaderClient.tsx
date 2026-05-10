@@ -11,6 +11,7 @@ import type { SessionUser } from "@/lib/session";
 const NAV = [
   { href: "/", label: "표지" },
   { href: "/archive", label: "아카이브" },
+  { href: "/gallery", label: "갤러리" },
   { href: "/search", label: "검색" },
   { href: "/videos", label: "영상" },
   { href: "/about", label: "소개" },

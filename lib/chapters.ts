@@ -55,7 +55,7 @@ export const chapters: Chapter[] = [
     number: "七",
     title: "영상(影像)",
     subtitle: "사진 아카이브",
-    description: "회의 사진을 연대순으로 갈무리하는 자리. 준비 중입니다.",
+    description: "회의 사진은 갤러리 메뉴에서 확인하실 수 있습니다.",
     comingSoon: true,
   },
   {
