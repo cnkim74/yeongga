@@ -48,23 +48,41 @@ export async function upsertPageBackground(
   data: { image_path?: string | null; opacity?: number; position?: string; active?: boolean }
 ): Promise<void> {
   const db = await getDb();
-  await db.execute({
-    sql: `INSERT INTO page_backgrounds (page, image_path, opacity, position, active, updated_at)
-          VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-          ON CONFLICT(page) DO UPDATE SET
-            image_path = COALESCE(excluded.image_path, image_path),
-            opacity = excluded.opacity,
-            position = excluded.position,
-            active = excluded.active,
-            updated_at = CURRENT_TIMESTAMP`,
-    args: [
-      page,
-      data.image_path ?? null,
+  // 행이 없으면 INSERT, 있으면 UPDATE (image_path는 null이 아닐 때만 덮어씀)
+  const existing = await db.execute({
+    sql: "SELECT id FROM page_backgrounds WHERE page = ?",
+    args: [page],
+  });
+  if (existing.rows.length === 0) {
+    await db.execute({
+      sql: `INSERT INTO page_backgrounds (page, image_path, opacity, position, active, updated_at)
+            VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+      args: [
+        page,
+        data.image_path ?? null,
+        data.opacity ?? 0.2,
+        data.position ?? "center",
+        data.active ? 1 : 0,
+      ],
+    });
+  } else {
+    const sets: string[] = ["opacity = ?", "position = ?", "active = ?", "updated_at = CURRENT_TIMESTAMP"];
+    const args: (string | number | null)[] = [
       data.opacity ?? 0.2,
       data.position ?? "center",
       data.active ? 1 : 0,
-    ],
-  });
+    ];
+    // image_path가 명시적으로 전달됐을 때만 업데이트
+    if ("image_path" in data) {
+      sets.unshift("image_path = ?");
+      args.unshift(data.image_path ?? null);
+    }
+    args.push(page);
+    await db.execute({
+      sql: `UPDATE page_backgrounds SET ${sets.join(", ")} WHERE page = ?`,
+      args,
+    });
+  }
 }
 
 export async function setPageBackgroundImage(page: string, image_path: string): Promise<void> {

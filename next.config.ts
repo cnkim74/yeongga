@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
     // 옮겨가는 중이라 점진적으로 줄여도 됨.
     serverActions: { bodySizeLimit: "15mb" },
   },
+  images: {
+    remotePatterns: [
+      // Vercel Blob 스토리지 (업로드된 이미지)
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      // Wikimedia Commons (about 페이지 배경 등 외부 이미지)
+      { protocol: "https", hostname: "upload.wikimedia.org" },
+    ],
+  },
 };
 
 export default nextConfig;
