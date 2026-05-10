@@ -15,12 +15,20 @@ const NAV: { section: string; items: { href: string; icon: string; label: string
       { href: "/admin/slides", icon: "🖼️", label: "홈 슬라이드" },
       { href: "/admin/videos", icon: "🎞️", label: "동영상" },
       { href: "/admin/articles", icon: "📝", label: "글 관리" },
-      { href: "/admin/photos", icon: "📸", label: "사진 아카이브" },
+      { href: "/admin/gallery", icon: "📷", label: "사진 갤러리" },
+      { href: "/admin/ebooks", icon: "📖", label: "이북(e-Book)" },
     ],
   },
   {
     section: "사람",
     items: [{ href: "/admin/members", icon: "👥", label: "회원 명부" }],
+  },
+  {
+    section: "설정",
+    items: [
+      { href: "/admin/tags", icon: "🏷️", label: "키워드 태그" },
+      { href: "/admin/backgrounds", icon: "🌄", label: "페이지 배경" },
+    ],
   },
   {
     section: "기타",
