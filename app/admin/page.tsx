@@ -7,18 +7,21 @@ import { getCurrentUser } from "@/lib/auth";
 import { countAllArticles } from "@/lib/articles-db";
 import { listAllTags } from "@/lib/tags-db";
 import { listPageBackgrounds } from "@/lib/backgrounds-db";
+import { listCategories, listPhotos } from "@/lib/gallery-db";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
   const me = await getCurrentUser();
-  const [slides, videos, users, totalArticles, allTags, backgrounds] = await Promise.all([
+  const [slides, videos, users, totalArticles, allTags, backgrounds, categories, photos] = await Promise.all([
     listSlides(),
     listVideos(),
     listUsers(),
     countAllArticles(),
     listAllTags(),
     listPageBackgrounds(),
+    listCategories(),
+    listPhotos(),
   ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
@@ -86,6 +89,13 @@ export default async function AdminHome() {
             title="페이지 배경"
             stat={`${activeBgs}개`}
             sub="배경 이미지 관리"
+          />
+          <DbCard
+            href="/admin/gallery"
+            icon="📷"
+            title="사진 갤러리"
+            stat={`${photos.length}장`}
+            sub={`카테고리 ${categories.length}개`}
           />
         </div>
 
