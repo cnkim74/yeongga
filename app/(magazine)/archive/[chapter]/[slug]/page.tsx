@@ -39,6 +39,7 @@ export default async function ArticlePage({
 
   const user = await getCurrentUser();
   const isLocked = article.visibility === "members-only" && !user;
+  const isAdmin = user?.role === "admin";
 
   const [all, users, tags] = await Promise.all([
     listChapterArticles(chapter),
@@ -68,6 +69,14 @@ export default async function ArticlePage({
             >
               {meta.number}. {meta.title}
             </Link>
+            {isAdmin && (
+              <Link
+                href={`/admin/articles/${article.id}/edit`}
+                className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-ink)] text-white hover:opacity-80 transition"
+              >
+                ✏️ 수정
+              </Link>
+            )}
           </nav>
 
           {article.visibility === "members-only" && (
