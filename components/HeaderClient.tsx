@@ -11,7 +11,6 @@ import type { SessionUser } from "@/lib/session";
 const NAV = [
   { href: "/", label: "표지" },
   { href: "/archive", label: "아카이브" },
-  { href: "/ebooks", label: "이북" },
   { href: "/search", label: "검색" },
   { href: "/videos", label: "영상" },
   { href: "/about", label: "소개" },
@@ -66,6 +65,30 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
         </ul>
 
         <div className="flex items-center gap-1">
+          {/* e-Book 바로가기 */}
+          <Link
+            href="/ebooks"
+            className="pill-nav-icon hidden sm:inline-flex items-center gap-1.5 px-3"
+            aria-label="e-Book 서재"
+            title="e-Book"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-[18px] h-[18px] shrink-0"
+              aria-hidden="true"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            <span className="text-xs font-medium leading-none">e-Book</span>
+          </Link>
+
           <button
             type="button"
             onClick={() => setSizeOpen((v) => !v)}
@@ -126,6 +149,17 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                 </li>
               );
             })}
+            {/* 모바일에서는 e-Book도 메뉴에 포함 */}
+            <li>
+              <Link
+                href="/ebooks"
+                className="mobile-sheet-link"
+                aria-current={pathname.startsWith("/ebooks") ? "page" : undefined}
+                onClick={() => setOpen(false)}
+              >
+                📖 e-Book
+              </Link>
+            </li>
             {!user && (
               <li>
                 <Link
