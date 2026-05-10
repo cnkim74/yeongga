@@ -55,24 +55,40 @@ export default async function ArticlePage({
 
   return (
     <article>
-      {/* HEADER — 종이톤 약한 배경 */}
-      <header className="bg-[var(--color-bg-soft)] pt-40 pb-16 sm:pb-24">
-        <div className="mx-auto max-w-3xl px-6">
-          <nav className="kicker mb-8 flex flex-wrap gap-x-2 items-center text-[var(--color-ink-mute)]">
-            <Link href="/archive" className="hover:text-[var(--color-ink)]">
+      {/* HEADER — 커버 이미지 있으면 풀블리드, 없으면 종이톤 배경 */}
+      <header className={`relative overflow-hidden pt-40 pb-16 sm:pb-24 ${article.cover ? "" : "bg-[var(--color-bg-soft)]"}`}>
+        {article.cover && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={article.cover}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/75" />
+          </>
+        )}
+        <div className={`relative mx-auto max-w-3xl px-6 ${article.cover ? "text-white" : ""}`}>
+          <nav className={`kicker mb-8 flex flex-wrap gap-x-2 items-center ${article.cover ? "text-white/70" : "text-[var(--color-ink-mute)]"}`}>
+            <Link href="/archive" className={article.cover ? "hover:text-white" : "hover:text-[var(--color-ink)]"}>
               아카이브
             </Link>
             <span aria-hidden="true">/</span>
             <Link
               href={`/archive/${chapter}`}
-              className="hover:text-[var(--color-ink)]"
+              className={article.cover ? "hover:text-white" : "hover:text-[var(--color-ink)]"}
             >
               {meta.number}. {meta.title}
             </Link>
             {isAdmin && (
               <Link
                 href={`/admin/articles/${article.id}/edit`}
-                className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-ink)] text-white hover:opacity-80 transition"
+                className={`ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition ${
+                  article.cover
+                    ? "bg-white/20 text-white hover:bg-white/30"
+                    : "bg-[var(--color-ink)] text-white hover:opacity-80"
+                }`}
               >
                 ✏️ 수정
               </Link>
@@ -80,7 +96,7 @@ export default async function ArticlePage({
           </nav>
 
           {article.visibility === "members-only" && (
-            <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-ink)] text-white">
+            <div className={`inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full text-xs font-semibold ${article.cover ? "bg-white/20 text-white" : "bg-[var(--color-ink)] text-white"}`}>
               🔒 회원 전용
             </div>
           )}
@@ -88,11 +104,11 @@ export default async function ArticlePage({
             {article.title}
           </h1>
           {article.subtitle && (
-            <p className="text-xl sm:text-2xl text-[var(--color-ink-soft)] mb-6">
+            <p className={`text-xl sm:text-2xl mb-6 ${article.cover ? "text-white/80" : "text-[var(--color-ink-soft)]"}`}>
               {article.subtitle}
             </p>
           )}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-ink-mute)]">
+          <div className={`flex flex-wrap items-center gap-x-5 gap-y-2 text-sm ${article.cover ? "text-white/70" : "text-[var(--color-ink-mute)]"}`}>
             <span className="font-mono tabular-nums">
               {formatDate(article.date)}
             </span>
@@ -113,7 +129,11 @@ export default async function ArticlePage({
                 <Link
                   key={t}
                   href={`/search?tag=${encodeURIComponent(t)}`}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-xs border border-[var(--color-rule)] text-[var(--color-ink-mute)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)] transition"
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs border transition ${
+                    article.cover
+                      ? "border-white/30 text-white/70 hover:border-white hover:text-white"
+                      : "border-[var(--color-rule)] text-[var(--color-ink-mute)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]"
+                  }`}
                 >
                   # {t}
                 </Link>

@@ -21,6 +21,30 @@ export function ArticleForm({
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tagInput, setTagInput] = useState("");
   const tagRef = useRef<HTMLInputElement>(null);
+  const coverFileRef = useRef<HTMLInputElement>(null);
+  const [coverPath, setCoverPath] = useState<string>(article?.cover ?? "");
+  const [coverUploading, setCoverUploading] = useState(false);
+  const [coverError, setCoverError] = useState("");
+
+  async function uploadCover(file: File) {
+    setCoverUploading(true);
+    setCoverError("");
+    const fd = new FormData();
+    fd.append("file", file);
+    try {
+      const res = await fetch("/api/upload/article-image", { method: "POST", body: fd });
+      const json = await res.json();
+      if (json.ok) {
+        setCoverPath(json.url);
+      } else {
+        setCoverError(json.error ?? "업로드 실패");
+      }
+    } catch {
+      setCoverError("업로드 중 오류가 발생했습니다.");
+    } finally {
+      setCoverUploading(false);
+    }
+  }
 
   // 쉼표로 분리된 문자열을 받아 여러 태그를 한번에 추가
   function addTags(raw: string) {
@@ -167,14 +191,49 @@ export function ArticleForm({
       </div>
 
       <div>
-        <Label>표지 이미지 경로 (선택)</Label>
+        <Label>대표 이미지 (선택)</Label>
+        <input type="hidden" name="cover" value={coverPath} />
+        {/* 미리보기 */}
+        {coverPath && (
+          <div className="relative mb-2 rounded-xl overflow-hidden bg-[var(--color-notion-hover)] aspect-video max-w-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={coverPath} alt="대표 이미지 미리보기" className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => setCoverPath("")}
+              className="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs hover:bg-black/80"
+              aria-label="이미지 제거"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+        {/* 업로드 버튼 */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => coverFileRef.current?.click()}
+            disabled={coverUploading}
+            className="notion-input px-4 py-1.5 border border-[var(--color-notion-rule)] hover:border-[var(--color-notion-accent)] text-sm cursor-pointer disabled:opacity-50"
+          >
+            {coverUploading ? "업로드 중…" : coverPath ? "이미지 교체" : "이미지 업로드"}
+          </button>
+          {coverPath && (
+            <span className="text-xs text-[var(--color-notion-mute)] truncate max-w-xs">{coverPath}</span>
+          )}
+        </div>
         <input
-          name="cover"
-          type="text"
-          defaultValue={article?.cover ?? ""}
-          placeholder="/covers/foo.jpg"
-          className="notion-input w-full border border-[var(--color-notion-rule)] focus:border-[var(--color-notion-accent)] font-mono text-sm"
+          ref={coverFileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) uploadCover(file);
+            e.target.value = "";
+          }}
         />
+        {coverError && <p className="mt-1 text-xs text-red-500">{coverError}</p>}
       </div>
 
       <div>

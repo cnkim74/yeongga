@@ -147,8 +147,9 @@ export default async function HomePage() {
                 <div
                   className="aspect-[4/3] rounded-3xl overflow-hidden bg-[var(--color-bg-deep)]"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/chapters/${chapter.slug}.jpg`}
+                    src={latest!.cover ?? `/chapters/${chapter.slug}.jpg`}
                     alt=""
                     className="w-full h-full object-cover"
                   />

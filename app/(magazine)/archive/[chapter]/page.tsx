@@ -96,7 +96,7 @@ export default async function ChapterPage({
                   <div className="sm:col-span-2 text-3xl sm:text-4xl text-[var(--color-ink-mute)] font-mono tabular-nums">
                     {String(articles.length - i).padStart(2, "0")}
                   </div>
-                  <div className="sm:col-span-10">
+                  <div className={a.cover ? "sm:col-span-7" : "sm:col-span-10"}>
                     <Link
                       href={`/archive/${chapter}/${a.slug}`}
                       className="group block"
@@ -139,6 +139,18 @@ export default async function ChapterPage({
                       </div>
                     </Link>
                   </div>
+                  {a.cover && (
+                    <div className="sm:col-span-3">
+                      <Link href={`/archive/${chapter}/${a.slug}`} tabIndex={-1} aria-hidden="true">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={a.cover}
+                          alt=""
+                          className="w-full aspect-[4/3] object-cover rounded-xl"
+                        />
+                      </Link>
+                    </div>
+                  )}
                 </li>
               ))}
             </ol>
