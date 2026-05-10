@@ -186,5 +186,17 @@ export async function updateArticle(
 
 export async function deleteArticle(id: number) {
   const db = await getDb();
+  // 삭제 전에 chapter/slug 를 차단 목록에 기록 → 시딩 때 부활 방지
+  const row = await db.execute({
+    sql: "SELECT chapter, slug FROM articles WHERE id = ?",
+    args: [id],
+  });
+  if (row.rows.length > 0) {
+    const { chapter, slug } = row.rows[0];
+    await db.execute({
+      sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+      args: [chapter, slug],
+    });
+  }
   await db.execute({ sql: "DELETE FROM articles WHERE id = ?", args: [id] });
 }

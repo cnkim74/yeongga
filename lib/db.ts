@@ -97,6 +97,12 @@ async function init(client: Client) {
       active INTEGER NOT NULL DEFAULT 1,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS seeded_deletions (
+      chapter TEXT NOT NULL,
+      slug    TEXT NOT NULL,
+      PRIMARY KEY (chapter, slug)
+    );
   `);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──
@@ -337,6 +343,14 @@ async function init(client: Client) {
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트, 멱등)
   // INSERT OR IGNORE 로 새 파일만 추가, 기존 행은 덮어쓰지 않음
+  // seeded_deletions 에 등록된 (chapter, slug) 는 건너뜀 (삭제 후 부활 방지)
+  const deletedRows = await client.execute(
+    "SELECT chapter, slug FROM seeded_deletions"
+  );
+  const deletedSet = new Set(
+    deletedRows.rows.map((r) => `${r.chapter}::${r.slug}`)
+  );
+
   const articlesDir = path.join(process.cwd(), "content", "articles");
   if (fs.existsSync(articlesDir)) {
     for (const chapterSlug of fs.readdirSync(articlesDir)) {
@@ -345,6 +359,8 @@ async function init(client: Client) {
       for (const file of fs.readdirSync(chapterDir)) {
         if (!file.endsWith(".md")) continue;
         const slug = file.replace(/\.md$/, "");
+        // 삭제 차단 목록에 있으면 시딩 건너뜀
+        if (deletedSet.has(`${chapterSlug}::${slug}`)) continue;
         const raw = fs.readFileSync(path.join(chapterDir, file), "utf8");
         const { data, content } = matter(raw);
         const v = String(data.visibility ?? "public").toLowerCase();
