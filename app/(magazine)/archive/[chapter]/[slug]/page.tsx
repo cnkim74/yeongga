@@ -9,6 +9,7 @@ import {
 import { getCurrentUser } from "@/lib/auth";
 import { listUsers } from "@/lib/users-db";
 import { getTagsForArticle } from "@/lib/tags-db";
+import { ShareBar } from "@/components/ShareBar";
 
 export const dynamic = "force-dynamic";
 
@@ -127,6 +128,20 @@ export default async function ArticlePage({
               className="prose-body"
               dangerouslySetInnerHTML={{ __html: article.html }}
             />
+          )}
+
+          {/* 공유 */}
+          {!isLocked && (
+            <div className="mt-16 pt-10 border-t border-[var(--color-rule)]">
+              <div className="text-xs text-[var(--color-ink-mute)] mb-3">
+                이 글이 도움이 되셨다면 공유해 주세요
+              </div>
+              <ShareBar
+                title={article.title}
+                path={`/archive/${chapter}/${slug}`}
+                excerpt={article.excerpt}
+              />
+            </div>
           )}
 
           <hr className="border-[var(--color-rule)] my-16" />
