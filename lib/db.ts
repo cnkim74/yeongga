@@ -87,6 +87,16 @@ async function init(client: Client) {
       PRIMARY KEY (article_id, tag)
     );
     CREATE INDEX IF NOT EXISTS idx_article_tags_tag ON article_tags(tag);
+
+    CREATE TABLE IF NOT EXISTS page_backgrounds (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      page TEXT UNIQUE NOT NULL,
+      image_path TEXT,
+      opacity REAL NOT NULL DEFAULT 0.2,
+      position TEXT NOT NULL DEFAULT 'center',
+      active INTEGER NOT NULL DEFAULT 1,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──
@@ -413,6 +423,20 @@ async function init(client: Client) {
       2
     );
   }
+
+  // 시드: 페이지 배경 (멱등 — INSERT OR IGNORE)
+  for (const page of ["home", "archive", "search", "videos", "about"]) {
+    await client.execute({
+      sql: `INSERT OR IGNORE INTO page_backgrounds (page, image_path, opacity, position, active)
+            VALUES (?, ?, 0.2, 'center', 0)`,
+      args: [page, page === "about" ? "/andong-hahoe-panorama.jpg" : null],
+    });
+  }
+  // about 페이지 배경 활성화
+  await client.execute({
+    sql: `UPDATE page_backgrounds SET active = 1 WHERE page = 'about' AND image_path IS NOT NULL`,
+    args: [],
+  });
 }
 
 export async function getDb(): Promise<Client> {

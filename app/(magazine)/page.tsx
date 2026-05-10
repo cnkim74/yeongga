@@ -6,6 +6,7 @@ import { chapters } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listActiveSlides } from "@/lib/slides-db";
 import { getFeaturedVideo } from "@/lib/videos-db";
+import { PageHeroBg } from "@/components/PageHeroBg";
 
 export const dynamic = "force-dynamic";
 
@@ -38,8 +39,9 @@ export default async function HomePage() {
       <HeroSlider slides={slides} />
 
       {/* 2. CATEGORY GRID — "Wise의 제품들" 톤 */}
-      <section className="py-24 sm:py-32">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="relative overflow-hidden py-24 sm:py-32">
+        <PageHeroBg page="home" />
+        <div className="relative mx-auto max-w-6xl px-6">
           <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
             <h2 className="display-md text-3xl sm:text-5xl">
               영가회의 여덟 장

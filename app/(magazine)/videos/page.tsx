@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listVideos } from "@/lib/videos-db";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
+import { PageHeroBg } from "@/components/PageHeroBg";
 
 export const metadata = {
   title: "영상 — 영가회 아카이브",
@@ -15,8 +16,9 @@ export default async function VideosPage() {
 
   return (
     <>
-      <section className="bg-[var(--color-bg-soft)] pt-40 pb-20">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-20">
+        <PageHeroBg page="videos" />
+        <div className="relative mx-auto max-w-6xl px-6">
           <div className="kicker text-[var(--color-ink-mute)] mb-5">
             VIDEO · 映像 アーカイブ
           </div>

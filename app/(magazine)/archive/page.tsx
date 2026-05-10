@@ -4,6 +4,7 @@ import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listUsers } from "@/lib/users-db";
+import { PageHeroBg } from "@/components/PageHeroBg";
 
 export const dynamic = "force-dynamic";
 
@@ -25,8 +26,9 @@ export default async function ArchiveIndex() {
 
   return (
     <>
-      <section className="bg-[var(--color-bg-soft)] pt-40 pb-24">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-24">
+        <PageHeroBg page="archive" />
+        <div className="relative mx-auto max-w-6xl px-6">
           <div className="kicker text-[var(--color-ink-mute)] mb-5">
             ARCHIVE · 全卷
           </div>

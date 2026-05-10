@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listAllTags, listArticlesByTag, searchArticles } from "@/lib/tags-db";
 import { chapters } from "@/lib/chapters";
+import { PageHeroBg } from "@/components/PageHeroBg";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +37,9 @@ export default async function SearchPage({
   return (
     <>
       {/* 헤더 */}
-      <section className="bg-[var(--color-bg-soft)] pt-40 pb-16">
-        <div className="mx-auto max-w-4xl px-6">
+      <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-16">
+        <PageHeroBg page="search" />
+        <div className="relative mx-auto max-w-4xl px-6">
           <div className="kicker text-[var(--color-ink-mute)] mb-5">
             SEARCH · 키워드 검색
           </div>
