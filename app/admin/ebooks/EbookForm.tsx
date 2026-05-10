@@ -19,23 +19,43 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 
+  const [pdfProgress, setPdfProgress] = useState(0); // 0~100
+
   async function uploadPdf(file: File) {
     setPdfUploading(true);
+    setPdfProgress(0);
     setError(null);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/upload/ebook", { method: "POST", body: fd });
-      const json = await res.json();
-      if (!json.ok) {
-        setError(json.error ?? "PDF 업로드에 실패했습니다.");
-      } else {
-        setPdfUrl(json.url);
-      }
+      // 1) Vercel Blob 클라이언트 직접 업로드 시도 (서버 4.5MB 제한 우회, 최대 300MB)
+      const { upload } = await import("@vercel/blob/client");
+      const blob = await upload(
+        `ebooks/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`,
+        file,
+        {
+          access: "public",
+          handleUploadUrl: "/api/upload/ebook",
+          onUploadProgress: ({ percentage }) => setPdfProgress(Math.round(percentage)),
+        }
+      );
+      setPdfUrl(blob.url);
     } catch {
-      setError("PDF 업로드 중 오류가 발생했습니다.");
+      // 2) 로컬 개발 환경 폴백: 서버를 통한 multipart 업로드
+      try {
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/upload/ebook", { method: "POST", body: fd });
+        const json = await res.json();
+        if (!json.ok) {
+          setError(json.error ?? "PDF 업로드에 실패했습니다.");
+        } else {
+          setPdfUrl(json.url);
+        }
+      } catch {
+        setError("PDF 업로드 중 오류가 발생했습니다.");
+      }
     } finally {
       setPdfUploading(false);
+      setPdfProgress(0);
     }
   }
 
@@ -145,9 +165,20 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
           className="notion-input w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-[var(--color-notion-accent)] file:text-white file:px-3 file:py-1 file:text-sm file:cursor-pointer"
         />
         {pdfUploading && (
-          <p className="mt-1 text-xs text-[var(--color-notion-mute)]">업로드 중...</p>
+          <div className="mt-2">
+            <div className="flex justify-between text-xs text-[var(--color-notion-mute)] mb-1">
+              <span>업로드 중…</span>
+              {pdfProgress > 0 && <span>{pdfProgress}%</span>}
+            </div>
+            <div className="h-1.5 rounded-full bg-[var(--color-notion-hover)] overflow-hidden">
+              <div
+                className="h-full bg-[var(--color-notion-accent)] transition-all duration-300"
+                style={{ width: pdfProgress > 0 ? `${pdfProgress}%` : "30%" }}
+              />
+            </div>
+          </div>
         )}
-        <p className="mt-1 text-xs text-[var(--color-notion-mute)]">최대 50MB, PDF 형식만 가능</p>
+        <p className="mt-1 text-xs text-[var(--color-notion-mute)]">최대 300MB, PDF 형식만 가능</p>
       </div>
 
       {/* 표지 이미지 업로드 */}
