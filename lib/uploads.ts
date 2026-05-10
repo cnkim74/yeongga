@@ -22,7 +22,7 @@ function useBlob() {
 }
 
 export async function saveUpload(
-  bucket: "slides" | "articles" | "members" | "backgrounds",
+  bucket: "slides" | "articles" | "members" | "backgrounds" | "ebooks",
   file: File
 ): Promise<UploadResult> {
   if (!(file instanceof File) || file.size === 0) {
@@ -66,6 +66,48 @@ export async function saveUpload(
   return {
     ok: true,
     publicPath: `/uploads/${bucket}/${filename}`,
+    bytes: buf.length,
+  };
+}
+
+const PDF_MAX_BYTES = 50 * 1024 * 1024; // 50MB
+
+export async function saveEbookUpload(file: File): Promise<UploadResult> {
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "파일이 비어 있습니다." };
+  }
+  if (file.size > PDF_MAX_BYTES) {
+    return {
+      ok: false,
+      error: `파일이 너무 큽니다 (최대 ${PDF_MAX_BYTES / 1024 / 1024}MB).`,
+    };
+  }
+  if (file.type !== "application/pdf") {
+    return { ok: false, error: "PDF 파일만 업로드할 수 있습니다." };
+  }
+
+  const filename = `${Date.now().toString(36)}-${crypto
+    .randomBytes(6)
+    .toString("hex")}.pdf`;
+
+  if (useBlob()) {
+    const blob = await put(`ebooks/${filename}`, file, {
+      access: "public",
+      contentType: "application/pdf",
+      addRandomSuffix: false,
+    });
+    return { ok: true, publicPath: blob.url, bytes: file.size };
+  }
+
+  const uploadsRoot = path.join(process.cwd(), "public", "uploads");
+  const dir = path.join(uploadsRoot, "ebooks");
+  await fs.mkdir(dir, { recursive: true });
+  const fullPath = path.join(dir, filename);
+  const buf = Buffer.from(await file.arrayBuffer());
+  await fs.writeFile(fullPath, buf);
+  return {
+    ok: true,
+    publicPath: `/uploads/ebooks/${filename}`,
     bytes: buf.length,
   };
 }

@@ -98,6 +98,18 @@ async function init(client: Client) {
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TABLE IF NOT EXISTS ebooks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      pdf_url TEXT NOT NULL,
+      cover_url TEXT,
+      visibility TEXT NOT NULL DEFAULT 'public' CHECK(visibility IN ('public','members-only')),
+      position INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS seeded_deletions (
       chapter TEXT NOT NULL,
       slug    TEXT NOT NULL,
