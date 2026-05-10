@@ -42,7 +42,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
             <h2 className="display-md text-3xl sm:text-5xl">
-              영가회의 다섯 장
+              영가회의 여덟 장
             </h2>
             <Link
               href="/archive"
@@ -52,27 +52,45 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
+          <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
             {chapters.map((c) => (
               <li key={c.slug}>
-                <Link
-                  href={`/archive/${c.slug}`}
-                  className="group flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl hover:bg-[var(--color-bg-soft)] transition"
-                >
-                  <ChapterIcon
-                    slug={c.slug}
-                    className="w-16 h-16 sm:w-20 sm:h-20 text-[var(--color-ink-soft)] mb-5 group-hover:text-[var(--color-ink)] transition"
-                  />
-                  <div className="text-xs text-[var(--color-ink-mute)] mb-1 font-mono">
-                    {c.number}
+                {c.comingSoon ? (
+                  <div className="flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl opacity-40 cursor-default">
+                    <ChapterIcon
+                      slug={c.slug}
+                      className="w-16 h-16 sm:w-20 sm:h-20 text-[var(--color-ink-soft)] mb-5"
+                    />
+                    <div className="text-xs text-[var(--color-ink-mute)] mb-1 font-mono">
+                      {c.number}
+                    </div>
+                    <div className="display-md text-lg sm:text-xl mb-1">
+                      {c.title}
+                    </div>
+                    <div className="text-xs text-[var(--color-ink-mute)]">
+                      準備中
+                    </div>
                   </div>
-                  <div className="display-md text-lg sm:text-xl mb-1">
-                    {c.title}
-                  </div>
-                  <div className="text-xs text-[var(--color-ink-mute)]">
-                    {c.subtitle}
-                  </div>
-                </Link>
+                ) : (
+                  <Link
+                    href={`/archive/${c.slug}`}
+                    className="group flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl hover:bg-[var(--color-bg-soft)] transition"
+                  >
+                    <ChapterIcon
+                      slug={c.slug}
+                      className="w-16 h-16 sm:w-20 sm:h-20 text-[var(--color-ink-soft)] mb-5 group-hover:text-[var(--color-ink)] transition"
+                    />
+                    <div className="text-xs text-[var(--color-ink-mute)] mb-1 font-mono">
+                      {c.number}
+                    </div>
+                    <div className="display-md text-lg sm:text-xl mb-1">
+                      {c.title}
+                    </div>
+                    <div className="text-xs text-[var(--color-ink-mute)]">
+                      {c.subtitle}
+                    </div>
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
