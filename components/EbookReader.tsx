@@ -10,6 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 const CMAP_URL = "/cmaps/";
 const CMAP_PACKED = true;
+const STANDARD_FONT_DATA_URL = "/standard_fonts/";
 
 interface EbookReaderProps {
   pdfUrl: string;
@@ -31,28 +32,41 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
   const rightCanvasRef = useRef<HTMLCanvasElement>(null);
   const mobileCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  /* ── PDF 로드 ── */
+  /* ── PDF 로드 ──
+   * URL 방식 대신 fetch → ArrayBuffer 로 전달:
+   * worker가 별도로 PDF를 fetch할 때 발생하는 CORS/네트워크 문제를 우회
+   */
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setLoadError(null);
+    setPdf(null);
+    setNumPages(0);
 
-    pdfjs.getDocument({
-      url: pdfUrl,
-      cMapUrl: CMAP_URL,
-      cMapPacked: CMAP_PACKED,
-    }).promise
-      .then((doc) => {
+    (async () => {
+      try {
+        const res = await fetch(pdfUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.arrayBuffer();
+        if (cancelled) return;
+
+        const doc = await pdfjs.getDocument({
+          data,
+          cMapUrl: CMAP_URL,
+          cMapPacked: CMAP_PACKED,
+          standardFontDataUrl: STANDARD_FONT_DATA_URL,
+        }).promise;
+
         if (cancelled) return;
         setPdf(doc);
         setNumPages(doc.numPages);
         setLoading(false);
-      })
-      .catch((err: Error) => {
+      } catch (err) {
         if (cancelled) return;
-        setLoadError(err.message);
+        setLoadError(err instanceof Error ? err.message : String(err));
         setLoading(false);
-      });
+      }
+    })();
 
     return () => { cancelled = true; };
   }, [pdfUrl]);
