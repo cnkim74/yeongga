@@ -120,6 +120,10 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         const scale = cssWidth / naturalViewport.width;
         const viewport = page.getViewport({ scale });
 
+        // ✅ 진단: 이 페이지의 그리기 명령 개수 확인
+        const opList = await page.getOperatorList();
+        const opCount = opList.fnArray.length;
+
         canvas.width = Math.floor(viewport.width);
         canvas.height = Math.floor(viewport.height);
         canvas.style.width = `${Math.floor(viewport.width)}px`;
@@ -131,27 +135,26 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
           return;
         }
 
-        // 진단 1: 렌더 전에 빨간색으로 칠해 캔버스가 실제로 화면에 표시되는지 확인
-        ctx.fillStyle = "#ff0000";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // 짧은 지연 — 사용자가 빨간색을 볼 수 있다면 캔버스는 정상
-        await new Promise((r) => setTimeout(r, 100));
-
-        // v5 API: canvas 만 전달 (canvasContext deprecated)
+        // canvas + canvasContext 둘 다 + intent='display' 명시 (가장 호환성 높은 조합)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const task = page.render({ canvas, viewport } as any);
+        const task = page.render({
+          canvas,
+          canvasContext: ctx,
+          viewport,
+          intent: "display",
+        } as any);
         activeRenderTasks.current.add(task);
         await task.promise;
         activeRenderTasks.current.delete(task);
 
-        // 진단 2: 렌더 후 중심 픽셀 샘플링
+        // 렌더 후 픽셀 진단
         const cx = Math.floor(canvas.width / 2);
         const cy = Math.floor(canvas.height / 2);
         const px = ctx.getImageData(cx, cy, 1, 1).data;
         const cornerPx = ctx.getImageData(20, 20, 1, 1).data;
 
         setDebug(
-          `p${pageNum} OK · cv ${canvas.width}×${canvas.height} · 중앙 rgb(${px[0]},${px[1]},${px[2]}) · 좌상 rgb(${cornerPx[0]},${cornerPx[1]},${cornerPx[2]})`
+          `p${pageNum} · ops=${opCount} · cv ${canvas.width}×${canvas.height} · 중앙 rgb(${px[0]},${px[1]},${px[2]}) · 좌상 rgb(${cornerPx[0]},${cornerPx[1]},${cornerPx[2]})`
         );
       } catch (e) {
         if (e instanceof Error) {
