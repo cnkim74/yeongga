@@ -72,7 +72,7 @@ export function SlideForm({ slide }: { slide?: Slide }) {
         if (!res.ok) {
           if (res.status === 413) {
             setUploadError(
-              `파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 권장: 12MB 이하 / 가로 2400px 이하로 줄여 주세요.`
+              `파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 권장: 30MB 이하 / 가로 2400px 이하로 줄여 주세요.`
             );
           } else {
             setUploadError(`업로드 실패 (HTTP ${res.status}). 잠시 후 다시 시도해 주세요.`);
@@ -125,7 +125,7 @@ export function SlideForm({ slide }: { slide?: Slide }) {
               className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-[var(--color-notion-text)] file:text-white file:cursor-pointer"
             />
             <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">
-              jpg / png / webp / gif · 최대 12MB · 권장 가로 2400px 이상, 16:9
+              jpg / png / webp / gif · 최대 30MB · 권장 가로 2400px 이상, 16:9
               비율. {slide && "교체하지 않으려면 그대로 두세요."}
             </div>
             {uploading && (

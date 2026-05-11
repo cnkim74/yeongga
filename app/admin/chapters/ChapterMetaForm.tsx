@@ -59,7 +59,7 @@ export function ChapterMetaForm({
         const res = await fetch("/api/upload/chapter-cover", { method: "POST", body: fd });
         if (!res.ok) {
           if (res.status === 413) {
-            setError(`파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 12MB 이하로 줄여 주세요.`);
+            setError(`파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 30MB 이하로 줄여 주세요.`);
           } else {
             setError(`업로드 실패 (HTTP ${res.status})`);
           }

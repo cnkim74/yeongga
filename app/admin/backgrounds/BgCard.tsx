@@ -47,7 +47,7 @@ export function BgCard({ bg }: { bg: PageBackground }) {
         if (!res.ok) {
           if (res.status === 413) {
             setUploadError(
-              `파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 12MB 이하로 줄여 주세요.`
+              `파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 30MB 이하로 줄여 주세요.`
             );
           } else {
             setUploadError(`업로드 실패 (HTTP ${res.status}).`);

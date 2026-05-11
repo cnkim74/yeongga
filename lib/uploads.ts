@@ -11,7 +11,7 @@ const MIME_EXT: Record<string, string> = {
   "image/gif": "gif",
 };
 
-const MAX_BYTES = 12 * 1024 * 1024; // 12MB
+const MAX_BYTES = 30 * 1024 * 1024; // 30MB — hero 풀블리드 사진 여유
 
 export type UploadResult =
   | { ok: true; publicPath: string; bytes: number }

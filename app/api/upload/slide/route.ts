@@ -6,7 +6,7 @@ import { saveUpload } from "@/lib/uploads";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const SLIDE_MAX = 15 * 1024 * 1024; // 15MB
+const SLIDE_MAX = 30 * 1024 * 1024; // 30MB
 
 export async function POST(req: NextRequest) {
   await requireAdmin();
