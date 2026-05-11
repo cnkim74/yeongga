@@ -201,6 +201,13 @@ async function init(client: Client) {
   await addCol("auth_provider", "TEXT NOT NULL DEFAULT 'local'");
   await addCol("provider_id", "TEXT");
 
+  // ─── 마이그레이션: chapter_meta 에 hero_image 컬럼 추가 ──
+  const cmCols = await client.execute("PRAGMA table_info(chapter_meta)");
+  const cmColNames = cmCols.rows.map((r) => String(r.name));
+  if (!cmColNames.includes("hero_image")) {
+    await client.execute(`ALTER TABLE chapter_meta ADD COLUMN hero_image TEXT`);
+  }
+
   // email + provider_id 에 인덱스 (OAuth 로 빠르게 매칭)
   await client.execute(
     `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`

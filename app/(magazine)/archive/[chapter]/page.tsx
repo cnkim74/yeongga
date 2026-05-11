@@ -43,8 +43,8 @@ export default async function ChapterPage({
   ]);
   const avatarByName = new Map(users.map((u) => [u.name, u.avatar_url]));
 
-  // 어드민 챕터 표지 > 정적 폴백 (없으면 placeholder)
-  const heroImage = chapterMeta?.cover_image ?? null;
+  // 우선순위: 챕터 hero_image (전용) > 메인 쇼케이스 cover_image (호환) > placeholder
+  const heroImage = chapterMeta?.hero_image ?? chapterMeta?.cover_image ?? null;
 
   return (
     <>

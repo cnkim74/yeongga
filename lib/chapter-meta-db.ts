@@ -7,7 +7,10 @@ export type DisplayMode = "latest" | "featured" | "random";
 
 export type ChapterMeta = {
   chapter_slug: string;
+  /** 메인 홈 쇼케이스용 (작은 사각 카드) */
   cover_image: string | null;
+  /** 챕터 페이지 hero 풀블리드용 (가로로 와이드) — 별도 설정 가능 */
+  hero_image: string | null;
   display_mode: DisplayMode;
   featured_article_id: number | null;
   visible: boolean;
@@ -18,6 +21,7 @@ function rowToMeta(row: Record<string, unknown>): ChapterMeta {
   return {
     chapter_slug: String(row.chapter_slug),
     cover_image: row.cover_image == null ? null : String(row.cover_image),
+    hero_image: row.hero_image == null ? null : String(row.hero_image),
     display_mode:
       row.display_mode === "featured"
         ? "featured"
@@ -47,11 +51,13 @@ export async function countChapterMetas(): Promise<{ total: number; withCover: n
   };
 }
 
+const CM_COLS =
+  "chapter_slug, cover_image, hero_image, display_mode, featured_article_id, visible, position";
+
 export async function listChapterMetas(): Promise<ChapterMeta[]> {
   const db = await getDb();
   const r = await db.execute(
-    `SELECT chapter_slug, cover_image, display_mode, featured_article_id, visible, position
-     FROM chapter_meta ORDER BY position ASC`
+    `SELECT ${CM_COLS} FROM chapter_meta ORDER BY position ASC`
   );
   return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
 }
@@ -59,8 +65,7 @@ export async function listChapterMetas(): Promise<ChapterMeta[]> {
 export async function getChapterMeta(slug: string): Promise<ChapterMeta | null> {
   const db = await getDb();
   const r = await db.execute({
-    sql: `SELECT chapter_slug, cover_image, display_mode, featured_article_id, visible, position
-          FROM chapter_meta WHERE chapter_slug = ?`,
+    sql: `SELECT ${CM_COLS} FROM chapter_meta WHERE chapter_slug = ?`,
     args: [slug],
   });
   return r.rows[0]
@@ -72,6 +77,7 @@ export async function upsertChapterMeta(
   slug: string,
   data: Partial<{
     cover_image: string | null;
+    hero_image: string | null;
     display_mode: DisplayMode;
     featured_article_id: number | null;
     visible: boolean;
@@ -87,11 +93,12 @@ export async function upsertChapterMeta(
   if (existing.rows.length === 0) {
     await db.execute({
       sql: `INSERT INTO chapter_meta
-            (chapter_slug, cover_image, display_mode, featured_article_id, visible, position, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+            (chapter_slug, cover_image, hero_image, display_mode, featured_article_id, visible, position, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
       args: [
         slug,
         data.cover_image ?? null,
+        data.hero_image ?? null,
         data.display_mode ?? "latest",
         data.featured_article_id ?? null,
         data.visible === false ? 0 : 1,
@@ -102,6 +109,7 @@ export async function upsertChapterMeta(
     const sets: string[] = ["updated_at = CURRENT_TIMESTAMP"];
     const args: (string | number | null)[] = [];
     if ("cover_image" in data) { sets.push("cover_image = ?"); args.push(data.cover_image ?? null); }
+    if ("hero_image" in data) { sets.push("hero_image = ?"); args.push(data.hero_image ?? null); }
     if (data.display_mode !== undefined) { sets.push("display_mode = ?"); args.push(data.display_mode); }
     if (data.featured_article_id !== undefined) { sets.push("featured_article_id = ?"); args.push(data.featured_article_id); }
     if (data.visible !== undefined) { sets.push("visible = ?"); args.push(data.visible ? 1 : 0); }
@@ -160,6 +168,7 @@ export async function listHomeChapterDisplays(): Promise<ChapterDisplay[]> {
       const meta = metaMap.get(c.slug) ?? {
         chapter_slug: c.slug,
         cover_image: null,
+        hero_image: null,
         display_mode: "latest" as DisplayMode,
         featured_article_id: null,
         visible: true,

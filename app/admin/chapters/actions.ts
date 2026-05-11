@@ -13,6 +13,9 @@ export async function saveChapterMetaAction(formData: FormData) {
   const cover_image_raw = String(formData.get("cover_image") ?? "").trim();
   const cover_image = cover_image_raw || null;
 
+  const hero_image_raw = String(formData.get("hero_image") ?? "").trim();
+  const hero_image = hero_image_raw || null;
+
   const mode = String(formData.get("display_mode") ?? "latest");
   const display_mode: DisplayMode =
     mode === "featured" ? "featured" : mode === "random" ? "random" : "latest";
@@ -29,6 +32,7 @@ export async function saveChapterMetaAction(formData: FormData) {
 
   await upsertChapterMeta(chapter_slug, {
     cover_image,
+    hero_image,
     display_mode,
     featured_article_id,
     visible,
