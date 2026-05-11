@@ -51,21 +51,42 @@ export function SlideForm({ slide }: { slide?: Slide }) {
     setUploadError(null);
     setJustUploaded(false);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/upload/slide", { method: "POST", body: fd });
-      if (!res.ok) {
-        // HTTP 4xx/5xx — JSON 본문이 아닐 수도 있음 (예: 404 HTML)
-        setUploadError(`업로드 실패 (HTTP ${res.status}). 잠시 후 다시 시도해 주세요.`);
-        return;
-      }
-      const json = await res.json();
-      if (!json.ok) {
-        setUploadError(json.error ?? "업로드에 실패했습니다.");
-      } else {
-        setImagePath(json.url);
-        setUploadError(null);   // ← 성공 시 이전 에러 명시적 제거
+      // 1) Vercel Blob 클라이언트 직접 업로드 (4.5MB 제한 우회, 최대 15MB)
+      try {
+        const { upload } = await import("@vercel/blob/client");
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const blob = await upload(`slides/${Date.now()}-${safeName}`, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload/slide",
+        });
+        setImagePath(blob.url);
+        setUploadError(null);
         setJustUploaded(true);
+        return;
+      } catch (blobErr) {
+        // 2) 로컬 개발 환경 폴백: 서버를 통한 multipart 업로드
+        console.warn("[slide upload] Blob 직접 업로드 실패, multipart 폴백 시도:", blobErr);
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/upload/slide", { method: "POST", body: fd });
+        if (!res.ok) {
+          if (res.status === 413) {
+            setUploadError(
+              `파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 권장: 12MB 이하 / 가로 2400px 이하로 줄여 주세요.`
+            );
+          } else {
+            setUploadError(`업로드 실패 (HTTP ${res.status}). 잠시 후 다시 시도해 주세요.`);
+          }
+          return;
+        }
+        const json = await res.json();
+        if (!json.ok) {
+          setUploadError(json.error ?? "업로드에 실패했습니다.");
+        } else {
+          setImagePath(json.url);
+          setUploadError(null);
+          setJustUploaded(true);
+        }
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
