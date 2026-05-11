@@ -66,10 +66,10 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
         </ul>
 
         <div className="flex items-center gap-1">
-          {/* e-Book 바로가기 */}
+          {/* e-Book 바로가기 — 가로 타원형 (아이콘 + 텍스트) */}
           <Link
             href="/ebooks"
-            className="pill-nav-icon hidden sm:inline-flex items-center gap-1.5 px-3 whitespace-nowrap"
+            className="pill-nav-pill hidden sm:inline-flex"
             aria-label="e-Book 서재"
             title="e-Book"
           >
@@ -87,7 +87,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
               <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
             </svg>
-            <span className="text-xs font-medium leading-none">e-Book</span>
+            <span>e-Book</span>
           </Link>
 
           {/* 구분 여백 */}

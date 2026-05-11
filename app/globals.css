@@ -386,6 +386,27 @@ html[data-theme="dark"] .hover\:bg-white:hover {
   color: #fff;
 }
 
+/* 가로 타원형 — 아이콘 + 텍스트가 함께 들어가는 버튼 (예: e-Book) */
+.pill-nav-pill {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.pill-nav-pill:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
 /* 모바일 햄버거 시트 */
 .mobile-sheet-link {
   display: block;
