@@ -51,8 +51,9 @@ const NAV: NavGroup[] = [
     section: "사람",
     hanja: "會員",
     items: [
-      { href: "/admin/members", label: "회원 명부", Icon: IconMembers },
-      { href: "/admin/banners", label: "회원 배너", Icon: IconTag },
+      { href: "/admin/members",     label: "회원 명부",  Icon: IconMembers },
+      { href: "/admin/banners",     label: "회원 배너",  Icon: IconTag },
+      { href: "/admin/submissions", label: "자료 접수",  Icon: IconArticle },
     ],
   },
   {

@@ -23,6 +23,7 @@ import { countEbooks } from "@/lib/ebooks-db";
 import { countChapterMetas } from "@/lib/chapter-meta-db";
 import { countBanners } from "@/lib/banners-db";
 import { getVisitStats } from "@/lib/visits-db";
+import { countNewSubmissions } from "@/lib/submissions-db";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,7 @@ export default async function AdminHome() {
     chapterStats,
     bannerStats,
     visitStats,
+    newSubmissions,
   ] = await Promise.all([
     listSlides(),
     countVideos(),       // 풀스캔 대신 COUNT(*)
@@ -56,6 +58,7 @@ export default async function AdminHome() {
     countChapterMetas(),
     countBanners(),
     getVisitStats(),
+    countNewSubmissions(),
   ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
@@ -96,6 +99,10 @@ export default async function AdminHome() {
         <div className="admin-summary mb-14">
           <SummaryRow label="현재 로그인" value={`${me?.name} (@${me?.username})`} />
           <SummaryRow label="오늘 방문" value={`${visitStats.today}회 · 고유 ${visitStats.uniqueToday}명`} />
+          <SummaryRow
+            label="신규 자료 접수"
+            value={newSubmissions > 0 ? `🔔 ${newSubmissions}건 (확인 필요)` : "없음"}
+          />
           <SummaryRow label="활성 슬라이드" value={`${activeSlides} / ${slides.length}장`} />
           <SummaryRow label="추천 영상" value={featuredTitle ?? "지정 안 됨"} />
         </div>
@@ -117,6 +124,9 @@ export default async function AdminHome() {
                   sub={ebookStats.membersOnly > 0 ? `회원전용 ${ebookStats.membersOnly}권` : "PDF 자료"} />
           <DbCard href="/admin/members"     Icon={IconMembers}    title="회원 명부"
                   stat={`${userStats.total}명`} sub={`관리자 ${userStats.admins}명`} />
+          <DbCard href="/admin/submissions" Icon={IconArticle}    title="자료 접수"
+                  stat={newSubmissions > 0 ? `${newSubmissions}건` : "—"}
+                  sub={newSubmissions > 0 ? "신규 확인 필요" : "공개 폼 접수"} />
           <DbCard href="/admin/chapters"    Icon={IconBackground} title="챕터 표지"
                   stat={`${chapterStats.withCover}개`}
                   sub={`설정된 표지 ${chapterStats.total}개 중`} />

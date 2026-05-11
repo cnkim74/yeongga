@@ -386,6 +386,30 @@ html[data-theme="dark"] .hover\:bg-white:hover {
   color: #fff;
 }
 
+/* 공개 폼 입력 스타일 — 자료 제공 폼 등 */
+.form-input {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-rule);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-ink);
+  font-size: 15px;
+  line-height: 1.5;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.08);
+}
+html[data-theme="dark"] .form-input {
+  background: var(--color-bg-soft);
+  color: var(--color-ink);
+}
+
 /* 가로 스크롤 영역에서 스크롤바 숨김 (챕터 네비 스트립 등) */
 .no-scrollbar {
   -ms-overflow-style: none;

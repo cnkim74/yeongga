@@ -187,6 +187,25 @@ async function init(client: Client) {
     );
     CREATE INDEX IF NOT EXISTS idx_banners_active_position ON member_banners(active, position);
 
+    CREATE TABLE IF NOT EXISTS submissions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT,
+      phone TEXT,
+      category TEXT NOT NULL DEFAULT 'other',
+      message TEXT NOT NULL,
+      file_url TEXT,
+      file_name TEXT,
+      status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','reviewing','done','archived')),
+      ip_hash TEXT,
+      user_agent TEXT,
+      admin_note TEXT,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_submissions_status ON submissions(status);
+    CREATE INDEX IF NOT EXISTS idx_submissions_created ON submissions(created_at DESC);
+
     CREATE TABLE IF NOT EXISTS page_visits (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       path TEXT NOT NULL,
