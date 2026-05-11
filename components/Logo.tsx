@@ -22,7 +22,7 @@ const SIZES: Record<
   xl: { mark: 96, main: 50, sub: 18, sub2: 16, gap: 20, subTracking: 0.24 },
 };
 
-const ANNIVERSARY_LABEL = "創立 45周年";
+const ANNIVERSARY_LABEL = "創立 50周年";
 
 export function LogoMark({
   size = 36,
@@ -171,7 +171,7 @@ export function Logo({
             whiteSpace: "nowrap",
           }}
         >
-          創立<br />45周年
+          創立<br />50周年
         </div>
       )}
     </div>
