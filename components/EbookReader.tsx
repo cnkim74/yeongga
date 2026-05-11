@@ -120,13 +120,11 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         const scale = cssWidth / naturalViewport.width;
         const viewport = page.getViewport({ scale });
 
-        // ✅ 진단: 이 페이지의 그리기 명령 개수 확인
-        const opList = await page.getOperatorList();
-        const opCount = opList.fnArray.length;
-
-        canvas.width = Math.floor(viewport.width);
-        canvas.height = Math.floor(viewport.height);
-        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        // DPR 고해상도 지원 (v4는 transform 매트릭스 안정적)
+        const outputScale = window.devicePixelRatio || 1;
+        canvas.width  = Math.floor(viewport.width  * outputScale);
+        canvas.height = Math.floor(viewport.height * outputScale);
+        canvas.style.width  = `${Math.floor(viewport.width)}px`;
         canvas.style.height = `${Math.floor(viewport.height)}px`;
 
         const ctx = canvas.getContext("2d");
@@ -135,26 +133,23 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
           return;
         }
 
-        // canvas + canvasContext 둘 다 + intent='display' 명시 (가장 호환성 높은 조합)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const transform: [number, number, number, number, number, number] | undefined =
+          outputScale !== 1
+            ? [outputScale, 0, 0, outputScale, 0, 0]
+            : undefined;
+
+        // pdfjs v4 표준 API
         const task = page.render({
-          canvas,
           canvasContext: ctx,
           viewport,
-          intent: "display",
-        } as any);
+          transform,
+        });
         activeRenderTasks.current.add(task);
         await task.promise;
         activeRenderTasks.current.delete(task);
 
-        // 렌더 후 픽셀 진단
-        const cx = Math.floor(canvas.width / 2);
-        const cy = Math.floor(canvas.height / 2);
-        const px = ctx.getImageData(cx, cy, 1, 1).data;
-        const cornerPx = ctx.getImageData(20, 20, 1, 1).data;
-
         setDebug(
-          `p${pageNum} · ops=${opCount} · cv ${canvas.width}×${canvas.height} · 중앙 rgb(${px[0]},${px[1]},${px[2]}) · 좌상 rgb(${cornerPx[0]},${cornerPx[1]},${cornerPx[2]})`
+          `p${pageNum} 렌더 완료 — ${canvas.width}×${canvas.height}`
         );
       } catch (e) {
         if (e instanceof Error) {

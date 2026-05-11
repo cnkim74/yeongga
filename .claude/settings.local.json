@@ -48,7 +48,12 @@
       "Bash(.venv/bin/pip install *)",
       "Read(//Volumes/CNKim/claude/영가회 자료/**)",
       "Bash(ln -sf '/Volumes/CNKim/claude/영가회 자료/영가회40년사_마스터_발행계획_260편_v2.xlsx' '~/yeongga-archive/source/master_plan_v2.xlsx')",
-      "Bash(.venv/bin/python3 -)"
+      "Bash(.venv/bin/python3 -)",
+      "Bash(sqlite3 ~/yeongga-archive/data/archive.db \"SELECT seq, jang_code, title, subtitle, category, source_pages FROM posts ORDER BY seq LIMIT 15;\")",
+      "Bash(python3 -c ' *)",
+      "Bash(pip3 install *)",
+      "Bash(python3)",
+      "Bash(mkdir -p /Volumes/CNKim/claude/yeongga/app/\\\\\\(magazine\\\\\\)/ebooks/\\\\[id\\\\])"
     ]
   }
 }
