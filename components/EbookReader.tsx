@@ -108,7 +108,7 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
   const [leftPage, rightPage] = spreadPages(spread);
   const mobilePage = leftPage ?? 1;
 
-  /* ── Canvas 렌더 — Mozilla 공식 예제 패턴 (DPR 미적용 단순화) ── */
+  /* ── Canvas 렌더 — 픽셀 진단 + 다중 fallback ── */
   const renderPage = useCallback(
     async (pageNum: number, canvas: HTMLCanvasElement) => {
       if (!pdf) return;
@@ -120,35 +120,38 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         const scale = cssWidth / naturalViewport.width;
         const viewport = page.getViewport({ scale });
 
-        // 캔버스 크기 설정 (단순화: DPR 미적용)
         canvas.width = Math.floor(viewport.width);
         canvas.height = Math.floor(viewport.height);
         canvas.style.width = `${Math.floor(viewport.width)}px`;
         canvas.style.height = `${Math.floor(viewport.height)}px`;
 
-        // 캔버스 컨텍스트 명시적 획득 + 흰색 배경 클리어
         const ctx = canvas.getContext("2d");
         if (!ctx) {
-          setDebug(`p${pageNum}: 2D 컨텍스트 획득 실패`);
+          setDebug(`p${pageNum}: 2D context 획득 실패`);
           return;
         }
 
-        // pdfjs v5 호환: canvas 와 canvasContext 둘 다 전달 (안전)
+        // 진단 1: 렌더 전에 빨간색으로 칠해 캔버스가 실제로 화면에 표시되는지 확인
+        ctx.fillStyle = "#ff0000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 짧은 지연 — 사용자가 빨간색을 볼 수 있다면 캔버스는 정상
+        await new Promise((r) => setTimeout(r, 100));
+
+        // v5 API: canvas 만 전달 (canvasContext deprecated)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const renderParams: any = {
-          canvas,
-          canvasContext: ctx,
-          viewport,
-        };
-
-        const task = page.render(renderParams);
+        const task = page.render({ canvas, viewport } as any);
         activeRenderTasks.current.add(task);
-
         await task.promise;
         activeRenderTasks.current.delete(task);
 
+        // 진단 2: 렌더 후 중심 픽셀 샘플링
+        const cx = Math.floor(canvas.width / 2);
+        const cy = Math.floor(canvas.height / 2);
+        const px = ctx.getImageData(cx, cy, 1, 1).data;
+        const cornerPx = ctx.getImageData(20, 20, 1, 1).data;
+
         setDebug(
-          `p${pageNum} 렌더 완료 — canvas: ${canvas.width}x${canvas.height}, viewport: ${Math.floor(viewport.width)}x${Math.floor(viewport.height)}`
+          `p${pageNum} OK · cv ${canvas.width}×${canvas.height} · 중앙 rgb(${px[0]},${px[1]},${px[2]}) · 좌상 rgb(${cornerPx[0]},${cornerPx[1]},${cornerPx[2]})`
         );
       } catch (e) {
         if (e instanceof Error) {
