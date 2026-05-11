@@ -6,6 +6,7 @@ import matter from "gray-matter";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { getDb } from "@/lib/db";
+import { restoreBodyFromFile } from "@/lib/articles-db";
 
 /**
  * 특정 챕터의 콘텐츠 디렉토리를 강제 재시드.
@@ -101,4 +102,26 @@ export async function forceReseedChapterAction(formData: FormData) {
   revalidatePath("/admin/diagnostics");
 
   return { ok: true, inserted, skipped };
+}
+
+/**
+ * 단일 글의 본문만 원본 .md 파일에서 복원.
+ * cover/title/excerpt 등 다른 메타데이터는 그대로 유지.
+ */
+export async function restoreArticleBodyAction(formData: FormData) {
+  await requireAdmin();
+  const chapter = String(formData.get("chapter") ?? "").trim();
+  const slug = String(formData.get("slug") ?? "").trim();
+  if (!chapter || !slug) return { error: "챕터와 슬러그를 모두 입력해 주세요." };
+
+  const result = await restoreBodyFromFile(chapter, slug);
+  if (!result.ok) return { error: result.error };
+
+  revalidatePath("/");
+  revalidatePath("/archive");
+  revalidatePath(`/archive/${chapter}`);
+  revalidatePath(`/archive/${chapter}/${slug}`);
+  revalidatePath("/admin/diagnostics");
+
+  return { ok: true };
 }

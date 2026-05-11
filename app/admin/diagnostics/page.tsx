@@ -3,6 +3,7 @@ import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { IconHome, IconSettings } from "@/components/admin/AdminIcons";
 import { getDb } from "@/lib/db";
 import { ReseedChapterButton } from "./ReseedChapterButton";
+import { RestoreBodyForm } from "./RestoreBodyForm";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "진단 — 집무실" };
@@ -74,6 +75,10 @@ export default async function DiagnosticsPage() {
             </div>
             <ReseedChapterButton chapter="jachui" />
           </div>
+        </Section>
+
+        <Section title="글 본문 복원" hanja="本文復元">
+          <RestoreBodyForm defaultChapter="saram" defaultSlug="2dae-ryu-mokgi" />
         </Section>
 
         <Section title="삭제 차단 목록" hanja="削除記錄">

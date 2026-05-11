@@ -75,6 +75,48 @@ export async function countAllArticles(): Promise<number> {
 }
 
 /**
+ * 특정 글의 본문(body)만 원본 .md 파일에서 다시 가져와 DB 업데이트.
+ * 어드민에서 cover 등을 변경하다 본문이 깨진 경우 복원용.
+ * cover/title/excerpt 등 메타데이터는 건드리지 않음.
+ */
+export async function restoreBodyFromFile(
+  chapter: string,
+  slug: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  // 동적 import — server-only 모듈이라 server action 에서만 호출 가능
+  const fs = await import("node:fs");
+  const path = await import("node:path");
+  const matter = (await import("gray-matter")).default;
+
+  const filePath = path.join(
+    process.cwd(),
+    "content",
+    "articles",
+    chapter,
+    `${slug}.md`
+  );
+  if (!fs.existsSync(filePath)) {
+    return { ok: false, error: `원본 파일이 없습니다: ${filePath}` };
+  }
+
+  const raw = fs.readFileSync(filePath, "utf8");
+  const { content } = matter(raw);
+  const html = await renderMarkdown(content);
+
+  const db = await getDb();
+  const r = await db.execute({
+    sql: `UPDATE articles SET body = ?, updated_at = CURRENT_TIMESTAMP
+          WHERE chapter = ? AND slug = ?`,
+    args: [html, chapter, slug],
+  });
+
+  if (r.rowsAffected === 0) {
+    return { ok: false, error: "해당 글을 DB에서 찾을 수 없습니다." };
+  }
+  return { ok: true };
+}
+
+/**
  * 챕터별 최신 글 1편씩 — 홈 페이지용
  * 8개 챕터에 대해 별도 쿼리 8번 도는 대신 한 번에 가져옴 (윈도우 함수 활용)
  */

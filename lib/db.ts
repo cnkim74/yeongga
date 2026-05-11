@@ -421,6 +421,32 @@ async function init(client: Client) {
     await markMigration(client, "chapter-rename-v1");
   }
 
+  // 일회성 복원: 류목기 회장 글 본문 — 사진 업로드 후 본문이 깨졌다는 보고에 따른 자동 복구
+  if (!(await hasMigration(client, "restore-2dae-ryu-mokgi-v1"))) {
+    try {
+      const filePath = path.join(
+        process.cwd(),
+        "content",
+        "articles",
+        "saram",
+        "2dae-ryu-mokgi.md"
+      );
+      if (fs.existsSync(filePath)) {
+        const raw = fs.readFileSync(filePath, "utf8");
+        const { content } = matter(raw);
+        const html = await renderMarkdown(content);
+        await client.execute({
+          sql: `UPDATE articles SET body = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE chapter = ? AND slug = ?`,
+          args: [html, "saram", "2dae-ryu-mokgi"],
+        });
+      }
+    } catch (e) {
+      console.warn("[restore-2dae-ryu-mokgi-v1] 실패:", e);
+    }
+    await markMigration(client, "restore-2dae-ryu-mokgi-v1");
+  }
+
   // 마이그레이션: 마크다운 본문 → HTML (한 번만, 전체 스캔 부담 큼)
   if (!(await hasMigration(client, "markdown-to-html-v1"))) {
     const mdRows = await client.execute("SELECT id, body FROM articles");
