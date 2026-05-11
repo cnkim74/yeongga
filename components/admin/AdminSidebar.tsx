@@ -62,6 +62,7 @@ const NAV: NavGroup[] = [
       { href: "/admin/tags",        label: "키워드 태그", Icon: IconTag },
       { href: "/admin/backgrounds", label: "페이지 배경", Icon: IconBackground },
       { href: "/admin/settings",    label: "시스템 설정", Icon: IconSettings },
+      { href: "/admin/diagnostics", label: "진단",       Icon: IconSettings },
     ],
   },
 ];
