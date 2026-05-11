@@ -42,7 +42,7 @@ export default async function AdminChaptersPage() {
             </span>
           </h1>
           <p className="text-[var(--admin-ink-soft)] text-sm leading-relaxed max-w-xl">
-            메인 홈에 노출되는 각 챕터의 대표 이미지와 노출 방식을 설정합니다.
+            각 챕터의 <b>대표 이미지</b>는 메인 홈 쇼케이스와 <b>챕터 페이지 상단(hero)</b> 양쪽에 함께 적용됩니다.
             <br />
             노출 방식: <b>최신</b> = 가장 최근 글 / <b>추천</b> = 지정된 글 / <b>랜덤</b> = 챕터 내 무작위.
           </p>

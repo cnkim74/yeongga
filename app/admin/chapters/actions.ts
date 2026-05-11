@@ -37,5 +37,6 @@ export async function saveChapterMetaAction(formData: FormData) {
 
   revalidatePath("/admin/chapters");
   revalidatePath("/");
+  revalidatePath(`/archive/${chapter_slug}`);
   return { ok: true };
 }

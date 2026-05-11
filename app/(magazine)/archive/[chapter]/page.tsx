@@ -1,10 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters, getChapter } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listUsers } from "@/lib/users-db";
+import { getChapterMeta } from "@/lib/chapter-meta-db";
 
 export const revalidate = 3600; // 1시간 캐시 — 글 변경 시 어드민에서 revalidatePath 호출
 
@@ -34,23 +36,54 @@ export default async function ChapterPage({
   const { chapter } = await params;
   const meta = getChapter(chapter);
   if (!meta) notFound();
-  const [articles, users] = await Promise.all([
+  const [articles, users, chapterMeta] = await Promise.all([
     listChapterArticles(chapter),
     listUsers(),
+    getChapterMeta(chapter),
   ]);
   const avatarByName = new Map(users.map((u) => [u.name, u.avatar_url]));
 
+  // 어드민 챕터 표지 > 정적 폴백 (없으면 placeholder)
+  const heroImage = chapterMeta?.cover_image ?? null;
+
   return (
     <>
-      {/* HERO 헤더 — 챕터 사진 풀블리드 */}
+      {/* HERO 헤더 — chapter_meta.cover_image 우선, 없으면 따뜻한 그라데이션 placeholder */}
       <section className="relative pt-40 pb-24 sm:pb-32 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
-            src={`/chapters/${chapter}.jpg`}
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
+          {heroImage ? (
+            <>
+              <Image
+                src={heroImage}
+                alt=""
+                fill
+                sizes="100vw"
+                priority
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
+            </>
+          ) : (
+            /* 이미지 없을 때 — 챕터 분위기에 맞는 따뜻한 먹·종이 그라데이션 */
+            <>
+              <div
+                className="w-full h-full"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #2a2520 0%, #3a3128 35%, #4a3d30 70%, #2a2520 100%)",
+                }}
+              />
+              {/* 좌측 상단 옅은 한자 워터마크 */}
+              <div
+                aria-hidden="true"
+                className="absolute right-8 sm:right-16 bottom-8 sm:bottom-12 font-serif text-white/[0.07] select-none leading-none"
+                style={{ fontSize: "clamp(180px, 30vw, 360px)" }}
+              >
+                {meta.number}
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/40" />
+            </>
+          )}
         </div>
         <div className="relative z-10 mx-auto max-w-6xl px-6 text-white">
           <Link
