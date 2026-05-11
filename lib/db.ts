@@ -186,6 +186,19 @@ async function init(client: Client) {
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX IF NOT EXISTS idx_banners_active_position ON member_banners(active, position);
+
+    CREATE TABLE IF NOT EXISTS page_visits (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      path TEXT NOT NULL,
+      visitor_id TEXT,
+      user_id INTEGER,
+      referer TEXT,
+      user_agent TEXT,
+      visited_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_visits_path ON page_visits(path);
+    CREATE INDEX IF NOT EXISTS idx_visits_visited_at ON page_visits(visited_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_visits_visitor ON page_visits(visitor_id);
   `);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──

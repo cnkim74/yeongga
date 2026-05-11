@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { VisitTracker } from "@/components/VisitTracker";
 
 export default function MagazineLayout({
   children,
@@ -11,6 +12,7 @@ export default function MagazineLayout({
       <Header />
       {children}
       <Footer />
+      <VisitTracker />
     </>
   );
 }

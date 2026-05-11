@@ -22,6 +22,7 @@ import { listCategories, countPhotos } from "@/lib/gallery-db";
 import { countEbooks } from "@/lib/ebooks-db";
 import { countChapterMetas } from "@/lib/chapter-meta-db";
 import { countBanners } from "@/lib/banners-db";
+import { getVisitStats } from "@/lib/visits-db";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export default async function AdminHome() {
     ebookStats,
     chapterStats,
     bannerStats,
+    visitStats,
   ] = await Promise.all([
     listSlides(),
     countVideos(),       // 풀스캔 대신 COUNT(*)
@@ -53,6 +55,7 @@ export default async function AdminHome() {
     countEbooks(),
     countChapterMetas(),
     countBanners(),
+    getVisitStats(),
   ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
@@ -92,6 +95,7 @@ export default async function AdminHome() {
         {/* ─── 현황 요약 패널 ─── */}
         <div className="admin-summary mb-14">
           <SummaryRow label="현재 로그인" value={`${me?.name} (@${me?.username})`} />
+          <SummaryRow label="오늘 방문" value={`${visitStats.today}회 · 고유 ${visitStats.uniqueToday}명`} />
           <SummaryRow label="활성 슬라이드" value={`${activeSlides} / ${slides.length}장`} />
           <SummaryRow label="추천 영상" value={featuredTitle ?? "지정 안 됨"} />
         </div>
