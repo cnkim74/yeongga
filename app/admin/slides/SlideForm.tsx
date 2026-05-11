@@ -9,20 +9,46 @@ export function SlideForm({ slide }: { slide?: Slide }) {
     saveSlideAction,
     {}
   );
-  const [preview, setPreview] = useState<string | null>(slide?.image_path ?? null);
+  const [imagePath, setImagePath] = useState<string>(slide?.image_path ?? "");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.currentTarget.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload/slide", { method: "POST", body: fd });
+      const json = await res.json();
+      if (!json.ok) {
+        setUploadError(json.error ?? "업로드에 실패했습니다.");
+      } else {
+        setImagePath(json.url);
+      }
+    } catch {
+      setUploadError("업로드 중 오류가 발생했습니다.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   return (
     <form action={formAction} className="space-y-6 max-w-3xl">
       {slide && <input type="hidden" name="id" value={slide.id} />}
-      <input type="hidden" name="current_image" value={slide?.image_path ?? ""} />
+      {/* image_path 를 hidden 으로 전송 — 파일은 별도 API 로 업로드됨 */}
+      <input type="hidden" name="image_path" value={imagePath} />
 
       {/* 이미지 */}
       <div>
         <Label>표지 이미지</Label>
         <div className="grid sm:grid-cols-[200px_1fr] gap-4 items-start">
           <div className="aspect-video bg-[var(--color-notion-hover)] rounded-md overflow-hidden border border-[var(--color-notion-rule)]">
-            {preview ? (
-              <img src={preview} alt="" className="w-full h-full object-cover" />
+            {imagePath ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={imagePath} alt="" className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full grid place-items-center text-[var(--color-notion-mute)] text-xs">
                 미리보기
@@ -31,19 +57,29 @@ export function SlideForm({ slide }: { slide?: Slide }) {
           </div>
           <div>
             <input
-              name="image"
               type="file"
               accept="image/jpeg,image/png,image/webp,image/gif"
-              onChange={(e) => {
-                const f = e.currentTarget.files?.[0];
-                if (f) setPreview(URL.createObjectURL(f));
-              }}
+              disabled={uploading}
+              onChange={handleFileChange}
               className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-[var(--color-notion-text)] file:text-white file:cursor-pointer"
             />
             <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">
               jpg / png / webp / gif · 최대 12MB · 권장 가로 2400px 이상, 16:9
-              비율. {slide && "교체하지 않으려면 비워 두세요."}
+              비율. {slide && "교체하지 않으려면 그대로 두세요."}
             </div>
+            {uploading && (
+              <div className="mt-2 text-xs text-[var(--color-notion-mute)]">
+                업로드 중…
+              </div>
+            )}
+            {uploadError && (
+              <div className="mt-2 text-xs text-[#c4554d]">{uploadError}</div>
+            )}
+            {imagePath && !uploading && (
+              <div className="mt-2 text-xs text-emerald-700">
+                ✓ 업로드 완료 — 저장하면 반영됩니다
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -88,8 +124,14 @@ export function SlideForm({ slide }: { slide?: Slide }) {
           name="href"
           label="버튼 링크"
           defaultValue={slide?.href ?? "/"}
-          placeholder="/archive/..."
+          placeholder="/archive/yeongi/... 또는 https://..."
         />
+      </div>
+
+      <div className="text-xs text-[var(--color-notion-mute)] -mt-3 leading-relaxed">
+        💡 버튼 링크는 사이트 내 경로(예: <code className="font-mono">/archive/yeongi/cheot-moim</code>)이거나
+        외부 URL(예: <code className="font-mono">https://...</code>)을 입력하세요.
+        존재하지 않는 경로를 입력하면 클릭 시 &quot;페이지 없음&quot;이 표시됩니다.
       </div>
 
       <label className="flex items-center gap-2 text-sm">
@@ -111,7 +153,7 @@ export function SlideForm({ slide }: { slide?: Slide }) {
       <div className="flex gap-2 pt-2">
         <button
           type="submit"
-          disabled={pending}
+          disabled={pending || uploading || !imagePath}
           className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] disabled:opacity-50 px-4 h-9"
         >
           {pending ? "저장 중…" : "저장"}

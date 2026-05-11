@@ -11,7 +11,7 @@ import {
   toggleActive,
   updateSlide,
 } from "@/lib/slides-db";
-import { deleteUploadIfLocal, saveUpload } from "@/lib/uploads";
+import { deleteUploadIfLocal } from "@/lib/uploads";
 
 export type SlideFormState = { error?: string };
 
@@ -34,26 +34,20 @@ export async function saveSlideAction(
   const href = String(formData.get("href") ?? "/").trim() || "/";
   const active = formData.get("active") === "on";
 
+  // 이미지는 /api/upload/slide 로 먼저 업로드되고 URL 만 전달됨
+  const imagePath = String(formData.get("image_path") ?? "").trim();
+
   if (!title) return { error: "제목은 비워둘 수 없습니다." };
-
-  const file = formData.get("image") as File | null;
-  let imagePath = String(formData.get("current_image") ?? "");
-
-  if (file && file.size > 0) {
-    const upload = await saveUpload("slides", file);
-    if (!upload.ok) return { error: upload.error };
-    if (id) {
-      const existing = await getSlide(id);
-      if (existing) await deleteUploadIfLocal(existing.image_path);
-    }
-    imagePath = upload.publicPath;
-  }
-
   if (!imagePath) {
-    return { error: "이미지 파일을 첨부해 주세요." };
+    return { error: "이미지를 업로드해 주세요." };
   }
 
   if (id) {
+    // 기존 슬라이드 — 이미지가 바뀌었으면 옛 파일 정리
+    const existing = await getSlide(id);
+    if (existing && existing.image_path !== imagePath) {
+      await deleteUploadIfLocal(existing.image_path);
+    }
     await updateSlide(id, {
       image_path: imagePath,
       kicker,
