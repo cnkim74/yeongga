@@ -15,7 +15,7 @@ export function EmptyDbPage({
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: crumbLabel },
         ]}
       />

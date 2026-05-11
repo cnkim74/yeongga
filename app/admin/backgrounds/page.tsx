@@ -3,7 +3,7 @@ import { listPageBackgrounds } from "@/lib/backgrounds-db";
 import { BgCard } from "./BgCard";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "페이지 배경 — 관리실" };
+export const metadata = { title: "페이지 배경 — 집무실" };
 
 export default async function BackgroundsAdminPage() {
   const bgs = await listPageBackgrounds();
@@ -12,7 +12,7 @@ export default async function BackgroundsAdminPage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🖼️ 페이지 배경" },
         ]}
       />

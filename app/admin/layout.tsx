@@ -1,7 +1,7 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 
 export const metadata = {
-  title: "관리실 — 영가회",
+  title: "집무실 — 영가회",
 };
 
 export default function AdminLayout({

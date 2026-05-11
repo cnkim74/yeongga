@@ -6,7 +6,7 @@ export default function NewSlidePage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🖼️ 슬라이드", href: "/admin/slides" },
           { label: "새 슬라이드" },
         ]}

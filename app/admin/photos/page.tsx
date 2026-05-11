@@ -19,7 +19,7 @@ export default function PhotoArchivePage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "📸 사진 아카이브" },
         ]}
         right={

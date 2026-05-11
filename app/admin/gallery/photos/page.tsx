@@ -23,7 +23,7 @@ export default async function AdminPhotosPage({
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🖼️ 갤러리 관리", href: "/admin/gallery" },
           { label: filteredCat ? `📁 ${filteredCat.name}` : "📷 전체 사진" },
         ]}

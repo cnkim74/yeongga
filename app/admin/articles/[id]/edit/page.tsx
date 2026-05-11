@@ -22,7 +22,7 @@ export default async function EditArticlePage({
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "📝 글 관리", href: "/admin/articles" },
           { label: "편집" },
         ]}

@@ -18,7 +18,7 @@ export default async function AdminGalleryPage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🖼️ 갤러리 관리" },
         ]}
       />

@@ -6,7 +6,7 @@ export default function NewVideoPage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🎞️ 동영상", href: "/admin/videos" },
           { label: "새 동영상" },
         ]}

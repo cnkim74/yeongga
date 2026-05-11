@@ -1,5 +1,16 @@
 import Link from "next/link";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
+import {
+  IconHome,
+  IconSlides,
+  IconVideo,
+  IconArticle,
+  IconGallery,
+  IconEbook,
+  IconMembers,
+  IconTag,
+  IconBackground,
+} from "@/components/admin/AdminIcons";
 import { listSlides } from "@/lib/slides-db";
 import { listVideos } from "@/lib/videos-db";
 import { listUsers } from "@/lib/users-db";
@@ -13,109 +24,101 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
   const me = await getCurrentUser();
-  const [slides, videos, users, totalArticles, allTags, backgrounds, categories, photos] = await Promise.all([
-    listSlides(),
-    listVideos(),
-    listUsers(),
-    countAllArticles(),
-    listAllTags(),
-    listPageBackgrounds(),
-    listCategories(),
-    listPhotos(),
-  ]);
+  const [slides, videos, users, totalArticles, allTags, backgrounds, categories, photos] =
+    await Promise.all([
+      listSlides(),
+      listVideos(),
+      listUsers(),
+      countAllArticles(),
+      listAllTags(),
+      listPageBackgrounds(),
+      listCategories(),
+      listPhotos(),
+    ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
   const featuredVideo = videos.find((v) => v.featured);
   const activeBgs = backgrounds.filter((b) => b.active && b.image_path !== null).length;
+  const adminCount = users.filter((u) => u.role === "admin").length;
 
   return (
     <>
-      <AdminTopbar crumbs={[{ label: "🏠 관리실 홈" }]} />
-      <div className="max-w-[960px] mx-auto px-12 pt-16 pb-24">
-        <div className="text-7xl mb-4 leading-none select-none">🗂️</div>
-        <h1 className="text-4xl font-bold tracking-tight mb-2">
-          영가회 관리실
-        </h1>
-        <p className="text-[var(--color-notion-mute)] text-base mb-10">
-          {me?.name} 관리자님, 안녕하세요. 공개 사이트와 분리된 작업 공간입니다.
-        </p>
+      <AdminTopbar
+        crumbs={[{ label: "집무실 홈", icon: <IconHome size={14} /> }]}
+      />
 
-        <div className="border border-[var(--color-notion-rule)] rounded-md mb-10 divide-y divide-[var(--color-notion-rule)]">
-          <PropRow label="현재 로그인" value={`${me?.name} (@${me?.username})`} />
-          <PropRow label="활성 슬라이드" value={`${activeSlides} / ${slides.length}장`} />
-          <PropRow label="추천 영상" value={featuredVideo?.title ?? "지정 안 됨"} />
+      <div className="max-w-[1040px] mx-auto px-10 pt-14 pb-24">
+        {/* ─── 인장 헤더 ─── */}
+        <div className="mb-14">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="seal-mark">執</div>
+            <div className="font-serif text-xs tracking-[0.4em] text-[var(--admin-mute)] uppercase">
+              YEONGGA · OFFICE
+            </div>
+          </div>
+
+          <h1 className="font-serif text-[44px] leading-tight tracking-tight text-[var(--admin-ink)] mb-3">
+            영가회 집무실
+            <span className="font-serif text-[18px] text-[var(--admin-mute)] ml-3 align-middle">
+              執務室
+            </span>
+          </h1>
+
+          <p className="text-[var(--admin-ink-soft)] text-[15px] leading-relaxed max-w-xl">
+            {me?.name} 관리자님, 안녕하십니까.
+            <br />
+            공개 사이트와 분리된 운영 공간입니다.
+          </p>
         </div>
 
-        <h2 className="text-xl font-semibold mb-3">데이터베이스</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
-          <DbCard
-            href="/admin/slides"
-            icon="🖼️"
-            title="홈 슬라이드"
-            stat={`${activeSlides}장`}
-            sub={`총 ${slides.length}장 중 활성`}
-          />
-          <DbCard
-            href="/admin/videos"
-            icon="🎞️"
-            title="동영상"
-            stat={`${videos.length}편`}
-            sub={featuredVideo ? "⭐ 추천 지정됨" : "추천 없음"}
-          />
-          <DbCard
-            href="/admin/articles"
-            icon="📝"
-            title="글 관리"
-            stat={`${totalArticles}편`}
-            sub="장(章)별 분류"
-          />
-          <DbCard
-            href="/admin/members"
-            icon="👥"
-            title="회원 명부"
-            stat={`${users.length}명`}
-            sub={`관리자 ${users.filter((u) => u.role === "admin").length}명`}
-          />
-          <DbCard
-            href="/admin/tags"
-            icon="🏷️"
-            title="키워드"
-            stat={`${allTags.length}개`}
-            sub="태그 관리 · 삭제"
-          />
-          <DbCard
-            href="/admin/backgrounds"
-            icon="🖼️"
-            title="페이지 배경"
-            stat={`${activeBgs}개`}
-            sub="배경 이미지 관리"
-          />
-          <DbCard
-            href="/admin/gallery"
-            icon="📷"
-            title="사진 갤러리"
-            stat={`${photos.length}장`}
-            sub={`카테고리 ${categories.length}개`}
-          />
+        {/* ─── 현황 요약 패널 ─── */}
+        <div className="admin-summary mb-14">
+          <SummaryRow label="현재 로그인" value={`${me?.name} (@${me?.username})`} />
+          <SummaryRow label="활성 슬라이드" value={`${activeSlides} / ${slides.length}장`} />
+          <SummaryRow label="추천 영상" value={featuredVideo?.title ?? "지정 안 됨"} />
         </div>
 
-        <h2 className="text-xl font-semibold mb-3">최근 회원</h2>
-        <ul className="text-sm space-y-1">
+        {/* ─── 데이터 관리 ─── */}
+        <SectionTitle ko="데이터 관리" hanja="管理" />
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
+          <DbCard href="/admin/slides"      Icon={IconSlides}     title="홈 슬라이드"
+                  stat={`${activeSlides}장`} sub={`총 ${slides.length}장 중 활성`} />
+          <DbCard href="/admin/videos"      Icon={IconVideo}      title="동영상"
+                  stat={`${videos.length}편`} sub={featuredVideo ? "추천 지정됨" : "추천 없음"} />
+          <DbCard href="/admin/articles"    Icon={IconArticle}    title="글 관리"
+                  stat={`${totalArticles}편`} sub="장(章)별 분류" />
+          <DbCard href="/admin/gallery"     Icon={IconGallery}    title="사진 갤러리"
+                  stat={`${photos.length}장`} sub={`카테고리 ${categories.length}개`} />
+          <DbCard href="/admin/ebooks"      Icon={IconEbook}      title="이북"
+                  stat="—" sub="PDF 자료" />
+          <DbCard href="/admin/members"     Icon={IconMembers}    title="회원 명부"
+                  stat={`${users.length}명`} sub={`관리자 ${adminCount}명`} />
+          <DbCard href="/admin/tags"        Icon={IconTag}        title="키워드"
+                  stat={`${allTags.length}개`} sub="태그 관리 · 삭제" />
+          <DbCard href="/admin/backgrounds" Icon={IconBackground} title="페이지 배경"
+                  stat={`${activeBgs}개`} sub="배경 이미지 관리" />
+        </div>
+
+        {/* ─── 최근 회원 ─── */}
+        <SectionTitle ko="최근 회원" hanja="名簿" />
+
+        <ul className="rounded-lg border border-[var(--admin-rule)] bg-[var(--admin-surface)] divide-y divide-[var(--admin-rule-soft)] overflow-hidden">
           {users.slice(0, 6).map((u) => (
-            <li
-              key={u.id}
-              className="flex items-baseline gap-3 px-2 py-1.5 rounded hover:bg-[var(--color-notion-hover)]"
-            >
-              <span className="w-6 text-center">
-                {u.role === "admin" ? "🛡️" : "👤"}
+            <li key={u.id} className="member-row">
+              <span className="member-mark">
+                {u.role === "admin" ? "印" : "·"}
               </span>
-              <Link href={`/admin/members/${u.id}/edit`} className="hover:underline font-medium">
+              <Link
+                href={`/admin/members/${u.id}/edit`}
+                className="font-medium text-[var(--admin-ink)] hover:underline underline-offset-2"
+              >
                 {u.name}
               </Link>
-              <span className="text-[var(--color-notion-mute)] font-mono text-xs">
+              <span className="text-[var(--admin-mute)] font-mono text-xs">
                 @{u.username}
               </span>
-              <span className="ml-auto text-[var(--color-notion-mute)] text-xs">
+              <span className="ml-auto text-[var(--admin-mute)] text-xs font-mono tabular-nums">
                 {u.joined_at ?? "—"}
               </span>
             </li>
@@ -126,39 +129,58 @@ export default async function AdminHome() {
   );
 }
 
-function PropRow({ label, value }: { label: string; value: string }) {
+function SectionTitle({ ko, hanja }: { ko: string; hanja: string }) {
   return (
-    <div className="flex items-center gap-4 px-3 py-2 text-sm">
-      <div className="w-32 text-[var(--color-notion-mute)] shrink-0">{label}</div>
-      <div>{value}</div>
+    <div className="flex items-baseline gap-3 mb-5">
+      <h2 className="font-serif text-xl text-[var(--admin-ink)]">{ko}</h2>
+      <span className="font-serif text-sm text-[var(--admin-mute)] tracking-widest">
+        {hanja}
+      </span>
+      <div className="flex-1 border-t border-[var(--admin-rule)] mt-2.5" />
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-4 px-5 py-3 text-sm">
+      <div className="w-28 text-[var(--admin-mute)] shrink-0 text-xs tracking-wider">
+        {label}
+      </div>
+      <div className="text-[var(--admin-ink)] font-medium">{value}</div>
     </div>
   );
 }
 
 function DbCard({
   href,
-  icon,
+  Icon,
   title,
   stat,
   sub,
 }: {
   href: string;
-  icon: string;
+  Icon: (p: { size?: number; className?: string }) => React.JSX.Element;
   title: string;
   stat: string;
   sub: string;
 }) {
   return (
-    <Link
-      href={href}
-      className="block border border-[var(--color-notion-rule)] rounded-md p-4 hover:bg-[var(--color-notion-hover)] transition"
-    >
-      <div className="flex items-center gap-2 text-base mb-2">
-        <span aria-hidden="true">{icon}</span>
-        <span className="font-medium">{title}</span>
+    <Link href={href} className="db-card group">
+      <div className="flex items-center justify-between mb-4">
+        <span className="db-card-icon">
+          <Icon size={18} />
+        </span>
+        <span className="text-[10px] tracking-widest text-[var(--admin-mute)] uppercase">
+          {sub}
+        </span>
       </div>
-      <div className="text-2xl font-semibold mb-1">{stat}</div>
-      <div className="text-xs text-[var(--color-notion-mute)]">{sub}</div>
+      <div className="font-serif text-2xl text-[var(--admin-ink)] mb-1 tabular-nums">
+        {stat}
+      </div>
+      <div className="text-[13px] text-[var(--admin-ink-soft)] font-medium">
+        {title}
+      </div>
     </Link>
   );
 }

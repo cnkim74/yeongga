@@ -6,7 +6,7 @@ export default function NewArticlePage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "📝 글 관리", href: "/admin/articles" },
           { label: "새 글" },
         ]}

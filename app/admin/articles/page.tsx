@@ -18,7 +18,7 @@ export default async function AdminArticles() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "📝 글 관리" },
         ]}
         right={

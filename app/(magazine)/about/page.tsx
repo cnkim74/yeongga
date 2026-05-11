@@ -52,7 +52,7 @@ export default async function AboutPage() {
                 글자 크기를 다섯 단계로 조절하실 수 있습니다.
               </li>
               <li>
-                사진은 회 내부 운영용 <a href="/admin/photos">관리실</a>에서
+                사진은 회 내부 운영용 <a href="/admin">집무실</a>에서
                 분류·태그를 정리한 뒤 본문에 인용됩니다.
               </li>
             </ul>

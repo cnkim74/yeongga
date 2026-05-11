@@ -180,7 +180,7 @@ export function MemberForm({ user }: { user?: User }) {
             className="notion-input w-full border border-[var(--color-notion-rule)] focus:border-[var(--color-notion-accent)]"
           >
             <option value="member">회원 — 회원 전용 글 보기</option>
-            <option value="admin">관리자 — 관리실 출입 가능</option>
+            <option value="admin">관리자 — 집무실 출입 가능</option>
           </select>
         </div>
         <Field

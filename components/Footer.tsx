@@ -24,7 +24,7 @@ export function Footer() {
           <ul className="space-y-2 text-sm">
             <li>
               <a href="/admin" className="hover:text-white text-white/80">
-                관리실
+                집무실
               </a>
             </li>
           </ul>

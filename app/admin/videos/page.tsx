@@ -14,7 +14,7 @@ export default async function AdminVideos() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🎞️ 동영상" },
         ]}
         right={

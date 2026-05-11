@@ -22,7 +22,7 @@
   /* 매거진 본문에서만 쓰는 종이색 (글 읽는 배경) */
   --color-paper: #fbfaf7;
 
-  /* Notion (admin) 팔레트 */
+  /* Notion (admin) 팔레트 — 호환 유지 */
   --color-notion-bg: #ffffff;
   --color-notion-sidebar: #fbfbfa;
   --color-notion-text: #37352f;
@@ -30,6 +30,19 @@
   --color-notion-rule: #ecebe9;
   --color-notion-hover: #f1f1ef;
   --color-notion-accent: #2383e2;
+
+  /* 집무실(執務室) 팔레트 — 한지·먹·인장 */
+  --admin-bg: #fbfaf6;          /* 한지 본문 */
+  --admin-surface: #ffffff;     /* 카드 표면 */
+  --admin-sidebar: #f6f3ec;     /* 한지 사이드 */
+  --admin-ink: #1a1715;         /* 먹 본문 */
+  --admin-ink-soft: #5b534b;    /* 먹 흐림 */
+  --admin-mute: #8a8278;        /* 회배경 */
+  --admin-rule: #e6dfd2;        /* 한지 결 */
+  --admin-rule-soft: #efeadf;
+  --admin-hover: #eee8da;       /* 따뜻 호버 */
+  --admin-accent: #8b1a1a;      /* 인주 적색 */
+  --admin-accent-soft: #f3e3df;
 
   /* 5단계 본문 글자 크기 */
   --reading-1: 17px;
@@ -387,6 +400,191 @@ html[data-reading="5"] { --reading-size: var(--reading-5); }
   font-weight: 600;
   color: var(--color-notion-mute);
   letter-spacing: 0.02em;
+}
+
+/* ───── 집무실 사이드바 ───── */
+.admin-sidebar {
+  background:
+    linear-gradient(180deg, var(--admin-sidebar) 0%, #f1ece1 100%);
+  border-right: 1px solid var(--admin-rule);
+  color: var(--admin-ink);
+}
+
+.admin-side-section {
+  display: flex;
+  align-items: baseline;
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--admin-mute);
+  letter-spacing: 0.18em;
+  text-transform: none;
+}
+
+.admin-side-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 7px 12px;
+  margin: 1px 2px;
+  border-radius: 6px;
+  color: var(--admin-ink-soft);
+  font-size: 13.5px;
+  line-height: 1.3;
+  font-weight: 450;
+  transition: background 0.12s ease, color 0.12s ease, transform 0.12s ease;
+  position: relative;
+}
+
+.admin-side-link:hover {
+  background: var(--admin-hover);
+  color: var(--admin-ink);
+}
+
+.admin-side-link[aria-current="page"] {
+  background: var(--admin-surface);
+  color: var(--admin-ink);
+  font-weight: 600;
+  box-shadow:
+    0 0 0 1px var(--admin-rule),
+    0 1px 2px rgba(26, 23, 21, 0.04);
+}
+
+/* 현재 페이지에 인주색 띠 */
+.admin-side-link[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--admin-accent);
+}
+
+.admin-side-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  color: var(--admin-mute);
+  flex-shrink: 0;
+  transition: color 0.12s ease;
+}
+
+.admin-side-link:hover .admin-side-icon { color: var(--admin-ink); }
+.admin-side-link[aria-current="page"] .admin-side-icon { color: var(--admin-accent); }
+
+.admin-side-foot {
+  color: var(--admin-mute);
+  font-size: 12.5px;
+}
+
+/* ───── 집무실 본문 ───── */
+
+/* 집무실 페이지 전체 배경 — 한지 톤 */
+.notion-shell {
+  background: var(--admin-bg);
+}
+
+/* 인장(印) 마크 */
+.seal-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  background: var(--admin-accent);
+  color: #fff8e8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  letter-spacing: 0;
+  line-height: 1;
+  padding-top: 1px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 4px 12px rgba(139, 26, 26, 0.2);
+  transform: rotate(-2deg);
+  user-select: none;
+}
+
+/* 현황 요약 패널 */
+.admin-summary {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-summary > div + div {
+  border-top: 1px solid var(--admin-rule-soft);
+}
+
+/* 데이터 카드 */
+.db-card {
+  display: block;
+  padding: 18px 18px 16px;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-rule);
+  border-radius: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.db-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--admin-mute);
+  box-shadow:
+    0 1px 0 var(--admin-rule),
+    0 8px 20px -8px rgba(26, 23, 21, 0.12);
+}
+
+.db-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--admin-bg);
+  border: 1px solid var(--admin-rule);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--admin-ink-soft);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.db-card:hover .db-card-icon {
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  border-color: var(--admin-accent-soft);
+}
+
+/* 회원 행 */
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  font-size: 14px;
+  background: var(--admin-surface);
+  transition: background 0.1s ease;
+}
+
+.member-row:hover {
+  background: var(--admin-bg);
+}
+
+.member-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  color: var(--admin-accent);
+  background: var(--admin-accent-soft);
+  flex-shrink: 0;
 }
 
 .notion-table { width: 100%; border-collapse: collapse; font-size: 14px; }

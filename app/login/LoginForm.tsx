@@ -57,7 +57,7 @@ export function LoginForm({
 
         {needAdmin && (
           <div className="text-sm bg-[var(--color-bg-soft)] border border-[var(--color-rule)] rounded-lg p-3 text-[var(--color-ink-soft)]">
-            관리실에 들어가려면 관리자 계정으로 로그인하세요.
+            집무실에 들어가려면 관리자 계정으로 로그인하세요.
           </div>
         )}
 

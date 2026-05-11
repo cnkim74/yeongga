@@ -11,7 +11,7 @@ export default async function ImportMembersPage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "👥 회원 명부", href: "/admin/members" },
           { label: "엑셀 일괄 등록" },
         ]}

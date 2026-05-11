@@ -4,7 +4,7 @@ import { TagRow } from "./TagRow";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "키워드 관리 — 관리실" };
+export const metadata = { title: "키워드 관리 — 집무실" };
 
 export default async function TagsAdminPage() {
   const tags = await listAllTags();
@@ -13,7 +13,7 @@ export default async function TagsAdminPage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🏷️ 키워드" },
         ]}
       />

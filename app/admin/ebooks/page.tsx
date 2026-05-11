@@ -13,7 +13,7 @@ export default async function AdminEbooksPage() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "📚 이북 관리" },
         ]}
       />

@@ -18,7 +18,7 @@ export default async function EditVideoPage({
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "🎞️ 동영상", href: "/admin/videos" },
           { label: "편집" },
         ]}

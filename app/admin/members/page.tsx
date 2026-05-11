@@ -17,7 +17,7 @@ export default async function AdminMembers() {
     <>
       <AdminTopbar
         crumbs={[
-          { label: "🗂️ 관리실 홈", href: "/admin" },
+          { label: "집무실 홈", href: "/admin" },
           { label: "👥 회원 명부" },
         ]}
         right={
@@ -46,7 +46,7 @@ export default async function AdminMembers() {
         </h1>
         <p className="text-[var(--color-notion-mute)] text-base mb-6 max-w-2xl">
           회원 계정과 권한을 관리합니다. 권한이 <b>관리자</b>인 사람만
-          이 관리실에 들어올 수 있고, <b>회원</b>은 회원 전용 글(회의록 등)을
+          이 집무실에 들어올 수 있고, <b>회원</b>은 회원 전용 글(회의록 등)을
           볼 수 있습니다.
         </p>
 

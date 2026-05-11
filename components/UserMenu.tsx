@@ -74,7 +74,7 @@ export function UserMenu({ user }: { user: SessionUser | null }) {
               className="block px-3 py-2 rounded-lg hover:bg-[var(--color-bg-soft)] text-[var(--color-ink)]"
               onClick={() => setOpen(false)}
             >
-              관리실 들어가기
+              집무실 들어가기
             </Link>
           )}
           <form action={logoutAction}>
