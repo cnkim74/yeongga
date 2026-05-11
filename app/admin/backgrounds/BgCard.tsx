@@ -27,18 +27,44 @@ export function BgCard({ bg }: { bg: PageBackground }) {
     setUploading(true);
     setUploadError("");
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-      const res = await fetch("/api/upload/page-bg", { method: "POST", body: fd });
-      const json = await res.json();
-      if (json.ok) {
-        setImagePath(json.url);
+      // 1) Vercel Blob 클라이언트 직접 업로드 (4.5MB 한도 우회, 최대 15MB)
+      try {
+        const { upload } = await import("@vercel/blob/client");
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const blob = await upload(`backgrounds/${Date.now()}-${safeName}`, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload/page-bg",
+        });
+        setImagePath(blob.url);
         setActive(true);
-      } else {
-        setUploadError(json.error ?? "업로드 실패");
+        return;
+      } catch (blobErr) {
+        // 2) 로컬 개발 환경 폴백: multipart 업로드
+        console.warn("[bg upload] Blob 직접 업로드 실패, multipart 폴백:", blobErr);
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/upload/page-bg", { method: "POST", body: fd });
+        if (!res.ok) {
+          if (res.status === 413) {
+            setUploadError(
+              `파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 12MB 이하로 줄여 주세요.`
+            );
+          } else {
+            setUploadError(`업로드 실패 (HTTP ${res.status}).`);
+          }
+          return;
+        }
+        const json = await res.json();
+        if (json.ok) {
+          setImagePath(json.url);
+          setActive(true);
+        } else {
+          setUploadError(json.error ?? "업로드 실패");
+        }
       }
-    } catch {
-      setUploadError("업로드 중 오류가 발생했습니다.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setUploadError(`업로드 중 오류: ${msg}`);
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
