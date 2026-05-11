@@ -12,24 +12,35 @@ export function SlideForm({ slide }: { slide?: Slide }) {
   const [imagePath, setImagePath] = useState<string>(slide?.image_path ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  /** 이번 세션에서 새로 업로드한 경우만 "업로드 완료" 메시지를 띄움 */
+  const [justUploaded, setJustUploaded] = useState(false);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.currentTarget.files?.[0];
     if (!file) return;
     setUploading(true);
     setUploadError(null);
+    setJustUploaded(false);
     try {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/upload/slide", { method: "POST", body: fd });
+      if (!res.ok) {
+        // HTTP 4xx/5xx — JSON 본문이 아닐 수도 있음 (예: 404 HTML)
+        setUploadError(`업로드 실패 (HTTP ${res.status}). 잠시 후 다시 시도해 주세요.`);
+        return;
+      }
       const json = await res.json();
       if (!json.ok) {
         setUploadError(json.error ?? "업로드에 실패했습니다.");
       } else {
         setImagePath(json.url);
+        setUploadError(null);   // ← 성공 시 이전 에러 명시적 제거
+        setJustUploaded(true);
       }
-    } catch {
-      setUploadError("업로드 중 오류가 발생했습니다.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setUploadError(`업로드 중 오류: ${msg}`);
     } finally {
       setUploading(false);
     }
@@ -72,10 +83,12 @@ export function SlideForm({ slide }: { slide?: Slide }) {
                 업로드 중…
               </div>
             )}
-            {uploadError && (
+            {/* 에러는 새 업로드 결과가 없는 경우(=현재 imagePath 가 비었거나 직전 시도가 실패) 에만 표시 */}
+            {uploadError && !justUploaded && (
               <div className="mt-2 text-xs text-[#c4554d]">{uploadError}</div>
             )}
-            {imagePath && !uploading && (
+            {/* "업로드 완료" 메시지는 이번 세션에서 새로 업로드한 경우에만 표시 (편집 진입 시 잘못 표시되는 것 방지) */}
+            {justUploaded && imagePath && !uploading && (
               <div className="mt-2 text-xs text-emerald-700">
                 ✓ 업로드 완료 — 저장하면 반영됩니다
               </div>
