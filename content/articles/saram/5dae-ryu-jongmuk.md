@@ -4,7 +4,6 @@ subtitle: "2011~2014을 되짚습니다"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "2011~2014, 영가회의 한 시대를 되짚습니다."
-cover: "/covers/5dae-ryu-jongmuk.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 5대, 2011, 2010년대, 류종묵, 회장, 안동"
 visibility: public
 ---

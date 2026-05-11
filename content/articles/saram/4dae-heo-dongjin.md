@@ -4,7 +4,6 @@ subtitle: "2007~2010을 되짚습니다"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "2007~2010, 영가회의 한 시대를 되짚습니다."
-cover: "/covers/4dae-heo-dongjin.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 4대, 2007, 2000년대, 허동진, 회장, 재경향우회"
 visibility: public
 ---

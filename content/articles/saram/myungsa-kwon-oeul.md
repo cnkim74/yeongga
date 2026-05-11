@@ -4,7 +4,6 @@ subtitle: "프레지던트호텔, 2011.1.7"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "권오을 — 영가회와 함께한 분의 발자취."
-cover: "/covers/myungsa-kwon-oeul.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 5대, 2011, 2010년대, 권오을, 프레지던트호텔, 외부명사"
 visibility: public
 ---

@@ -4,7 +4,6 @@ subtitle: "기고"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "김희곤 — 영가회와 함께한 분의 발자취."
-cover: "/covers/myungsa-kim-huigon.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 김희곤, 외부명사, 안동, 기념, 재경향우회, 기록"
 visibility: public
 ---

@@ -4,7 +4,6 @@ subtitle: "2017~을 되짚습니다"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "2017~, 영가회의 한 시대를 되짚습니다."
-cover: "/covers/7dae-kim-gyedong.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 7대, 2017, 2010년대, 김계동, 회장, 재경향우회"
 visibility: public
 ---

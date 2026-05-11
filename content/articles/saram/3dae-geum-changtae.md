@@ -4,7 +4,6 @@ subtitle: "2003~2006을 되짚습니다"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "2003~2006, 영가회의 한 시대를 되짚습니다."
-cover: "/covers/3dae-geum-changtae.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 3대, 2003, 2000년대, 금창태, 회장, 안동"
 visibility: public
 ---

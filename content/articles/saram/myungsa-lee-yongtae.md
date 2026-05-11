@@ -4,7 +4,6 @@ subtitle: "박약회 사무실(종로구 수송동), 2018.10.4"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "이용태 — 영가회와 함께한 분의 발자취."
-cover: "/covers/myungsa-lee-yongtae.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 7대, 2018, 2010년대, 이용태, 박약회 사무실(종로구 수송동), 외부명사"
 visibility: public
 ---

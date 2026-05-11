@@ -421,6 +421,27 @@ async function init(client: Client) {
     await markMigration(client, "chapter-rename-v1");
   }
 
+  // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
+  if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
+    const slugs = [
+      "1dae-kim-haegil", "2dae-ryu-mokgi", "3dae-geum-changtae",
+      "4dae-heo-dongjin", "5dae-ryu-jongmuk", "6dae-kim-bonggu",
+      "7dae-kim-gyedong",
+      "myungsa-lee-huibeom", "myungsa-kwon-oeul", "myungsa-kwon-yeongbok",
+      "myungsa-kim-gwangrim", "myungsa-kim-wonjung", "myungsa-lee-jaebeom",
+      "myungsa-kwon-ryeonggeon", "myungsa-lee-yongtae",
+      "myungsa-hwang-hyeontak", "myungsa-kim-huigon",
+    ];
+    for (const slug of slugs) {
+      await client.execute({
+        sql: `UPDATE articles SET cover = NULL, updated_at = CURRENT_TIMESTAMP
+              WHERE chapter = ? AND slug = ?`,
+        args: ["saram", slug],
+      });
+    }
+    await markMigration(client, "clear-saram-32-48-covers-v1");
+  }
+
   // 일회성 복원: 류목기 회장 글 본문 — 사진 업로드 후 본문이 깨졌다는 보고에 따른 자동 복구
   if (!(await hasMigration(client, "restore-2dae-ryu-mokgi-v1"))) {
     try {

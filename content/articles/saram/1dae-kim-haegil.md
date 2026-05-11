@@ -4,7 +4,6 @@ subtitle: "1977~1998을 되짚습니다"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "1977~1998, 영가회의 한 시대를 되짚습니다."
-cover: "/covers/1dae-kim-haegil.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 초대, 1977, 1970년대, 김해길, 회장, 안동"
 visibility: public
 ---

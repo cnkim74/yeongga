@@ -4,7 +4,6 @@ subtitle: "소피텔 앰배서더, 2003.4.15"
 author: "편집실"
 date: "2026-05-11"
 excerpt: "권령건 — 영가회와 함께한 분의 발자취."
-cover: "/covers/myungsa-kwon-ryeonggeon.jpg"
 tags: "영가회, 永嘉會, 인물, 평전, 3대, 2003, 2000년대, 권령건, 소피텔 앰배서더, 외부명사, 안동"
 visibility: public
 ---
