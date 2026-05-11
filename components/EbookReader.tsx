@@ -104,29 +104,43 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
   const [leftPage, rightPage] = spreadPages(spread);
   const mobilePage = leftPage ?? 1;
 
-  /* ── Canvas 렌더 함수 ── */
+  /* ── Canvas 렌더 함수 (pdfjs-dist v5 공식 방식) ──
+   * v5에서 canvasContext는 deprecated, canvas 요소만 넘기는 것이 표준
+   * DPI 스케일링은 ctx.scale() 대신 transform 매트릭스로 처리
+   * 참고: https://github.com/mozilla/pdf.js/pull/20149
+   */
   const renderPage = useCallback(
     async (pageNum: number, canvas: HTMLCanvasElement, targetWidth: number) => {
       if (!pdf) return;
       try {
         const page = await pdf.getPage(pageNum);
-        const viewport = page.getViewport({ scale: 1 });
-        const scale = targetWidth / viewport.width;
-        const scaled = page.getViewport({ scale });
+        const baseViewport = page.getViewport({ scale: 1 });
+        const scale = targetWidth / baseViewport.width;
+        const viewport = page.getViewport({ scale });
 
-        // 고DPI(Retina) 지원
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width  = Math.round(scaled.width  * dpr);
-        canvas.height = Math.round(scaled.height * dpr);
-        canvas.style.width  = `${Math.round(scaled.width)}px`;
-        canvas.style.height = `${Math.round(scaled.height)}px`;
+        const outputScale = window.devicePixelRatio || 1;
 
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.scale(dpr, dpr);
+        // 캔버스 백킹 버퍼는 outputScale 배수, CSS 표시 크기는 viewport 크기 그대로
+        canvas.width  = Math.floor(viewport.width  * outputScale);
+        canvas.height = Math.floor(viewport.height * outputScale);
+        canvas.style.width  = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
 
-        await page.render({ canvasContext: ctx, viewport: scaled, canvas }).promise;
+        const transform: [number, number, number, number, number, number] | undefined =
+          outputScale !== 1
+            ? [outputScale, 0, 0, outputScale, 0, 0]
+            : undefined;
+
+        // pdfjs v5: canvas 요소만 전달, canvasContext는 deprecated
+        const renderTask = page.render({
+          canvas,
+          viewport,
+          transform,
+        } as Parameters<typeof page.render>[0]);
+
+        await renderTask.promise;
       } catch (e) {
+        if (e instanceof Error && e.name === "RenderingCancelledException") return;
         console.error(`[EbookReader] page ${pageNum} render error`, e);
       }
     },
@@ -137,18 +151,23 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
   useEffect(() => {
     if (!pdf || loading) return;
 
-    if (isMobile) {
-      if (mobileCanvasRef.current && mobilePage) {
-        renderPage(mobilePage, mobileCanvasRef.current, pageWidth);
+    // 중복 렌더 방지: 약간의 지연 후 실행 (페이지 변경 시 이전 작업 정리)
+    const handle = requestAnimationFrame(() => {
+      if (isMobile) {
+        if (mobileCanvasRef.current && mobilePage) {
+          renderPage(mobilePage, mobileCanvasRef.current, pageWidth);
+        }
+      } else {
+        if (leftCanvasRef.current && leftPage) {
+          renderPage(leftPage, leftCanvasRef.current, pageWidth);
+        }
+        if (rightCanvasRef.current && rightPage) {
+          renderPage(rightPage, rightCanvasRef.current, pageWidth);
+        }
       }
-    } else {
-      if (leftCanvasRef.current && leftPage) {
-        renderPage(leftPage, leftCanvasRef.current, pageWidth);
-      }
-      if (rightCanvasRef.current && rightPage) {
-        renderPage(rightPage, rightCanvasRef.current, pageWidth);
-      }
-    }
+    });
+
+    return () => cancelAnimationFrame(handle);
   }, [pdf, loading, spread, isMobile, pageWidth, leftPage, rightPage, mobilePage, renderPage]);
 
   /* ── 네비게이션 ── */
