@@ -9,6 +9,9 @@ export type SubmissionCategory =
   | "video"
   | "other";
 
+/** 출처 표기 방식 */
+export type AttributionMode = "name" | "anon" | "anon_era";
+
 export const CATEGORY_LABELS: Record<SubmissionCategory, string> = {
   photo: "사진",
   document: "문서·기록물",
@@ -24,6 +27,12 @@ export const STATUS_LABELS: Record<SubmissionStatus, string> = {
   archived: "보관",
 };
 
+export const ATTRIBUTION_LABELS: Record<AttributionMode, string> = {
+  name: "실명 표기 (예: 김해길 회원 제공)",
+  anon: "익명 (출처 미표기)",
+  anon_era: "익명 + 연대만 (예: 1대 회원 제공)",
+};
+
 export type Submission = {
   id: number;
   name: string;
@@ -37,6 +46,12 @@ export type Submission = {
   ip_hash: string | null;
   user_agent: string | null;
   admin_note: string | null;
+  /** 저작권 동의 시각 (ISO) */
+  consent_at: string | null;
+  /** 출처 표기 방식 */
+  attribution_mode: AttributionMode;
+  /** 함께 담긴 분의 동의 확인 여부 */
+  others_consent: boolean;
   created_at: string;
   updated_at: string;
 };

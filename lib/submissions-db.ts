@@ -1,6 +1,7 @@
 import "server-only";
 import { getDb } from "./db";
 import type {
+  AttributionMode,
   Submission,
   SubmissionCategory,
   SubmissionStatus,
@@ -11,11 +12,13 @@ import type {
 export {
   CATEGORY_LABELS,
   STATUS_LABELS,
+  ATTRIBUTION_LABELS,
 } from "./submissions-types";
 export type {
   Submission,
   SubmissionCategory,
   SubmissionStatus,
+  AttributionMode,
 } from "./submissions-types";
 
 function rowToSubmission(row: Record<string, unknown>): Submission {
@@ -27,6 +30,9 @@ function rowToSubmission(row: Record<string, unknown>): Submission {
   const st = String(row.status);
   const status: SubmissionStatus =
     st === "reviewing" || st === "done" || st === "archived" ? st : "new";
+  const am = String(row.attribution_mode ?? "name");
+  const attribution_mode: AttributionMode =
+    am === "anon" || am === "anon_era" ? am : "name";
 
   return {
     id: Number(row.id),
@@ -41,6 +47,9 @@ function rowToSubmission(row: Record<string, unknown>): Submission {
     ip_hash: row.ip_hash ? String(row.ip_hash) : null,
     user_agent: row.user_agent ? String(row.user_agent) : null,
     admin_note: row.admin_note ? String(row.admin_note) : null,
+    consent_at: row.consent_at ? String(row.consent_at) : null,
+    attribution_mode,
+    others_consent: Number(row.others_consent ?? 0) === 1,
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
   };
@@ -56,12 +65,17 @@ export async function createSubmission(data: {
   file_name?: string | null;
   ip_hash?: string | null;
   user_agent?: string | null;
+  attribution_mode?: AttributionMode;
+  others_consent?: boolean;
+  /** 동의 시각 — 미지정 시 현재 시각 사용 */
+  consent_at?: string;
 }): Promise<number> {
   const db = await getDb();
   const r = await db.execute({
     sql: `INSERT INTO submissions
-          (name, email, phone, category, message, file_url, file_name, ip_hash, user_agent)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          (name, email, phone, category, message, file_url, file_name, ip_hash, user_agent,
+           consent_at, attribution_mode, others_consent)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
       data.name,
       data.email ?? null,
@@ -72,6 +86,9 @@ export async function createSubmission(data: {
       data.file_name ?? null,
       data.ip_hash ?? null,
       data.user_agent ?? null,
+      data.consent_at ?? new Date().toISOString(),
+      data.attribution_mode ?? "name",
+      data.others_consent ? 1 : 0,
     ],
   });
   return Number(r.lastInsertRowid);

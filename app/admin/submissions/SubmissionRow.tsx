@@ -6,7 +6,7 @@ import {
   deleteSubmissionAction,
 } from "./actions";
 import type { Submission, SubmissionStatus } from "@/lib/submissions-types";
-import { STATUS_LABELS } from "@/lib/submissions-types";
+import { STATUS_LABELS, ATTRIBUTION_LABELS } from "@/lib/submissions-types";
 
 const STATUS_OPTIONS: { value: SubmissionStatus; label: string }[] = [
   { value: "new", label: STATUS_LABELS.new },
@@ -117,6 +117,37 @@ export function SubmissionRow({
             </div>
             <div className="rounded-md bg-[var(--admin-surface)] border border-[var(--admin-rule)] p-4 text-sm whitespace-pre-wrap leading-relaxed">
               {s.message}
+            </div>
+          </div>
+
+          {/* 동의·출처 정보 */}
+          <div className="mb-4 rounded-md bg-[var(--admin-surface)] border border-[var(--admin-rule)] p-4">
+            <div className="text-[11px] text-[var(--admin-mute)] tracking-widest uppercase mb-2">
+              저작권 동의·출처
+            </div>
+            <div className="grid sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <div className="text-[var(--admin-mute)] mb-0.5">자료 사용 동의</div>
+                <div className="text-[var(--admin-ink)] font-medium">
+                  {s.consent_at ? (
+                    <>✓ 동의 <span className="text-[var(--admin-mute)] ml-1 font-mono">{formatDateShort(s.consent_at)}</span></>
+                  ) : (
+                    <span className="text-[var(--admin-mute)]">— 기록 없음</span>
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="text-[var(--admin-mute)] mb-0.5">출처 표기</div>
+                <div className="text-[var(--admin-ink)] font-medium">
+                  {ATTRIBUTION_LABELS[s.attribution_mode]}
+                </div>
+              </div>
+              <div>
+                <div className="text-[var(--admin-mute)] mb-0.5">함께 담긴 분 동의</div>
+                <div className={s.others_consent ? "text-emerald-700 font-medium" : "text-[var(--admin-mute)]"}>
+                  {s.others_consent ? "✓ 확인됨" : "— 해당 없음/미확인"}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -233,4 +264,19 @@ function formatDate(iso: string): string {
   const hh = String(kst.getUTCHours()).padStart(2, "0");
   const mi = String(kst.getUTCMinutes()).padStart(2, "0");
   return `${yyyy}/${mm}/${dd} ${hh}:${mi}`;
+}
+
+/** consent_at 같은 ISO 시각을 짧게 (YY/MM/DD HH:MM) */
+function formatDateShort(iso: string): string {
+  // consent_at 은 ISO 8601 (toISOString) 또는 SQLite datetime 둘 다 대응
+  const isoWithZ = iso.includes("T") ? iso : iso + "Z";
+  const d = new Date(isoWithZ);
+  if (isNaN(d.getTime())) return iso;
+  const kst = new Date(d.getTime() + 9 * 60 * 60 * 1000);
+  const yy = String(kst.getUTCFullYear()).slice(2);
+  const mm = String(kst.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(kst.getUTCDate()).padStart(2, "0");
+  const hh = String(kst.getUTCHours()).padStart(2, "0");
+  const mi = String(kst.getUTCMinutes()).padStart(2, "0");
+  return `${yy}/${mm}/${dd} ${hh}:${mi}`;
 }

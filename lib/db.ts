@@ -240,6 +240,19 @@ async function init(client: Client) {
     await client.execute(`ALTER TABLE chapter_meta ADD COLUMN hero_image TEXT`);
   }
 
+  // ─── 마이그레이션: submissions 에 저작권·출처·동의 컬럼 추가 ──
+  const subCols = await client.execute("PRAGMA table_info(submissions)");
+  const subColNames = subCols.rows.map((r) => String(r.name));
+  if (!subColNames.includes("consent_at")) {
+    await client.execute(`ALTER TABLE submissions ADD COLUMN consent_at TEXT`);
+  }
+  if (!subColNames.includes("attribution_mode")) {
+    await client.execute(`ALTER TABLE submissions ADD COLUMN attribution_mode TEXT DEFAULT 'name'`);
+  }
+  if (!subColNames.includes("others_consent")) {
+    await client.execute(`ALTER TABLE submissions ADD COLUMN others_consent INTEGER DEFAULT 0`);
+  }
+
   // email + provider_id 에 인덱스 (OAuth 로 빠르게 매칭)
   await client.execute(
     `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`

@@ -4,7 +4,9 @@ import { revalidatePath } from "next/cache";
 import {
   createSubmission,
   CATEGORY_LABELS,
+  ATTRIBUTION_LABELS,
   type SubmissionCategory,
+  type AttributionMode,
 } from "@/lib/submissions-db";
 import { sendMail, escapeHtml } from "@/lib/mail";
 
@@ -13,6 +15,10 @@ export const dynamic = "force-dynamic";
 
 function isValidCategory(s: string): s is SubmissionCategory {
   return ["photo", "document", "memoir", "video", "other"].includes(s);
+}
+
+function isValidAttribution(s: string): s is AttributionMode {
+  return ["name", "anon", "anon_era"].includes(s);
 }
 
 function hashIp(ip: string, ua: string): string {
@@ -35,6 +41,9 @@ export async function POST(req: NextRequest) {
     const message = String(body?.message ?? "").trim();
     const file_url = String(body?.file_url ?? "").trim() || null;
     const file_name = String(body?.file_name ?? "").trim() || null;
+    const attributionRaw = String(body?.attribution_mode ?? "name").trim();
+    const othersConsent = body?.others_consent === true;
+    const consentAgreed = body?.consent === true;
     // honeypot (봇 차단): 폼에 숨겨진 'website' 필드가 채워져 있으면 거부
     const honeypot = String(body?.website ?? "").trim();
     if (honeypot) {
@@ -49,6 +58,12 @@ export async function POST(req: NextRequest) {
     if (message.length > 5000) return NextResponse.json({ ok: false, error: "내용은 5,000자 이하로 입력해 주세요." }, { status: 400 });
     if (!isValidCategory(categoryRaw)) {
       return NextResponse.json({ ok: false, error: "분류 값이 올바르지 않습니다." }, { status: 400 });
+    }
+    if (!isValidAttribution(attributionRaw)) {
+      return NextResponse.json({ ok: false, error: "출처 표기 방식이 올바르지 않습니다." }, { status: 400 });
+    }
+    if (!consentAgreed) {
+      return NextResponse.json({ ok: false, error: "자료 사용 동의에 체크해 주세요." }, { status: 400 });
     }
     if (email && email.length > 200) return NextResponse.json({ ok: false, error: "이메일이 너무 깁니다." }, { status: 400 });
 
@@ -71,11 +86,15 @@ export async function POST(req: NextRequest) {
       file_name,
       ip_hash: ipHash,
       user_agent: ua.slice(0, 300),
+      attribution_mode: attributionRaw,
+      others_consent: othersConsent,
+      consent_at: new Date().toISOString(),
     });
 
     // ─ 관리자 이메일 알림 (환경변수 없으면 silent skip) ─
     try {
       const categoryLabel = CATEGORY_LABELS[categoryRaw];
+      const attributionLabel = ATTRIBUTION_LABELS[attributionRaw];
       const html = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1715;">
           <div style="border-bottom: 2px solid #8b1a1a; padding-bottom: 12px; margin-bottom: 24px;">
@@ -87,10 +106,13 @@ export async function POST(req: NextRequest) {
             </div>
           </div>
           <table style="width: 100%; font-size: 14px; border-collapse: collapse;">
-            <tr><td style="padding: 6px 0; color: #8a8278; width: 100px;">분류</td><td><b>${escapeHtml(categoryLabel)}</b></td></tr>
+            <tr><td style="padding: 6px 0; color: #8a8278; width: 110px;">분류</td><td><b>${escapeHtml(categoryLabel)}</b></td></tr>
             <tr><td style="padding: 6px 0; color: #8a8278;">보낸이</td><td>${escapeHtml(name)}</td></tr>
             ${email ? `<tr><td style="padding: 6px 0; color: #8a8278;">이메일</td><td><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></td></tr>` : ""}
             ${phone ? `<tr><td style="padding: 6px 0; color: #8a8278;">연락처</td><td>${escapeHtml(phone)}</td></tr>` : ""}
+            <tr><td style="padding: 6px 0; color: #8a8278;">출처 표기</td><td>${escapeHtml(attributionLabel)}</td></tr>
+            <tr><td style="padding: 6px 0; color: #8a8278;">함께 담긴 분 동의</td><td>${othersConsent ? "✓ 확인됨" : "— (해당 없음 또는 미확인)"}</td></tr>
+            <tr><td style="padding: 6px 0; color: #8a8278;">자료 사용 동의</td><td>✓ 동의함 (${new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })})</td></tr>
             ${file_url ? `<tr><td style="padding: 6px 0; color: #8a8278;">첨부</td><td><a href="${escapeHtml(file_url)}">${escapeHtml(file_name ?? "파일 보기")}</a></td></tr>` : ""}
           </table>
           <div style="margin-top: 20px; padding: 16px; background: #fbfaf6; border-left: 3px solid #8b1a1a; font-size: 14px; line-height: 1.7; white-space: pre-wrap;">${escapeHtml(message)}</div>
