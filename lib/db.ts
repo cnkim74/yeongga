@@ -440,8 +440,8 @@ async function init(client: Client) {
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
   // 새 콘텐츠 파일이 추가됐을 때만 SEED_FROM_FILES=1 환경변수로 재실행
-  // v2: 자취 챕터(jachui)의 누락된 글 재시드 트리거
-  const seedKey = "content-seed-v2";
+  // v3: 자취 챕터에 사진 갤러리 입구 글 3편(1970s/80s/90s) 추가
+  const seedKey = "content-seed-v3";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
