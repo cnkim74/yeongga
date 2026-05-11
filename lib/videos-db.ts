@@ -39,6 +39,22 @@ export async function listVideos(): Promise<Video[]> {
   return r.rows.map((row) => rowToVideo(row as unknown as Record<string, unknown>));
 }
 
+/** 어드민 카드용 — 카운트 + 추천 영상 1개만 */
+export async function countVideos(): Promise<{ total: number; featuredTitle: string | null }> {
+  const db = await getDb();
+  const r = await db.execute(
+    `SELECT
+       COUNT(*) AS total,
+       (SELECT title FROM videos WHERE featured = 1 LIMIT 1) AS featured_title
+     FROM videos`
+  );
+  const row = r.rows[0];
+  return {
+    total: Number(row.total),
+    featuredTitle: row.featured_title ? String(row.featured_title) : null,
+  };
+}
+
 export async function getVideo(id: number): Promise<Video | null> {
   const db = await getDb();
   const r = await db.execute({

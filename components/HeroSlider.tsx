@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type HeroSlide = {
@@ -76,7 +77,15 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
             aria-roledescription="슬라이드"
             aria-label={`${i + 1}/${slides.length} — ${s.title}`}
           >
-            <img src={s.image} alt="" className="hero-slide-img" />
+            <Image
+              src={s.image}
+              alt=""
+              fill
+              sizes="100vw"
+              priority={i === 0}
+              className="hero-slide-img"
+              style={{ objectFit: "cover" }}
+            />
             <div className="hero-slide-overlay" />
             <div className="hero-slide-text">
               <div className="kicker mb-5 text-white/90">{s.kicker}</div>

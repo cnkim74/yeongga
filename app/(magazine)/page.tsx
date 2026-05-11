@@ -3,7 +3,7 @@ import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
 import { chapters } from "@/lib/chapters";
-import { listChapterArticles } from "@/lib/articles-db";
+import { getLatestPerChapter } from "@/lib/articles-db";
 import { listActiveSlides } from "@/lib/slides-db";
 import { getFeaturedVideo } from "@/lib/videos-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
@@ -25,13 +25,13 @@ export default async function HomePage() {
 
   const featuredVideo = await getFeaturedVideo();
 
-  // 교차 쇼케이스에 쓸 — 5개 장 중 글이 있는 것만, 최신순
-  const chapterLatests = await Promise.all(
-    chapters.map(async (c) => ({
-      chapter: c,
-      latest: (await listChapterArticles(c.slug))[0],
-    }))
-  );
+  // 교차 쇼케이스 — 8개 챕터의 최신 글을 단일 쿼리로 가져옴 (8쿼리 → 1쿼리)
+  const latestRows = await getLatestPerChapter();
+  const latestByChapter = new Map(latestRows.map((a) => [a.chapter, a]));
+  const chapterLatests = chapters.map((c) => ({
+    chapter: c,
+    latest: latestByChapter.get(c.slug),
+  }));
   const showcases = chapterLatests.filter((x) => x.latest);
 
   return (

@@ -139,6 +139,13 @@ export async function deleteCategory(id: number): Promise<void> {
 
 // ─── 사진 CRUD ──────────────────────────────────────────────
 
+/** 어드민 카드용 — 카운트만 */
+export async function countPhotos(): Promise<number> {
+  const db = await getDb();
+  const r = await db.execute(`SELECT COUNT(*) AS n FROM photos`);
+  return Number(r.rows[0].n);
+}
+
 export async function listPhotos(opts?: {
   categoryId?: number;
   visibility?: string;

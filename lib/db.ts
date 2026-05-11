@@ -24,8 +24,33 @@ function makeClient(): Client {
   return createClient({ url: `file://${dbPath}` });
 }
 
+/** 마이그레이션 가드 — 한 번 실행된 작업은 키로 기록해 두 번 실행 안 함 */
+async function hasMigration(client: Client, key: string): Promise<boolean> {
+  try {
+    const r = await client.execute({
+      sql: "SELECT 1 FROM migrations_log WHERE key = ? LIMIT 1",
+      args: [key],
+    });
+    return r.rows.length > 0;
+  } catch {
+    return false; // migrations_log 가 아직 없으면 false
+  }
+}
+
+async function markMigration(client: Client, key: string): Promise<void> {
+  await client.execute({
+    sql: "INSERT OR IGNORE INTO migrations_log (key, run_at) VALUES (?, CURRENT_TIMESTAMP)",
+    args: [key],
+  });
+}
+
 async function init(client: Client) {
   await client.executeMultiple(`
+    CREATE TABLE IF NOT EXISTS migrations_log (
+      key TEXT PRIMARY KEY,
+      run_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
@@ -159,6 +184,23 @@ async function init(client: Client) {
   );
   await client.execute(
     `CREATE INDEX IF NOT EXISTS idx_users_provider ON users(auth_provider, provider_id)`
+  );
+
+  // 성능 인덱스 — 자주 쓰이는 정렬/필터 조합
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_articles_chapter_date ON articles(chapter, date DESC)`
+  );
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_articles_date ON articles(date DESC)`
+  );
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_slides_active_position ON slides(active, position)`
+  );
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_videos_featured ON videos(featured)`
+  );
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_photos_visibility_position ON photos(visibility, position)`
   );
 
   // 시드: 관리자 + 회원 샘플
@@ -348,37 +390,39 @@ async function init(client: Client) {
     );
   }
 
-  // 마이그레이션: natnal → jachwi (멱등)
-  await client.execute(
-    "UPDATE articles SET chapter = 'jachwi' WHERE chapter = 'natnal'"
-  );
-  // 마이그레이션: yeon-gi → yeongi (멱등)
-  await client.execute(
-    "UPDATE articles SET chapter = 'yeongi' WHERE chapter = 'yeon-gi'"
-  );
-  // 마이그레이션: jachwi → jachui (멱등)
-  await client.execute(
-    "UPDATE articles SET chapter = 'jachui' WHERE chapter = 'jachwi'"
-  );
-
-  // 마이그레이션: 마크다운 본문 → HTML (멱등 — 이미 HTML인 행은 건너뜀)
-  const mdRows = await client.execute(
-    "SELECT id, body FROM articles"
-  );
-  for (const row of mdRows.rows) {
-    const id = Number(row.id);
-    const body = String(row.body);
-    if (looksLikeHTML(body)) continue;
-    const html = await renderMarkdown(body);
-    await client.execute({
-      sql: "UPDATE articles SET body = ?, updated_at = updated_at WHERE id = ?",
-      args: [html, id],
-    });
+  // 마이그레이션: 챕터명 정정 (한 번만 실행)
+  if (!(await hasMigration(client, "chapter-rename-v1"))) {
+    await client.execute("UPDATE articles SET chapter = 'jachwi' WHERE chapter = 'natnal'");
+    await client.execute("UPDATE articles SET chapter = 'yeongi' WHERE chapter = 'yeon-gi'");
+    await client.execute("UPDATE articles SET chapter = 'jachui' WHERE chapter = 'jachwi'");
+    await markMigration(client, "chapter-rename-v1");
   }
 
-  // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트, 멱등)
-  // INSERT OR IGNORE 로 새 파일만 추가, 기존 행은 덮어쓰지 않음
-  // seeded_deletions 에 등록된 (chapter, slug) 는 건너뜀 (삭제 후 부활 방지)
+  // 마이그레이션: 마크다운 본문 → HTML (한 번만, 전체 스캔 부담 큼)
+  if (!(await hasMigration(client, "markdown-to-html-v1"))) {
+    const mdRows = await client.execute("SELECT id, body FROM articles");
+    for (const row of mdRows.rows) {
+      const id = Number(row.id);
+      const body = String(row.body);
+      if (looksLikeHTML(body)) continue;
+      const html = await renderMarkdown(body);
+      await client.execute({
+        sql: "UPDATE articles SET body = ?, updated_at = updated_at WHERE id = ?",
+        args: [html, id],
+      });
+    }
+    await markMigration(client, "markdown-to-html-v1");
+  }
+
+  // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
+  // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
+  // 새 콘텐츠 파일이 추가됐을 때만 SEED_FROM_FILES=1 환경변수로 재실행
+  const seedKey = "content-seed-v1";
+  const shouldSeed =
+    !(await hasMigration(client, seedKey)) ||
+    process.env.SEED_FROM_FILES === "1";
+
+  if (shouldSeed) {
   const deletedRows = await client.execute(
     "SELECT chapter, slug FROM seeded_deletions"
   );
@@ -447,6 +491,8 @@ async function init(client: Client) {
       }
     }
   }
+  await markMigration(client, seedKey);
+  } // ← shouldSeed 끝
 
   // 시드: 동영상
   const videoCount = (

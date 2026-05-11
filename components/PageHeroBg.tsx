@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getPageBackground } from "@/lib/backgrounds-db";
 
 export async function PageHeroBg({ page }: { page: string }) {
@@ -13,13 +14,19 @@ export async function PageHeroBg({ page }: { page: string }) {
   };
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={bg.image_path}
       alt=""
+      fill
+      sizes="100vw"
+      priority
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-      style={{ opacity: bg.opacity, objectPosition: posMap[bg.position] ?? "center center" }}
+      className="select-none pointer-events-none"
+      style={{
+        opacity: bg.opacity,
+        objectFit: "cover",
+        objectPosition: posMap[bg.position] ?? "center center",
+      }}
     />
   );
 }

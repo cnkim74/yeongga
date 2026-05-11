@@ -19,12 +19,10 @@ export default function RootLayout({
   return (
     <html lang="ko" data-reading="3" suppressHydrationWarning>
       <head>
+        {/* 폰트 — 동일 origin 미리 연결 후 swap 으로 비차단 로드 */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
         <link
           href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700&display=swap"
           rel="stylesheet"

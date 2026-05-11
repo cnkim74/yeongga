@@ -12,34 +12,43 @@ import {
   IconBackground,
 } from "@/components/admin/AdminIcons";
 import { listSlides } from "@/lib/slides-db";
-import { listVideos } from "@/lib/videos-db";
-import { listUsers } from "@/lib/users-db";
+import { countVideos } from "@/lib/videos-db";
+import { countUsers, listRecentUsers } from "@/lib/users-db";
 import { getCurrentUser } from "@/lib/auth";
 import { countAllArticles } from "@/lib/articles-db";
 import { listAllTags } from "@/lib/tags-db";
 import { listPageBackgrounds } from "@/lib/backgrounds-db";
-import { listCategories, listPhotos } from "@/lib/gallery-db";
+import { listCategories, countPhotos } from "@/lib/gallery-db";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminHome() {
   const me = await getCurrentUser();
-  const [slides, videos, users, totalArticles, allTags, backgrounds, categories, photos] =
-    await Promise.all([
-      listSlides(),
-      listVideos(),
-      listUsers(),
-      countAllArticles(),
-      listAllTags(),
-      listPageBackgrounds(),
-      listCategories(),
-      listPhotos(),
-    ]);
+  const [
+    slides,
+    videoStats,
+    userStats,
+    recentUsers,
+    totalArticles,
+    allTags,
+    backgrounds,
+    categories,
+    photoCount,
+  ] = await Promise.all([
+    listSlides(),
+    countVideos(),       // 풀스캔 대신 COUNT(*)
+    countUsers(),        // 풀스캔 대신 COUNT(*)
+    listRecentUsers(6),  // 6명만 가져옴
+    countAllArticles(),
+    listAllTags(),
+    listPageBackgrounds(),
+    listCategories(),
+    countPhotos(),       // 풀스캔 + JOIN 대신 COUNT(*)
+  ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
-  const featuredVideo = videos.find((v) => v.featured);
   const activeBgs = backgrounds.filter((b) => b.active && b.image_path !== null).length;
-  const adminCount = users.filter((u) => u.role === "admin").length;
+  const featuredTitle = videoStats.featuredTitle;
 
   return (
     <>
@@ -75,7 +84,7 @@ export default async function AdminHome() {
         <div className="admin-summary mb-14">
           <SummaryRow label="현재 로그인" value={`${me?.name} (@${me?.username})`} />
           <SummaryRow label="활성 슬라이드" value={`${activeSlides} / ${slides.length}장`} />
-          <SummaryRow label="추천 영상" value={featuredVideo?.title ?? "지정 안 됨"} />
+          <SummaryRow label="추천 영상" value={featuredTitle ?? "지정 안 됨"} />
         </div>
 
         {/* ─── 데이터 관리 ─── */}
@@ -85,15 +94,15 @@ export default async function AdminHome() {
           <DbCard href="/admin/slides"      Icon={IconSlides}     title="홈 슬라이드"
                   stat={`${activeSlides}장`} sub={`총 ${slides.length}장 중 활성`} />
           <DbCard href="/admin/videos"      Icon={IconVideo}      title="동영상"
-                  stat={`${videos.length}편`} sub={featuredVideo ? "추천 지정됨" : "추천 없음"} />
+                  stat={`${videoStats.total}편`} sub={featuredTitle ? "추천 지정됨" : "추천 없음"} />
           <DbCard href="/admin/articles"    Icon={IconArticle}    title="글 관리"
                   stat={`${totalArticles}편`} sub="장(章)별 분류" />
           <DbCard href="/admin/gallery"     Icon={IconGallery}    title="사진 갤러리"
-                  stat={`${photos.length}장`} sub={`카테고리 ${categories.length}개`} />
+                  stat={`${photoCount}장`} sub={`카테고리 ${categories.length}개`} />
           <DbCard href="/admin/ebooks"      Icon={IconEbook}      title="이북"
                   stat="—" sub="PDF 자료" />
           <DbCard href="/admin/members"     Icon={IconMembers}    title="회원 명부"
-                  stat={`${users.length}명`} sub={`관리자 ${adminCount}명`} />
+                  stat={`${userStats.total}명`} sub={`관리자 ${userStats.admins}명`} />
           <DbCard href="/admin/tags"        Icon={IconTag}        title="키워드"
                   stat={`${allTags.length}개`} sub="태그 관리 · 삭제" />
           <DbCard href="/admin/backgrounds" Icon={IconBackground} title="페이지 배경"
@@ -104,7 +113,7 @@ export default async function AdminHome() {
         <SectionTitle ko="최근 회원" hanja="名簿" />
 
         <ul className="rounded-lg border border-[var(--admin-rule)] bg-[var(--admin-surface)] divide-y divide-[var(--admin-rule-soft)] overflow-hidden">
-          {users.slice(0, 6).map((u) => (
+          {recentUsers.map((u) => (
             <li key={u.id} className="member-row">
               <span className="member-mark">
                 {u.role === "admin" ? "印" : "·"}

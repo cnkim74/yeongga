@@ -74,6 +74,23 @@ export async function countAllArticles(): Promise<number> {
   return Number(r.rows[0].n);
 }
 
+/**
+ * 챕터별 최신 글 1편씩 — 홈 페이지용
+ * 8개 챕터에 대해 별도 쿼리 8번 도는 대신 한 번에 가져옴 (윈도우 함수 활용)
+ */
+export async function getLatestPerChapter(): Promise<ArticleMeta[]> {
+  const db = await getDb();
+  const r = await db.execute(`
+    SELECT ${META_COLS} FROM (
+      SELECT ${META_COLS},
+        ROW_NUMBER() OVER (PARTITION BY chapter ORDER BY date DESC, id DESC) AS rn
+      FROM articles
+    )
+    WHERE rn = 1
+  `);
+  return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
+}
+
 export async function getArticleBySlug(
   chapter: string,
   slug: string

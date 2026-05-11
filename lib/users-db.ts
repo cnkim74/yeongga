@@ -60,6 +60,30 @@ export async function listUsers(): Promise<User[]> {
   return r.rows.map((r) => rowToUser(r as unknown as Record<string, unknown>));
 }
 
+/** 어드민 카드용 — 전체 행 로드 없이 카운트만 */
+export async function countUsers(): Promise<{ total: number; admins: number }> {
+  const db = await getDb();
+  const r = await db.execute(
+    `SELECT
+       COUNT(*) AS total,
+       SUM(CASE WHEN role = 'admin' THEN 1 ELSE 0 END) AS admins
+     FROM users`
+  );
+  const row = r.rows[0];
+  return { total: Number(row.total), admins: Number(row.admins ?? 0) };
+}
+
+/** 어드민 홈 "최근 회원" 6명 — 풀 리스트 안 가져옴 */
+export async function listRecentUsers(limit = 6): Promise<User[]> {
+  const db = await getDb();
+  const r = await db.execute({
+    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, joined_at, note, created_at
+          FROM users ORDER BY role DESC, joined_at ASC, id ASC LIMIT ?`,
+    args: [limit],
+  });
+  return r.rows.map((r) => rowToUser(r as unknown as Record<string, unknown>));
+}
+
 export async function getUser(id: number): Promise<User | null> {
   const db = await getDb();
   const r = await db.execute({

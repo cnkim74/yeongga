@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters } from "@/lib/chapters";
-import { listChapterArticles } from "@/lib/articles-db";
+import { listAllArticles, type ArticleMeta } from "@/lib/articles-db";
 import { listUsers } from "@/lib/users-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
@@ -14,15 +14,18 @@ export const metadata = {
 };
 
 export default async function ArchiveIndex() {
-  const [sections, users] = await Promise.all([
-    Promise.all(
-      chapters.map(async (c) => ({
-        chapter: c,
-        articles: c.comingSoon ? [] : await listChapterArticles(c.slug),
-      }))
-    ),
-    listUsers(),
-  ]);
+  // 8 챕터 × 별도 쿼리 → 단일 쿼리 + 메모리 그룹핑 (9쿼리 → 2쿼리)
+  const [allArticles, users] = await Promise.all([listAllArticles(), listUsers()]);
+  const byChapter = new Map<string, ArticleMeta[]>();
+  for (const a of allArticles) {
+    const arr = byChapter.get(a.chapter) ?? [];
+    arr.push(a);
+    byChapter.set(a.chapter, arr);
+  }
+  const sections = chapters.map((c) => ({
+    chapter: c,
+    articles: c.comingSoon ? [] : byChapter.get(c.slug) ?? [],
+  }));
   const avatarByName = new Map(users.map((u) => [u.name, u.avatar_url]));
 
   return (
