@@ -40,6 +40,7 @@ const NAV: NavGroup[] = [
     hanja: "編輯",
     items: [
       { href: "/admin/slides",   label: "홈 슬라이드", Icon: IconSlides },
+      { href: "/admin/chapters", label: "챕터 표지",   Icon: IconBackground },
       { href: "/admin/videos",   label: "동영상",       Icon: IconVideo },
       { href: "/admin/articles", label: "글 관리",      Icon: IconArticle },
       { href: "/admin/gallery",  label: "사진 갤러리",   Icon: IconGallery },
@@ -49,7 +50,10 @@ const NAV: NavGroup[] = [
   {
     section: "사람",
     hanja: "會員",
-    items: [{ href: "/admin/members", label: "회원 명부", Icon: IconMembers }],
+    items: [
+      { href: "/admin/members", label: "회원 명부", Icon: IconMembers },
+      { href: "/admin/banners", label: "회원 배너", Icon: IconTag },
+    ],
   },
   {
     section: "환경",

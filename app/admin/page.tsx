@@ -103,6 +103,10 @@ export default async function AdminHome() {
                   stat="—" sub="PDF 자료" />
           <DbCard href="/admin/members"     Icon={IconMembers}    title="회원 명부"
                   stat={`${userStats.total}명`} sub={`관리자 ${userStats.admins}명`} />
+          <DbCard href="/admin/chapters"    Icon={IconBackground} title="챕터 표지"
+                  stat="—" sub="대표 이미지·노출 설정" />
+          <DbCard href="/admin/banners"     Icon={IconTag}        title="회원 배너"
+                  stat="—" sub="홈 하단 배너링크" />
           <DbCard href="/admin/tags"        Icon={IconTag}        title="키워드"
                   stat={`${allTags.length}개`} sub="태그 관리 · 삭제" />
           <DbCard href="/admin/backgrounds" Icon={IconBackground} title="페이지 배경"

@@ -163,6 +163,29 @@ async function init(client: Client) {
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX IF NOT EXISTS idx_photos_category ON photos(category_id);
+
+    CREATE TABLE IF NOT EXISTS chapter_meta (
+      chapter_slug TEXT PRIMARY KEY,
+      cover_image TEXT,
+      display_mode TEXT NOT NULL DEFAULT 'latest' CHECK(display_mode IN ('latest','featured','random')),
+      featured_article_id INTEGER REFERENCES articles(id) ON DELETE SET NULL,
+      visible INTEGER NOT NULL DEFAULT 1,
+      position INTEGER NOT NULL DEFAULT 0,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS member_banners (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      subtitle TEXT,
+      image_url TEXT NOT NULL,
+      link_url TEXT NOT NULL,
+      position INTEGER NOT NULL DEFAULT 0,
+      active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_banners_active_position ON member_banners(active, position);
   `);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──

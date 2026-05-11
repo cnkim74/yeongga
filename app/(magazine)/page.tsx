@@ -1,18 +1,26 @@
 import Link from "next/link";
+import Image from "next/image";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
 import { chapters } from "@/lib/chapters";
-import { getLatestPerChapter } from "@/lib/articles-db";
 import { listActiveSlides } from "@/lib/slides-db";
 import { getFeaturedVideo } from "@/lib/videos-db";
+import { listHomeChapterDisplays } from "@/lib/chapter-meta-db";
+import { listActiveBanners } from "@/lib/banners-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
-// 슬라이드·영상이 바뀌면 어드민 액션에서 revalidatePath("/") 호출
-export const revalidate = 60; // 최대 1분 캐시 (슬라이드·홈 변경 반영)
+// 랜덤 모드를 효과적으로 쓰려면 캐시를 짧게 유지
+export const revalidate = 60;
 
 export default async function HomePage() {
-  const dbSlides = await listActiveSlides();
+  const [dbSlides, featuredVideo, chapterDisplays, banners] = await Promise.all([
+    listActiveSlides(),
+    getFeaturedVideo(),
+    listHomeChapterDisplays(),
+    listActiveBanners(),
+  ]);
+
   const slides: HeroSlide[] = dbSlides.map((s) => ({
     id: `db-${s.id}`,
     kicker: s.kicker ?? "",
@@ -23,16 +31,18 @@ export default async function HomePage() {
     cta: s.cta ?? undefined,
   }));
 
-  const featuredVideo = await getFeaturedVideo();
-
-  // 교차 쇼케이스 — 8개 챕터의 최신 글을 단일 쿼리로 가져옴 (8쿼리 → 1쿼리)
-  const latestRows = await getLatestPerChapter();
-  const latestByChapter = new Map(latestRows.map((a) => [a.chapter, a]));
-  const chapterLatests = chapters.map((c) => ({
-    chapter: c,
-    latest: latestByChapter.get(c.slug),
-  }));
-  const showcases = chapterLatests.filter((x) => x.latest);
+  // 메타에 visible=true 이지만 articles이 없는 챕터는 자동으로 빼고,
+  // article 있는 챕터만 쇼케이스로 노출
+  const showcases = chapterDisplays
+    .filter((d) => d.article != null)
+    .map((d) => {
+      const chapter = chapters.find((c) => c.slug === d.meta.chapter_slug)!;
+      return {
+        chapter,
+        meta: d.meta,
+        latest: d.article!,
+      };
+    });
 
   return (
     <>
@@ -133,10 +143,12 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* 3. ALTERNATING SHOWCASES — "Wise Pixie" 톤 */}
-      {showcases.map(({ chapter, latest }, i) => {
+      {/* 3. ALTERNATING SHOWCASES — chapter_meta 의 cover_image 우선, 글 cover 차순위 */}
+      {showcases.map(({ chapter, meta, latest }, i) => {
         const reversed = i % 2 === 1;
         const bg = i % 2 === 0 ? "bg-[var(--color-bg-soft)]" : "bg-white";
+        // cover 우선순위: chapter_meta.cover_image > article.cover > 챕터 아이콘 placeholder
+        const coverSrc = meta.cover_image || latest.cover || null;
         return (
           <section key={chapter.slug} className={`${bg} py-24 sm:py-32`}>
             <div
@@ -145,15 +157,30 @@ export default async function HomePage() {
               }`}
             >
               <div className={reversed ? "lg:[direction:ltr]" : ""}>
-                <div
-                  className="aspect-[4/3] rounded-3xl overflow-hidden bg-[var(--color-bg-deep)]"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={latest!.cover ?? `/chapters/${chapter.slug}.jpg`}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
+                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-[var(--color-bg-deep)]">
+                  {coverSrc ? (
+                    <Image
+                      src={coverSrc}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 540px, 100vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    /* 이미지 없을 때 — 챕터 아이콘 + 한자 번호 */
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-[var(--color-ink-mute)] bg-gradient-to-br from-[var(--color-bg-soft)] to-[var(--color-bg-deep)]">
+                      <ChapterIcon
+                        slug={chapter.slug}
+                        className="w-24 h-24 opacity-30"
+                      />
+                      <div
+                        className="font-serif text-7xl opacity-20 select-none"
+                        aria-hidden="true"
+                      >
+                        {chapter.number}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className={`max-w-lg ${reversed ? "lg:[direction:ltr]" : ""}`}>
@@ -161,25 +188,25 @@ export default async function HomePage() {
                   {chapter.number}. {chapter.title}
                 </div>
                 <Link
-                  href={`/archive/${chapter.slug}/${latest!.slug}`}
+                  href={`/archive/${chapter.slug}/${latest.slug}`}
                   className="group block"
                 >
                   <h3 className="display-md text-3xl sm:text-5xl mb-5 group-hover:text-[var(--color-accent)] transition">
-                    {latest!.title}
+                    {latest.title}
                   </h3>
                 </Link>
-                {latest!.excerpt && (
+                {latest.excerpt && (
                   <p className="text-base sm:text-lg leading-relaxed text-[var(--color-ink-soft)] mb-8">
-                    {latest!.excerpt}
+                    {latest.excerpt}
                   </p>
                 )}
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-ink-mute)] mb-8">
-                  <span>{formatDate(latest!.date)}</span>
-                  {latest!.author && <span>글 · {latest!.author}</span>}
+                  <span>{formatDate(latest.date)}</span>
+                  {latest.author && <span>글 · {latest.author}</span>}
                 </div>
                 <div className="flex gap-3 flex-wrap">
                   <Link
-                    href={`/archive/${chapter.slug}/${latest!.slug}`}
+                    href={`/archive/${chapter.slug}/${latest.slug}`}
                     className="btn-pill"
                   >
                     글 읽기 <span aria-hidden="true">→</span>
@@ -196,6 +223,49 @@ export default async function HomePage() {
           </section>
         );
       })}
+
+      {/* 4. MEMBER BANNERS — 회원사 배너링크 */}
+      {banners.length > 0 && (
+        <section className="bg-[var(--color-bg-soft)] py-20 sm:py-28 border-y border-[var(--color-rule)]">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="kicker text-[var(--color-ink-mute)] mb-8 text-center">
+              永嘉會 · 회원의 광장
+            </div>
+            <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {banners.map((b) => (
+                <li key={b.id}>
+                  <a
+                    href={b.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block rounded-2xl overflow-hidden bg-white border border-[var(--color-rule)] hover:shadow-lg transition-shadow"
+                  >
+                    <div className="relative aspect-[16/9] bg-[var(--color-bg-deep)] overflow-hidden">
+                      <Image
+                        src={b.image_url}
+                        alt={b.title}
+                        fill
+                        sizes="(min-width: 1024px) 280px, 50vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-3">
+                      <div className="text-sm font-medium text-[var(--color-ink)] truncate">
+                        {b.title}
+                      </div>
+                      {b.subtitle && (
+                        <div className="text-xs text-[var(--color-ink-mute)] truncate mt-0.5">
+                          {b.subtitle}
+                        </div>
+                      )}
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* 4. CLOSING */}
       <section className="bg-[var(--color-ink)] text-white py-24 sm:py-32">
