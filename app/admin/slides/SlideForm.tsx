@@ -1,19 +1,48 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { saveSlideAction, type SlideFormState } from "./actions";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { saveSlideAction } from "./actions";
 import type { Slide } from "@/lib/slides-db";
 
 export function SlideForm({ slide }: { slide?: Slide }) {
-  const [state, formAction, pending] = useActionState<SlideFormState, FormData>(
-    saveSlideAction,
-    {}
-  );
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [imagePath, setImagePath] = useState<string>(slide?.image_path ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   /** 이번 세션에서 새로 업로드한 경우만 "업로드 완료" 메시지를 띄움 */
   const [justUploaded, setJustUploaded] = useState(false);
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSaveError(null);
+    const fd = new FormData(e.currentTarget);
+    // 안전: image_path 가 hidden 값으로 들어 있어도 state 값으로 덮어씌움
+    fd.set("image_path", imagePath);
+
+    startTransition(async () => {
+      try {
+        const result = await saveSlideAction({}, fd);
+        if (result && "error" in result && result.error) {
+          setSaveError(result.error);
+          return;
+        }
+        // 성공 — 서버에서 redirect 가 발생했어야 하지만, 그러지 못한 경우 클라이언트에서 이동
+        router.push("/admin/slides");
+        router.refresh();
+      } catch (err) {
+        // NEXT_REDIRECT 는 정상 흐름 — 메시지 무시하고 이동
+        const msg = err instanceof Error ? err.message : String(err);
+        if (msg.includes("NEXT_REDIRECT")) {
+          router.push("/admin/slides");
+          return;
+        }
+        setSaveError(`저장 중 오류: ${msg}`);
+      }
+    });
+  }
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.currentTarget.files?.[0];
@@ -47,7 +76,7 @@ export function SlideForm({ slide }: { slide?: Slide }) {
   }
 
   return (
-    <form action={formAction} className="space-y-6 max-w-3xl">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl">
       {slide && <input type="hidden" name="id" value={slide.id} />}
       {/* image_path 를 hidden 으로 전송 — 파일은 별도 API 로 업로드됨 */}
       <input type="hidden" name="image_path" value={imagePath} />
@@ -157,19 +186,19 @@ export function SlideForm({ slide }: { slide?: Slide }) {
         <span>활성 — 공개 사이트 메인에 노출</span>
       </label>
 
-      {state.error && (
+      {saveError && (
         <div className="text-sm text-[#c4554d] bg-[#ffe2dd] border border-[#f5c8c0] rounded-lg p-3">
-          {state.error}
+          {saveError}
         </div>
       )}
 
       <div className="flex gap-2 pt-2">
         <button
           type="submit"
-          disabled={pending || uploading || !imagePath}
+          disabled={isPending || uploading || !imagePath}
           className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] disabled:opacity-50 px-4 h-9"
         >
-          {pending ? "저장 중…" : "저장"}
+          {isPending ? "저장 중…" : "저장"}
         </button>
         <a href="/admin/slides" className="notion-icon-btn h-9">
           취소
