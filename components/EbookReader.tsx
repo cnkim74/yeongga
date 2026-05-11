@@ -28,7 +28,6 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [pageWidth, setPageWidth] = useState(400);
-  const [debug, setDebug] = useState<string>("");
 
   const containerRef = useRef<HTMLDivElement>(null);
   const leftCanvasRef  = useRef<HTMLCanvasElement>(null);
@@ -47,7 +46,6 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
     setLoadError(null);
     setPdf(null);
     setNumPages(0);
-    setDebug("PDF 가져오는 중…");
 
     (async () => {
       try {
@@ -55,8 +53,6 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.arrayBuffer();
         if (cancelled) return;
-
-        setDebug(`PDF 다운로드 완료 (${(data.byteLength / 1024 / 1024).toFixed(2)} MB), 파싱 중…`);
 
         const doc = await pdfjs.getDocument({
           data,
@@ -69,7 +65,6 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         setPdf(doc);
         setNumPages(doc.numPages);
         setLoading(false);
-        setDebug(`PDF 파싱 완료 — ${doc.numPages}페이지`);
       } catch (err) {
         if (cancelled) return;
         setLoadError(err instanceof Error ? err.message : String(err));
@@ -128,10 +123,7 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         canvas.style.height = `${Math.floor(viewport.height)}px`;
 
         const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          setDebug(`p${pageNum}: 2D context 획득 실패`);
-          return;
-        }
+        if (!ctx) return;
 
         const transform: [number, number, number, number, number, number] | undefined =
           outputScale !== 1
@@ -147,15 +139,8 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         activeRenderTasks.current.add(task);
         await task.promise;
         activeRenderTasks.current.delete(task);
-
-        setDebug(
-          `p${pageNum} 렌더 완료 — ${canvas.width}×${canvas.height}`
-        );
       } catch (e) {
-        if (e instanceof Error) {
-          if (e.name === "RenderingCancelledException") return;
-          setDebug(`p${pageNum} 에러: ${e.name} — ${e.message}`);
-        }
+        if (e instanceof Error && e.name === "RenderingCancelledException") return;
         console.error(`[EbookReader] p${pageNum}`, e);
       }
     },
@@ -370,13 +355,6 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
 
             {numPages > 0 && (
               <div className="mt-5 text-white/40 text-xs font-mono tabular-nums">{pageLabel}</div>
-            )}
-
-            {/* 진단 정보 */}
-            {debug && (
-              <div className="mt-3 text-amber-300/60 text-[10px] font-mono max-w-2xl text-center px-4">
-                {debug}
-              </div>
             )}
           </>
         )}
