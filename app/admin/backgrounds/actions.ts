@@ -33,6 +33,8 @@ export async function saveBgAction(
   revalidatePath("/search");
   revalidatePath("/videos");
   revalidatePath("/about");
+  revalidatePath("/gallery");
+  revalidatePath("/ebooks");
 
   return { ok: true };
 }
@@ -48,4 +50,6 @@ export async function removeImageAction(formData: FormData) {
   revalidatePath("/search");
   revalidatePath("/videos");
   revalidatePath("/about");
+  revalidatePath("/gallery");
+  revalidatePath("/ebooks");
 }

@@ -6,7 +6,8 @@ import { listChapterArticles } from "@/lib/articles-db";
 import { listUsers } from "@/lib/users-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
-export const dynamic = "force-dynamic";
+// 글이 추가/수정/삭제되면 어드민 액션에서 revalidatePath("/archive") 호출
+export const revalidate = 3600; // 1시간 캐시
 
 export const metadata = {
   title: "아카이브 — 영가회",

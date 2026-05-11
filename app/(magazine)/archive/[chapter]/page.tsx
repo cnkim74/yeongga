@@ -6,7 +6,7 @@ import { chapters, getChapter } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listUsers } from "@/lib/users-db";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // 1시간 캐시 — 글 변경 시 어드민에서 revalidatePath 호출
 
 export function generateStaticParams() {
   return chapters.map((c) => ({ chapter: c.slug }));

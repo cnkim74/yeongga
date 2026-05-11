@@ -8,7 +8,8 @@ import { listActiveSlides } from "@/lib/slides-db";
 import { getFeaturedVideo } from "@/lib/videos-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
-export const dynamic = "force-dynamic";
+// 슬라이드·영상이 바뀌면 어드민 액션에서 revalidatePath("/") 호출
+export const revalidate = 60; // 최대 1분 캐시 (슬라이드·홈 변경 반영)
 
 export default async function HomePage() {
   const dbSlides = await listActiveSlides();

@@ -3,7 +3,7 @@ import { listAllTags, listArticlesByTag, searchArticles } from "@/lib/tags-db";
 import { chapters } from "@/lib/chapters";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // 1시간 캐시 — 태그 변경 시 어드민에서 revalidatePath 호출
 
 export const metadata = {
   title: "키워드 검색 — 영가회",

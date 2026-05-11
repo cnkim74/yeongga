@@ -10,8 +10,14 @@ import { getCurrentUser } from "@/lib/auth";
 import { listUsers } from "@/lib/users-db";
 import { getTagsForArticle } from "@/lib/tags-db";
 import { ShareBar } from "@/components/ShareBar";
+import { AdminEditLink } from "@/components/AdminEditLink";
 
-export const dynamic = "force-dynamic";
+/**
+ * 캐시 전략:
+ * - 공개 글: getCurrentUser() 미호출 → 쿠키 의존 없음 → 1시간 ISR 캐시
+ * - 회원전용 글: getCurrentUser() 호출 → 쿠키 의존 → 자동으로 동적 렌더링
+ */
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -37,9 +43,15 @@ export default async function ArticlePage({
   const article = await getArticleBySlug(chapter, slug);
   if (!meta || !article) notFound();
 
-  const user = await getCurrentUser();
-  const isLocked = article.visibility === "members-only" && !user;
-  const isAdmin = user?.role === "admin";
+  /**
+   * 회원전용 글은 서버에서 사용자 확인 (보안)
+   * 공개 글은 getCurrentUser() 를 호출하지 않아 캐싱 가능
+   */
+  let isLocked = false;
+  if (article.visibility === "members-only") {
+    const user = await getCurrentUser(); // ← 쿠키 읽기 → 이 URL만 동적 렌더링
+    isLocked = !user;
+  }
 
   const [all, users, tags] = await Promise.all([
     listChapterArticles(chapter),
@@ -81,18 +93,16 @@ export default async function ArticlePage({
             >
               {meta.number}. {meta.title}
             </Link>
-            {isAdmin && (
-              <Link
-                href={`/admin/articles/${article.id}/edit`}
-                className={`ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition ${
-                  article.cover
-                    ? "bg-white/20 text-white hover:bg-white/30"
-                    : "bg-[var(--color-ink)] text-white hover:opacity-80"
-                }`}
-              >
-                ✏️ 수정
-              </Link>
-            )}
+            {/* 관리자 편집 버튼 — 클라이언트에서 /api/me 조회, 캐시에 영향 없음 */}
+            <AdminEditLink
+              href={`/admin/articles/${article.id}/edit`}
+              label="수정"
+              className={`ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition ${
+                article.cover
+                  ? "bg-white/20 text-white hover:bg-white/30"
+                  : "bg-[var(--color-ink)] text-white hover:opacity-80"
+              }`}
+            />
           </nav>
 
           {article.visibility === "members-only" && (
@@ -237,7 +247,7 @@ function MemberGate({
         {excerpt ? (
           <>
             <span className="block mb-3 italic text-[var(--color-ink-mute)]">
-              "{excerpt}"
+              &ldquo;{excerpt}&rdquo;
             </span>
             전문은 영가회 회원으로 로그인하셔야 보실 수 있습니다.
           </>
