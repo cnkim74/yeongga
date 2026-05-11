@@ -55,7 +55,11 @@
 :root {
   --reading-size: var(--reading-3);
   --reading-line: 1.95;
+  /* 본문 폰트 — 기본 명조, 고딕 선택 시 sans 로 교체 */
+  --reading-font: var(--font-serif);
   color-scheme: light;
+  /* 다크 모드 전환 부드럽게 */
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 html {
@@ -77,6 +81,43 @@ html[data-reading="2"] { --reading-size: var(--reading-2); }
 html[data-reading="3"] { --reading-size: var(--reading-3); }
 html[data-reading="4"] { --reading-size: var(--reading-4); }
 html[data-reading="5"] { --reading-size: var(--reading-5); }
+
+/* 본문 폰트 토글 */
+html[data-font="serif"] { --reading-font: var(--font-serif); }
+html[data-font="sans"]  { --reading-font: var(--font-sans); }
+
+/* 다크 모드 — 한지/먹 톤 반전 */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #15140f;          /* 짙은 먹지 */
+  --color-bg-soft: #1d1c17;
+  --color-bg-deep: #28261f;
+  --color-ink: #f0e9d8;          /* 미색 본문 */
+  --color-ink-soft: #c8c2b3;
+  --color-ink-mute: #8a8475;
+  --color-rule: #34322b;
+  --color-paper: #1a1812;        /* 본문 종이색 */
+  --color-accent: #c89669;       /* 다크에서 잘 보이는 황토 */
+}
+
+html[data-theme="dark"] body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+/* 다크에서 이미지·동영상 약간 어둡게 (눈부심 완화) */
+html[data-theme="dark"] img,
+html[data-theme="dark"] video {
+  filter: brightness(0.92);
+}
+
+/* 다크에서 하드코딩된 bg-white 를 자연스러운 카드 색으로 매핑 */
+html[data-theme="dark"] .bg-white {
+  background-color: var(--color-bg-soft) !important;
+}
+html[data-theme="dark"] .hover\:bg-white:hover {
+  background-color: var(--color-bg-deep) !important;
+}
 
 /* ─── 디스플레이 / 헤드라인 (Pretendard 굵게) ───────────── */
 .display {
@@ -138,7 +179,7 @@ html[data-reading="5"] { --reading-size: var(--reading-5); }
 
 /* ─── 본문 (실제 글 읽기 화면) ──────────────────────────── */
 .prose-body {
-  font-family: var(--font-serif);
+  font-family: var(--reading-font);
   font-size: var(--reading-size);
   line-height: var(--reading-line);
   letter-spacing: -0.005em;

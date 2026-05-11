@@ -123,19 +123,29 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
 
       {sizeOpen && (
         <div
-          className="fixed top-[88px] right-3 z-50 bg-white border border-[var(--color-rule)] rounded-2xl shadow-lg p-3"
+          className="fixed top-[88px] right-3 z-50 bg-[var(--color-bg)] border border-[var(--color-rule)] rounded-2xl shadow-2xl p-4"
           role="dialog"
-          aria-label="글자 크기"
+          aria-label="보기 설정"
         >
-          <div className="text-xs font-semibold text-[var(--color-ink-mute)] mb-2 px-2">
-            본문 글자 크기
+          <div className="flex items-center justify-between mb-3 px-1">
+            <div className="text-xs font-semibold text-[var(--color-ink)]">
+              보기 설정
+            </div>
+            <button
+              type="button"
+              onClick={() => setSizeOpen(false)}
+              aria-label="닫기"
+              className="w-6 h-6 inline-flex items-center justify-center rounded-md text-[var(--color-ink-mute)] hover:bg-[var(--color-bg-soft)]"
+            >
+              ✕
+            </button>
           </div>
           <ReadingSizeControl />
         </div>
       )}
 
       {open && (
-        <div className="fixed inset-0 z-40 bg-white pt-24" role="dialog" aria-label="모바일 메뉴">
+        <div className="fixed inset-0 z-40 bg-[var(--color-bg)] pt-24" role="dialog" aria-label="모바일 메뉴">
           <ul>
             {NAV.map((n) => {
               const active =
@@ -177,8 +187,8 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
             )}
           </ul>
           <div className="px-6 mt-8">
-            <div className="text-xs font-semibold text-[var(--color-ink-mute)] mb-3">
-              본문 글자 크기
+            <div className="text-xs font-semibold text-[var(--color-ink)] mb-3">
+              보기 설정
             </div>
             <ReadingSizeControl />
           </div>
