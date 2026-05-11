@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ChapterIcon } from "@/components/ChapterIcon";
+import { ChapterNavStrip } from "@/components/ChapterNavStrip";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters, getChapter } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
@@ -111,6 +112,9 @@ export default async function ChapterPage({
           </div>
         </div>
       </section>
+
+      {/* 챕터 네비 스트립 — hero 바로 아래, 다른 챕터로 빠르게 이동 */}
+      <ChapterNavStrip current={chapter} />
 
       {/* 글 목록 */}
       <section className="py-20 sm:py-28">

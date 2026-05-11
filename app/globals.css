@@ -386,6 +386,41 @@ html[data-theme="dark"] .hover\:bg-white:hover {
   color: #fff;
 }
 
+/* 가로 스크롤 영역에서 스크롤바 숨김 (챕터 네비 스트립 등) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* 아카이브 드롭다운 — 검은 pill nav 위에 떠있는 챕터 목록 */
+.archive-drop-item {
+  display: flex;
+  align-items: center;
+  padding: 9px 16px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  line-height: 1.4;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.archive-drop-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.archive-drop-all {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.archive-drop-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.archive-drop-disabled:hover {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+}
+
 /* 가로 타원형 — 아이콘 + 텍스트가 함께 들어가는 버튼 (예: e-Book) */
 .pill-nav-pill {
   height: 40px;

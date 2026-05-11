@@ -7,10 +7,11 @@ import { ReadingSizeControl } from "./ReadingSizeControl";
 import { UserMenu } from "./UserMenu";
 import { Logo } from "./Logo";
 import type { SessionUser } from "@/lib/session";
+import { chapters } from "@/lib/chapters";
 
 const NAV = [
   { href: "/", label: "표지" },
-  { href: "/archive", label: "아카이브" },
+  { href: "/archive", label: "아카이브", hasDropdown: true },
   { href: "/search", label: "검색" },
   { href: "/videos", label: "영상" },
   { href: "/about", label: "소개" },
@@ -51,6 +52,57 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           {NAV.map((n) => {
             const active =
               n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
+            if (n.hasDropdown && n.href === "/archive") {
+              return (
+                <li key={n.href} className="group relative">
+                  <Link
+                    href={n.href}
+                    className="pill-nav-link"
+                    aria-current={active ? "page" : undefined}
+                    aria-haspopup="true"
+                  >
+                    {n.label}
+                    <span className="ml-1 text-[10px] opacity-60" aria-hidden="true">▾</span>
+                  </Link>
+                  {/* 호버 간격을 잇기 위한 투명 패딩 영역 (pt-2) + 드롭다운 */}
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-opacity duration-150"
+                    role="menu"
+                  >
+                    <div className="min-w-[220px] rounded-2xl border border-white/15 bg-[var(--color-ink)] shadow-2xl py-2">
+                      <Link
+                        href="/archive"
+                        className="archive-drop-item archive-drop-all"
+                        role="menuitem"
+                      >
+                        전체 아카이브
+                      </Link>
+                      <div className="my-1 mx-3 border-t border-white/10" />
+                      {chapters.map((c) => (
+                        <Link
+                          key={c.slug}
+                          href={c.comingSoon ? "#" : `/archive/${c.slug}`}
+                          className={`archive-drop-item ${c.comingSoon ? "archive-drop-disabled" : ""}`}
+                          role="menuitem"
+                          aria-disabled={c.comingSoon ? "true" : undefined}
+                          onClick={(e) => c.comingSoon && e.preventDefault()}
+                        >
+                          <span className="font-serif text-white/40 w-5 text-center mr-2">
+                            {c.number}
+                          </span>
+                          <span className="flex-1">{c.title}</span>
+                          {c.comingSoon && (
+                            <span className="text-[10px] text-white/30 tracking-wider ml-2">
+                              準備中
+                            </span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </li>
+              );
+            }
             return (
               <li key={n.href}>
                 <Link
@@ -145,7 +197,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
       )}
 
       {open && (
-        <div className="fixed inset-0 z-40 bg-[var(--color-bg)] pt-24" role="dialog" aria-label="모바일 메뉴">
+        <div className="fixed inset-0 z-40 bg-[var(--color-bg)] pt-24 overflow-auto" role="dialog" aria-label="모바일 메뉴">
           <ul>
             {NAV.map((n) => {
               const active =
@@ -160,6 +212,38 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                   >
                     {n.label}
                   </Link>
+                  {/* 아카이브 아래로 챕터 8개 인라인 표시 */}
+                  {n.href === "/archive" && (
+                    <ul className="pl-8 pb-2">
+                      {chapters.map((c) => (
+                        <li key={c.slug}>
+                          <Link
+                            href={c.comingSoon ? "#" : `/archive/${c.slug}`}
+                            className={`block py-2.5 text-base ${
+                              c.comingSoon
+                                ? "text-[var(--color-ink-mute)] opacity-50 cursor-not-allowed"
+                                : "text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+                            }`}
+                            onClick={(e) => {
+                              if (c.comingSoon) {
+                                e.preventDefault();
+                                return;
+                              }
+                              setOpen(false);
+                            }}
+                          >
+                            <span className="font-serif text-[var(--color-ink-mute)] w-6 inline-block">
+                              {c.number}
+                            </span>
+                            {c.title}
+                            {c.comingSoon && (
+                              <span className="ml-2 text-xs">準備中</span>
+                            )}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               );
             })}
