@@ -25,6 +25,22 @@ function rowToBanner(row: Record<string, unknown>): MemberBanner {
   };
 }
 
+/** 어드민 카드용 — 카운트만 (총 + 활성 개수) */
+export async function countBanners(): Promise<{ total: number; active: number }> {
+  const db = await getDb();
+  const r = await db.execute(
+    `SELECT
+       COUNT(*) AS total,
+       SUM(CASE WHEN active = 1 THEN 1 ELSE 0 END) AS active
+     FROM member_banners`
+  );
+  const row = r.rows[0];
+  return {
+    total: Number(row.total),
+    active: Number(row.active ?? 0),
+  };
+}
+
 export async function listBanners(): Promise<MemberBanner[]> {
   const db = await getDb();
   const r = await db.execute(

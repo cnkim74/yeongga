@@ -19,6 +19,9 @@ import { countAllArticles } from "@/lib/articles-db";
 import { listAllTags } from "@/lib/tags-db";
 import { listPageBackgrounds } from "@/lib/backgrounds-db";
 import { listCategories, countPhotos } from "@/lib/gallery-db";
+import { countEbooks } from "@/lib/ebooks-db";
+import { countChapterMetas } from "@/lib/chapter-meta-db";
+import { countBanners } from "@/lib/banners-db";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +37,9 @@ export default async function AdminHome() {
     backgrounds,
     categories,
     photoCount,
+    ebookStats,
+    chapterStats,
+    bannerStats,
   ] = await Promise.all([
     listSlides(),
     countVideos(),       // 풀스캔 대신 COUNT(*)
@@ -44,6 +50,9 @@ export default async function AdminHome() {
     listPageBackgrounds(),
     listCategories(),
     countPhotos(),       // 풀스캔 + JOIN 대신 COUNT(*)
+    countEbooks(),
+    countChapterMetas(),
+    countBanners(),
   ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
@@ -100,13 +109,16 @@ export default async function AdminHome() {
           <DbCard href="/admin/gallery"     Icon={IconGallery}    title="사진 갤러리"
                   stat={`${photoCount}장`} sub={`카테고리 ${categories.length}개`} />
           <DbCard href="/admin/ebooks"      Icon={IconEbook}      title="이북"
-                  stat="—" sub="PDF 자료" />
+                  stat={`${ebookStats.total}권`}
+                  sub={ebookStats.membersOnly > 0 ? `회원전용 ${ebookStats.membersOnly}권` : "PDF 자료"} />
           <DbCard href="/admin/members"     Icon={IconMembers}    title="회원 명부"
                   stat={`${userStats.total}명`} sub={`관리자 ${userStats.admins}명`} />
           <DbCard href="/admin/chapters"    Icon={IconBackground} title="챕터 표지"
-                  stat="—" sub="대표 이미지·노출 설정" />
+                  stat={`${chapterStats.withCover}개`}
+                  sub={`설정된 표지 ${chapterStats.total}개 중`} />
           <DbCard href="/admin/banners"     Icon={IconTag}        title="회원 배너"
-                  stat="—" sub="홈 하단 배너링크" />
+                  stat={`${bannerStats.active}개`}
+                  sub={`활성 ${bannerStats.active} / 총 ${bannerStats.total}`} />
           <DbCard href="/admin/tags"        Icon={IconTag}        title="키워드"
                   stat={`${allTags.length}개`} sub="태그 관리 · 삭제" />
           <DbCard href="/admin/backgrounds" Icon={IconBackground} title="페이지 배경"

@@ -33,6 +33,22 @@ export async function listEbooks(): Promise<Ebook[]> {
   return res.rows.map((r) => rowToEbook(r as Record<string, unknown>));
 }
 
+/** 어드민 카드용 — 카운트만 (총 + 회원전용 개수) */
+export async function countEbooks(): Promise<{ total: number; membersOnly: number }> {
+  const db = await getDb();
+  const r = await db.execute(
+    `SELECT
+       COUNT(*) AS total,
+       SUM(CASE WHEN visibility = 'members-only' THEN 1 ELSE 0 END) AS members_only
+     FROM ebooks`
+  );
+  const row = r.rows[0];
+  return {
+    total: Number(row.total),
+    membersOnly: Number(row.members_only ?? 0),
+  };
+}
+
 export async function getEbook(id: number): Promise<Ebook | null> {
   const db = await getDb();
   const res = await db.execute({

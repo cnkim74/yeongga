@@ -31,6 +31,22 @@ function rowToMeta(row: Record<string, unknown>): ChapterMeta {
   };
 }
 
+/** 어드민 카드용 — 설정된 챕터 메타 개수 (cover_image 가 있는 것 기준) */
+export async function countChapterMetas(): Promise<{ total: number; withCover: number }> {
+  const db = await getDb();
+  const r = await db.execute(
+    `SELECT
+       COUNT(*) AS total,
+       SUM(CASE WHEN cover_image IS NOT NULL THEN 1 ELSE 0 END) AS with_cover
+     FROM chapter_meta`
+  );
+  const row = r.rows[0];
+  return {
+    total: Number(row.total),
+    withCover: Number(row.with_cover ?? 0),
+  };
+}
+
 export async function listChapterMetas(): Promise<ChapterMeta[]> {
   const db = await getDb();
   const r = await db.execute(
