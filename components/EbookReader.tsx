@@ -6,7 +6,8 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+// /public/pdf.worker.min.mjs 에 복사된 워커 사용 (CDN 의존 제거, 버전 불일치 방지)
+pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
 interface EbookReaderProps {
   pdfUrl: string;
@@ -431,7 +432,11 @@ function ErrorState({ message }: { message: string }) {
       <div className="text-white text-lg font-medium mb-2">
         PDF를 불러올 수 없습니다
       </div>
-      <div className="text-white/50 text-sm max-w-sm mx-auto">{message}</div>
+      <div className="text-white/50 text-sm max-w-sm mx-auto mb-4">{message}</div>
+      <div className="text-white/30 text-xs max-w-xs mx-auto">
+        PDF 파일이 올바르게 업로드됐는지 확인하거나,
+        관리자에게 문의해 주세요.
+      </div>
     </div>
   );
 }
