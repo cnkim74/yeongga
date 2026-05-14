@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
+// ISR — 페이지 배경 변경 시 어드민 액션에서 revalidatePath("/about") 호출
+export const revalidate = 3600;
+
 export const metadata = {
   title: "회 소개 — 영가회",
 };

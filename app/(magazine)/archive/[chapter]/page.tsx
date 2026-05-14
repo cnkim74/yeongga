@@ -4,16 +4,15 @@ import { notFound } from "next/navigation";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { ChapterNavStrip } from "@/components/ChapterNavStrip";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
-import { chapters, getChapter } from "@/lib/chapters";
+import { getChapter } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listUsers } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
 
-export const revalidate = 3600; // 1시간 캐시 — 글 변경 시 어드민에서 revalidatePath 호출
-
-export function generateStaticParams() {
-  return chapters.map((c) => ({ chapter: c.slug }));
-}
+// ISR — 첫 요청 시 생성, 1시간 캐시 (글 변경 시 어드민에서 revalidatePath 호출)
+// 빌드 타임 SSG 는 챕터별 글 개수가 많아 timeout 위험이 있어 사용 안 함
+export const revalidate = 3600;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
