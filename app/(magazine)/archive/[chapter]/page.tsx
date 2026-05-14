@@ -9,10 +9,9 @@ import { listChapterArticles } from "@/lib/articles-db";
 import { listUsers } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
 
-// ISR — 첫 요청 시 생성, 1시간 캐시 (글 변경 시 어드민에서 revalidatePath 호출)
-// 빌드 타임 SSG 는 챕터별 글 개수가 많아 timeout 위험이 있어 사용 안 함
-export const revalidate = 3600;
-export const dynamicParams = true;
+// 빌드 타임 정적 생성 비활성화 (모임 챕터 100+편으로 60초 timeout 회피)
+// 매 요청 SSR + Next.js fetch 캐시 활용
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

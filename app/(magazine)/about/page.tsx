@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
-// ISR — 페이지 배경 변경 시 어드민 액션에서 revalidatePath("/about") 호출
-export const revalidate = 3600;
+// 빌드 타임 정적 생성 비활성화 (PageHeroBg DB 호출 timeout 회피)
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "회 소개 — 영가회",
