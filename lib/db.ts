@@ -473,6 +473,41 @@ async function init(client: Client) {
     await markMigration(client, "chapter-rename-v1");
   }
 
+  // 일회성 정리: 부실한 시리즈 글 26편 삭제 + 재시드 차단 (2대·4대 명사/축하/이사회)
+  // 작업표 비고 [OCR 후 보완] 자리들로, 자료가 모이면 추후 정성껏 다시 작성
+  if (!(await hasMigration(client, "purge-skeleton-moim-v1"))) {
+    const skeletonSlugs = [
+      // 2대 명사 5
+      "2dae-1999-myeongsa-1", "2dae-2000-myeongsa-2", "2dae-2001-myeongsa-3",
+      "2dae-2002-myeongsa-4", "2dae-2002-myeongsa-5",
+      // 2대 축하 5
+      "2dae-1999-chukha-1", "2dae-2000-chukha-2", "2dae-2001-chukha-3",
+      "2dae-2002-chukha-4", "2dae-2002-chukha-5",
+      // 2대 이사회 4
+      "2dae-1999-isagae-1", "2dae-2000-isagae-2", "2dae-2001-isagae-3", "2dae-2002-isagae-4",
+      // 4대 명사 5
+      "4dae-2007-myeongsa-1", "4dae-2007-myeongsa-2", "4dae-2008-myeongsa-3",
+      "4dae-2009-myeongsa-4", "4dae-2010-myeongsa-5",
+      // 4대 축하 5
+      "4dae-2007-chukha-1", "4dae-2008-chukha-2", "4dae-2008-chukha-3",
+      "4dae-2009-chukha-4", "4dae-2010-chukha-5",
+      // 4대 이사회 2
+      "4dae-2008-isagae-1", "4dae-2010-isagae-2",
+    ];
+    for (const slug of skeletonSlugs) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["moim", slug],
+      });
+      // 재시드 차단 — 다음 콘텐츠 디렉토리 시드 시 다시 추가되지 않도록
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["moim", slug],
+      });
+    }
+    await markMigration(client, "purge-skeleton-moim-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
