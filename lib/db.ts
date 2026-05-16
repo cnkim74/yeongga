@@ -508,6 +508,50 @@ async function init(client: Client) {
     await markMigration(client, "purge-skeleton-moim-v1");
   }
 
+  // 일회성 정리 v2: 매년 반복 평년 정기행사 60편 삭제 + 회장기별 묶음 5편으로 압축
+  // 이전 v1과 마찬가지로 자료가 모이면 추후 정성껏 다시 작성
+  if (!(await hasMigration(client, "purge-skeleton-moim-v2"))) {
+    const skeletonSlugs = [
+      // 1대 평년 정기총회 6편 (1985~1997)
+      "1985-jeongi-sinnyeon", "1988-jeongi-sinnyeon", "1990-jeongi-sinnyeon",
+      "1992-jeongi-sinnyeon", "1995-jeongi-sinnyeon", "1997-jeongi-sinnyeon",
+      // 2대 평년 정기/신년/탐방 12편
+      "2dae-1999-jeongi", "2dae-1999-sinnyeon", "2dae-1999-tambang",
+      "2dae-2000-jeongi", "2dae-2000-sinnyeon", "2dae-2000-tambang",
+      "2dae-2001-jeongi", "2dae-2001-sinnyeon", "2dae-2001-tambang",
+      "2dae-2002-jeongi", "2dae-2002-sinnyeon", "2dae-2002-tambang",
+      // 3대 평년 정기-신년/탐방/문화상 1~3회/묶음 시도 3편 = 14편
+      "3dae-2003-jeongi-sinnyeon", "3dae-2003-tambang",
+      "3dae-2004-jeongi-sinnyeon", "3dae-2004-tambang", "3dae-2004-munhwasang-1",
+      "3dae-2005-jeongi-sinnyeon", "3dae-2005-tambang", "3dae-2005-munhwasang-2",
+      "3dae-2006-jeongi-sinnyeon", "3dae-2006-tambang", "3dae-2006-munhwasang-3",
+      "3dae-chukha-mum", "3dae-myeongsa-mum", "3dae-isagae-mum",
+      // 4대 평년 신년-정기/탐방/문화상 4~7회/이사회 2006 = 13편
+      "4dae-2006-isagae",
+      "4dae-2007-sinnyeon-jeongi", "4dae-2007-tambang", "4dae-2007-munhwasang-4",
+      "4dae-2008-sinnyeon-jeongi", "4dae-2008-tambang", "4dae-2008-munhwasang-5",
+      "4dae-2009-sinnyeon-jeongi", "4dae-2009-tambang", "4dae-2009-munhwasang-6",
+      "4dae-2010-sinnyeon-jeongi", "4dae-2010-tambang", "4dae-2010-munhwasang-7",
+      // 5대 평년 정기/신년/탐방/이사회 2010 = 15편
+      "5dae-2010-isagae",
+      "5dae-2011-jeongi", "5dae-2011-sinnyeon", "5dae-2011-tambang-k",
+      "5dae-2012-jeongi", "5dae-2012-sinnyeon", "5dae-2012-tambang-h", "5dae-2012-tambang-k",
+      "5dae-2013-jeongi", "5dae-2013-sinnyeon", "5dae-2013-tambang-k",
+      "5dae-2014-jeongi", "5dae-2014-sinnyeon", "5dae-2014-tambang-h", "5dae-2014-tambang-k",
+    ];
+    for (const slug of skeletonSlugs) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["moim", slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["moim", slug],
+      });
+    }
+    await markMigration(client, "purge-skeleton-moim-v2");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -575,7 +619,8 @@ async function init(client: Client) {
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
   // 새 콘텐츠 파일이 추가됐을 때만 SEED_FROM_FILES=1 환경변수로 재실행
   // v8: 모임 챕터 84~181번 (1~5대 회장기 정기행사·창립·취임·회칙) 98편 추가
-  const seedKey = "content-seed-v8";
+  // v9: 모임 챕터 회장기별 묶음 글 5편 추가 (1~5대 시기 정기행사 모음)
+  const seedKey = "content-seed-v9";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
