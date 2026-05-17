@@ -18,15 +18,25 @@ export function ReseedChapterButton({ chapter }: { chapter: string }) {
     });
   }
 
+  const chapterLabels: Record<string, string> = {
+    yeongi: "연기",
+    moim: "모임",
+    geul: "글",
+    saram: "사람",
+    jachui: "자취",
+    hyang: "향",
+  };
+  const label = chapterLabels[chapter] ?? chapter;
+
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
       <button
         type="button"
         onClick={handleClick}
         disabled={isPending}
         className="px-3 py-1.5 rounded-md bg-[var(--admin-accent)] text-white text-xs font-medium hover:opacity-90 disabled:opacity-50"
       >
-        {isPending ? "처리 중…" : `자취 챕터 강제 재시드`}
+        {isPending ? "처리 중…" : `${label} 재시드`}
       </button>
       {result && (
         <span
