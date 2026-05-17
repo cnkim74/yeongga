@@ -599,6 +599,55 @@ async function init(client: Client) {
     await markMigration(client, "restore-2dae-ryu-mokgi-v1");
   }
 
+  // 일회성: 콘텐츠 파일에서 모든 글의 본문·메타데이터 강제 갱신
+  // 시드는 INSERT OR IGNORE라 기존 슬러그의 본문이 갱신되지 않는 한계가 있어,
+  // 회원 기고문·회장 평전·안동 향토 자료 등을 양질로 보강한 결을 DB에도 반영하기 위한 일회성
+  if (!(await hasMigration(client, "refresh-articles-content-v1"))) {
+    try {
+      const articlesDir = path.join(process.cwd(), "content", "articles");
+      if (fs.existsSync(articlesDir)) {
+        for (const chapterSlug of fs.readdirSync(articlesDir)) {
+          const chapterDir = path.join(articlesDir, chapterSlug);
+          if (!fs.statSync(chapterDir).isDirectory()) continue;
+          for (const file of fs.readdirSync(chapterDir)) {
+            if (!file.endsWith(".md") || file.startsWith("._")) continue;
+            const slug = file.replace(/\.md$/, "");
+            const raw = fs.readFileSync(path.join(chapterDir, file), "utf8");
+            const { data, content } = matter(raw);
+            const html = await renderMarkdown(content);
+            const v = String(data.visibility ?? "public").toLowerCase();
+            const visibility =
+              v === "members-only" || v === "members" || v === "private"
+                ? "members-only"
+                : "public";
+            await client.execute({
+              sql: `UPDATE articles SET
+                      title = ?, subtitle = ?, author = ?, excerpt = ?,
+                      cover = ?, date = ?, visibility = ?, body = ?,
+                      updated_at = CURRENT_TIMESTAMP
+                    WHERE chapter = ? AND slug = ?`,
+              args: [
+                String(data.title ?? slug),
+                data.subtitle ? String(data.subtitle) : null,
+                data.author ? String(data.author) : null,
+                data.excerpt ? String(data.excerpt) : null,
+                data.cover ? String(data.cover) : null,
+                String(data.date ?? "1970-01-01"),
+                visibility,
+                html,
+                chapterSlug,
+                slug,
+              ],
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[refresh-articles-content-v1] 실패:", e);
+    }
+    await markMigration(client, "refresh-articles-content-v1");
+  }
+
   // 마이그레이션: 마크다운 본문 → HTML (한 번만, 전체 스캔 부담 큼)
   if (!(await hasMigration(client, "markdown-to-html-v1"))) {
     const mdRows = await client.execute("SELECT id, body FROM articles");
@@ -620,7 +669,9 @@ async function init(client: Client) {
   // 새 콘텐츠 파일이 추가됐을 때만 SEED_FROM_FILES=1 환경변수로 재실행
   // v8: 모임 챕터 84~181번 (1~5대 회장기 정기행사·창립·취임·회칙) 98편 추가
   // v9: 모임 챕터 회장기별 묶음 글 5편 추가 (1~5대 시기 정기행사 모음)
-  const seedKey = "content-seed-v9";
+  // v10: 자취 사진 9편 + 연기 3편(기획) + 명사 11편 등 신규 글 추가
+  //      (보강된 기존 글의 본문 갱신은 위의 refresh-articles-content-v1 마이그레이션 참조)
+  const seedKey = "content-seed-v10";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
