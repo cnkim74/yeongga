@@ -62,7 +62,21 @@ export function MigrateR2Client() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({}),
       });
-      const json: StepRes = await res.json();
+      // 응답이 JSON이 아닐 수도 (Vercel function timeout 시 plain text)
+      const text = await res.text();
+      let json: StepRes | null = null;
+      try {
+        json = JSON.parse(text) as StepRes;
+      } catch {
+        // 서버에서 JSON 아닌 응답 (보통 timeout 또는 메모리 초과)
+        const snippet = text.slice(0, 120);
+        setPhase("error");
+        setErrorMsg(
+          `서버 응답 파싱 실패 (HTTP ${res.status}). 큰 파일에서 timeout 났을 가능성이 큽니다. ` +
+            `잠시 후 〈다시 시도〉를 누르면 이어 작업합니다. — 응답 일부: ${snippet}…`
+        );
+        return null;
+      }
       if (!res.ok || !json.ok) {
         setPhase("error");
         setErrorMsg(json.error ?? `HTTP ${res.status}`);

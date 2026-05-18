@@ -18,7 +18,11 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // Vercel Hobby 최대치
 
-const TIME_BUDGET_MS = 50_000; // 50초 안에 마무리하고 응답
+// Vercel Hobby 의 60초 함수 제한 안에서 안전하게 응답하려면 큰 PDF 한 개가
+// 다운로드 + R2 업로드에 5~15초 걸릴 수 있는 점을 감안해 25초로 잡음.
+// 한 chunk 안에서 큰 파일을 처리하다 budget 을 넘기면 즉시 응답.
+const TIME_BUDGET_MS = 25_000;
+const PER_FILE_SOFT_LIMIT_MS = 18_000; // 한 파일 처리 후 남은 시간이 이보다 작으면 break
 const MAX_BLOB_LIST_PER_CALL = 1000;
 
 // Vercel Blob URL → 버킷 안 경로 키 추출.
@@ -84,7 +88,10 @@ export async function POST(req: NextRequest) {
   const copyResults: { blob_url: string; r2_url?: string; ok: boolean; error?: string }[] = [];
 
   for (const blob of toCopy) {
-    if (Date.now() - startedAt > TIME_BUDGET_MS) break;
+    const elapsed = Date.now() - startedAt;
+    if (elapsed > TIME_BUDGET_MS) break;
+    // 큰 파일 한 개가 budget 을 넘길 위험이 있으면 다음 호출로 미룸
+    if (elapsed > TIME_BUDGET_MS - PER_FILE_SOFT_LIMIT_MS && copyResults.length > 0) break;
     try {
       const key = keyFromBlobUrl(blob.url, blob.pathname);
       const dlRes = await fetch(blob.downloadUrl ?? blob.url);
