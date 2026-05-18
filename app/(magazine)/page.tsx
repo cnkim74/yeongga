@@ -135,7 +135,7 @@ export default async function HomePage() {
                     {featuredVideo.description}
                   </p>
                 )}
-                <Link href="/videos" className="btn-pill invert">
+                <Link href="/videos" className="btn-pill paper">
                   영상 아카이브 →
                 </Link>
               </div>
@@ -280,7 +280,7 @@ export default async function HomePage() {
             영가회는 한 줄의 글, 한 장의 사진을 모아 한 사람의 자리를,
             한 모임의 역사를 기록합니다.
           </p>
-          <Link href="/about" className="btn-pill invert">
+          <Link href="/about" className="btn-pill paper">
             영가회 소개 보기
           </Link>
         </div>
