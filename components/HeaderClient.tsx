@@ -69,27 +69,25 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
   }
 
   const isLight = theme === "light";
-  // 알약 헤더는 본문 테마와 반대 톤으로 — 라이트 본문엔 어두운 알약, 다크 본문엔 밝은 알약.
-  const pillIsLight = !isLight;
 
   return (
     <>
       <nav
-        className={`pill-nav ${pillIsLight ? "theme-light" : ""}`}
+        className={`pill-nav ${isLight ? "theme-light" : ""}`}
         aria-label="주 메뉴"
       >
         <Link
           href="/"
-          className={`${pillIsLight ? "text-[var(--color-ink)]" : "text-white"} hover:opacity-90 transition-opacity`}
+          className={`${isLight ? "text-[var(--color-ink)]" : "text-white"} hover:opacity-90 transition-opacity`}
           aria-label="영가회 아카이브 — 표지"
         >
           {/* 모바일: 로고만 (공간 절약) */}
           <span className="md:hidden">
-            <Logo variant="horizontal" size="sm" inverse={pillIsLight} />
+            <Logo variant="horizontal" size="sm" inverse={isLight} />
           </span>
           {/* 태블릿+: 키운 로고 + 부제 노출 */}
           <span className="hidden md:inline-flex">
-            <Logo variant="horizontal" size="md" inverse={pillIsLight} showAnniversary />
+            <Logo variant="horizontal" size="md" inverse={isLight} showAnniversary />
           </span>
         </Link>
 
@@ -195,8 +193,8 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
             type="button"
             onClick={toggleTheme}
             className="pill-nav-icon"
-            aria-label={isLight ? "어두운 모드로 전환" : "밝은 모드로 전환"}
-            title={isLight ? "어두운 모드로 전환" : "밝은 모드로 전환"}
+            aria-label={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
+            title={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
           >
             {isLight ? (
               // 달 — 다크 모드로 전환할 수 있다는 의미
