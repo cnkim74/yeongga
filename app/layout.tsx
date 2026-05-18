@@ -32,6 +32,13 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
         <script dangerouslySetInnerHTML={{ __html: READING_INIT_SCRIPT }} />
+        {/* 테마 초기화 — hydration 전에 html data-theme 동기화 (FOUC 방지).
+            디폴트는 라이트, localStorage 에 'dark' 가 저장된 경우만 다크. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('yeongga-header-theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();`,
+          }}
+        />
       </head>
       <body>
         <ReadingSizeProvider>{children}</ReadingSizeProvider>
