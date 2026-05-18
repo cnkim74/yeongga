@@ -20,12 +20,24 @@ const NAV = [
 
 type Theme = "dark" | "light";
 
+// 디폴트는 라이트 — 회보 정체성에 맞춰 차분한 종이 톤.
+// 토글 시 헤더 + 본문(html[data-theme]) 모두 같이 전환.
+const DEFAULT_THEME: Theme = "light";
+
+function applyHtmlTheme(theme: Theme) {
+  const html = document.documentElement;
+  if (theme === "dark") {
+    html.setAttribute("data-theme", "dark");
+  } else {
+    html.removeAttribute("data-theme");
+  }
+}
+
 export function HeaderClient({ user }: { user: SessionUser | null }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sizeOpen, setSizeOpen] = useState(false);
-  // 헤더 테마 — 클라이언트 검토용. localStorage 에 저장되어 새로고침에도 유지.
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -34,15 +46,21 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
     };
   }, [open]);
 
-  // 첫 마운트 시 localStorage 에서 테마 읽기 (hydration mismatch 회피 — useEffect 안에서)
+  // 첫 마운트 — localStorage 에서 테마 읽기, html 속성 동기화
   useEffect(() => {
-    const saved = typeof window !== "undefined" ? window.localStorage.getItem("yeongga-header-theme") : null;
-    if (saved === "light" || saved === "dark") setTheme(saved);
+    const saved =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("yeongga-header-theme")
+        : null;
+    const initial: Theme = saved === "light" || saved === "dark" ? saved : DEFAULT_THEME;
+    setTheme(initial);
+    applyHtmlTheme(initial);
   }, []);
 
   function toggleTheme() {
     const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
+    applyHtmlTheme(next);
     try {
       window.localStorage.setItem("yeongga-header-theme", next);
     } catch {
