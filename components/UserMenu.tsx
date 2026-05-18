@@ -35,14 +35,14 @@ export function UserMenu({ user }: { user: SessionUser | null }) {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="h-10 px-2 rounded-full bg-white/10 hover:bg-white/20 flex items-center gap-2 text-white text-sm"
+        className="pill-nav-pill"
         aria-haspopup="menu"
         aria-expanded={open}
       >
-        <span className="h-7 w-7 rounded-full bg-white text-[var(--color-ink)] grid place-items-center text-xs font-bold">
+        <span className="h-7 w-7 rounded-full bg-[var(--color-ink)] text-[var(--color-bg)] grid place-items-center text-xs font-bold">
           {initial}
         </span>
-        <span className="hidden sm:inline pr-2">{user.name}</span>
+        <span className="hidden sm:inline">{user.name}</span>
       </button>
 
       {open && (
