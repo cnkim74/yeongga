@@ -7,7 +7,8 @@ export const metadata = {
   title: "영상 — 영가회 아카이브",
 };
 
-export const revalidate = 3600; // 1시간 캐시 — 영상 변경 시 어드민에서 revalidatePath 호출
+// force-dynamic — 빌드 시 SSG 생성에 60초 초과 timeout 발생
+export const dynamic = "force-dynamic";
 
 export default async function VideosPage() {
   const videos = await listVideos();

@@ -1,7 +1,8 @@
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { ContributeForm } from "./ContributeForm";
 
-export const revalidate = 3600;
+// force-dynamic — 빌드 시 SSG 생성에 60초 초과 timeout 발생
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "자료 제공 — 영가회",

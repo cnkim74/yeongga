@@ -66,14 +66,21 @@ export default async function DiagnosticsPage() {
             </tbody>
           </table>
           <div className="mt-4 p-3 border-t border-[var(--admin-rule)] bg-[var(--admin-bg)]">
-            <div className="text-xs text-[var(--admin-ink-soft)] mb-2">
-              자취(jachui) 챕터를 콘텐츠 디렉토리에서 강제 재시드:
+            <div className="text-xs text-[var(--admin-ink-soft)] mb-3">
+              챕터별 강제 재시드 — 콘텐츠 디렉토리에서 누락된 글을 다시 등록합니다.
               <br />
               <span className="text-[var(--admin-mute)]">
-                (seeded_deletions 무시하고 누락 글을 다시 등록합니다)
+                (seeded_deletions 무시하고 신규 슬러그를 즉시 추가)
               </span>
             </div>
-            <ReseedChapterButton chapter="jachui" />
+            <div className="flex flex-wrap gap-2">
+              <ReseedChapterButton chapter="yeongi" />
+              <ReseedChapterButton chapter="moim" />
+              <ReseedChapterButton chapter="geul" />
+              <ReseedChapterButton chapter="saram" />
+              <ReseedChapterButton chapter="jachui" />
+              <ReseedChapterButton chapter="hyang" />
+            </div>
           </div>
         </Section>
 

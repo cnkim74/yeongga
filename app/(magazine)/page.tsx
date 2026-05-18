@@ -10,8 +10,9 @@ import { listHomeChapterDisplays } from "@/lib/chapter-meta-db";
 import { listActiveBanners } from "@/lib/banners-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
-// 랜덤 모드를 효과적으로 쓰려면 캐시를 짧게 유지
-export const revalidate = 60;
+// force-dynamic — 글 수가 늘어나면서 빌드 시 SSG 생성에 60초 초과 timeout 발생.
+// /archive/[chapter] 와 동일한 방식으로 요청 시점에 동적 렌더링.
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [dbSlides, featuredVideo, chapterDisplays, banners] = await Promise.all([
