@@ -27,12 +27,11 @@ export function BgCard({ bg }: { bg: PageBackground }) {
     setUploading(true);
     setUploadError("");
     try {
-      // 1) Vercel Blob 클라이언트 직접 업로드 (4.5MB 한도 우회, 최대 15MB)
+      // 1) R2 클라이언트 직접 업로드 (서버 4.5MB 한도 우회, 최대 30MB)
       try {
-        const { upload } = await import("@vercel/blob/client");
+        const { uploadToR2 } = await import("@/lib/r2-client");
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const blob = await upload(`backgrounds/${Date.now()}-${safeName}`, file, {
-          access: "public",
+        const blob = await uploadToR2(safeName, file, {
           handleUploadUrl: "/api/upload/page-bg",
         });
         setImagePath(blob.url);
@@ -40,7 +39,7 @@ export function BgCard({ bg }: { bg: PageBackground }) {
         return;
       } catch (blobErr) {
         // 2) 로컬 개발 환경 폴백: multipart 업로드
-        console.warn("[bg upload] Blob 직접 업로드 실패, multipart 폴백:", blobErr);
+        console.warn("[bg upload] R2 직접 업로드 실패, multipart 폴백:", blobErr);
         const fd = new FormData();
         fd.append("file", file);
         const res = await fetch("/api/upload/page-bg", { method: "POST", body: fd });
