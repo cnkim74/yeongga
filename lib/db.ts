@@ -648,6 +648,54 @@ async function init(client: Client) {
     await markMigration(client, "refresh-articles-content-v1");
   }
 
+  // 일회성 v2: 〈결〉 단어 과다 사용 톤앤매너 정리(89편) 반영
+  // v1과 동일 로직 — 콘텐츠 파일에서 모든 글의 본문·메타데이터 강제 갱신
+  if (!(await hasMigration(client, "refresh-articles-content-v2"))) {
+    try {
+      const articlesDir = path.join(process.cwd(), "content", "articles");
+      if (fs.existsSync(articlesDir)) {
+        for (const chapterSlug of fs.readdirSync(articlesDir)) {
+          const chapterDir = path.join(articlesDir, chapterSlug);
+          if (!fs.statSync(chapterDir).isDirectory()) continue;
+          for (const file of fs.readdirSync(chapterDir)) {
+            if (!file.endsWith(".md") || file.startsWith("._")) continue;
+            const slug = file.replace(/\.md$/, "");
+            const raw = fs.readFileSync(path.join(chapterDir, file), "utf8");
+            const { data, content } = matter(raw);
+            const html = await renderMarkdown(content);
+            const v = String(data.visibility ?? "public").toLowerCase();
+            const visibility =
+              v === "members-only" || v === "members" || v === "private"
+                ? "members-only"
+                : "public";
+            await client.execute({
+              sql: `UPDATE articles SET
+                      title = ?, subtitle = ?, author = ?, excerpt = ?,
+                      cover = ?, date = ?, visibility = ?, body = ?,
+                      updated_at = CURRENT_TIMESTAMP
+                    WHERE chapter = ? AND slug = ?`,
+              args: [
+                String(data.title ?? slug),
+                data.subtitle ? String(data.subtitle) : null,
+                data.author ? String(data.author) : null,
+                data.excerpt ? String(data.excerpt) : null,
+                data.cover ? String(data.cover) : null,
+                String(data.date ?? "1970-01-01"),
+                visibility,
+                html,
+                chapterSlug,
+                slug,
+              ],
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[refresh-articles-content-v2] 실패:", e);
+    }
+    await markMigration(client, "refresh-articles-content-v2");
+  }
+
   // 마이그레이션: 마크다운 본문 → HTML (한 번만, 전체 스캔 부담 큼)
   if (!(await hasMigration(client, "markdown-to-html-v1"))) {
     const mdRows = await client.execute("SELECT id, body FROM articles");
