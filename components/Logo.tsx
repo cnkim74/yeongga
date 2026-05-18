@@ -12,13 +12,13 @@ const SIZES: Record<
   Size,
   { mark: number; sub: number; gap: number; subTracking: number }
 > = {
-  sm: { mark: 26, sub: 9, gap: 10, subTracking: 0.18 },
-  md: { mark: 34, sub: 11, gap: 14, subTracking: 0.2 },
-  lg: { mark: 56, sub: 13, gap: 18, subTracking: 0.22 },
-  xl: { mark: 88, sub: 18, gap: 22, subTracking: 0.24 },
+  sm: { mark: 26, sub: 11, gap: 10, subTracking: 0.14 },
+  md: { mark: 34, sub: 13, gap: 14, subTracking: 0.16 },
+  lg: { mark: 56, sub: 15, gap: 18, subTracking: 0.18 },
+  xl: { mark: 88, sub: 20, gap: 22, subTracking: 0.2 },
 };
 
-const ANNIVERSARY_LABEL = "창립 50주년";
+const SUB_LINES = ["디지털 아카이브", "창립 50주년"];
 
 export function LogoMark({
   size = 36,
@@ -70,14 +70,17 @@ export function Logo({
     <div
       style={{
         fontSize: s.sub,
-        opacity: 0.7,
+        color: "rgba(255,255,255,0.92)",
         letterSpacing: `${s.subTracking}em`,
         fontFamily:
           "'Noto Serif KR','Nanum Myeongjo',var(--font-serif),serif",
         whiteSpace: "nowrap",
+        lineHeight: 1.35,
       }}
     >
-      {ANNIVERSARY_LABEL}
+      {SUB_LINES.map((line) => (
+        <div key={line}>{line}</div>
+      ))}
     </div>
   ) : null;
 
@@ -90,7 +93,7 @@ export function Logo({
     );
   }
 
-  // horizontal — 제호 + (옵션) 세로 구분선 + 창립 50주년
+  // horizontal — 제호 + (옵션) 세로 구분선 + 두 줄 부제
   return (
     <div
       className={`inline-flex items-center ${className}`}
@@ -100,9 +103,8 @@ export function Logo({
       {showAnniversary && (
         <div
           style={{
-            borderLeft: "1px solid rgba(255,255,255,0.22)",
+            borderLeft: "1px solid rgba(255,255,255,0.32)",
             paddingLeft: s.gap,
-            lineHeight: 1.4,
           }}
         >
           {anniversaryBlock}
