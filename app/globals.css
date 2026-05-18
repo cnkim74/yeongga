@@ -170,11 +170,24 @@ html[data-theme="dark"] .hover\:bg-white:hover {
 .btn-pill:hover { background: #1f1f1f; transform: translateY(-1px); }
 /* paper — 라이트=아이보리+검정, 다크=검정+흰. 슬라이드 안 알약 등에 사용.
    이전 이름은 Tailwind 의 filter 유틸과 클래스명이 겹쳐서 시각 반전이
-   한 번 더 들어가던 문제가 있어 paper 로 변경. */
-.btn-pill.paper { background: #fbfaf7; color: #0a0a0a; }
+   한 번 더 들어가던 문제가 있어 paper 로 변경.
+   다크 변형에는 어두운 슬라이드 히어로 위에서 알약이 묻히지 않게
+   은은한 흰 테두리. 라이트 변형엔 투명 테두리로 레이아웃 유지. */
+.btn-pill.paper {
+  background: #fbfaf7;
+  color: #0a0a0a;
+  border: 1px solid transparent;
+}
 .btn-pill.paper:hover { background: #efece4; }
-html[data-theme="dark"] .btn-pill.paper { background: #0a0a0a; color: #ffffff; }
-html[data-theme="dark"] .btn-pill.paper:hover { background: #1f1f1f; }
+html[data-theme="dark"] .btn-pill.paper {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.6);
+}
+html[data-theme="dark"] .btn-pill.paper:hover {
+  background: #1f1f1f;
+  border-color: rgba(255, 255, 255, 0.85);
+}
 .btn-pill.ghost {
   background: transparent;
   color: var(--color-ink);
