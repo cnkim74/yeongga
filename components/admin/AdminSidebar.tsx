@@ -65,7 +65,8 @@ const NAV: NavGroup[] = [
       { href: "/admin/analytics",   label: "방문 기록",   Icon: IconSettings },
       { href: "/admin/settings",    label: "시스템 설정", Icon: IconSettings },
       { href: "/admin/diagnostics", label: "진단",       Icon: IconSettings },
-      { href: "/admin/migrate-r2",  label: "Blob → R2 이전", Icon: IconSettings },
+      // /admin/migrate-r2 페이지는 비상시에 대비해 남겨 두고 메뉴에서만 제거.
+      // 직접 URL 로 접근 가능: https://yeongga.com/admin/migrate-r2
     ],
   },
 ];

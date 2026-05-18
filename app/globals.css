@@ -468,6 +468,34 @@ html[data-theme="dark"] .form-input {
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* 드롭다운 패널 — 라이트/다크 분기. 기본 다크. */
+.archive-dropdown-panel {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.pill-nav.theme-light .archive-dropdown-panel {
+  background: #fbfaf7;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+.pill-nav.theme-light .archive-drop-item {
+  color: rgba(10, 10, 10, 0.78);
+}
+.pill-nav.theme-light .archive-drop-item:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #0a0a0a;
+}
+.pill-nav.theme-light .archive-drop-item .text-white\/40,
+.pill-nav.theme-light .archive-drop-item.archive-drop-disabled .text-white\/30 {
+  color: rgba(10, 10, 10, 0.4) !important;
+}
+.pill-nav.theme-light .archive-drop-disabled:hover {
+  background: transparent;
+  color: rgba(10, 10, 10, 0.78);
+}
+.pill-nav.theme-light .archive-dropdown-panel .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
 /* ─── 헤더 라이트 변형 (테마 토글) ─────────────────────── */
 /* pill-nav.theme-light — 다크 헤더의 대비 톤. 결정 검토용. */
 .pill-nav.theme-light {
