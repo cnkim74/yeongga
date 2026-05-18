@@ -11,7 +11,11 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      // Vercel Blob 스토리지 (업로드된 이미지)
+      // Cloudflare R2 — pub-*.r2.dev 공개 도메인
+      { protocol: "https", hostname: "*.r2.dev" },
+      // Cloudflare R2 — 커스텀 도메인 사용 시 직접 추가
+      // { protocol: "https", hostname: "cdn.example.com" },
+      // Vercel Blob (마이그레이션 기간 동안 호환 유지)
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
       // Wikimedia Commons (about 페이지 배경 등 외부 이미지)
       { protocol: "https", hostname: "upload.wikimedia.org" },

@@ -32,10 +32,9 @@ export function ContributeForm() {
     setUploading(true);
     setError(null);
     try {
-      const { upload } = await import("@vercel/blob/client");
+      const { uploadToR2 } = await import("@/lib/r2-client");
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const blob = await upload(`submissions/${Date.now()}-${safeName}`, file, {
-        access: "public",
+      const blob = await uploadToR2(safeName, file, {
         handleUploadUrl: "/api/upload/submission",
       });
       setFileUrl(blob.url);

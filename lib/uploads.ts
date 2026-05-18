@@ -2,7 +2,7 @@ import "server-only";
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
-import { put, del } from "@vercel/blob";
+import { r2Configured, r2Put, r2Delete, r2KeyFromPublicUrl } from "./r2";
 
 const MIME_EXT: Record<string, string> = {
   "image/jpeg": "jpg",
@@ -17,20 +17,30 @@ export type UploadResult =
   | { ok: true; publicPath: string; bytes: number }
   | { ok: false; error: string };
 
-function useBlob() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+export type Bucket =
+  | "slides"
+  | "articles"
+  | "members"
+  | "backgrounds"
+  | "ebooks"
+  | "gallery"
+  | "chapters"
+  | "banners"
+  | "submissions";
+
+export function generateUploadKey(bucket: Bucket, ext: string): string {
+  const filename = `${Date.now().toString(36)}-${crypto
+    .randomBytes(6)
+    .toString("hex")}.${ext}`;
+  return `${bucket}/${filename}`;
+}
+
+export function extFromMime(mime: string): string | null {
+  return MIME_EXT[mime] ?? null;
 }
 
 export async function saveUpload(
-  bucket:
-    | "slides"
-    | "articles"
-    | "members"
-    | "backgrounds"
-    | "ebooks"
-    | "gallery"
-    | "chapters"
-    | "banners",
+  bucket: Bucket,
   file: File
 ): Promise<UploadResult> {
   if (!(file instanceof File) || file.size === 0) {
@@ -44,7 +54,6 @@ export async function saveUpload(
   }
   const ext = MIME_EXT[file.type];
   if (!ext) {
-    // 사용자 친화적 안내 — 흔한 〈안 되는 형식〉 별로 변환 가이드
     const fileType = (file.type || "알 수 없음").toLowerCase();
     const fileName = file.name.toLowerCase();
     let hint = "";
@@ -67,24 +76,19 @@ export async function saveUpload(
     };
   }
 
-  const filename = `${Date.now().toString(36)}-${crypto
-    .randomBytes(6)
-    .toString("hex")}.${ext}`;
+  const key = generateUploadKey(bucket, ext);
 
-  if (useBlob()) {
-    // Vercel Blob — 절대 URL 반환 (https://...)
-    const blob = await put(`${bucket}/${filename}`, file, {
-      access: "public",
-      contentType: file.type,
-      addRandomSuffix: false,
-    });
-    return { ok: true, publicPath: blob.url, bytes: file.size };
+  if (r2Configured()) {
+    const buf = Buffer.from(await file.arrayBuffer());
+    const publicUrl = await r2Put(key, buf, file.type);
+    return { ok: true, publicPath: publicUrl, bytes: buf.length };
   }
 
   // 로컬 — public/uploads 에 저장 (상대 경로 반환)
   const uploadsRoot = path.join(process.cwd(), "public", "uploads");
   const dir = path.join(uploadsRoot, bucket);
   await fs.mkdir(dir, { recursive: true });
+  const filename = key.split("/").pop()!;
   const fullPath = path.join(dir, filename);
   const buf = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(fullPath, buf);
@@ -95,7 +99,7 @@ export async function saveUpload(
   };
 }
 
-const PDF_MAX_BYTES = 50 * 1024 * 1024; // 50MB
+const PDF_MAX_BYTES = 300 * 1024 * 1024; // 300MB — 이북 PDF 여유
 
 export async function saveEbookUpload(file: File): Promise<UploadResult> {
   if (!(file instanceof File) || file.size === 0) {
@@ -111,22 +115,18 @@ export async function saveEbookUpload(file: File): Promise<UploadResult> {
     return { ok: false, error: "PDF 파일만 업로드할 수 있습니다." };
   }
 
-  const filename = `${Date.now().toString(36)}-${crypto
-    .randomBytes(6)
-    .toString("hex")}.pdf`;
+  const key = generateUploadKey("ebooks", "pdf");
 
-  if (useBlob()) {
-    const blob = await put(`ebooks/${filename}`, file, {
-      access: "public",
-      contentType: "application/pdf",
-      addRandomSuffix: false,
-    });
-    return { ok: true, publicPath: blob.url, bytes: file.size };
+  if (r2Configured()) {
+    const buf = Buffer.from(await file.arrayBuffer());
+    const publicUrl = await r2Put(key, buf, "application/pdf");
+    return { ok: true, publicPath: publicUrl, bytes: buf.length };
   }
 
   const uploadsRoot = path.join(process.cwd(), "public", "uploads");
   const dir = path.join(uploadsRoot, "ebooks");
   await fs.mkdir(dir, { recursive: true });
+  const filename = key.split("/").pop()!;
   const fullPath = path.join(dir, filename);
   const buf = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(fullPath, buf);
@@ -138,14 +138,13 @@ export async function saveEbookUpload(file: File): Promise<UploadResult> {
 }
 
 export async function deleteUploadIfLocal(publicPath: string) {
-  // Vercel Blob URL — 원격 삭제
-  if (publicPath.startsWith("https://") && useBlob()) {
-    try {
-      await del(publicPath);
-    } catch {
-      // 이미 없으면 무시
+  // R2 공개 URL — 원격 삭제
+  if (publicPath.startsWith("https://") && r2Configured()) {
+    const key = r2KeyFromPublicUrl(publicPath);
+    if (key) {
+      await r2Delete(key);
+      return;
     }
-    return;
   }
   // 로컬 업로드 경로
   if (!publicPath.startsWith("/uploads/")) return;

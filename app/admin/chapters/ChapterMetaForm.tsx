@@ -43,12 +43,11 @@ export function ChapterMetaForm({
     else setUploadingHero(true);
 
     try {
-      // 1) Vercel Blob 클라이언트 직접 업로드 (4.5MB 우회)
+      // 1) R2 클라이언트 직접 업로드 (4.5MB 우회)
       try {
-        const { upload } = await import("@vercel/blob/client");
+        const { uploadToR2 } = await import("@/lib/r2-client");
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const blob = await upload(`chapters/${Date.now()}-${safeName}`, file, {
-          access: "public",
+        const blob = await uploadToR2(safeName, file, {
           handleUploadUrl: "/api/upload/chapter-cover",
         });
         return blob.url;

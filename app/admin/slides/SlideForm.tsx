@@ -51,12 +51,11 @@ export function SlideForm({ slide }: { slide?: Slide }) {
     setUploadError(null);
     setJustUploaded(false);
     try {
-      // 1) Vercel Blob 클라이언트 직접 업로드 (4.5MB 제한 우회, 최대 15MB)
+      // 1) R2 클라이언트 직접 업로드 (서버 4.5MB 제한 우회, 최대 30MB)
       try {
-        const { upload } = await import("@vercel/blob/client");
+        const { uploadToR2 } = await import("@/lib/r2-client");
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const blob = await upload(`slides/${Date.now()}-${safeName}`, file, {
-          access: "public",
+        const blob = await uploadToR2(safeName, file, {
           handleUploadUrl: "/api/upload/slide",
         });
         setImagePath(blob.url);
@@ -65,7 +64,7 @@ export function SlideForm({ slide }: { slide?: Slide }) {
         return;
       } catch (blobErr) {
         // 2) 로컬 개발 환경 폴백: 서버를 통한 multipart 업로드
-        console.warn("[slide upload] Blob 직접 업로드 실패, multipart 폴백 시도:", blobErr);
+        console.warn("[slide upload] R2 직접 업로드 실패, multipart 폴백 시도:", blobErr);
         const fd = new FormData();
         fd.append("file", file);
         const res = await fetch("/api/upload/slide", { method: "POST", body: fd });

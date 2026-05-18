@@ -26,17 +26,14 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
     setPdfProgress(0);
     setError(null);
     try {
-      // 1) Vercel Blob 클라이언트 직접 업로드 시도 (서버 4.5MB 제한 우회, 최대 300MB)
-      const { upload } = await import("@vercel/blob/client");
-      const blob = await upload(
-        `ebooks/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`,
-        file,
-        {
-          access: "public",
-          handleUploadUrl: "/api/upload/ebook",
-          onUploadProgress: ({ percentage }) => setPdfProgress(Math.round(percentage)),
-        }
-      );
+      // 1) R2 클라이언트 직접 업로드 시도 (서버 4.5MB 제한 우회, 최대 300MB)
+      const { uploadToR2 } = await import("@/lib/r2-client");
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const blob = await uploadToR2(safeName, file, {
+        handleUploadUrl: "/api/upload/ebook",
+        contentType: "application/pdf",
+        onUploadProgress: ({ percentage }) => setPdfProgress(Math.round(percentage)),
+      });
       setPdfUrl(blob.url);
     } catch {
       // 2) 로컬 개발 환경 폴백: 서버를 통한 multipart 업로드
@@ -74,11 +71,9 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
     }
 
     try {
-      // 1) Vercel Blob 클라이언트 직접 업로드 — 서버 4.5MB 함수 한도 우회
-      const safeKey = safeFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const { upload } = await import("@vercel/blob/client");
-      const blob = await upload(`ebooks/${Date.now()}-${safeKey}`, safeFile, {
-        access: "public",
+      // 1) R2 클라이언트 직접 업로드 — 서버 4.5MB 함수 한도 우회
+      const { uploadToR2 } = await import("@/lib/r2-client");
+      const blob = await uploadToR2(safeFile.name, safeFile, {
         handleUploadUrl: "/api/upload/ebook-cover",
         contentType: safeFile.type || "image/png",
       });
