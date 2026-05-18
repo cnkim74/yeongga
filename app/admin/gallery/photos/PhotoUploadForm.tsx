@@ -84,7 +84,8 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
   async function uploadOne(file: File): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
     try {
       const fd = new FormData();
-      fd.append("file", file);
+      // 한글·공백 파일명은 multipart 전송 단계에서 거부되는 환경이 있어 ASCII 안전 이름으로 재작성
+      fd.append("file", makeSafeFile(file));
       const res = await fetch("/api/upload/photo", { method: "POST", body: fd });
       const json = await res.json();
       if (!json.ok) return { ok: false, error: json.error ?? "업로드 실패" };
@@ -92,6 +93,14 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
     } catch {
       return { ok: false, error: "네트워크 오류" };
     }
+  }
+
+  function makeSafeFile(file: File): File {
+    if (/^[\w.-]+$/.test(file.name)) return file;
+    const m = file.name.match(/\.([^.]+)$/);
+    const ext = m ? m[1].toLowerCase() : "bin";
+    const safeName = `upload-${Date.now()}.${ext}`;
+    return new File([file], safeName, { type: file.type, lastModified: file.lastModified });
   }
 
   function buildFormData(imageUrl: string, fileName: string, totalCount: number): FormData {

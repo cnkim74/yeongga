@@ -62,13 +62,21 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
   async function uploadCover(file: File) {
     setCoverUploading(true);
     setError(null);
-    // 진단용 — 클라이언트 콘솔과 화면에 파일 정보 함께 노출
+    // 진단용 — 원본 파일 정보
     const sizeMB = (file.size / 1024 / 1024).toFixed(2);
     const fileInfo = `[${file.name} · ${file.type || "MIME 미상"} · ${sizeMB}MB]`;
     console.log("[표지 업로드 시도]", fileInfo, file);
+
+    // 파일명에 한글·공백·비ASCII가 있으면 multipart 전송 단계에서 거부되는 환경이 있어,
+    // 업로드 전에 ASCII 안전 이름으로 재작성. 콘텐츠 자체는 그대로.
+    const safeFile = makeSafeFile(file);
+    if (safeFile !== file) {
+      console.log("[표지 업로드] 파일명 ASCII 변환:", file.name, "→", safeFile.name);
+    }
+
     try {
       const fd = new FormData();
-      fd.append("file", file);
+      fd.append("file", safeFile);
       const res = await fetch("/api/upload/ebook-cover", { method: "POST", body: fd });
       let json: { ok?: boolean; error?: string; url?: string } | null = null;
       try {
@@ -90,6 +98,18 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
     } finally {
       setCoverUploading(false);
     }
+  }
+
+  function makeSafeFile(file: File): File {
+    // ASCII 영문·숫자·.-_ 만 안전. 그 외 문자가 있으면 새 File 객체로 재포장.
+    if (/^[\w.-]+$/.test(file.name)) return file;
+    const m = file.name.match(/\.([^.]+)$/);
+    const ext = m ? m[1].toLowerCase() : "bin";
+    const safeName = `upload-${Date.now()}.${ext}`;
+    return new File([file], safeName, {
+      type: file.type,
+      lastModified: file.lastModified,
+    });
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
