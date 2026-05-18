@@ -586,6 +586,22 @@ async function init(client: Client) {
     await markMigration(client, "purge-sample-articles-v1");
   }
 
+  // 영가문화상 1회 시상식 옛 글 영구 삭제 — 40년사 분책에서 1회 수상자가
+  // '하회별신굿탈놀이 보존회 (2003)' 가 아니라 '안동문화지킴이 (2006.1.9)' 로
+  // 확인되어, 잘못된 정보의 옛 글을 삭제하고 새 슬러그 3dae-2006-munhwasang-1 로 작성.
+  if (!(await hasMigration(client, "purge-wrong-munhwasang-1hoe-v1"))) {
+    const slug = "yeongga-munhwasang-1hoe-sihaengshik";
+    await client.execute({
+      sql: "DELETE FROM articles WHERE slug = ?",
+      args: [slug],
+    });
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+      args: ["moim", slug],
+    });
+    await markMigration(client, "purge-wrong-munhwasang-1hoe-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
