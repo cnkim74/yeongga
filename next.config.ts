@@ -4,10 +4,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   turbopack: {},
   experimental: {
-    // 모바일 사진(5~10MB) 업로드를 받기 위한 서버 액션 body 한도 상향.
-    // 슬라이드 등 form 기반 업로드 안전망 — 이미지 업로드는 /api/upload/* 로
-    // 옮겨가는 중이라 점진적으로 줄여도 됨.
-    serverActions: { bodySizeLimit: "15mb" },
+    // 고해상도 갤러리 사진(20~50MB) 업로드 여유.
+    // 이미지 파일은 /api/upload/photo 라우트 — 별도 body 제한 없음.
+    // serverActions 한도는 폼 기반 업로드 안전망용.
+    serverActions: { bodySizeLimit: "50mb" },
   },
   images: {
     remotePatterns: [

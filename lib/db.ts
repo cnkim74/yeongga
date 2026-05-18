@@ -552,6 +552,31 @@ async function init(client: Client) {
     await markMigration(client, "purge-skeleton-moim-v2");
   }
 
+  // 일회성: 샘플로 만들어진 글 5편 삭제 + 재시드 차단
+  // 사용자가 사이트에서 삭제했으나, 콘텐츠 디렉토리에 남아 있어 시드 시 다시 복구되던 글들
+  // (이번 작업에서 콘텐츠 파일도 함께 삭제됨)
+  if (!(await hasMigration(client, "purge-sample-articles-v1"))) {
+    const sampleSlugs: [string, string][] = [
+      ["yeongi", "cheot-moim"],
+      ["moim", "2025-chu-moim"],
+      ["geul", "teotbat-ilji"],
+      ["geul", "oedongttal-pyeonji"],
+      ["saram", "kim-yeongseok"],
+    ];
+    for (const [chapter, slug] of sampleSlugs) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+      // 재시드 차단 — 다음 콘텐츠 시드 시 다시 추가되지 않도록
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "purge-sample-articles-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [

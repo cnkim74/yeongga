@@ -11,7 +11,7 @@ const MIME_EXT: Record<string, string> = {
   "image/gif": "gif",
 };
 
-const MAX_BYTES = 30 * 1024 * 1024; // 30MB — hero 풀블리드 사진 여유
+const MAX_BYTES = 50 * 1024 * 1024; // 50MB — 고해상도 갤러리 사진 여유
 
 export type UploadResult =
   | { ok: true; publicPath: string; bytes: number }
@@ -44,9 +44,26 @@ export async function saveUpload(
   }
   const ext = MIME_EXT[file.type];
   if (!ext) {
+    // 사용자 친화적 안내 — 흔한 〈안 되는 형식〉 별로 변환 가이드
+    const fileType = (file.type || "알 수 없음").toLowerCase();
+    const fileName = file.name.toLowerCase();
+    let hint = "";
+    if (fileType.includes("heic") || fileType.includes("heif") || fileName.endsWith(".heic") || fileName.endsWith(".heif")) {
+      hint = " — 아이폰 HEIC 형식입니다. 아이폰 〈설정 → 카메라 → 포맷 → 높은 호환성〉을 켜고 다시 찍거나, 미리보기/사진 앱에서 JPG로 내보내 주세요.";
+    } else if (fileType.includes("tiff") || fileName.endsWith(".tif") || fileName.endsWith(".tiff")) {
+      hint = " — TIFF는 지원하지 않습니다. JPG로 저장 후 다시 시도해 주세요.";
+    } else if (fileType.includes("bmp") || fileName.endsWith(".bmp")) {
+      hint = " — BMP는 지원하지 않습니다. JPG·PNG로 저장 후 다시 시도해 주세요.";
+    } else if (fileType.includes("photoshop") || fileName.endsWith(".psd")) {
+      hint = " — PSD(포토샵 원본)는 지원하지 않습니다. JPG·PNG로 내보내기 한 뒤 다시 시도해 주세요.";
+    } else if (fileType.includes("svg")) {
+      hint = " — SVG는 지원하지 않습니다. PNG로 변환해 주세요.";
+    } else if (fileType.includes("pdf")) {
+      hint = " — PDF는 표지 이미지로 쓸 수 없습니다. 첫 페이지를 JPG·PNG로 캡처해 주세요.";
+    }
     return {
       ok: false,
-      error: "지원하지 않는 형식입니다 (jpg, png, webp, gif 만 가능).",
+      error: `지원하지 않는 형식입니다 (jpg·png·webp·gif 만 가능). 받은 형식: ${file.type || "알 수 없음"}${hint}`,
     };
   }
 
