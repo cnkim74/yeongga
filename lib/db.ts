@@ -218,6 +218,15 @@ async function init(client: Client) {
     CREATE INDEX IF NOT EXISTS idx_visits_path ON page_visits(path);
     CREATE INDEX IF NOT EXISTS idx_visits_visited_at ON page_visits(visited_at DESC);
     CREATE INDEX IF NOT EXISTS idx_visits_visitor ON page_visits(visitor_id);
+
+    -- Blob → R2 일회성 마이그레이션 진행 상태 추적용 테이블.
+    -- chunked 방식으로 여러 번 호출되어도 안전하게 이어 작업하기 위해 사용.
+    CREATE TABLE IF NOT EXISTS migration_blob_to_r2 (
+      blob_url TEXT PRIMARY KEY,
+      r2_url TEXT NOT NULL,
+      bytes INTEGER,
+      copied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──
