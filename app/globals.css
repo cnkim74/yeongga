@@ -169,8 +169,8 @@ html[data-theme="dark"] .hover\:bg-white:hover {
 }
 .btn-pill:hover { background: #1f1f1f; transform: translateY(-1px); }
 /* paper — 라이트=아이보리+검정, 다크=검정+흰. 슬라이드 안 알약 등에 사용.
-   〈invert〉 이름은 Tailwind 의 filter:invert(100%) 유틸과 충돌해 시각적
-   색 반전이 한 번 더 일어남. paper 로 변경. */
+   이전 이름은 Tailwind 의 filter 유틸과 클래스명이 겹쳐서 시각 반전이
+   한 번 더 들어가던 문제가 있어 paper 로 변경. */
 .btn-pill.paper { background: #fbfaf7; color: #0a0a0a; }
 .btn-pill.paper:hover { background: #efece4; }
 html[data-theme="dark"] .btn-pill.paper { background: #0a0a0a; color: #ffffff; }
