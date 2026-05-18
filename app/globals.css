@@ -445,6 +445,37 @@ html[data-theme="dark"] .form-input {
   color: rgba(255, 255, 255, 0.85);
 }
 
+/* ─── 헤더 라이트 변형 (테마 토글) ─────────────────────── */
+/* pill-nav.theme-light — 다크 헤더의 대비 톤. 결정 검토용. */
+.pill-nav.theme-light {
+  background: #fbfaf7;
+  color: var(--color-ink);
+  border: 1px solid var(--color-rule);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+.pill-nav.theme-light .pill-nav-link { color: rgba(10, 10, 10, 0.78); }
+.pill-nav.theme-light .pill-nav-link:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #0a0a0a;
+}
+.pill-nav.theme-light .pill-nav-link[aria-current="page"] {
+  background: rgba(0, 0, 0, 0.08);
+  color: #0a0a0a;
+}
+.pill-nav.theme-light .pill-nav-icon { color: rgba(10, 10, 10, 0.78); }
+.pill-nav.theme-light .pill-nav-icon:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #0a0a0a;
+}
+.pill-nav.theme-light .pill-nav-pill {
+  color: rgba(10, 10, 10, 0.88);
+  background: rgba(0, 0, 0, 0.06);
+}
+.pill-nav.theme-light .pill-nav-pill:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: #0a0a0a;
+}
+
 /* 가로 타원형 — 아이콘 + 텍스트가 함께 들어가는 버튼 (예: e-Book) */
 .pill-nav-pill {
   height: 40px;

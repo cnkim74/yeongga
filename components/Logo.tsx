@@ -66,11 +66,14 @@ export function Logo({
     return <LogoMark size={s.mark} inverse={inverse} className={className} />;
   }
 
+  const subColor = inverse ? "rgba(10,10,10,0.85)" : "rgba(255,255,255,0.92)";
+  const dividerColor = inverse ? "rgba(0,0,0,0.22)" : "rgba(255,255,255,0.32)";
+
   const anniversaryBlock = showAnniversary ? (
     <div
       style={{
         fontSize: s.sub,
-        color: "rgba(255,255,255,0.92)",
+        color: subColor,
         letterSpacing: `${s.subTracking}em`,
         fontFamily:
           "'Noto Serif KR','Nanum Myeongjo',var(--font-serif),serif",
@@ -103,7 +106,7 @@ export function Logo({
       {showAnniversary && (
         <div
           style={{
-            borderLeft: "1px solid rgba(255,255,255,0.32)",
+            borderLeft: `1px solid ${dividerColor}`,
             paddingLeft: s.gap,
           }}
         >

@@ -18,10 +18,14 @@ const NAV = [
   { href: "/gallery", label: "갤러리" },
 ];
 
+type Theme = "dark" | "light";
+
 export function HeaderClient({ user }: { user: SessionUser | null }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sizeOpen, setSizeOpen] = useState(false);
+  // 헤더 테마 — 클라이언트 검토용. localStorage 에 저장되어 새로고침에도 유지.
+  const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -30,21 +34,42 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
     };
   }, [open]);
 
+  // 첫 마운트 시 localStorage 에서 테마 읽기 (hydration mismatch 회피 — useEffect 안에서)
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? window.localStorage.getItem("yeongga-header-theme") : null;
+    if (saved === "light" || saved === "dark") setTheme(saved);
+  }, []);
+
+  function toggleTheme() {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      window.localStorage.setItem("yeongga-header-theme", next);
+    } catch {
+      // 사파리 시크릿 등 — 무시
+    }
+  }
+
+  const isLight = theme === "light";
+
   return (
     <>
-      <nav className="pill-nav" aria-label="주 메뉴">
+      <nav
+        className={`pill-nav ${isLight ? "theme-light" : ""}`}
+        aria-label="주 메뉴"
+      >
         <Link
           href="/"
-          className="text-white hover:opacity-90 transition-opacity"
+          className={`${isLight ? "text-[var(--color-ink)]" : "text-white"} hover:opacity-90 transition-opacity`}
           aria-label="영가회 아카이브 — 표지"
         >
           {/* 모바일: 로고만 (공간 절약) */}
           <span className="md:hidden">
-            <Logo variant="horizontal" size="sm" />
+            <Logo variant="horizontal" size="sm" inverse={isLight} />
           </span>
-          {/* 태블릿+: 키운 로고 + 創立 50周年 부제 노출 */}
+          {/* 태블릿+: 키운 로고 + 부제 노출 */}
           <span className="hidden md:inline-flex">
-            <Logo variant="horizontal" size="md" showAnniversary />
+            <Logo variant="horizontal" size="md" inverse={isLight} showAnniversary />
           </span>
         </Link>
 
@@ -144,6 +169,28 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
 
           {/* 구분 여백 */}
           <span className="hidden sm:block w-px h-4 bg-white/25 mx-1" aria-hidden="true" />
+
+          {/* 헤더 테마 토글 — 클라이언트 검토용 */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="pill-nav-icon"
+            aria-label={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
+            title={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
+          >
+            {isLight ? (
+              // 달 — 다크 모드로 전환할 수 있다는 의미
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            ) : (
+              // 해 — 라이트 모드로 전환할 수 있다는 의미
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+              </svg>
+            )}
+          </button>
 
           <button
             type="button"
