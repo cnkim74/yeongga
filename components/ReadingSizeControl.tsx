@@ -4,7 +4,6 @@ import {
   useReadingSize,
   type ReadingLevel,
   type ReadingFont,
-  type ReadingTheme,
 } from "./ReadingSizeProvider";
 
 const LEVELS: { level: ReadingLevel; label: string }[] = [
@@ -20,17 +19,12 @@ const FONTS: { value: ReadingFont; label: string; sample: string }[] = [
   { value: "sans",  label: "고딕 (Gothic)", sample: "글" },
 ];
 
-const THEMES: { value: ReadingTheme; label: string; icon: string }[] = [
-  { value: "light", label: "밝게",   icon: "☼" },
-  { value: "dark",  label: "어둡게", icon: "☾" },
-];
-
 /**
- * 통합 보기 설정 컨트롤 — 글자 크기 / 본문 폰트 / 화면 모드
- * 헤더 우측 상단 패널과 모바일 메뉴 시트에서 사용됨.
+ * 통합 보기 설정 컨트롤 — 글자 크기 / 본문 폰트
+ * 화면 모드(다크/라이트) 토글은 헤더의 ☼/☾ 버튼으로 일원화되어 여기서 제거됨.
  */
 export function ReadingSizeControl() {
-  const { level, setLevel, font, setFont, theme, setTheme } = useReadingSize();
+  const { level, setLevel, font, setFont } = useReadingSize();
 
   return (
     <div className="space-y-5 min-w-[260px]">
@@ -115,39 +109,6 @@ export function ReadingSizeControl() {
         </div>
       </section>
 
-      {/* ── 화면 모드 ── */}
-      <section>
-        <div className="text-[11px] font-semibold tracking-widest text-[var(--color-ink-mute)] mb-2 px-1 uppercase">
-          화면 모드
-        </div>
-        <div
-          role="group"
-          aria-label="화면 모드"
-          className="grid grid-cols-2 gap-1.5"
-        >
-          {THEMES.map((t) => {
-            const active = theme === t.value;
-            return (
-              <button
-                key={t.value}
-                type="button"
-                onClick={() => setTheme(t.value)}
-                aria-pressed={active}
-                className={`flex items-center justify-center gap-2 h-10 rounded-xl border transition ${
-                  active
-                    ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-white"
-                    : "border-[var(--color-rule)] text-[var(--color-ink-soft)] hover:border-[var(--color-ink-mute)]"
-                }`}
-              >
-                <span className="text-base leading-none" aria-hidden="true">
-                  {t.icon}
-                </span>
-                <span className="text-xs font-medium">{t.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
     </div>
   );
 }
