@@ -62,7 +62,6 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
   async function uploadCover(file: File) {
     setCoverUploading(true);
     setError(null);
-    // 진단용 — 원본 파일 정보
     const sizeMB = (file.size / 1024 / 1024).toFixed(2);
     const fileInfo = `[${file.name} · ${file.type || "MIME 미상"} · ${sizeMB}MB]`;
     console.log("[표지 업로드 시도]", fileInfo, file);
@@ -75,26 +74,42 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
     }
 
     try {
-      const fd = new FormData();
-      fd.append("file", safeFile);
-      const res = await fetch("/api/upload/ebook-cover", { method: "POST", body: fd });
-      let json: { ok?: boolean; error?: string; url?: string } | null = null;
+      // 1) Vercel Blob 클라이언트 직접 업로드 — 서버 4.5MB 함수 한도 우회
+      const safeKey = safeFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const { upload } = await import("@vercel/blob/client");
+      const blob = await upload(`ebooks/${Date.now()}-${safeKey}`, safeFile, {
+        access: "public",
+        handleUploadUrl: "/api/upload/ebook-cover",
+        contentType: safeFile.type || "image/png",
+      });
+      setCoverUrl(blob.url);
+    } catch (clientErr) {
+      console.warn("[표지 업로드] 클라이언트 직접 업로드 실패, 서버 폴백 시도:", clientErr);
+      // 2) 폴백 — 로컬 개발 환경 또는 Blob 미설정 시 서버 multipart 경로
       try {
-        json = await res.json();
-      } catch {
-        json = null;
+        const fd = new FormData();
+        fd.append("file", safeFile);
+        const res = await fetch("/api/upload/ebook-cover", { method: "POST", body: fd });
+        let json: { ok?: boolean; error?: string; url?: string } | null = null;
+        try {
+          json = await res.json();
+        } catch {
+          json = null;
+        }
+        if (!res.ok || !json?.ok) {
+          const serverMsg = json?.error ?? `HTTP ${res.status} ${res.statusText}`;
+          const clientMsg = clientErr instanceof Error ? clientErr.message : String(clientErr);
+          setError(`표지 업로드 실패: ${serverMsg} / 직접 업로드 오류: ${clientMsg}  ${fileInfo}`);
+          console.error("[표지 업로드 실패]", { status: res.status, json, clientErr, fileInfo });
+        } else {
+          setCoverUrl(json.url ?? "");
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        const clientMsg = clientErr instanceof Error ? clientErr.message : String(clientErr);
+        setError(`네트워크 오류: ${msg} / 직접 업로드 오류: ${clientMsg}  ${fileInfo}`);
+        console.error("[표지 업로드 예외]", e);
       }
-      if (!res.ok || !json?.ok) {
-        const serverMsg = json?.error ?? `HTTP ${res.status} ${res.statusText}`;
-        setError(`표지 업로드 실패: ${serverMsg}  ${fileInfo}`);
-        console.error("[표지 업로드 실패]", { status: res.status, json, fileInfo });
-      } else {
-        setCoverUrl(json.url ?? "");
-      }
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      setError(`네트워크 오류: ${msg}  ${fileInfo}`);
-      console.error("[표지 업로드 예외]", e);
     } finally {
       setCoverUploading(false);
     }
