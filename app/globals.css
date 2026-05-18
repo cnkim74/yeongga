@@ -168,14 +168,34 @@ html[data-theme="dark"] .hover\:bg-white:hover {
   transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
 }
 .btn-pill:hover { background: #1f1f1f; transform: translateY(-1px); }
-.btn-pill.invert { background: var(--color-bg); color: var(--color-ink); }
-.btn-pill.invert:hover { background: var(--color-bg-deep); }
+/* invert — 라이트=아이보리+검정, 다크=검정+흰. 슬라이드 안 알약 등에 사용 */
+.btn-pill.invert { background: #fbfaf7; color: #0a0a0a; }
+.btn-pill.invert:hover { background: #efece4; }
+html[data-theme="dark"] .btn-pill.invert { background: #0a0a0a; color: #ffffff; }
+html[data-theme="dark"] .btn-pill.invert:hover { background: #1f1f1f; }
 .btn-pill.ghost {
   background: transparent;
   color: var(--color-ink);
   border: 1px solid var(--color-ink);
 }
 .btn-pill.ghost:hover { background: var(--color-ink); color: var(--color-bg); }
+
+/* ─── 강조 패널·푸터 톤 ─────────────────────────────────
+   라이트 모드 = 아이보리 바탕 + 검정 텍스트
+   다크 모드   = 검정 바탕 + 흰 텍스트
+   var(--color-ink/bg) 가 한지·먹 톤으로 swap 되는 것을 피해 명시. */
+.surface-tone {
+  background: #fbfaf7;
+  color: #0a0a0a;
+}
+.surface-tone .surface-mute  { color: rgba(10,10,10,0.55); }
+.surface-tone .surface-soft  { color: rgba(10,10,10,0.72); }
+html[data-theme="dark"] .surface-tone {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+html[data-theme="dark"] .surface-tone .surface-mute { color: rgba(255,255,255,0.55); }
+html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.72); }
 
 /* ─── 본문 (실제 글 읽기 화면) ──────────────────────────── */
 .prose-body {
@@ -310,7 +330,8 @@ html[data-theme="dark"] .hover\:bg-white:hover {
   justify-content: center;
   padding: 0 max(6vw, 32px) 0 4vw;
   max-width: 720px;
-  color: var(--color-bg);
+  /* 사진 위에 떠 있는 텍스트라 라이트/다크 무관하게 항상 흰색 */
+  color: #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -336,14 +357,16 @@ html[data-theme="dark"] .hover\:bg-white:hover {
 }
 
 /* ─── Floating pill nav ──────────────────────────────── */
+/* 헤더는 라이트/다크 본문과 무관하게 항상 짙은 먹 톤을 유지.
+   var(--color-ink) 를 쓰면 다크 모드 때 미색으로 바뀌어 버려서 검정 고정. */
 .pill-nav {
   position: fixed;
   top: 12px;
   left: 12px;
   right: 12px;
   z-index: 50;
-  background: var(--color-ink);
-  color: var(--color-bg);
+  background: #0a0a0a;
+  color: #ffffff;
   border-radius: 999px;
   display: flex;
   align-items: center;

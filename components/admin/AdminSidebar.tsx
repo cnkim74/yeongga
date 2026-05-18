@@ -65,6 +65,7 @@ const NAV: NavGroup[] = [
       { href: "/admin/analytics",   label: "방문 기록",   Icon: IconSettings },
       { href: "/admin/settings",    label: "시스템 설정", Icon: IconSettings },
       { href: "/admin/diagnostics", label: "진단",       Icon: IconSettings },
+      { href: "/admin/migrate-r2",  label: "Blob → R2 이전", Icon: IconSettings },
     ],
   },
 ];

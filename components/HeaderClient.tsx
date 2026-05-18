@@ -112,7 +112,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                     className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-opacity duration-150"
                     role="menu"
                   >
-                    <div className="min-w-[220px] rounded-2xl border border-white/15 bg-[var(--color-ink)] shadow-2xl py-2">
+                    <div className="min-w-[220px] rounded-2xl border border-white/15 bg-[#0a0a0a] shadow-2xl py-2">
                       <Link
                         href="/archive"
                         className="archive-drop-item archive-drop-all"
