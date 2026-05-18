@@ -77,13 +77,13 @@ export function AdminSidebar() {
       {/* ── 상단 브랜드 ── */}
       <div className="px-5 pt-5 pb-4 border-b border-[var(--admin-rule)]">
         <div className="flex items-center gap-3">
-          <LogoMark size={36} inverse className="shrink-0" />
+          <LogoMark size={28} inverse className="shrink-0" />
           <div className="flex-1 min-w-0">
-            <div className="font-serif text-base leading-tight tracking-tight text-[var(--admin-ink)]">
+            <div className="font-serif text-base leading-tight tracking-tight text-[var(--admin-ink)] whitespace-nowrap">
               영가회 집무실
             </div>
-            <div className="text-[10px] mt-0.5 text-[var(--admin-mute)] tracking-[0.25em] font-medium">
-              YEONGGA · 執務室
+            <div className="font-serif text-[11px] mt-0.5 text-[var(--admin-mute)] tracking-[0.22em] whitespace-nowrap">
+              執務室
             </div>
           </div>
         </div>
