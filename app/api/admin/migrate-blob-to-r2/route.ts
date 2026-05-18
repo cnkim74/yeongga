@@ -39,19 +39,19 @@ function keyFromBlobUrl(url: string, pathname?: string): string {
   return pathname?.replace(/^\//, "") ?? url;
 }
 
-// DB URL 컬럼 목록
-const URL_COLUMNS: { table: string; col: string }[] = [
-  { table: "slides", col: "image_path" },
-  { table: "page_backgrounds", col: "image_path" },
-  { table: "ebooks", col: "pdf_url" },
-  { table: "ebooks", col: "cover_url" },
-  { table: "photo_categories", col: "cover_url" },
-  { table: "photos", col: "image_url" },
-  { table: "chapter_meta", col: "cover_image" },
-  { table: "chapter_meta", col: "hero_image" },
-  { table: "member_banners", col: "image_url" },
-  { table: "submissions", col: "file_url" },
-  { table: "users", col: "avatar_url" },
+// DB URL 컬럼 목록 — pk 컬럼명 명시 (chapter_meta 처럼 id 없는 테이블 대응)
+const URL_COLUMNS: { table: string; col: string; pk: string }[] = [
+  { table: "slides", col: "image_path", pk: "id" },
+  { table: "page_backgrounds", col: "image_path", pk: "id" },
+  { table: "ebooks", col: "pdf_url", pk: "id" },
+  { table: "ebooks", col: "cover_url", pk: "id" },
+  { table: "photo_categories", col: "cover_url", pk: "id" },
+  { table: "photos", col: "image_url", pk: "id" },
+  { table: "chapter_meta", col: "cover_image", pk: "chapter_slug" },
+  { table: "chapter_meta", col: "hero_image", pk: "chapter_slug" },
+  { table: "member_banners", col: "image_url", pk: "id" },
+  { table: "submissions", col: "file_url", pk: "id" },
+  { table: "users", col: "avatar_url", pk: "id" },
 ];
 
 export async function POST(req: NextRequest) {
@@ -191,10 +191,10 @@ async function runPatchPhase(db: Client) {
 
   const summary: { table: string; col: string; updated: number; error?: string }[] = [];
 
-  for (const { table, col } of URL_COLUMNS) {
+  for (const { table, col, pk } of URL_COLUMNS) {
     try {
       const rs = await db.execute({
-        sql: `SELECT id, ${col} AS value FROM ${table} WHERE ${col} IS NOT NULL AND ${col} LIKE '%blob.vercel-storage.com%'`,
+        sql: `SELECT ${pk} AS pk, ${col} AS value FROM ${table} WHERE ${col} IS NOT NULL AND ${col} LIKE '%blob.vercel-storage.com%'`,
         args: [],
       });
       let n = 0;
@@ -203,8 +203,8 @@ async function runPatchPhase(db: Client) {
         const next = urlMap.get(old);
         if (!next) continue;
         await db.execute({
-          sql: `UPDATE ${table} SET ${col} = ? WHERE id = ?`,
-          args: [next, row.id],
+          sql: `UPDATE ${table} SET ${col} = ? WHERE ${pk} = ?`,
+          args: [next, row.pk as string | number],
         });
         n += 1;
       }
