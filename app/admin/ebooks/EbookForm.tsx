@@ -62,18 +62,31 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
   async function uploadCover(file: File) {
     setCoverUploading(true);
     setError(null);
+    // 진단용 — 클라이언트 콘솔과 화면에 파일 정보 함께 노출
+    const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+    const fileInfo = `[${file.name} · ${file.type || "MIME 미상"} · ${sizeMB}MB]`;
+    console.log("[표지 업로드 시도]", fileInfo, file);
     try {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/upload/ebook-cover", { method: "POST", body: fd });
-      const json = await res.json();
-      if (!json.ok) {
-        setError(json.error ?? "표지 업로드에 실패했습니다.");
-      } else {
-        setCoverUrl(json.url);
+      let json: { ok?: boolean; error?: string; url?: string } | null = null;
+      try {
+        json = await res.json();
+      } catch {
+        json = null;
       }
-    } catch {
-      setError("표지 업로드 중 오류가 발생했습니다.");
+      if (!res.ok || !json?.ok) {
+        const serverMsg = json?.error ?? `HTTP ${res.status} ${res.statusText}`;
+        setError(`표지 업로드 실패: ${serverMsg}  ${fileInfo}`);
+        console.error("[표지 업로드 실패]", { status: res.status, json, fileInfo });
+      } else {
+        setCoverUrl(json.url ?? "");
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setError(`네트워크 오류: ${msg}  ${fileInfo}`);
+      console.error("[표지 업로드 예외]", e);
     } finally {
       setCoverUploading(false);
     }
