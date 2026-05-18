@@ -113,7 +113,7 @@ export default async function HomePage() {
 
       {/* 2.5 FEATURED VIDEO — 메인 추천 영상 */}
       {featuredVideo && (
-        <section className="bg-[var(--color-ink)] text-white py-24 sm:py-32">
+        <section className="surface-tone py-24 sm:py-32">
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
               <div className="lg:col-span-7">
@@ -124,14 +124,14 @@ export default async function HomePage() {
                 />
               </div>
               <div className="lg:col-span-5">
-                <div className="kicker text-white/60 mb-4">
+                <div className="kicker surface-mute mb-4">
                   {featuredVideo.kicker ?? "VIDEO · 추천 영상"}
                 </div>
                 <h2 className="display text-3xl sm:text-5xl mb-5">
                   {featuredVideo.title}
                 </h2>
                 {featuredVideo.description && (
-                  <p className="text-base sm:text-lg text-white/75 leading-relaxed mb-8">
+                  <p className="text-base sm:text-lg surface-soft leading-relaxed mb-8">
                     {featuredVideo.description}
                   </p>
                 )}
@@ -269,14 +269,14 @@ export default async function HomePage() {
       )}
 
       {/* 4. CLOSING */}
-      <section className="bg-[var(--color-ink)] text-white py-24 sm:py-32">
+      <section className="surface-tone py-24 sm:py-32">
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <div className="kicker text-white/60 mb-6">永嘉會 · ARCHIVE</div>
+          <div className="kicker surface-mute mb-6">永嘉會 · ARCHIVE</div>
           <h2 className="display text-4xl sm:text-6xl mb-8">
             글은 사람의 발자국,<br />
             발자국이 모이면 길이 됩니다.
           </h2>
-          <p className="text-base sm:text-lg text-white/75 leading-relaxed mb-10">
+          <p className="text-base sm:text-lg surface-soft leading-relaxed mb-10">
             영가회는 한 줄의 글, 한 장의 사진을 모아 한 사람의 자리를,
             한 모임의 역사를 기록합니다.
           </p>
