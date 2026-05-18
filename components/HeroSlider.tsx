@@ -101,7 +101,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
               <Link
                 href={s.href}
                 tabIndex={active ? 0 : -1}
-                className="btn-pill invert"
+                className="btn-pill paper"
               >
                 {s.cta ?? "읽어 보기"}
                 <span aria-hidden="true">→</span>
