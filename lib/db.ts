@@ -602,6 +602,34 @@ async function init(client: Client) {
     await markMigration(client, "purge-wrong-munhwasang-1hoe-v1");
   }
 
+  // 영가문화상 5대 8~11회 잘못된 글 영구 삭제 —
+  // 40년사 분책 자료 정독 결과 영가문화상은 격년 시상으로:
+  //   · 1회 2006.1.9 (안동문화지킴이)
+  //   · 3회 2010.1.13 (안동문화원)
+  //   · 4회 2012.1.9 (한국예총 안동시 지부)
+  // 즉 5대 회장기(2011-2014)는 매년 시상 아니며 2012=4회·2014=5회가 정상.
+  // 사이트의 5dae-201X-munhwasang-8~11 4편은 회차와 본문 모두 자료 없는
+  // 부실 글로 확인되어 영구 삭제. 새 정확 글로 점진 대체 예정.
+  if (!(await hasMigration(client, "purge-wrong-5dae-munhwasang-v1"))) {
+    const slugs = [
+      "5dae-2011-munhwasang-8",
+      "5dae-2012-munhwasang-9",
+      "5dae-2013-munhwasang-10",
+      "5dae-2014-munhwasang-11",
+    ];
+    for (const slug of slugs) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE slug = ?",
+        args: [slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["moim", slug],
+      });
+    }
+    await markMigration(client, "purge-wrong-5dae-munhwasang-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -769,7 +797,11 @@ async function init(client: Client) {
   // v9: 모임 챕터 회장기별 묶음 글 5편 추가 (1~5대 시기 정기행사 모음)
   // v10: 자취 사진 9편 + 연기 3편(기획) + 명사 11편 등 신규 글 추가
   //      (보강된 기존 글의 본문 갱신은 위의 refresh-articles-content-v1 마이그레이션 참조)
-  const seedKey = "content-seed-v10";
+  // v11: 2~5대 회장기 자료 기반 모임 글 묶음 추가 — 2대 5편, 3대 5편,
+  //      4대 5편, 5대 1차 4편 (5dae-*-munhwasang-8~11 옛 글은 위의
+  //      purge-wrong-5dae-munhwasang-v1 마이그레이션이 seeded_deletions
+  //      에 등록해 두므로 재시드 시 제외됨).
+  const seedKey = "content-seed-v11";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
