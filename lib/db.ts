@@ -807,7 +807,11 @@ async function init(client: Client) {
   // v13: 5대 류종묵 회장기 3차 배치 5편 추가 — 박석무·박세일·김용직
   //      특강, 김광림·류성걸 19대 의원 당선 축하, 2012 서산·아산만
   //      탐방(흥국 공장 견학 포함).
-  const seedKey = "content-seed-v13";
+  // v14: 6대 김봉구 회장기 1차 배치 5편 추가 — 2015 신년하례(회장
+  //      취임), 중국 사천성(중경·양자강) 탐방, 정부락 교수 〈북한정세
+  //      와 남북관계 전망〉, 백두대간 협곡열차·영월 청령포, 2016
+  //      신년하례 + 영가문화상 6회(안동 내방가사 보존회).
+  const seedKey = "content-seed-v14";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
