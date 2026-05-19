@@ -13,9 +13,13 @@
  */
 
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import HTMLFlipBook from "react-pageflip";
+import dynamic from "next/dynamic";
 import * as pdfjs from "pdfjs-dist";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
+
+// react-pageflip 은 window 를 즉시 참조해 SSR 단계에서 깨진다.
+// Next.js 에서는 dynamic import + ssr:false 로 클라이언트에서만 로드.
+const HTMLFlipBook = dynamic(() => import("react-pageflip"), { ssr: false });
 
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
