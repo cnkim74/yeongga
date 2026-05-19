@@ -68,7 +68,7 @@ export default async function AdminPhotosPage({
 
         <PhotoUploadForm categories={categories} defaultCategorySlug={category} />
 
-        <PhotoGridAdmin photos={photos} />
+        <PhotoGridAdmin photos={photos} categories={categories} />
       </div>
     </>
   );
