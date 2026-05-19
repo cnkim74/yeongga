@@ -313,7 +313,10 @@ export const BookFlipReader = forwardRef<BookFlipReaderHandle, BookFlipReaderPro
           maxHeight={1400}
           drawShadow={true}
           flippingTime={650}
-          usePortrait={true}
+          // 양면 스프레드 강제 — 책처럼 두 페이지가 펼쳐진 상태에서
+          // 한 장이 휘어 넘어가는 자리. (default true 면 데스크탑에서도
+          // 단일 페이지 portrait 로 가는 경우가 있어 false 로 고정)
+          usePortrait={false}
           startPage={0}
           showCover={true}
           mobileScrollSupport={true}
