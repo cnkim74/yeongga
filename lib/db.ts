@@ -815,7 +815,11 @@ async function init(client: Client) {
   //      도청 개청, 회장 영어 특강, 라오스 탐방, 2017 신년하례(회장
   //      유임), 김병렬 교수 독도 특강, 김봉구 회장 사임 + 김계동 7대
   //      회장 선임.
-  const seedKey = "content-seed-v15";
+  // v16: 7대 김계동 회장기 1차 배치 5편 추가 — 2017.5.26 회장 취임 +
+  //      7.13 이사회, 2017.9.12 정선 5일장, 2017.10.26 권원오 교수
+  //      특강 〈어떻게 살 것인가?〉, 2017.11.14 베트남 다낭, 2018.1.5
+  //      신년하례(영가회 40년사 제작 천명).
+  const seedKey = "content-seed-v16";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
