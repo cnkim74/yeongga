@@ -49,7 +49,7 @@ export default async function GalleryPage({
             GALLERY · 寫眞 アーカイブ
           </div>
           <h1 className="display text-5xl sm:text-7xl mb-6 max-w-3xl">
-            영가회의<br />사진 기록
+            영가회<span className="text-[0.6em] align-middle opacity-70">(永嘉會)</span>의<br />사진 기록
           </h1>
           <p className="text-base sm:text-lg text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
             모임과 행사에서 남긴 사진을 한자리에 모았습니다.
