@@ -166,7 +166,9 @@ function BulkActionBar({
   }
 
   return (
-    <div className="sticky top-2 z-10 mb-4 rounded-lg border border-[var(--color-notion-accent)] bg-blue-50 px-4 py-3 flex flex-wrap items-center gap-3">
+    // AdminTopbar 가 sticky top-0 z-20 h-12 라 그 바로 아래(top-12)에
+    // 더 높은 z-index(z-30) 로 붙임. 안 그러면 토픽바 뒤에 가려서 안 보임.
+    <div className="sticky top-12 z-30 mb-4 rounded-lg border border-[var(--color-notion-accent)] bg-blue-50 shadow-md px-4 py-3 flex flex-wrap items-center gap-3">
       <div className="text-sm font-semibold text-[var(--color-notion-ink)]">
         {ids.length}장 선택됨
       </div>
