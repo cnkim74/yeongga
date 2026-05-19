@@ -114,50 +114,6 @@ export default async function GalleryPage({
           <PhotoGrid photos={photos} initialCategory={category} />
         </div>
       </section>
-
-      {/* 카테고리 카드 섹션 (카테고리가 있고, 전체 보기일 때) */}
-      {!category && categories.length > 0 && (
-        <section className="py-12 sm:py-16 bg-[var(--color-bg-soft)]">
-          <div className="mx-auto max-w-6xl px-6">
-            <h2 className="display-md text-2xl sm:text-3xl mb-8">카테고리별 보기</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/gallery?category=${cat.slug}`}
-                  className="group block overflow-hidden rounded-2xl bg-[var(--color-paper)] border border-[var(--color-rule)] hover:border-[var(--color-ink-mute)] transition"
-                >
-                  <div className="aspect-video relative overflow-hidden bg-[var(--color-bg-soft)]">
-                    {cat.cover_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={cat.cover_url}
-                        alt=""
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-4xl text-[var(--color-ink-mute)]">
-                        🗂️
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-[var(--color-ink)]">{cat.name}</h3>
-                    {cat.description && (
-                      <p className="text-sm text-[var(--color-ink-soft)] mt-1 line-clamp-2">
-                        {cat.description}
-                      </p>
-                    )}
-                    <p className="text-xs text-[var(--color-ink-mute)] mt-2">
-                      {cat.photo_count ?? 0}장
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </>
   );
 }

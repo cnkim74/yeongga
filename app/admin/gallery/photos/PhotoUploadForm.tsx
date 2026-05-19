@@ -129,6 +129,41 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
     return fd;
   }
 
+  // 한 장당 업로드 + 저장. 병렬 처리용으로 추출.
+  async function processItem(item: QueuedFile, totalCount: number): Promise<boolean> {
+    setQueue((q) =>
+      q.map((it) => (it.id === item.id ? { ...it, status: "uploading", progress: 30 } : it))
+    );
+    const up = await uploadOne(item.file);
+    if (!up.ok) {
+      setQueue((q) =>
+        q.map((it) =>
+          it.id === item.id ? { ...it, status: "error", error: up.error, progress: 0 } : it
+        )
+      );
+      return false;
+    }
+    setQueue((q) =>
+      q.map((it) =>
+        it.id === item.id ? { ...it, status: "saving", imageUrl: up.url, progress: 70 } : it
+      )
+    );
+    const fd = buildFormData(up.url, item.file.name, totalCount);
+    const result = await createPhotoAction(fd);
+    if (result && "error" in result && result.error) {
+      setQueue((q) =>
+        q.map((it) =>
+          it.id === item.id ? { ...it, status: "error", error: result.error, progress: 0 } : it
+        )
+      );
+      return false;
+    }
+    setQueue((q) =>
+      q.map((it) => (it.id === item.id ? { ...it, status: "done", progress: 100 } : it))
+    );
+    return true;
+  }
+
   function startProcessing() {
     if (processing) return;
     const pendingItems = queue.filter((q) => q.status === "pending");
@@ -144,41 +179,22 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
         });
       });
 
+      // 병렬 처리 — 동시 4장씩. 서버·R2 부하 분산용.
+      // 워커 4개가 큐에서 다음 항목을 가져다 처리, 비어지면 종료.
+      const concurrency = Math.min(4, snapshot.length);
+      let idx = 0;
       let ok = 0;
-      for (const item of snapshot) {
-        setQueue((q) =>
-          q.map((it) => (it.id === item.id ? { ...it, status: "uploading", progress: 30 } : it))
-        );
-        const up = await uploadOne(item.file);
-        if (!up.ok) {
-          setQueue((q) =>
-            q.map((it) =>
-              it.id === item.id ? { ...it, status: "error", error: up.error, progress: 0 } : it
-            )
-          );
-          continue;
+      async function worker() {
+        while (true) {
+          const myIdx = idx++;
+          if (myIdx >= snapshot.length) return;
+          const item = snapshot[myIdx];
+          const success = await processItem(item, snapshot.length);
+          if (success) ok++;
         }
-
-        setQueue((q) =>
-          q.map((it) =>
-            it.id === item.id ? { ...it, status: "saving", imageUrl: up.url, progress: 70 } : it
-          )
-        );
-        const fd = buildFormData(up.url, item.file.name, snapshot.length);
-        const result = await createPhotoAction(fd);
-        if (result && "error" in result && result.error) {
-          setQueue((q) =>
-            q.map((it) =>
-              it.id === item.id ? { ...it, status: "error", error: result.error, progress: 0 } : it
-            )
-          );
-          continue;
-        }
-        setQueue((q) =>
-          q.map((it) => (it.id === item.id ? { ...it, status: "done", progress: 100 } : it))
-        );
-        ok++;
       }
+      await Promise.all(Array.from({ length: concurrency }, () => worker()));
+
       setProcessing(false);
       setSuccessCount((n) => n + ok);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -224,7 +240,7 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
         </label>
       </div>
       <p className="text-xs text-[var(--color-notion-mute)] mb-4">
-        파일을 끌어다 놓거나 영역을 클릭해서 선택. 한 장 최대 50MB, 여러 장 가능.
+        파일을 끌어다 놓거나 영역을 클릭해서 선택. 한 장 최대 50MB. 여러 장 한 번에 가능 — 동시 4장씩 병렬 업로드.
       </p>
 
       {successCount > 0 && (
