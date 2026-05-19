@@ -1,12 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createBanner, updateBanner, deleteBanner } from "@/lib/banners-db";
 
 function refresh() {
   revalidatePath("/admin/banners");
   revalidatePath("/");
+  revalidateTag("banners", "max");
 }
 
 export async function createBannerAction(formData: FormData) {

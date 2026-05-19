@@ -1,5 +1,8 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
+
+const CACHE_TTL = 60;
 
 export type MemberBanner = {
   id: number;
@@ -41,21 +44,29 @@ export async function countBanners(): Promise<{ total: number; active: number }>
   };
 }
 
-export async function listBanners(): Promise<MemberBanner[]> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT * FROM member_banners ORDER BY position ASC, id ASC`
-  );
-  return r.rows.map((row) => rowToBanner(row as unknown as Record<string, unknown>));
-}
+export const listBanners = unstable_cache(
+  async (): Promise<MemberBanner[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT * FROM member_banners ORDER BY position ASC, id ASC`
+    );
+    return r.rows.map((row) => rowToBanner(row as unknown as Record<string, unknown>));
+  },
+  ["banners:list"],
+  { tags: ["banners"], revalidate: CACHE_TTL }
+);
 
-export async function listActiveBanners(): Promise<MemberBanner[]> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT * FROM member_banners WHERE active = 1 ORDER BY position ASC, id ASC`
-  );
-  return r.rows.map((row) => rowToBanner(row as unknown as Record<string, unknown>));
-}
+export const listActiveBanners = unstable_cache(
+  async (): Promise<MemberBanner[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT * FROM member_banners WHERE active = 1 ORDER BY position ASC, id ASC`
+    );
+    return r.rows.map((row) => rowToBanner(row as unknown as Record<string, unknown>));
+  },
+  ["banners:listActive"],
+  { tags: ["banners"], revalidate: CACHE_TTL }
+);
 
 export async function getBanner(id: number): Promise<MemberBanner | null> {
   const db = await getDb();

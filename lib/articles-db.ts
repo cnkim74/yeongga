@@ -1,6 +1,10 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
 import { looksLikeHTML, renderMarkdown } from "./markdown";
+
+// 캐시 TTL — 60초. 글 추가·수정 시 admin action 의 revalidateTag("articles") 로 즉시 무효화.
+const CACHE_TTL = 60;
 
 export type Visibility = "public" | "members-only";
 
@@ -49,30 +53,40 @@ async function bodyToHTML(body: string): Promise<string> {
   return looksLikeHTML(body) ? body : await renderMarkdown(body);
 }
 
-export async function listAllArticles(): Promise<ArticleMeta[]> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT ${META_COLS} FROM articles ORDER BY date DESC, id DESC`
-  );
-  return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
-}
+export const listAllArticles = unstable_cache(
+  async (): Promise<ArticleMeta[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT ${META_COLS} FROM articles ORDER BY date DESC, id DESC`
+    );
+    return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
+  },
+  ["articles:listAll"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
 
-export async function listChapterArticles(
-  chapter: string
-): Promise<ArticleMeta[]> {
-  const db = await getDb();
-  const r = await db.execute({
-    sql: `SELECT ${META_COLS} FROM articles WHERE chapter = ? ORDER BY date DESC, id DESC`,
-    args: [chapter],
-  });
-  return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
-}
+export const listChapterArticles = unstable_cache(
+  async (chapter: string): Promise<ArticleMeta[]> => {
+    const db = await getDb();
+    const r = await db.execute({
+      sql: `SELECT ${META_COLS} FROM articles WHERE chapter = ? ORDER BY date DESC, id DESC`,
+      args: [chapter],
+    });
+    return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
+  },
+  ["articles:listChapter"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
 
-export async function countAllArticles(): Promise<number> {
-  const db = await getDb();
-  const r = await db.execute(`SELECT COUNT(*) as n FROM articles`);
-  return Number(r.rows[0].n);
-}
+export const countAllArticles = unstable_cache(
+  async (): Promise<number> => {
+    const db = await getDb();
+    const r = await db.execute(`SELECT COUNT(*) as n FROM articles`);
+    return Number(r.rows[0].n);
+  },
+  ["articles:countAll"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
 
 /**
  * 특정 글의 본문(body)만 원본 .md 파일에서 다시 가져와 DB 업데이트.
@@ -120,35 +134,40 @@ export async function restoreBodyFromFile(
  * 챕터별 최신 글 1편씩 — 홈 페이지용
  * 8개 챕터에 대해 별도 쿼리 8번 도는 대신 한 번에 가져옴 (윈도우 함수 활용)
  */
-export async function getLatestPerChapter(): Promise<ArticleMeta[]> {
-  const db = await getDb();
-  const r = await db.execute(`
-    SELECT ${META_COLS} FROM (
-      SELECT ${META_COLS},
-        ROW_NUMBER() OVER (PARTITION BY chapter ORDER BY date DESC, id DESC) AS rn
-      FROM articles
-    )
-    WHERE rn = 1
-  `);
-  return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
-}
+export const getLatestPerChapter = unstable_cache(
+  async (): Promise<ArticleMeta[]> => {
+    const db = await getDb();
+    const r = await db.execute(`
+      SELECT ${META_COLS} FROM (
+        SELECT ${META_COLS},
+          ROW_NUMBER() OVER (PARTITION BY chapter ORDER BY date DESC, id DESC) AS rn
+        FROM articles
+      )
+      WHERE rn = 1
+    `);
+    return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
+  },
+  ["articles:latestPerChapter"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
 
-export async function getArticleBySlug(
-  chapter: string,
-  slug: string
-): Promise<Article | null> {
-  const db = await getDb();
-  const r = await db.execute({
-    sql: `SELECT ${META_COLS}, body FROM articles WHERE chapter = ? AND slug = ?`,
-    args: [chapter, slug],
-  });
-  const row = r.rows[0];
-  if (!row) return null;
-  const rec = row as unknown as Record<string, unknown>;
-  const meta = rowToMeta(rec);
-  const body = String(rec.body);
-  return { ...meta, body, html: await bodyToHTML(body) };
-}
+export const getArticleBySlug = unstable_cache(
+  async (chapter: string, slug: string): Promise<Article | null> => {
+    const db = await getDb();
+    const r = await db.execute({
+      sql: `SELECT ${META_COLS}, body FROM articles WHERE chapter = ? AND slug = ?`,
+      args: [chapter, slug],
+    });
+    const row = r.rows[0];
+    if (!row) return null;
+    const rec = row as unknown as Record<string, unknown>;
+    const meta = rowToMeta(rec);
+    const body = String(rec.body);
+    return { ...meta, body, html: await bodyToHTML(body) };
+  },
+  ["articles:bySlug"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
 
 export async function getArticleById(id: number): Promise<Article | null> {
   const db = await getDb();

@@ -1,5 +1,5 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { upsertPageBackground } from "@/lib/backgrounds-db";
 
@@ -35,6 +35,7 @@ export async function saveBgAction(
   revalidatePath("/about");
   revalidatePath("/gallery");
   revalidatePath("/ebooks");
+  revalidateTag("backgrounds", "max");
 
   return { ok: true };
 }
@@ -44,6 +45,7 @@ export async function removeImageAction(formData: FormData) {
   const page = String(formData.get("page") ?? "").trim();
   if (!page) return;
   await upsertPageBackground(page, { image_path: null, opacity: 0.2, position: "center", active: false });
+  revalidateTag("backgrounds", "max");
   revalidatePath("/admin/backgrounds");
   revalidatePath("/");
   revalidatePath("/archive");

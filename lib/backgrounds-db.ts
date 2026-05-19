@@ -1,5 +1,9 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
+
+// 배경 이미지는 거의 안 바뀌니 캐시 길게 — 5분
+const CACHE_TTL = 300;
 
 export type PageBackground = {
   id: number;
@@ -24,24 +28,32 @@ function rowToBg(row: Record<string, unknown>): PageBackground {
   };
 }
 
-export async function listPageBackgrounds(): Promise<PageBackground[]> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT id, page, image_path, opacity, position, active FROM page_backgrounds ORDER BY id`
-  );
-  return r.rows.map((row) => rowToBg(row as unknown as Record<string, unknown>));
-}
+export const listPageBackgrounds = unstable_cache(
+  async (): Promise<PageBackground[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT id, page, image_path, opacity, position, active FROM page_backgrounds ORDER BY id`
+    );
+    return r.rows.map((row) => rowToBg(row as unknown as Record<string, unknown>));
+  },
+  ["backgrounds:list"],
+  { tags: ["backgrounds"], revalidate: CACHE_TTL }
+);
 
-export async function getPageBackground(page: string): Promise<PageBackground | null> {
-  const db = await getDb();
-  const r = await db.execute({
-    sql: `SELECT id, page, image_path, opacity, position, active FROM page_backgrounds WHERE page = ?`,
-    args: [page],
-  });
-  const row = r.rows[0];
-  if (!row) return null;
-  return rowToBg(row as unknown as Record<string, unknown>);
-}
+export const getPageBackground = unstable_cache(
+  async (page: string): Promise<PageBackground | null> => {
+    const db = await getDb();
+    const r = await db.execute({
+      sql: `SELECT id, page, image_path, opacity, position, active FROM page_backgrounds WHERE page = ?`,
+      args: [page],
+    });
+    const row = r.rows[0];
+    if (!row) return null;
+    return rowToBg(row as unknown as Record<string, unknown>);
+  },
+  ["backgrounds:byPage"],
+  { tags: ["backgrounds"], revalidate: CACHE_TTL }
+);
 
 export async function upsertPageBackground(
   page: string,

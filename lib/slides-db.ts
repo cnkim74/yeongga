@@ -1,5 +1,8 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
+
+const CACHE_TTL = 60;
 
 export type Slide = {
   id: number;
@@ -29,21 +32,29 @@ function rowToSlide(row: Record<string, unknown>): Slide {
   };
 }
 
-export async function listSlides(): Promise<Slide[]> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT * FROM slides ORDER BY position ASC, id ASC`
-  );
-  return r.rows.map((row) => rowToSlide(row as unknown as Record<string, unknown>));
-}
+export const listSlides = unstable_cache(
+  async (): Promise<Slide[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT * FROM slides ORDER BY position ASC, id ASC`
+    );
+    return r.rows.map((row) => rowToSlide(row as unknown as Record<string, unknown>));
+  },
+  ["slides:list"],
+  { tags: ["slides"], revalidate: CACHE_TTL }
+);
 
-export async function listActiveSlides(): Promise<Slide[]> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT * FROM slides WHERE active = 1 ORDER BY position ASC, id ASC`
-  );
-  return r.rows.map((row) => rowToSlide(row as unknown as Record<string, unknown>));
-}
+export const listActiveSlides = unstable_cache(
+  async (): Promise<Slide[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT * FROM slides WHERE active = 1 ORDER BY position ASC, id ASC`
+    );
+    return r.rows.map((row) => rowToSlide(row as unknown as Record<string, unknown>));
+  },
+  ["slides:listActive"],
+  { tags: ["slides"], revalidate: CACHE_TTL }
+);
 
 export async function getSlide(id: number): Promise<Slide | null> {
   const db = await getDb();

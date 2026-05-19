@@ -1,5 +1,8 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
+
+const CACHE_TTL = 60;
 
 export type Ebook = {
   id: number;
@@ -25,39 +28,51 @@ function rowToEbook(row: Record<string, unknown>): Ebook {
   };
 }
 
-export async function listEbooks(): Promise<Ebook[]> {
-  const db = await getDb();
-  const res = await db.execute(
-    "SELECT * FROM ebooks ORDER BY position ASC, id ASC"
-  );
-  return res.rows.map((r) => rowToEbook(r as Record<string, unknown>));
-}
+export const listEbooks = unstable_cache(
+  async (): Promise<Ebook[]> => {
+    const db = await getDb();
+    const res = await db.execute(
+      "SELECT * FROM ebooks ORDER BY position ASC, id ASC"
+    );
+    return res.rows.map((r) => rowToEbook(r as Record<string, unknown>));
+  },
+  ["ebooks:list"],
+  { tags: ["ebooks"], revalidate: CACHE_TTL }
+);
 
 /** 어드민 카드용 — 카운트만 (총 + 회원전용 개수) */
-export async function countEbooks(): Promise<{ total: number; membersOnly: number }> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT
-       COUNT(*) AS total,
-       SUM(CASE WHEN visibility = 'members-only' THEN 1 ELSE 0 END) AS members_only
-     FROM ebooks`
-  );
-  const row = r.rows[0];
-  return {
-    total: Number(row.total),
-    membersOnly: Number(row.members_only ?? 0),
-  };
-}
+export const countEbooks = unstable_cache(
+  async (): Promise<{ total: number; membersOnly: number }> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT
+         COUNT(*) AS total,
+         SUM(CASE WHEN visibility = 'members-only' THEN 1 ELSE 0 END) AS members_only
+       FROM ebooks`
+    );
+    const row = r.rows[0];
+    return {
+      total: Number(row.total),
+      membersOnly: Number(row.members_only ?? 0),
+    };
+  },
+  ["ebooks:count"],
+  { tags: ["ebooks"], revalidate: CACHE_TTL }
+);
 
-export async function getEbook(id: number): Promise<Ebook | null> {
-  const db = await getDb();
-  const res = await db.execute({
-    sql: "SELECT * FROM ebooks WHERE id = ? LIMIT 1",
-    args: [id],
-  });
-  if (res.rows.length === 0) return null;
-  return rowToEbook(res.rows[0] as Record<string, unknown>);
-}
+export const getEbook = unstable_cache(
+  async (id: number): Promise<Ebook | null> => {
+    const db = await getDb();
+    const res = await db.execute({
+      sql: "SELECT * FROM ebooks WHERE id = ? LIMIT 1",
+      args: [id],
+    });
+    if (res.rows.length === 0) return null;
+    return rowToEbook(res.rows[0] as Record<string, unknown>);
+  },
+  ["ebooks:byId"],
+  { tags: ["ebooks"], revalidate: CACHE_TTL }
+);
 
 export async function createEbook(data: {
   title: string;

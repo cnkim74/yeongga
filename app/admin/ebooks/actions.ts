@@ -1,12 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createEbook, updateEbook, deleteEbook } from "@/lib/ebooks-db";
 
 function refreshPaths() {
   revalidatePath("/admin/ebooks");
   revalidatePath("/ebooks");
+  revalidateTag("ebooks", "max");
 }
 
 export async function createEbookAction(formData: FormData) {
