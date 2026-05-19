@@ -824,6 +824,16 @@ async function init(client: Client) {
     deletedRows.rows.map((r) => `${r.chapter}::${r.slug}`)
   );
 
+  // 이미 DB 에 있는 글은 시드에서 건너뜀 — INSERT OR IGNORE 만으로는
+  // 라운드트립이 누적되어 Vercel 서버리스 타임아웃(504)이 났던 이슈.
+  // (chapter, slug) 쌍을 한 번 끌어와 메모리 셋으로 조회.
+  const existingRows = await client.execute(
+    "SELECT chapter, slug FROM articles"
+  );
+  const existingSet = new Set(
+    existingRows.rows.map((r) => `${r.chapter}::${r.slug}`)
+  );
+
   const articlesDir = path.join(process.cwd(), "content", "articles");
   if (fs.existsSync(articlesDir)) {
     for (const chapterSlug of fs.readdirSync(articlesDir)) {
@@ -832,8 +842,11 @@ async function init(client: Client) {
       for (const file of fs.readdirSync(chapterDir)) {
         if (!file.endsWith(".md")) continue;
         const slug = file.replace(/\.md$/, "");
+        const key = `${chapterSlug}::${slug}`;
         // 삭제 차단 목록에 있으면 시딩 건너뜀
-        if (deletedSet.has(`${chapterSlug}::${slug}`)) continue;
+        if (deletedSet.has(key)) continue;
+        // 이미 DB 에 있으면 시딩 건너뜀 (본문 갱신은 별도 마이그레이션)
+        if (existingSet.has(key)) continue;
         const raw = fs.readFileSync(path.join(chapterDir, file), "utf8");
         const { data, content } = matter(raw);
         const v = String(data.visibility ?? "public").toLowerCase();
