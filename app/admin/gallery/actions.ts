@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import {
   createCategory,
@@ -14,6 +14,7 @@ import {
 function refreshPaths() {
   revalidatePath("/gallery");
   revalidatePath("/admin/gallery");
+  revalidateTag("gallery", "max"); // unstable_cache 무효화
 }
 
 // ─── 카테고리 액션 ────────────────────────────────────────────

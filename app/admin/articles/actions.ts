@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import {
@@ -24,6 +24,7 @@ function refresh(chapter: string, slug?: string) {
   revalidatePath("/archive");
   revalidatePath(`/archive/${chapter}`);
   if (slug) revalidatePath(`/archive/${chapter}/${slug}`);
+  revalidateTag("articles", "max"); // unstable_cache 무효화
 }
 
 function readInput(formData: FormData): ArticleInput | { _error: string } {

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import {
   createSlide,
@@ -17,6 +17,7 @@ export type SlideFormState = { error?: string; ok?: boolean };
 function refresh() {
   revalidatePath("/admin/slides");
   revalidatePath("/");
+  revalidateTag("slides", "max");
 }
 
 export async function saveSlideAction(

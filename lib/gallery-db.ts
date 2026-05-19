@@ -1,5 +1,9 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
+
+// 캐시 TTL — 60s. 카테고리/사진 변경 시 admin action 의 revalidateTag("gallery") 로 즉시 무효화.
+const CACHE_TTL = 60;
 
 export type PhotoCategory = {
   id: number;
@@ -53,18 +57,22 @@ function rowToPhoto(row: Record<string, unknown>): Photo {
 
 // ─── 카테고리 CRUD ──────────────────────────────────────────
 
-export async function listCategories(): Promise<PhotoCategory[]> {
-  const db = await getDb();
-  const res = await db.execute(`
-    SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position,
-           COUNT(p.id) AS photo_count
-    FROM photo_categories c
-    LEFT JOIN photos p ON p.category_id = c.id
-    GROUP BY c.id
-    ORDER BY c.position ASC, c.id ASC
-  `);
-  return res.rows.map((r) => rowToCategory(r as Record<string, unknown>));
-}
+export const listCategories = unstable_cache(
+  async (): Promise<PhotoCategory[]> => {
+    const db = await getDb();
+    const res = await db.execute(`
+      SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position,
+             COUNT(p.id) AS photo_count
+      FROM photo_categories c
+      LEFT JOIN photos p ON p.category_id = c.id
+      GROUP BY c.id
+      ORDER BY c.position ASC, c.id ASC
+    `);
+    return res.rows.map((r) => rowToCategory(r as Record<string, unknown>));
+  },
+  ["gallery:categories"],
+  { tags: ["gallery"], revalidate: CACHE_TTL }
+);
 
 export async function getCategoryBySlug(slug: string): Promise<PhotoCategory | null> {
   const db = await getDb();
@@ -146,36 +154,40 @@ export async function countPhotos(): Promise<number> {
   return Number(r.rows[0].n);
 }
 
-export async function listPhotos(opts?: {
-  categoryId?: number;
-  visibility?: string;
-}): Promise<Photo[]> {
-  const db = await getDb();
-  const conditions: string[] = [];
-  const args: (string | number | null)[] = [];
+export const listPhotos = unstable_cache(
+  async (opts?: {
+    categoryId?: number;
+    visibility?: string;
+  }): Promise<Photo[]> => {
+    const db = await getDb();
+    const conditions: string[] = [];
+    const args: (string | number | null)[] = [];
 
-  if (opts?.categoryId !== undefined) {
-    conditions.push("p.category_id = ?");
-    args.push(opts.categoryId);
-  }
-  if (opts?.visibility) {
-    conditions.push("p.visibility = ?");
-    args.push(opts.visibility);
-  }
+    if (opts?.categoryId !== undefined) {
+      conditions.push("p.category_id = ?");
+      args.push(opts.categoryId);
+    }
+    if (opts?.visibility) {
+      conditions.push("p.visibility = ?");
+      args.push(opts.visibility);
+    }
 
-  const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-  const res = await db.execute({
-    sql: `SELECT p.id, p.category_id, p.title, p.description, p.image_url,
-                 p.taken_at, p.position, p.visibility, p.created_at,
-                 c.name AS category_name
-          FROM photos p
-          LEFT JOIN photo_categories c ON c.id = p.category_id
-          ${where}
-          ORDER BY p.position ASC, p.id DESC`,
-    args,
-  });
-  return res.rows.map((r) => rowToPhoto(r as Record<string, unknown>));
-}
+    const where = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    const res = await db.execute({
+      sql: `SELECT p.id, p.category_id, p.title, p.description, p.image_url,
+                   p.taken_at, p.position, p.visibility, p.created_at,
+                   c.name AS category_name
+            FROM photos p
+            LEFT JOIN photo_categories c ON c.id = p.category_id
+            ${where}
+            ORDER BY p.position ASC, p.id DESC`,
+      args,
+    });
+    return res.rows.map((r) => rowToPhoto(r as Record<string, unknown>));
+  },
+  ["gallery:photos"],
+  { tags: ["gallery"], revalidate: CACHE_TTL }
+);
 
 export async function getPhoto(id: number): Promise<Photo | null> {
   const db = await getDb();
@@ -256,17 +268,21 @@ export async function deletePhoto(id: number): Promise<void> {
   await db.execute({ sql: "DELETE FROM photos WHERE id = ?", args: [id] });
 }
 
-export async function listPhotosByCategory(categorySlug: string): Promise<Photo[]> {
-  const db = await getDb();
-  const res = await db.execute({
-    sql: `SELECT p.id, p.category_id, p.title, p.description, p.image_url,
-                 p.taken_at, p.position, p.visibility, p.created_at,
-                 c.name AS category_name
-          FROM photos p
-          JOIN photo_categories c ON c.id = p.category_id
-          WHERE c.slug = ?
-          ORDER BY p.position ASC, p.id DESC`,
-    args: [categorySlug],
-  });
-  return res.rows.map((r) => rowToPhoto(r as Record<string, unknown>));
-}
+export const listPhotosByCategory = unstable_cache(
+  async (categorySlug: string): Promise<Photo[]> => {
+    const db = await getDb();
+    const res = await db.execute({
+      sql: `SELECT p.id, p.category_id, p.title, p.description, p.image_url,
+                   p.taken_at, p.position, p.visibility, p.created_at,
+                   c.name AS category_name
+            FROM photos p
+            JOIN photo_categories c ON c.id = p.category_id
+            WHERE c.slug = ?
+            ORDER BY p.position ASC, p.id DESC`,
+      args: [categorySlug],
+    });
+    return res.rows.map((r) => rowToPhoto(r as Record<string, unknown>));
+  },
+  ["gallery:photosByCategory"],
+  { tags: ["gallery"], revalidate: CACHE_TTL }
+);
