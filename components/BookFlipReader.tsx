@@ -46,7 +46,8 @@ export interface BookFlipReaderHandle {
 
 /**
  * 종이 넘기는 합성 사운드 — Web Audio API 로 즉석 생성.
- * 짧은 노이즈 버스트 + 저주파 thud 가 섞인 결.
+ * 고주파 노이즈를 5.5kHz→2.5kHz 로 스위프하며 종이가 사르륵 풀어지는 결.
+ * (저주파 thud 는 제거 — 둔탁한 느낌의 원인)
  */
 function playPageFlipSound() {
   try {
@@ -54,40 +55,33 @@ function playPageFlipSound() {
     const AC = (window.AudioContext ?? (window as Win).webkitAudioContext);
     if (!AC) return;
     const ctx = new AC();
-    const dur = 0.18;
-    // 노이즈 (종이 결 마찰)
+    const dur = 0.22;
+
+    // 화이트 노이즈 — 종이 마찰 원음
     const noise = ctx.createBufferSource();
     const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
     const data = buf.getChannelData(0);
     for (let i = 0; i < data.length; i++) {
-      const t = i / data.length;
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - t, 1.6) * 0.45;
+      data[i] = Math.random() * 2 - 1;
     }
     noise.buffer = buf;
+
+    // 밴드패스 스위프 — 5500Hz → 2500Hz. 종이 휘다가 펴지는 결.
     const bp = ctx.createBiquadFilter();
     bp.type = "bandpass";
-    bp.frequency.value = 2200;
+    bp.frequency.setValueAtTime(5500, ctx.currentTime);
+    bp.frequency.exponentialRampToValueAtTime(2500, ctx.currentTime + dur * 0.85);
     bp.Q.value = 0.7;
-    const ng = ctx.createGain();
-    ng.gain.setValueAtTime(0.8, ctx.currentTime);
-    noise.connect(bp).connect(ng).connect(ctx.destination);
 
-    // 저주파 thud
-    const osc = ctx.createOscillator();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(120, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(60, ctx.currentTime + 0.12);
-    const og = ctx.createGain();
-    og.gain.setValueAtTime(0.001, ctx.currentTime);
-    og.gain.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.02);
-    og.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    osc.connect(og).connect(ctx.destination);
+    // 부드러운 envelope — 빠른 attack(25ms) + 자연스러운 decay
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 0.025);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
 
+    noise.connect(bp).connect(g).connect(ctx.destination);
     noise.start();
-    osc.start();
     noise.stop(ctx.currentTime + dur);
-    osc.stop(ctx.currentTime + dur);
-    // 정리
     setTimeout(() => ctx.close().catch(() => {}), 400);
   } catch {
     // 사운드 실패는 무시

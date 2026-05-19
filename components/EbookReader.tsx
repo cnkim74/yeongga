@@ -252,7 +252,7 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
             className="text-xs px-2 py-1 rounded border border-white/20 hover:bg-white/10"
             title="양면 정적 모드"
           >
-            ▦ 양면
+            ▦ 정적 양면
           </button>
           <button
             type="button"
@@ -348,7 +348,7 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
             onClick={() => setViewMode("flipbook")}
             className="text-xs px-3 py-1 rounded border border-white/20 hover:bg-white/10"
           >
-            ▦ 양면
+            ▦ 정적 양면
           </button>
           <a
             href={pdfUrl}
