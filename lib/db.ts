@@ -811,7 +811,11 @@ async function init(client: Client) {
   //      취임), 중국 사천성(중경·양자강) 탐방, 정부락 교수 〈북한정세
   //      와 남북관계 전망〉, 백두대간 협곡열차·영월 청령포, 2016
   //      신년하례 + 영가문화상 6회(안동 내방가사 보존회).
-  const seedKey = "content-seed-v14";
+  // v15: 6대 김봉구 회장기 2차 배치 6편 추가 — 괴산 산막이옛길 + 경북
+  //      도청 개청, 회장 영어 특강, 라오스 탐방, 2017 신년하례(회장
+  //      유임), 김병렬 교수 독도 특강, 김봉구 회장 사임 + 김계동 7대
+  //      회장 선임.
+  const seedKey = "content-seed-v15";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
