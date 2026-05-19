@@ -249,30 +249,45 @@ function PhotoCard({
     <div
       className={`relative border rounded-lg overflow-hidden transition ${
         selected
-          ? "border-[var(--color-notion-accent)] ring-2 ring-blue-200"
+          ? "border-[var(--color-notion-accent)] ring-2 ring-blue-300 bg-blue-50/40"
           : "border-[var(--color-notion-rule)]"
       }`}
     >
-      {/* 체크박스 */}
-      <label className="absolute top-1.5 left-1.5 z-10 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={(e) => onToggleSelect(e.target.checked)}
-          className="w-5 h-5 rounded cursor-pointer accent-[var(--color-notion-accent)]"
+      {/* 이미지 — 클릭하면 선택 토글 (가장 직관적) */}
+      <button
+        type="button"
+        onClick={() => onToggleSelect(!selected)}
+        className="relative block w-full text-left cursor-pointer"
+        aria-pressed={selected}
+        aria-label={selected ? "선택 해제" : "선택"}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={photo.image_url}
+          alt={photo.title ?? ""}
+          className="w-full aspect-square object-cover bg-gray-100 block"
+          loading="lazy"
+          draggable={false}
         />
-      </label>
 
-      {/* 이미지 */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={photo.image_url}
-        alt={photo.title ?? ""}
-        className="w-full aspect-square object-cover bg-gray-100"
-        loading="lazy"
-      />
+        {/* 큰 체크박스 — 좌상단, 항상 보이게 */}
+        <span
+          className={`absolute top-2 left-2 w-7 h-7 rounded-md flex items-center justify-center text-white text-base font-bold shadow-md transition ${
+            selected
+              ? "bg-[var(--color-notion-accent)] scale-100"
+              : "bg-white/80 text-transparent border-2 border-white scale-90 hover:scale-100"
+          }`}
+        >
+          ✓
+        </span>
 
-      {/* 카드 메타 영역 */}
+        {/* 선택된 상태 오버레이 */}
+        {selected && (
+          <span className="absolute inset-0 bg-blue-500/10 pointer-events-none" />
+        )}
+      </button>
+
+      {/* 카드 메타 영역 — 클릭이 선택에 영향 주지 않도록 button 밖 */}
       <div className="p-2 space-y-1.5">
         {photo.title && (
           <p className="text-xs font-medium truncate" title={photo.title}>
