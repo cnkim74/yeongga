@@ -139,7 +139,7 @@ const FlipPage = forwardRef<HTMLDivElement, {
                   opacity: 0.85,
                 }}
               >
-                40 年 史
+                50 年 史
               </div>
               <div
                 style={{
@@ -150,7 +150,7 @@ const FlipPage = forwardRef<HTMLDivElement, {
                   opacity: 0.5,
                 }}
               >
-                1977 · 2017
+                1977 · 2026
               </div>
             </>
           ) : (
