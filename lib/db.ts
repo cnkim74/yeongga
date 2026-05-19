@@ -823,7 +823,11 @@ async function init(client: Client) {
   //      〈솔바위〉 사진전시회, 2018.5.17 강화도 탐방, 2018.8.30 임시
   //      총회(김봉구 전 회장 감사패 + 신입회원 13명 + 김동기 학술원
   //      회장 〈4차 산업혁명시대〉 특강).
-  const seedKey = "content-seed-v17";
+  // v18: 〈향〉 챕터 보강 5편 추가 (10번 분책 〈안동은?〉 미발췌 부분
+  //      에서) — 도산서원, 병산서원, 임청각·학봉종택, 안동의 전탑·
+  //      석불(법흥사지 칠층전탑·동부동 오층전탑·이천동 마애여래입상),
+  //      한국국학진흥원.
+  const seedKey = "content-seed-v18";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
