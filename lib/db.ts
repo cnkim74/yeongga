@@ -804,7 +804,10 @@ async function init(client: Client) {
   // v12: 5대 류종묵 회장기 2차 배치 6편 추가 — 홍영재·김경동 특강,
   //      2013·2014 신년하례(+영가문화상 5회 김희곤), 권영진 대구시장
   //      축하, 연천 탐방.
-  const seedKey = "content-seed-v12";
+  // v13: 5대 류종묵 회장기 3차 배치 5편 추가 — 박석무·박세일·김용직
+  //      특강, 김광림·류성걸 19대 의원 당선 축하, 2012 서산·아산만
+  //      탐방(흥국 공장 견학 포함).
+  const seedKey = "content-seed-v13";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
