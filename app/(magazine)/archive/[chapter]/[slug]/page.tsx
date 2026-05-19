@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { getChapter } from "@/lib/chapters";
@@ -71,12 +72,14 @@ export default async function ArticlePage({
       <header className={`relative overflow-hidden pt-40 pb-16 sm:pb-24 ${article.cover ? "" : "bg-[var(--color-bg-soft)]"}`}>
         {article.cover && (
           <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={article.cover}
               alt=""
               aria-hidden="true"
-              className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover select-none pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/75" />
           </>

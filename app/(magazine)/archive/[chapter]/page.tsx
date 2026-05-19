@@ -177,12 +177,16 @@ export default async function ChapterPage({
                   {a.cover && (
                     <div className="sm:col-span-3">
                       <Link href={`/archive/${chapter}/${a.slug}`} tabIndex={-1} aria-hidden="true">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={a.cover}
-                          alt=""
-                          className="w-full aspect-[4/3] object-cover rounded-xl"
-                        />
+                        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
+                          <Image
+                            src={a.cover}
+                            alt=""
+                            fill
+                            sizes="(max-width: 640px) 100vw, 33vw"
+                            className="object-cover"
+                            loading="lazy"
+                          />
+                        </div>
                       </Link>
                     </div>
                   )}

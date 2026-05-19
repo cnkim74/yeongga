@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth";
 import { listEbooks } from "@/lib/ebooks-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
@@ -100,11 +101,13 @@ function EbookCard({
       {/* 표지 */}
       <div className="relative aspect-[3/4] bg-[var(--color-bg-soft)] overflow-hidden">
         {ebook.cover_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={ebook.cover_url}
             alt={ebook.title}
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-3 p-6 text-center">
