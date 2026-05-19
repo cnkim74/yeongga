@@ -819,7 +819,11 @@ async function init(client: Client) {
   //      7.13 이사회, 2017.9.12 정선 5일장, 2017.10.26 권원오 교수
   //      특강 〈어떻게 살 것인가?〉, 2017.11.14 베트남 다낭, 2018.1.5
   //      신년하례(영가회 40년사 제작 천명).
-  const seedKey = "content-seed-v16";
+  // v17: 7대 김계동 회장기 2차 배치 3편 추가 — 2018.4.24 김휘동 회원
+  //      〈솔바위〉 사진전시회, 2018.5.17 강화도 탐방, 2018.8.30 임시
+  //      총회(김봉구 전 회장 감사패 + 신입회원 13명 + 김동기 학술원
+  //      회장 〈4차 산업혁명시대〉 특강).
+  const seedKey = "content-seed-v17";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
