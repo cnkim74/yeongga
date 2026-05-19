@@ -91,6 +91,9 @@ function playPageFlipSound() {
 /**
  * 한 페이지 컴포넌트. ref 로 캔버스 접근 가능.
  * react-pageflip 은 직속 자식들에게 ref 를 박아 두므로 forwardRef 필수.
+ *
+ * 표지는 data-density="hard" 속성으로 react-pageflip 에 표지임을 알림.
+ * 그래야 단일 페이지로 떼어 두꺼운 표지처럼 처리됨.
  */
 const FlipPage = forwardRef<HTMLDivElement, {
   pageNum: number;
@@ -100,19 +103,19 @@ const FlipPage = forwardRef<HTMLDivElement, {
   isCover?: "front" | "back" | null;
 }>(function FlipPage({ pageNum, width, height, renderPage, isCover }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const renderedRef = useRef(false);
 
-  // 페이지가 DOM 에 들어오면 한 번 렌더
+  // 캔버스가 DOM 에 있으면 그릴 수 있을 때마다 그림.
+  // 이전엔 renderedRef 가드로 한 번만 그려 빈 페이지가 생기던 문제 해소.
   useEffect(() => {
-    if (!canvasRef.current || renderedRef.current) return;
-    renderedRef.current = true;
+    if (!canvasRef.current || isCover) return;
     renderPage(pageNum, canvasRef.current);
-  }, [pageNum, renderPage]);
+  }, [pageNum, renderPage, isCover]);
 
   if (isCover) {
     return (
       <div
         ref={ref}
+        data-density="hard"
         style={{
           width,
           height,
@@ -122,19 +125,33 @@ const FlipPage = forwardRef<HTMLDivElement, {
               : "linear-gradient(135deg, #2a0d04 0%, #3a1408 60%, #5a2418 100%)",
           boxShadow: "inset 0 0 60px rgba(0,0,0,0.5)",
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           color: "#e8c98a",
           fontFamily: "var(--font-serif)",
-          fontSize: 20,
-          letterSpacing: "0.15em",
           textAlign: "center",
           padding: 40,
+          userSelect: "none",
         }}
       >
-        <div>
-          {isCover === "front" ? "永 嘉 會\n40 年 史" : "永 嘉 會"}
-        </div>
+        {isCover === "front" ? (
+          <>
+            <div style={{ fontSize: 38, letterSpacing: "0.25em", marginBottom: 28, fontWeight: 500 }}>
+              永 嘉 會
+            </div>
+            <div style={{ fontSize: 26, letterSpacing: "0.18em", opacity: 0.82, marginBottom: 60 }}>
+              40 年 史
+            </div>
+            <div style={{ fontSize: 12, letterSpacing: "0.3em", opacity: 0.45 }}>
+              1977 · 2017
+            </div>
+          </>
+        ) : (
+          <div style={{ fontSize: 24, letterSpacing: "0.22em", opacity: 0.7 }}>
+            永 嘉 會
+          </div>
+        )}
       </div>
     );
   }
