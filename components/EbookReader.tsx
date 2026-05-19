@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import * as pdfjs from "pdfjs-dist";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
+import { BookFlipReader, type BookFlipReaderHandle } from "./BookFlipReader";
 
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
@@ -17,10 +18,11 @@ interface EbookReaderProps {
   backHref?: string;
 }
 
-type ViewMode = "flipbook" | "iframe";
+type ViewMode = "flipbook" | "animatedBook" | "iframe";
 
 export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>("flipbook");
+  // 기본은 진짜 책 느낌의 animatedBook. flipbook(정적 양면) 과 iframe 폴백 유지.
+  const [viewMode, setViewMode] = useState<ViewMode>("animatedBook");
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null);
   const [numPages, setNumPages] = useState(0);
   const [spread, setSpread] = useState(0);
@@ -28,6 +30,9 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [pageWidth, setPageWidth] = useState(400);
+  const [soundOn, setSoundOn] = useState(true);
+  const [animatedPage, setAnimatedPage] = useState<{ page: number; total: number }>({ page: 0, total: 0 });
+  const bookFlipRef = useRef<BookFlipReaderHandle>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const leftCanvasRef  = useRef<HTMLCanvasElement>(null);
@@ -213,6 +218,112 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
 
   const pageHeight = Math.round(pageWidth * 1.414);
 
+  /* ── 진짜 책 모드 — react-pageflip 기반 ── */
+  if (viewMode === "animatedBook") {
+    const pageW = isMobile ? Math.min(pageWidth, 480) : Math.min(pageWidth, 520);
+    const pageH = Math.round(pageW * 1.414);
+    return (
+      <div
+        className="flex flex-col min-h-screen select-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at 30% 20%, #5c3010 0%, #3a1a06 40%, #2c1205 80%, #1e0d04 100%)",
+        }}
+      >
+        <div className="sticky top-0 z-20 flex items-center gap-3 px-4 py-2.5 bg-black/60 backdrop-blur-sm text-white/80 text-sm">
+          {backHref && (
+            <Link href={backHref} className="shrink-0 text-white/60 hover:text-white text-xs px-2 py-1 rounded hover:bg-white/10">
+              ← 서재
+            </Link>
+          )}
+          <span className="truncate max-w-[160px] sm:max-w-sm font-medium opacity-90">{title}</span>
+          <div className="flex-1" />
+          <button
+            type="button"
+            onClick={() => setSoundOn((v) => !v)}
+            className="text-xs px-2 py-1 rounded border border-white/20 hover:bg-white/10"
+            title={soundOn ? "사운드 끄기" : "사운드 켜기"}
+          >
+            {soundOn ? "🔊" : "🔇"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode("flipbook")}
+            className="text-xs px-2 py-1 rounded border border-white/20 hover:bg-white/10"
+            title="양면 정적 모드"
+          >
+            ▦ 양면
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode("iframe")}
+            className="text-xs px-2 py-1 rounded border border-white/20 hover:bg-white/10"
+            title="브라우저 기본 PDF 뷰어"
+          >
+            📄 기본
+          </button>
+          {animatedPage.total > 0 && (
+            <span className="font-mono text-xs opacity-60 tabular-nums">
+              {animatedPage.page} / {animatedPage.total + 1}
+            </span>
+          )}
+        </div>
+
+        <div
+          ref={containerRef}
+          className="flex-1 flex flex-col items-center justify-center py-8 sm:py-12 px-2"
+        >
+          <BookFlipReader
+            ref={bookFlipRef}
+            pdfUrl={pdfUrl}
+            pageWidth={pageW}
+            pageHeight={pageH}
+            sound={soundOn}
+            onPageChange={(page, total) => setAnimatedPage({ page, total })}
+          />
+        </div>
+
+        <div className="sticky bottom-0 z-20 flex items-center justify-center gap-2 px-4 py-3 bg-black/60 backdrop-blur-sm">
+          <BottomBtn
+            onClick={() => bookFlipRef.current?.flipToPage(0)}
+            disabled={false}
+            label="처음"
+            title="처음으로"
+          >
+            {"|◀"}
+          </BottomBtn>
+          <BottomBtn
+            onClick={() => bookFlipRef.current?.flipPrev()}
+            disabled={false}
+            label="이전"
+            title="이전 페이지"
+          >
+            {"◀◀"}
+          </BottomBtn>
+          <BottomBtn
+            onClick={() => bookFlipRef.current?.flipNext()}
+            disabled={false}
+            label="다음"
+            title="다음 페이지"
+          >
+            {"▶▶"}
+          </BottomBtn>
+          <BottomBtn
+            onClick={() => {
+              const n = bookFlipRef.current?.getNumPages();
+              if (n) bookFlipRef.current?.flipToPage(n);
+            }}
+            disabled={false}
+            label="마지막"
+            title="마지막으로"
+          >
+            {"▶|"}
+          </BottomBtn>
+        </div>
+      </div>
+    );
+  }
+
   /* ── iframe 폴백 모드 ── */
   if (viewMode === "iframe") {
     return (
@@ -227,10 +338,17 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
           <div className="flex-1" />
           <button
             type="button"
+            onClick={() => setViewMode("animatedBook")}
+            className="text-xs px-3 py-1 rounded border border-amber-400/40 text-amber-200 hover:bg-amber-400/10"
+          >
+            ✨ 책 펴기
+          </button>
+          <button
+            type="button"
             onClick={() => setViewMode("flipbook")}
             className="text-xs px-3 py-1 rounded border border-white/20 hover:bg-white/10"
           >
-            📖 책 모드
+            ▦ 양면
           </button>
           <a
             href={pdfUrl}
@@ -268,6 +386,14 @@ export function EbookReader({ pdfUrl, title, backHref }: EbookReaderProps) {
         )}
         <span className="truncate max-w-[160px] sm:max-w-sm font-medium opacity-90">{title}</span>
         <div className="flex-1" />
+        <button
+          type="button"
+          onClick={() => setViewMode("animatedBook")}
+          className="text-xs px-2 py-1 rounded border border-amber-400/40 text-amber-200 hover:bg-amber-400/10"
+          title="진짜 책넘김 애니메이션 + 사운드"
+        >
+          ✨ 책 펴기
+        </button>
         <button
           type="button"
           onClick={() => setViewMode("iframe")}
