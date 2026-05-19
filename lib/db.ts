@@ -801,7 +801,10 @@ async function init(client: Client) {
   //      4대 5편, 5대 1차 4편 (5dae-*-munhwasang-8~11 옛 글은 위의
   //      purge-wrong-5dae-munhwasang-v1 마이그레이션이 seeded_deletions
   //      에 등록해 두므로 재시드 시 제외됨).
-  const seedKey = "content-seed-v11";
+  // v12: 5대 류종묵 회장기 2차 배치 6편 추가 — 홍영재·김경동 특강,
+  //      2013·2014 신년하례(+영가문화상 5회 김희곤), 권영진 대구시장
+  //      축하, 연천 탐방.
+  const seedKey = "content-seed-v12";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
