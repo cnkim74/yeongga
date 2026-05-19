@@ -827,7 +827,12 @@ async function init(client: Client) {
   //      에서) — 도산서원, 병산서원, 임청각·학봉종택, 안동의 전탑·
   //      석불(법흥사지 칠층전탑·동부동 오층전탑·이천동 마애여래입상),
   //      한국국학진흥원.
-  const seedKey = "content-seed-v18";
+  // v19: 〈향〉 챕터 보강 2차 4편 추가 — 안동의 역사 인물(김방경·김자수·
+  //      권부·권근·이황·김성일), 태사묘 + 안동향교 + 예안향교, 안동의
+  //      박물관(안동민속박물관·하회 세계탈박물관·전통문화콘텐츠박물관),
+  //      안동의 자연 명승(안동댐·임하댐·암산유원지·무릉유원지·700년
+  //      은행나무·도산온천·학가산온천).
+  const seedKey = "content-seed-v19";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
