@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import type { Photo } from "@/lib/gallery-db";
 
 interface PhotoGridProps {
@@ -75,11 +76,12 @@ export function PhotoGrid({ photos, initialCategory }: PhotoGridProps) {
             className="group relative aspect-square overflow-hidden rounded-lg bg-[var(--color-bg-soft)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
             aria-label={photo.title ?? `사진 ${index + 1}`}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={photo.image_url}
               alt={photo.title ?? ""}
-              className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover transition duration-500 group-hover:scale-105"
               loading="lazy"
             />
             {/* 호버 오버레이 */}

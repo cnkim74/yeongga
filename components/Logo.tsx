@@ -2,6 +2,8 @@
 // 마크는 영가회보 1면 제호의 필체를 그대로 추출한 PNG (흰 글씨/투명 배경).
 // 부제는 옵션으로 〈창립 50주년〉을 우측에 곁들임.
 
+import Image from "next/image";
+
 type Variant = "mark" | "horizontal" | "stacked";
 type Size = "sm" | "md" | "lg" | "xl";
 
@@ -34,14 +36,14 @@ export function LogoMark({
   const src = inverse ? "/brand/jeho-black.png" : "/brand/jeho-white.png";
   const w = Math.round(size * JEHO_RATIO);
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={src}
       alt="永嘉會"
       width={w}
       height={size}
       className={className}
       draggable={false}
+      priority
       style={{ width: w, height: size, objectFit: "contain" }}
     />
   );
