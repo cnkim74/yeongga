@@ -38,7 +38,7 @@ export default async function AdminArticles() {
           공개 사이트 아카이브에 노출되는 글입니다. 다섯 장(章)으로 분류됩니다.
         </p>
 
-        <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm mb-10">
+        <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm mb-6">
           <Prop k="총" v={`${articles.length}편`} />
           <Prop
             k="공개"
@@ -52,12 +52,57 @@ export default async function AdminArticles() {
           />
         </div>
 
+        {/* 챕터별 카드 그리드 — 한눈에 들어오는 분포 + 섹션 점프 앵커 */}
+        {articles.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-10">
+            {byChapter.map(({ chapter: c, items }) => {
+              const empty = items.length === 0;
+              return (
+                <a
+                  key={c.slug}
+                  href={`#chapter-${c.slug}`}
+                  className={`group rounded-lg border px-3 py-3 transition ${
+                    empty
+                      ? "border-[var(--color-notion-rule)] bg-transparent opacity-60 hover:opacity-100"
+                      : "border-[var(--color-notion-rule)] bg-[var(--color-notion-surface)] hover:border-[var(--color-notion-accent)] hover:shadow-sm"
+                  }`}
+                  title={c.subtitle}
+                >
+                  <div className="flex items-baseline gap-1.5 mb-1">
+                    <span className="font-serif text-base text-[var(--color-notion-mute)] group-hover:text-[var(--color-notion-accent)]">
+                      {c.number}
+                    </span>
+                    <span className="text-sm font-medium truncate">
+                      {c.title}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-semibold tabular-nums">
+                      {items.length}
+                    </span>
+                    <span className="text-xs text-[var(--color-notion-mute)]">편</span>
+                  </div>
+                  {c.comingSoon && (
+                    <div className="text-[10px] text-[var(--color-notion-mute)] mt-1">
+                      준비 중
+                    </div>
+                  )}
+                </a>
+              );
+            })}
+          </div>
+        )}
+
         {articles.length === 0 ? (
           <Empty />
         ) : (
           <div className="space-y-12">
             {byChapter.map(({ chapter: c, items }) => (
-              <section key={c.slug}>
+              <section
+                key={c.slug}
+                id={`chapter-${c.slug}`}
+                className="scroll-mt-24"
+              >
                 <h2 className="text-xs font-mono uppercase tracking-wider text-[var(--color-notion-mute)] mb-3">
                   {c.number}. {c.title} · {items.length}편
                 </h2>
