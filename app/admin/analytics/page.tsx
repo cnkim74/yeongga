@@ -7,6 +7,12 @@ import {
   getRecentVisits,
   getDailyVisits14d,
 } from "@/lib/visits-db";
+import {
+  isAnalyticsConfigured,
+  getVisitorSummary,
+  getTopPages as getGaTopPages,
+  getEventCounts,
+} from "@/lib/ga-analytics";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "방문 기록 — 집무실" };
@@ -14,15 +20,26 @@ export const metadata = { title: "방문 기록 — 집무실" };
 export default async function AnalyticsPage() {
   await requireAdmin();
 
-  const [stats, top7, top30, recent, daily] = await Promise.all([
-    getVisitStats(),
-    getTopPages(7, 10),
-    getTopPages(30, 10),
-    getRecentVisits(50),
-    getDailyVisits14d(),
-  ]);
+  const gaReady = isAnalyticsConfigured();
+
+  const [stats, top7, top30, recent, daily, gaSummary, gaTop, gaEvents] =
+    await Promise.all([
+      getVisitStats(),
+      getTopPages(7, 10),
+      getTopPages(30, 10),
+      getRecentVisits(50),
+      getDailyVisits14d(),
+      // GA 데이터 — 환경변수 없으면 null/[] 반환
+      gaReady ? getVisitorSummary() : Promise.resolve(null),
+      gaReady ? getGaTopPages(10, 28) : Promise.resolve([]),
+      gaReady ? getEventCounts(28) : Promise.resolve([]),
+    ]);
 
   const maxDaily = Math.max(1, ...daily.map((d) => d.visits));
+  const maxGaDaily = Math.max(
+    1,
+    ...(gaSummary?.daily.map((d) => d.activeUsers) ?? [1])
+  );
 
   return (
     <>
@@ -143,10 +160,238 @@ export default async function AnalyticsPage() {
             </div>
           )}
         </Section>
+
+        {/* ─────────────────────────────────────────────────────────
+            Google Analytics 4 — 외부 데이터
+            (자체 visits 기록과 별개로, GA 가 수집한 더 풍부한 지표)
+            ───────────────────────────────────────────────────────── */}
+        <div className="mt-20 mb-10">
+          <h2 className="font-serif text-2xl text-[var(--admin-ink)] mb-2">
+            Google Analytics
+            <span className="font-serif text-xs text-[var(--admin-mute)] ml-3 tracking-widest">
+              外部 集計
+            </span>
+          </h2>
+          <p className="text-[var(--admin-ink-soft)] text-sm leading-relaxed max-w-2xl">
+            구글 애널리틱스 4 가 수집한 방문 데이터입니다. 자체 방문 기록과
+            차이가 있을 수 있습니다 (광고 차단기로 인한 누락 등).
+            <br />
+            <span className="text-[var(--admin-mute)] text-xs">
+              ※ GA 데이터는 보통 24~48 시간 정착 — 오늘 자 수치는 변동될 수 있습니다.
+            </span>
+          </p>
+        </div>
+
+        {!gaReady ? (
+          <div className="rounded-lg border border-dashed border-[var(--admin-rule)] bg-[var(--admin-surface)] p-8 text-center">
+            <div className="text-3xl mb-3">📊</div>
+            <p className="text-sm text-[var(--admin-ink-soft)] mb-2">
+              GA 환경변수가 설정되지 않았습니다.
+            </p>
+            <p className="text-xs text-[var(--admin-mute)] max-w-md mx-auto leading-relaxed">
+              Vercel 환경변수에{" "}
+              <code className="bg-[var(--admin-bg)] px-1.5 py-0.5 rounded">
+                GA_PROPERTY_ID
+              </code>
+              와{" "}
+              <code className="bg-[var(--admin-bg)] px-1.5 py-0.5 rounded">
+                GA_SERVICE_ACCOUNT_JSON
+              </code>
+              을 등록하시면 자동으로 표시됩니다.
+            </p>
+          </div>
+        ) : !gaSummary ? (
+          <div className="rounded-lg border border-[var(--admin-rule)] bg-[var(--admin-surface)] p-8 text-center">
+            <p className="text-sm text-[var(--admin-ink-soft)]">
+              GA 데이터를 불러오지 못했습니다 — 환경변수·서비스 계정 권한을 확인해 주세요.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* GA 요약 카드 */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+              <StatCard
+                label="오늘 (GA)"
+                value={gaSummary.today.activeUsers}
+                sub={`페이지뷰 ${gaSummary.today.pageViews.toLocaleString()}`}
+              />
+              <StatCard
+                label="어제 (GA)"
+                value={gaSummary.yesterday.activeUsers}
+                sub={`페이지뷰 ${gaSummary.yesterday.pageViews.toLocaleString()}`}
+              />
+              <StatCard
+                label="지난 7일 (GA)"
+                value={gaSummary.last7d.activeUsers}
+                sub={`페이지뷰 ${gaSummary.last7d.pageViews.toLocaleString()}`}
+              />
+              <StatCard
+                label="지난 28일 (GA)"
+                value={gaSummary.last28d.activeUsers}
+                sub={`페이지뷰 ${gaSummary.last28d.pageViews.toLocaleString()} · MAU 근사`}
+              />
+            </div>
+
+            {/* GA 30일 추이 */}
+            <Section title="최근 30일 방문 추이 (GA)" hanja="月別">
+              {gaSummary.daily.length === 0 ? (
+                <Empty>아직 GA 데이터가 없습니다.</Empty>
+              ) : (
+                <div className="p-5">
+                  <div className="flex items-end gap-1 h-40 mb-2">
+                    {gaSummary.daily.map((d) => {
+                      const h = Math.max(2, (d.activeUsers / maxGaDaily) * 100);
+                      return (
+                        <div
+                          key={d.date}
+                          className="flex-1 flex flex-col items-center justify-end relative group"
+                          title={`${d.date} · 사용자 ${d.activeUsers}명 / 페이지뷰 ${d.pageViews}회`}
+                        >
+                          <div
+                            className="w-full rounded-t-sm bg-[var(--admin-accent)] opacity-80 group-hover:opacity-100 transition"
+                            style={{ height: `${h}%` }}
+                          />
+                          <div className="absolute -top-5 text-[10px] tabular-nums opacity-0 group-hover:opacity-100 transition text-[var(--admin-ink)]">
+                            {d.activeUsers}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex gap-1">
+                    {gaSummary.daily.map((d, i) => (
+                      <div
+                        key={d.date}
+                        className="flex-1 text-center text-[9px] font-mono text-[var(--admin-mute)]"
+                      >
+                        {/* 5일 간격으로만 날짜 표시 — 30일 라벨 다 보이면 빽빽 */}
+                        {i % 5 === 0 ? d.date.slice(5) : ""}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Section>
+
+            {/* 인기 글 TOP 10 (GA 28일) */}
+            <Section title="인기 페이지 TOP 10 (GA · 28일)" hanja="人氣">
+              {gaTop.length === 0 ? (
+                <Empty>데이터가 없습니다.</Empty>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-xs text-[var(--admin-mute)] border-b border-[var(--admin-rule)]">
+                      <th className="py-2 px-3 w-8">#</th>
+                      <th className="py-2 px-3">경로 / 제목</th>
+                      <th className="py-2 px-3 w-20 text-right">페이지뷰</th>
+                      <th className="py-2 px-3 w-20 text-right">사용자</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {gaTop.map((r, i) => (
+                      <tr
+                        key={r.path + i}
+                        className="border-b border-[var(--admin-rule-soft)] hover:bg-[var(--admin-bg)]"
+                      >
+                        <td className="py-2 px-3 text-xs text-[var(--admin-mute)] font-mono tabular-nums">
+                          {i + 1}
+                        </td>
+                        <td className="py-2 px-3">
+                          <div className="font-mono text-xs truncate max-w-[420px]">
+                            {r.path}
+                          </div>
+                          {r.title && (
+                            <div className="text-xs text-[var(--admin-mute)] truncate max-w-[420px] mt-0.5">
+                              {r.title}
+                            </div>
+                          )}
+                        </td>
+                        <td className="py-2 px-3 text-right tabular-nums">
+                          {r.pageViews.toLocaleString()}
+                        </td>
+                        <td className="py-2 px-3 text-right tabular-nums text-[var(--admin-mute)]">
+                          {r.activeUsers.toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Section>
+
+            {/* 이벤트 발생 횟수 (28일) */}
+            <Section title="이벤트 발생 횟수 (GA · 28일)" hanja="事象">
+              {gaEvents.length === 0 ? (
+                <Empty>데이터가 없습니다.</Empty>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-xs text-[var(--admin-mute)] border-b border-[var(--admin-rule)]">
+                      <th className="py-2 px-3">이벤트 이름</th>
+                      <th className="py-2 px-3 w-40">분류</th>
+                      <th className="py-2 px-3 w-24 text-right">발생 횟수</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {gaEvents.map((e) => {
+                      const meta = EVENT_META[e.name] ?? {
+                        label: e.name,
+                        category: "기본",
+                      };
+                      return (
+                        <tr
+                          key={e.name}
+                          className="border-b border-[var(--admin-rule-soft)] hover:bg-[var(--admin-bg)]"
+                        >
+                          <td className="py-2 px-3">
+                            <div className="font-mono text-xs">{e.name}</div>
+                            <div className="text-xs text-[var(--admin-ink-soft)] mt-0.5">
+                              {meta.label}
+                            </div>
+                          </td>
+                          <td className="py-2 px-3 text-xs text-[var(--admin-mute)]">
+                            {meta.category}
+                          </td>
+                          <td className="py-2 px-3 text-right tabular-nums">
+                            {e.count.toLocaleString()}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+            </Section>
+          </>
+        )}
       </div>
     </>
   );
 }
+
+/** GA 이벤트 이름 → 한국어 라벨/분류 매핑. 표 표시용. */
+const EVENT_META: Record<string, { label: string; category: string }> = {
+  // 영가회 커스텀 이벤트
+  member_gate_view: { label: "회원 전용 잠금 화면 도달", category: "영가회 · 회원" },
+  login_attempt: { label: "로그인 시도", category: "영가회 · 회원" },
+  share_click: { label: "공유 버튼 클릭", category: "영가회 · 공유" },
+  site_search: { label: "사이트 내 검색", category: "영가회 · 검색" },
+  ebook_open: { label: "이북 열기", category: "영가회 · 이북" },
+  // GA4 자동 수집
+  page_view: { label: "페이지 조회", category: "GA 기본" },
+  session_start: { label: "세션 시작", category: "GA 기본" },
+  first_visit: { label: "최초 방문", category: "GA 기본" },
+  user_engagement: { label: "사용자 참여", category: "GA 기본" },
+  scroll: { label: "스크롤 (90%)", category: "GA 향상된 측정" },
+  click: { label: "외부 링크 클릭", category: "GA 향상된 측정" },
+  file_download: { label: "파일 다운로드", category: "GA 향상된 측정" },
+  view_search_results: { label: "검색 결과 보기", category: "GA 향상된 측정" },
+  video_start: { label: "동영상 시작", category: "GA 향상된 측정" },
+  video_progress: { label: "동영상 진행", category: "GA 향상된 측정" },
+  video_complete: { label: "동영상 완료", category: "GA 향상된 측정" },
+  form_start: { label: "폼 시작", category: "GA 향상된 측정" },
+  form_submit: { label: "폼 제출", category: "GA 향상된 측정" },
+};
 
 function Section({ title, hanja, children }: {
   title: string; hanja: string; children: React.ReactNode;
