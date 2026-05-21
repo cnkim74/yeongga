@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { loginAction, type LoginState } from "./actions";
+import { trackEvent } from "@/lib/analytics";
 
 export function LoginForm({
   next,
@@ -23,6 +24,7 @@ export function LoginForm({
     <div className="space-y-5">
       <a
         href={googleHref}
+        onClick={() => trackEvent("login_attempt", { method: "google", next })}
         className="flex items-center justify-center gap-3 w-full h-12 px-4 rounded-xl border border-[var(--color-rule)] bg-white hover:bg-[var(--color-bg-soft)] transition-colors text-base font-medium"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
@@ -52,7 +54,13 @@ export function LoginForm({
         <span className="flex-1 h-px bg-[var(--color-rule)]" />
       </div>
 
-      <form action={formAction} className="space-y-4">
+      <form
+        action={formAction}
+        onSubmit={() =>
+          trackEvent("login_attempt", { method: "password", next })
+        }
+        className="space-y-4"
+      >
         <input type="hidden" name="next" value={next} />
 
         {needAdmin && (

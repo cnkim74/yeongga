@@ -12,6 +12,7 @@ import { listUsers } from "@/lib/users-db";
 import { getTagsForArticle } from "@/lib/tags-db";
 import { ShareBar } from "@/components/ShareBar";
 import { AdminEditLink } from "@/components/AdminEditLink";
+import { GAEventOnMount } from "@/components/GAEventOnMount";
 
 /**
  * 캐시 전략:
@@ -160,11 +161,21 @@ export default async function ArticlePage({
       <div className="bg-[var(--color-paper)] py-20 sm:py-28">
         <div className="mx-auto max-w-3xl px-6">
           {isLocked ? (
-            <MemberGate
-              chapter={chapter}
-              slug={slug}
-              excerpt={article.excerpt ?? undefined}
-            />
+            <>
+              <GAEventOnMount
+                event="member_gate_view"
+                params={{
+                  chapter,
+                  slug,
+                  content_type: "article",
+                }}
+              />
+              <MemberGate
+                chapter={chapter}
+                slug={slug}
+                excerpt={article.excerpt ?? undefined}
+              />
+            </>
           ) : (
             <div
               className="prose-body"

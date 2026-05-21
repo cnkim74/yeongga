@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getEbook } from "@/lib/ebooks-db";
 import { EbookReader } from "@/components/EbookReader";
+import { GAEventOnMount } from "@/components/GAEventOnMount";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +39,10 @@ export default async function EbookPage({
   if (isLocked) {
     return (
       <div className="min-h-screen bg-[var(--color-paper)] flex items-center justify-center px-6 py-24">
+        <GAEventOnMount
+          event="member_gate_view"
+          params={{ ebook_id: ebook.id, content_type: "ebook" }}
+        />
         <div className="rounded-3xl border border-[var(--color-rule)] bg-white p-10 sm:p-14 text-center max-w-md w-full">
           <div className="text-5xl mb-4 select-none">🔒</div>
           <h1 className="text-2xl sm:text-3xl font-bold mb-3">
@@ -75,10 +80,16 @@ export default async function EbookPage({
   }
 
   return (
-    <EbookReader
-      pdfUrl={ebook.pdf_url}
-      title={ebook.title}
-      backHref="/ebooks"
-    />
+    <>
+      <GAEventOnMount
+        event="ebook_open"
+        params={{ ebook_id: ebook.id, title: ebook.title }}
+      />
+      <EbookReader
+        pdfUrl={ebook.pdf_url}
+        title={ebook.title}
+        backHref="/ebooks"
+      />
+    </>
   );
 }

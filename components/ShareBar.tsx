@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 interface ShareBarProps {
   title: string;
@@ -16,6 +17,7 @@ export function ShareBar({ title, path, excerpt }: ShareBarProps) {
 
   /* ─ 링크 복사 ─────────────────────────────────────────────── */
   async function copyLink() {
+    trackEvent("share_click", { method: "copy", content_path: path });
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -37,6 +39,7 @@ export function ShareBar({ title, path, excerpt }: ShareBarProps) {
      모바일: navigator.share → 기기 공유 시트(카카오톡 포함)
      데스크탑: 팝업 창 열기 불가 → 링크 복사로 안내              */
   async function shareKakao() {
+    trackEvent("share_click", { method: "kakao", content_path: path });
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
       try {
         await navigator.share({
@@ -56,7 +59,8 @@ export function ShareBar({ title, path, excerpt }: ShareBarProps) {
   }
 
   /* ─ 팝업 공유 헬퍼 ─────────────────────────────────────────── */
-  function popup(shareUrl: string) {
+  function popup(shareUrl: string, method: "facebook" | "x") {
+    trackEvent("share_click", { method, content_path: path });
     window.open(
       shareUrl,
       "share",
@@ -79,12 +83,12 @@ export function ShareBar({ title, path, excerpt }: ShareBarProps) {
       </ShareBtn>
 
       {/* Facebook */}
-      <ShareBtn onClick={() => popup(fbUrl)} label="Facebook" color="#1877F2" textColor="#fff">
+      <ShareBtn onClick={() => popup(fbUrl, "facebook")} label="Facebook" color="#1877F2" textColor="#fff">
         <FacebookIcon />
       </ShareBtn>
 
       {/* X (구 트위터) */}
-      <ShareBtn onClick={() => popup(xUrl)} label="X" color="#000" textColor="#fff">
+      <ShareBtn onClick={() => popup(xUrl, "x")} label="X" color="#000" textColor="#fff">
         <XIcon />
       </ShareBtn>
 

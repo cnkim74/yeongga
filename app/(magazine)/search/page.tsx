@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listAllTags, listArticlesByTag, searchArticles } from "@/lib/tags-db";
 import { chapters } from "@/lib/chapters";
 import { PageHeroBg } from "@/components/PageHeroBg";
+import { GAEventOnMount } from "@/components/GAEventOnMount";
 
 export const revalidate = 3600; // 1시간 캐시 — 태그 변경 시 어드민에서 revalidatePath 호출
 
@@ -36,6 +37,17 @@ export default async function SearchPage({
 
   return (
     <>
+      {(q || tag) && (
+        <GAEventOnMount
+          event="site_search"
+          params={{
+            search_term: q ?? "",
+            search_tag: tag ?? "",
+            result_count: articles.length,
+            search_type: tag ? "tag" : "keyword",
+          }}
+        />
+      )}
       {/* 헤더 */}
       <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-16">
         <PageHeroBg page="search" />

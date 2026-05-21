@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import {
   ReadingSizeProvider,
   READING_INIT_SCRIPT,
 } from "@/components/ReadingSizeProvider";
+import { GAUserIdentify } from "@/components/GAUserIdentify";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   title: "영가회 永嘉會 — 아카이브",
@@ -42,6 +46,12 @@ export default function RootLayout({
       </head>
       <body>
         <ReadingSizeProvider>{children}</ReadingSizeProvider>
+        {GA_ID && (
+          <>
+            <GoogleAnalytics gaId={GA_ID} />
+            <GAUserIdentify />
+          </>
+        )}
       </body>
     </html>
   );
