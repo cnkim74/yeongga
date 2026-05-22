@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition, useCallback } from "react";
+import exifr from "exifr";
 import { createPhotoAction } from "../actions";
 import type { PhotoCategory } from "@/lib/gallery-db";
 
@@ -16,9 +17,13 @@ interface QueuedFile {
   file: File;
   previewUrl: string;
   status: UploadStatus;
-  progress: number; // 0..100, 표시용
+  progress: number; // 0..100, 실제 업로드 진행률 (XHR upload.onprogress 기반)
   imageUrl?: string;
   error?: string;
+  /** EXIF DateTimeOriginal — YYYY-MM-DD 형식. 비동기 추출이라 늦게 채워질 수 있음. */
+  takenAt?: string;
+  /** EXIF 추출 시도 완료 여부 (실패도 true) — 추출 중 상태 표시용. */
+  exifReady: boolean;
 }
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB — 서버 한도와 동일
@@ -56,12 +61,32 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
         previewUrl: URL.createObjectURL(file),
         status: "pending",
         progress: 0,
+        exifReady: false,
       });
     }
     if (rejected.length > 0) {
       alert(`다음 파일은 추가되지 않았습니다:\n\n${rejected.join("\n")}`);
     }
     setQueue((q) => [...q, ...valid]);
+
+    // 큐에 들어간 후 EXIF DateTimeOriginal 비동기 추출 — 추출이 끝날 때마다
+    // 해당 큐 항목을 업데이트. 추출 자체가 늦어도 업로드는 막지 않음
+    // (uploadOne 직전에 한 번 더 await 으로 보장).
+    for (const item of valid) {
+      extractTakenAt(item.file)
+        .then((takenAt) => {
+          setQueue((q) =>
+            q.map((it) =>
+              it.id === item.id ? { ...it, takenAt, exifReady: true } : it
+            )
+          );
+        })
+        .catch(() => {
+          setQueue((q) =>
+            q.map((it) => (it.id === item.id ? { ...it, exifReady: true } : it))
+          );
+        });
+    }
     return valid.length > 0;
   }, []);
 
@@ -81,18 +106,49 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
     }
   }
 
-  async function uploadOne(file: File): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
-    try {
+  function uploadOne(
+    file: File,
+    onProgress: (pct: number) => void
+  ): Promise<{ ok: true; url: string } | { ok: false; error: string }> {
+    return new Promise((resolve) => {
       const fd = new FormData();
       // 한글·공백 파일명은 multipart 전송 단계에서 거부되는 환경이 있어 ASCII 안전 이름으로 재작성
       fd.append("file", makeSafeFile(file));
-      const res = await fetch("/api/upload/photo", { method: "POST", body: fd });
-      const json = await res.json();
-      if (!json.ok) return { ok: false, error: json.error ?? "업로드 실패" };
-      return { ok: true, url: json.url };
-    } catch {
-      return { ok: false, error: "네트워크 오류" };
-    }
+
+      // XMLHttpRequest 를 쓰는 이유: fetch 는 업로드 진행률(upload.onprogress)을
+      // 제공하지 않음. 진짜 바이트 단위 진행률이 필요하면 XHR 만이 답.
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/upload/photo");
+      xhr.responseType = "json";
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          // 업로드 전송 단계는 전체 진행률의 0~85% 로 매핑.
+          // 나머지 85~100% 는 server action (createPhotoAction) 구간.
+          const pct = Math.round((e.loaded / e.total) * 85);
+          onProgress(pct);
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const json = xhr.response as { ok?: boolean; url?: string; error?: string } | null;
+          if (json && json.ok && json.url) {
+            onProgress(85);
+            resolve({ ok: true, url: json.url });
+          } else {
+            resolve({ ok: false, error: json?.error ?? "업로드 실패" });
+          }
+        } else {
+          resolve({ ok: false, error: `서버 오류 (${xhr.status})` });
+        }
+      };
+
+      xhr.onerror = () => resolve({ ok: false, error: "네트워크 오류" });
+      xhr.onabort = () => resolve({ ok: false, error: "업로드 취소됨" });
+
+      xhr.send(fd);
+    });
   }
 
   function makeSafeFile(file: File): File {
@@ -103,20 +159,28 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
     return new File([file], safeName, { type: file.type, lastModified: file.lastModified });
   }
 
-  function buildFormData(imageUrl: string, fileName: string, totalCount: number): FormData {
+  function buildFormData(
+    imageUrl: string,
+    fileName: string,
+    totalCount: number,
+    perFileTakenAt?: string
+  ): FormData {
     const fd = new FormData();
     fd.set("image_url", imageUrl);
     if (formRef.current) {
       const form = new FormData(formRef.current);
       const categoryId = form.get("category_id");
       const visibility = form.get("visibility");
-      const taken_at = form.get("taken_at");
+      const globalTakenAt = form.get("taken_at");
       const position = form.get("position");
       const title = form.get("title");
       const description = form.get("description");
       if (categoryId) fd.set("category_id", String(categoryId));
       if (visibility) fd.set("visibility", String(visibility));
-      if (taken_at) fd.set("taken_at", String(taken_at));
+      // 촬영일 우선순위: 폼에 명시적으로 입력된 값 > EXIF 자동 추출값
+      const globalTakenAtStr = globalTakenAt ? String(globalTakenAt).trim() : "";
+      const effectiveTakenAt = globalTakenAtStr || perFileTakenAt || "";
+      if (effectiveTakenAt) fd.set("taken_at", effectiveTakenAt);
       if (position) fd.set("position", String(position));
       const titleStr = title ? String(title).trim() : "";
       if (titleStr) {
@@ -132,9 +196,15 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
   // 한 장당 업로드 + 저장. 병렬 처리용으로 추출.
   async function processItem(item: QueuedFile, totalCount: number): Promise<boolean> {
     setQueue((q) =>
-      q.map((it) => (it.id === item.id ? { ...it, status: "uploading", progress: 30 } : it))
+      q.map((it) => (it.id === item.id ? { ...it, status: "uploading", progress: 0 } : it))
     );
-    const up = await uploadOne(item.file);
+
+    const up = await uploadOne(item.file, (pct) => {
+      setQueue((q) =>
+        q.map((it) => (it.id === item.id ? { ...it, progress: pct } : it))
+      );
+    });
+
     if (!up.ok) {
       setQueue((q) =>
         q.map((it) =>
@@ -143,12 +213,21 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
       );
       return false;
     }
+
     setQueue((q) =>
       q.map((it) =>
-        it.id === item.id ? { ...it, status: "saving", imageUrl: up.url, progress: 70 } : it
+        it.id === item.id ? { ...it, status: "saving", imageUrl: up.url, progress: 90 } : it
       )
     );
-    const fd = buildFormData(up.url, item.file.name, totalCount);
+
+    // EXIF 추출이 아직 안 끝났으면 잠깐 기다림 (최대 2초). 대부분 즉시 완료.
+    let takenAt = item.takenAt;
+    if (!item.exifReady) {
+      const fresh = await waitForExifReady(setQueue, item.id, 2000);
+      takenAt = fresh ?? item.takenAt;
+    }
+
+    const fd = buildFormData(up.url, item.file.name, totalCount, takenAt);
     const result = await createPhotoAction(fd);
     if (result && "error" in result && result.error) {
       setQueue((q) =>
@@ -241,6 +320,7 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
       </div>
       <p className="text-xs text-[var(--color-notion-mute)] mb-4">
         파일을 끌어다 놓거나 영역을 클릭해서 선택. 한 장 최대 50MB. 여러 장 한 번에 가능 — 동시 4장씩 병렬 업로드.
+        촬영일은 사진의 EXIF 정보에서 자동 추출됩니다 (아래 〈고급 옵션〉에서 명시한 값이 우선).
       </p>
 
       {successCount > 0 && (
@@ -384,6 +464,9 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
               <div>
                 <label className="block text-sm font-medium text-[var(--color-notion-ink)] mb-1.5">
                   촬영일
+                  <span className="ml-2 text-xs text-[var(--color-notion-mute)]">
+                    (비우면 사진별 EXIF 값 자동 적용)
+                  </span>
                 </label>
                 <input name="taken_at" type="date" className="notion-input w-full" />
               </div>
@@ -423,6 +506,65 @@ export function PhotoUploadForm({ categories, defaultCategorySlug }: PhotoUpload
   );
 }
 
+/**
+ * 이미지 파일에서 EXIF DateTimeOriginal 을 뽑아 YYYY-MM-DD 로 반환.
+ * 추출 실패(EXIF 없음, 파싱 오류 등)는 undefined.
+ *
+ * exifr.parse(file, ['DateTimeOriginal']) 만 호출하므로 트리쉐이킹으로
+ * 번들 영향 최소.
+ */
+async function extractTakenAt(file: File): Promise<string | undefined> {
+  try {
+    const exif = (await exifr.parse(file, ["DateTimeOriginal"])) as
+      | { DateTimeOriginal?: Date }
+      | undefined;
+    const d = exif?.DateTimeOriginal;
+    if (!(d instanceof Date) || isNaN(d.getTime())) return undefined;
+    // YYYY-MM-DD (input[type=date] 호환)
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * 큐 항목의 EXIF 추출이 끝날 때까지 (또는 timeoutMs 까지) 기다림.
+ * setState callback 으로 최신 큐를 폴링해서 exifReady 가 true 가 되면 반환.
+ */
+function waitForExifReady(
+  setQueue: React.Dispatch<React.SetStateAction<QueuedFile[]>>,
+  id: string,
+  timeoutMs: number
+): Promise<string | undefined> {
+  return new Promise((resolve) => {
+    const start = Date.now();
+    const interval = setInterval(() => {
+      let resolved = false;
+      setQueue((current) => {
+        const item = current.find((it) => it.id === id);
+        if (!item) {
+          clearInterval(interval);
+          resolve(undefined);
+          resolved = true;
+        } else if (item.exifReady) {
+          clearInterval(interval);
+          resolve(item.takenAt);
+          resolved = true;
+        } else if (Date.now() - start > timeoutMs) {
+          clearInterval(interval);
+          resolve(undefined);
+          resolved = true;
+        }
+        return current;
+      });
+      if (resolved) clearInterval(interval);
+    }, 80);
+  });
+}
+
 function ThumbCard({
   item,
   onRemove,
@@ -456,6 +598,12 @@ function ThumbCard({
       <div className={`absolute top-1 left-1 px-1.5 py-0.5 rounded text-[10px] text-white font-medium ${statusColor}`}>
         {statusLabel}
       </div>
+      {/* 업로드 중 진행률 숫자 — 모서리에 작게 */}
+      {item.status === "uploading" && (
+        <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded bg-black/60 text-white text-[10px] font-mono tabular-nums">
+          {item.progress}%
+        </div>
+      )}
       {/* 제거 버튼 — pending/error 상태에서만 */}
       {(item.status === "pending" || item.status === "error") && (
         <button
@@ -467,6 +615,12 @@ function ThumbCard({
         >
           ×
         </button>
+      )}
+      {/* EXIF 촬영일 — 추출 완료 시 좌하단에 작게 (대기 상태에만) */}
+      {item.status === "pending" && item.exifReady && item.takenAt && (
+        <div className="absolute bottom-0 left-0 right-0 bg-black/55 text-white text-[10px] px-1.5 py-0.5 truncate font-mono tabular-nums">
+          📅 {item.takenAt}
+        </div>
       )}
       {/* 진행 바 */}
       {item.progress > 0 && item.progress < 100 && (
