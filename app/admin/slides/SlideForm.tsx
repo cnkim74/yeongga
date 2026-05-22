@@ -63,24 +63,36 @@ export function SlideForm({ slide }: { slide?: Slide }) {
         setJustUploaded(true);
         return;
       } catch (blobErr) {
-        // 2) 로컬 개발 환경 폴백: 서버를 통한 multipart 업로드
+        // 2) 로컬 개발 환경 폴백: 서버를 통한 multipart 업로드 (Vercel 4.5MB 한도)
+        const blobMsg = blobErr instanceof Error ? blobErr.message : String(blobErr);
         console.warn("[slide upload] R2 직접 업로드 실패, multipart 폴백 시도:", blobErr);
         const fd = new FormData();
         fd.append("file", file);
         const res = await fetch("/api/upload/slide", { method: "POST", body: fd });
         if (!res.ok) {
+          const sizeMB = (file.size / 1024 / 1024).toFixed(1);
           if (res.status === 413) {
-            setUploadError(
-              `파일이 너무 큽니다 (${(file.size / 1024 / 1024).toFixed(1)}MB). 권장: 30MB 이하 / 가로 2400px 이하로 줄여 주세요.`
-            );
+            // 파일이 30MB 이내인데 413 → 진짜 원인은 R2 직접 업로드 실패.
+            // Vercel multipart 폴백의 4.5MB 한도가 잡힌 것뿐.
+            if (file.size <= 30 * 1024 * 1024) {
+              setUploadError(
+                `R2 직접 업로드 실패로 임시 경로(4.5MB 한도)에 걸렸습니다. 원인: ${blobMsg}`
+              );
+            } else {
+              setUploadError(
+                `파일이 너무 큽니다 (${sizeMB}MB). 30MB 이하로 줄여 주세요.`
+              );
+            }
           } else {
-            setUploadError(`업로드 실패 (HTTP ${res.status}). 잠시 후 다시 시도해 주세요.`);
+            setUploadError(
+              `업로드 실패 (HTTP ${res.status}). R2 오류: ${blobMsg}`
+            );
           }
           return;
         }
         const json = await res.json();
         if (!json.ok) {
-          setUploadError(json.error ?? "업로드에 실패했습니다.");
+          setUploadError(json.error ?? `업로드 실패. R2 오류: ${blobMsg}`);
         } else {
           setImagePath(json.url);
           setUploadError(null);
