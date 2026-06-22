@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
-import { listEbooks } from "@/lib/ebooks-db";
+import { listEbooks } from "@/lib/public-cache";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
 export const dynamic = "force-dynamic";

@@ -1,10 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createBanner, updateBanner, deleteBanner } from "@/lib/banners-db";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 
 function refresh() {
+  updateTag(PUBLIC_TAG);
   revalidatePath("/admin/banners");
   revalidatePath("/");
 }

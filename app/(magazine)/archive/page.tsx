@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters } from "@/lib/chapters";
-import { listAllArticles, type ArticleMeta } from "@/lib/articles-db";
-import { listUsers } from "@/lib/users-db";
+import { type ArticleMeta } from "@/lib/articles-db";
+import { listAllArticles, listUsers } from "@/lib/public-cache";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
 // force-dynamic — 글 수가 늘어나면서 빌드 시 SSG 생성에 60초 초과 timeout 발생.

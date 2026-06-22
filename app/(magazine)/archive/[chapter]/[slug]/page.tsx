@@ -5,10 +5,10 @@ import { getChapter } from "@/lib/chapters";
 import {
   getArticleBySlug,
   listChapterArticles,
-} from "@/lib/articles-db";
+  listUsers,
+  getTagsForArticle,
+} from "@/lib/public-cache";
 import { getCurrentUser } from "@/lib/auth";
-import { listUsers } from "@/lib/users-db";
-import { getTagsForArticle } from "@/lib/tags-db";
 import { ShareBar } from "@/components/ShareBar";
 import { AdminEditLink } from "@/components/AdminEditLink";
 

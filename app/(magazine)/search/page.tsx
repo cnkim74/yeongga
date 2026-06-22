@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { listAllTags, listArticlesByTag, searchArticles } from "@/lib/tags-db";
+import {
+  listAllTags,
+  listArticlesByTag,
+  searchArticles,
+} from "@/lib/public-cache";
 import { chapters } from "@/lib/chapters";
 import { PageHeroBg } from "@/components/PageHeroBg";
 

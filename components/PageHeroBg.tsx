@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getPageBackground } from "@/lib/backgrounds-db";
+import { getPageBackground } from "@/lib/public-cache";
 
 export async function PageHeroBg({ page }: { page: string }) {
   const bg = await getPageBackground(page);

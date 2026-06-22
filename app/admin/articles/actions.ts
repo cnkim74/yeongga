@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import {
@@ -11,6 +11,7 @@ import {
   type Visibility,
 } from "@/lib/articles-db";
 import { setTagsForArticle } from "@/lib/tags-db";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 import { chapters } from "@/lib/chapters";
 
 export type ArticleFormState = { error?: string };
@@ -18,6 +19,7 @@ export type ArticleFormState = { error?: string };
 const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
 
 function refresh(chapter: string, slug?: string) {
+  updateTag(PUBLIC_TAG); // 공개 데이터 캐시 즉시 무효화
   revalidatePath("/admin/articles");
   revalidatePath("/admin");
   revalidatePath("/");

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
-import { listCategories, listPhotos, listPhotosByCategory } from "@/lib/gallery-db";
+import {
+  listCategories,
+  listPhotos,
+  listPhotosByCategory,
+} from "@/lib/public-cache";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { PhotoGrid } from "@/components/PhotoGrid";
 

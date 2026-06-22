@@ -1,10 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createEbook, updateEbook, deleteEbook } from "@/lib/ebooks-db";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 
 function refreshPaths() {
+  updateTag(PUBLIC_TAG);
   revalidatePath("/admin/ebooks");
   revalidatePath("/ebooks");
 }

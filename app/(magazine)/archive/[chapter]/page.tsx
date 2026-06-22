@@ -5,9 +5,11 @@ import { ChapterIcon } from "@/components/ChapterIcon";
 import { ChapterNavStrip } from "@/components/ChapterNavStrip";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { getChapter } from "@/lib/chapters";
-import { listChapterArticles } from "@/lib/articles-db";
-import { listUsers } from "@/lib/users-db";
-import { getChapterMeta } from "@/lib/chapter-meta-db";
+import {
+  listChapterArticles,
+  listUsers,
+  getChapterMeta,
+} from "@/lib/public-cache";
 
 // 빌드 타임 정적 생성 비활성화 (모임 챕터 100+편으로 60초 timeout 회피)
 // 매 요청 SSR + Next.js fetch 캐시 활용

@@ -1,7 +1,8 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { upsertPageBackground } from "@/lib/backgrounds-db";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 
 export type BgFormState = { error?: string; ok?: boolean };
 
@@ -27,6 +28,7 @@ export async function saveBgAction(
     active,
   });
 
+  updateTag(PUBLIC_TAG);
   revalidatePath(`/admin/backgrounds`);
   revalidatePath("/");
   revalidatePath("/archive");
@@ -44,6 +46,7 @@ export async function removeImageAction(formData: FormData) {
   const page = String(formData.get("page") ?? "").trim();
   if (!page) return;
   await upsertPageBackground(page, { image_path: null, opacity: 0.2, position: "center", active: false });
+  updateTag(PUBLIC_TAG);
   revalidatePath("/admin/backgrounds");
   revalidatePath("/");
   revalidatePath("/archive");

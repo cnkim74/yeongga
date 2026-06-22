@@ -4,10 +4,12 @@ import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
 import { chapters } from "@/lib/chapters";
-import { listActiveSlides } from "@/lib/slides-db";
-import { getFeaturedVideo } from "@/lib/videos-db";
-import { listHomeChapterDisplays } from "@/lib/chapter-meta-db";
-import { listActiveBanners } from "@/lib/banners-db";
+import {
+  listActiveSlides,
+  getFeaturedVideo,
+  listHomeChapterDisplays,
+  listActiveBanners,
+} from "@/lib/public-cache";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
 // force-dynamic — 글 수가 늘어나면서 빌드 시 SSG 생성에 60초 초과 timeout 발생.

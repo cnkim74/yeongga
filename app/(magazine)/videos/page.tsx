@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listVideos } from "@/lib/videos-db";
+import { listVideos } from "@/lib/public-cache";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
 import { PageHeroBg } from "@/components/PageHeroBg";
 

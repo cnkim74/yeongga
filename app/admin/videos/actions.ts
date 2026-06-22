@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import {
@@ -9,10 +9,12 @@ import {
   setFeatured,
   updateVideo,
 } from "@/lib/videos-db";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 
 export type VideoFormState = { error?: string };
 
 function refresh() {
+  updateTag(PUBLIC_TAG);
   revalidatePath("/admin/videos");
   revalidatePath("/videos");
   revalidatePath("/");

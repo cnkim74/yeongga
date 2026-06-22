@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { upsertChapterMeta, type DisplayMode } from "@/lib/chapter-meta-db";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 
 export async function saveChapterMetaAction(formData: FormData) {
   await requireAdmin();
@@ -39,6 +40,7 @@ export async function saveChapterMetaAction(formData: FormData) {
     position,
   });
 
+  updateTag(PUBLIC_TAG);
   revalidatePath("/admin/chapters");
   revalidatePath("/");
   revalidatePath(`/archive/${chapter_slug}`);

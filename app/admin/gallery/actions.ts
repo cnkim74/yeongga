@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import {
   createCategory,
@@ -10,8 +10,10 @@ import {
   updatePhoto,
   deletePhoto,
 } from "@/lib/gallery-db";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 
 function refreshPaths() {
+  updateTag(PUBLIC_TAG);
   revalidatePath("/gallery");
   revalidatePath("/admin/gallery");
 }

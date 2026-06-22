@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import {
   createSlide,
@@ -11,10 +11,12 @@ import {
   updateSlide,
 } from "@/lib/slides-db";
 import { deleteUploadIfLocal } from "@/lib/uploads";
+import { PUBLIC_TAG } from "@/lib/public-cache";
 
 export type SlideFormState = { error?: string; ok?: boolean };
 
 function refresh() {
+  updateTag(PUBLIC_TAG);
   revalidatePath("/admin/slides");
   revalidatePath("/");
 }
