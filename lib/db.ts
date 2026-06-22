@@ -602,6 +602,33 @@ async function init(client: Client) {
     await markMigration(client, "purge-wrong-munhwasang-1hoe-v1");
   }
 
+  // 영가문화상 8~11회 옛 글 영구 삭제 — 40년사 분책 기준 영가문화상은
+  // 신년하례회 자리에서 격년으로 시상되었고 실제 회차는 1~6회뿐
+  //   1회 2006(안동문화지킴이) · 2회 2008 · 3회 2010(안동문화원) ·
+  //   4회 2012(한국예총 안동시지부) · 5회 2014(김희곤) · 6회 2016(내방가사보존회)
+  // 이 6편은 이미 자료 기반 신년하례회 글로 모두 존재. 반면 8~11회 글은
+  // 존재하지 않는 회차 + 2011·2013은 시상 없던 해 + 2012·2014는 4·5회와
+  // 연도 중복인 출처 없는 추측성 글이므로 삭제하고 재시드 차단.
+  if (!(await hasMigration(client, "purge-wrong-munhwasang-8-11-v1"))) {
+    const slugs = [
+      "5dae-2011-munhwasang-8",
+      "5dae-2012-munhwasang-9",
+      "5dae-2013-munhwasang-10",
+      "5dae-2014-munhwasang-11",
+    ];
+    for (const slug of slugs) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["moim", slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["moim", slug],
+      });
+    }
+    await markMigration(client, "purge-wrong-munhwasang-8-11-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
