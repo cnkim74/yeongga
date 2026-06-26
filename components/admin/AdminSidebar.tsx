@@ -46,7 +46,7 @@ const NAV: NavGroup[] = [
       { href: "/admin/articles", label: "글 관리",      Icon: IconArticle },
       { href: "/admin/gallery",  label: "사진 갤러리",   Icon: IconGallery },
       { href: "/admin/ebooks",   label: "이북",         Icon: IconEbook },
-      { href: "/admin/documents", label: "자료실",       Icon: IconArchive },
+      { href: "/board",          label: "게시판",       Icon: IconArchive },
     ],
   },
   {

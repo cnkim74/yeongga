@@ -135,18 +135,26 @@ async function init(client: Client) {
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
-    CREATE TABLE IF NOT EXISTS documents (
+    CREATE TABLE IF NOT EXISTS posts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
-      description TEXT,
-      category TEXT,
+      body TEXT NOT NULL DEFAULT '',
+      author_id INTEGER,
+      author_name TEXT NOT NULL,
+      pinned INTEGER NOT NULL DEFAULT 0,
+      views INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS post_attachments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      post_id INTEGER NOT NULL,
       file_url TEXT NOT NULL,
       file_name TEXT NOT NULL,
       file_size INTEGER NOT NULL DEFAULT 0,
       mime TEXT,
-      position INTEGER NOT NULL DEFAULT 0,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      position INTEGER NOT NULL DEFAULT 0
     );
 
     CREATE TABLE IF NOT EXISTS seeded_deletions (

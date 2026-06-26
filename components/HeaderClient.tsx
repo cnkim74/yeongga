@@ -16,7 +16,7 @@ const NAV = [
   { href: "/videos", label: "영상" },
   { href: "/about", label: "소개" },
   { href: "/gallery", label: "갤러리" },
-  { href: "/documents", label: "자료실" },
+  { href: "/board", label: "게시판" },
 ];
 
 type Theme = "dark" | "light";
