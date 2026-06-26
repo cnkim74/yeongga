@@ -4,8 +4,10 @@ import { requireAdmin } from "@/lib/auth";
 import {
   saveUpload,
   saveEbookUpload,
+  saveDocumentUpload,
   generateUploadKey,
   extFromMime,
+  extFromFilename,
   type Bucket,
 } from "@/lib/uploads";
 import { r2Configured, r2PresignedPutUrl, r2PublicUrl } from "@/lib/r2";
@@ -24,6 +26,9 @@ export interface UploadRouteConfig {
   forceExt?: string;
   // 익명 접근 허용 — submission 같은 비로그인 폼 전용.
   publicAccess?: boolean;
+  // 모든 MIME 형식 허용 — 자료실처럼 임의 파일 업로드 전용.
+  // 켜면 allowedMimeTypes 검사를 건너뛰고, 확장자는 원본 파일명에서 추출.
+  allowAnyType?: boolean;
 }
 
 /**
@@ -66,7 +71,7 @@ export function createUploadRoute(config: UploadRouteConfig) {
         );
       }
       const mime = body.contentType ?? "";
-      if (!config.allowedMimeTypes.includes(mime)) {
+      if (!config.allowAnyType && !config.allowedMimeTypes.includes(mime)) {
         return NextResponse.json(
           { ok: false, error: `허용되지 않는 형식입니다. (${mime})` },
           { status: 400 }
@@ -87,7 +92,11 @@ export function createUploadRoute(config: UploadRouteConfig) {
           { status: 400 }
         );
       }
-      const ext = config.forceExt ?? extFromMime(mime) ?? "bin";
+      const ext =
+        config.forceExt ??
+        extFromMime(mime) ??
+        (body.filename ? extFromFilename(body.filename) : null) ??
+        "bin";
       const key = generateUploadKey(config.bucket, ext);
       const uploadUrl = await r2PresignedPutUrl(key, mime);
       const publicUrl = r2PublicUrl(key);
@@ -139,5 +148,6 @@ export const IMAGE_MIME_TYPES = [
 
 export const IMAGE_MAX_BYTES = 50 * 1024 * 1024; // 50MB
 export const PDF_MAX_BYTES = 300 * 1024 * 1024; // 300MB
+export const DOC_MAX_BYTES = 300 * 1024 * 1024; // 300MB — 자료실 문서·압축파일
 
-export { saveEbookUpload };
+export { saveEbookUpload, saveDocumentUpload };

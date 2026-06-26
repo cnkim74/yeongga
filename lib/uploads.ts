@@ -26,7 +26,14 @@ export type Bucket =
   | "gallery"
   | "chapters"
   | "banners"
-  | "submissions";
+  | "submissions"
+  | "documents";
+
+/** 파일명에서 확장자 추출 (소문자, 영숫자만). 없으면 null. */
+export function extFromFilename(filename: string): string | null {
+  const m = filename.match(/\.([A-Za-z0-9]+)$/);
+  return m ? m[1].toLowerCase() : null;
+}
 
 export function generateUploadKey(bucket: Bucket, ext: string): string {
   const filename = `${Date.now().toString(36)}-${crypto
@@ -133,6 +140,45 @@ export async function saveEbookUpload(file: File): Promise<UploadResult> {
   return {
     ok: true,
     publicPath: `/uploads/ebooks/${filename}`,
+    bytes: buf.length,
+  };
+}
+
+const DOC_MAX_BYTES = 300 * 1024 * 1024; // 300MB — 자료실 문서·압축파일 여유
+
+/** 자료실 — 모든 형식 허용. 확장자는 원본 파일명에서 보존. */
+export async function saveDocumentUpload(file: File): Promise<UploadResult> {
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: "파일이 비어 있습니다." };
+  }
+  if (file.size > DOC_MAX_BYTES) {
+    return {
+      ok: false,
+      error: `파일이 너무 큽니다 (최대 ${DOC_MAX_BYTES / 1024 / 1024}MB).`,
+    };
+  }
+
+  const ext = extFromFilename(file.name) ?? "bin";
+  const key = generateUploadKey("documents", ext);
+  const mime = file.type || "application/octet-stream";
+
+  if (r2Configured()) {
+    const buf = Buffer.from(await file.arrayBuffer());
+    const publicUrl = await r2Put(key, buf, mime);
+    return { ok: true, publicPath: publicUrl, bytes: buf.length };
+  }
+
+  // 로컬 — public/uploads/documents 에 저장
+  const uploadsRoot = path.join(process.cwd(), "public", "uploads");
+  const dir = path.join(uploadsRoot, "documents");
+  await fs.mkdir(dir, { recursive: true });
+  const filename = key.split("/").pop()!;
+  const fullPath = path.join(dir, filename);
+  const buf = Buffer.from(await file.arrayBuffer());
+  await fs.writeFile(fullPath, buf);
+  return {
+    ok: true,
+    publicPath: `/uploads/documents/${filename}`,
     bytes: buf.length,
   };
 }

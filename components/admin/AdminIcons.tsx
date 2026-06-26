@@ -133,3 +133,11 @@ export const IconSeal = (p: IconProps) => (
     <path d="M8 8h8M8 12h8M8 16h8" />
   </Svg>
 );
+
+/* 자료실 — 서류함(폴더) */
+export const IconArchive = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <path d="M9 13h6" />
+  </Svg>
+);
