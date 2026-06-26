@@ -7,7 +7,7 @@ import { PostForm } from "../../PostForm";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "글 수정 — 게시판 · 영가회 아카이브",
+  title: "글 수정 — 자료실 · 영가회 아카이브",
 };
 
 export default async function EditPostPage({

@@ -5,8 +5,8 @@ import { listPosts } from "@/lib/board-db";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "게시판 — 영가회 아카이브",
-  description: "영가회 회원 게시판.",
+  title: "자료실 — 영가회 아카이브",
+  description: "영가회 회원 자료실.",
 };
 
 function fmtDate(s: string): string {
@@ -33,8 +33,8 @@ export default async function BoardPage() {
     <>
       <section className="relative pt-40 pb-16 overflow-hidden bg-[var(--color-bg-soft)]">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="kicker text-[var(--color-ink-mute)] mb-4">회원 전용 · 揭示板</div>
-          <h1 className="display text-5xl sm:text-7xl mb-4">게시판</h1>
+          <div className="kicker text-[var(--color-ink-mute)] mb-4">회원 전용 · 資料室</div>
+          <h1 className="display text-5xl sm:text-7xl mb-4">자료실</h1>
           <p className="text-base text-[var(--color-ink-soft)]">
             영가회 회원들의 소식과 자료를 나누는 공간입니다.
           </p>
