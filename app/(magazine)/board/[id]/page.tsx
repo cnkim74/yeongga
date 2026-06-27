@@ -18,6 +18,11 @@ function extLabel(name: string): string {
   return (m ? m[1] : "FILE").toUpperCase();
 }
 
+function isImageAttachment(a: { mime: string | null; file_name: string }): boolean {
+  if (a.mime && a.mime.startsWith("image/")) return true;
+  return /\.(jpe?g|png|gif|webp|avif|bmp|heic|heif)$/i.test(a.file_name);
+}
+
 export default async function PostDetailPage({
   params,
 }: {
@@ -35,6 +40,9 @@ export default async function PostDetailPage({
   const isAdmin = user?.role === "admin";
   const isOwner = post.author_id != null && user?.id === post.author_id;
   const canEdit = Boolean(isOwner || isAdmin);
+
+  const imageAttachments = post.attachments.filter(isImageAttachment);
+  const fileAttachments = post.attachments.filter((a) => !isImageAttachment(a));
 
   return (
     <article className="pt-32 sm:pt-40 pb-24">
@@ -70,14 +78,36 @@ export default async function PostDetailPage({
           )}
         </div>
 
-        {/* 첨부파일 */}
-        {post.attachments.length > 0 && (
+        {/* 이미지 첨부 — 내용 안에 표시 */}
+        {imageAttachments.length > 0 && (
+          <div className="mt-6 space-y-4">
+            {imageAttachments.map((a) => (
+              <figure key={a.id} className="m-0">
+                <a href={a.file_url} target="_blank" rel="noopener noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={a.file_url}
+                    alt={a.file_name}
+                    loading="lazy"
+                    className="w-full h-auto rounded-lg border border-[var(--color-rule)]"
+                  />
+                </a>
+                <figcaption className="mt-1 text-xs text-[var(--color-ink-mute)] text-center">
+                  {a.file_name}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+
+        {/* 첨부파일 (이미지 외) */}
+        {fileAttachments.length > 0 && (
           <div className="mt-8 rounded-xl border border-[var(--color-rule)] p-4">
             <div className="text-sm font-semibold text-[var(--color-ink)] mb-3">
-              첨부파일 {post.attachments.length}개
+              첨부파일 {fileAttachments.length}개
             </div>
             <ul className="space-y-2">
-              {post.attachments.map((a) => (
+              {fileAttachments.map((a) => (
                 <li key={a.id}>
                   <a
                     href={a.file_url}
