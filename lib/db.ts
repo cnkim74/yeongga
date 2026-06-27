@@ -309,31 +309,9 @@ async function init(client: Client) {
     `CREATE INDEX IF NOT EXISTS idx_photos_visibility_position ON photos(visibility, position)`
   );
 
-  // 시드: 관리자 + 회원 샘플
-  const userCount = (
-    await client.execute("SELECT COUNT(*) as n FROM users")
-  ).rows[0].n as number;
-
-  if (userCount === 0) {
-    const insert = (
-      username: string,
-      name: string,
-      pass: string,
-      role: "admin" | "member",
-      joined: string | null,
-      note: string
-    ) =>
-      client.execute({
-        sql: `INSERT INTO users (username, name, password_hash, role, joined_at, note)
-              VALUES (?, ?, ?, ?, ?, ?)`,
-        args: [username, name, hashPassword(pass), role, joined, note],
-      });
-
-    await insert("kim", "김영석", "yeongga", "member", "1998-10-12", "초대 회원 · 회장");
-    await insert("park", "박정자", "yeongga", "member", "1998-10-12", "서기");
-    await insert("lee", "이숙자", "yeongga", "member", "2003-04-05", "");
-    await insert("jeong", "정인규", "yeongga", "member", "2010-09-14", "");
-  }
+  // 관리자 계정은 아래 ensureAdmin 이 보장한다. 데모 회원 샘플 시드는
+  // 약한 기본 비밀번호(yeongga) 문제로 제거됨 — 실제 회원은 구글 로그인 또는
+  // 관리자가 발급한 계정으로 가입한다.
 
   // ─── ensureAdmin: 매 부팅마다 admin 단일 계정 보장 + 중복 자동 병합 ──
   // 보장 사항
@@ -444,6 +422,17 @@ async function init(client: Client) {
       sql: `UPDATE users SET email = ?, role = 'admin' WHERE id = ?`,
       args: [adminEmail, canonicalId],
     });
+  }
+
+  // 데모 회원 계정(kim/park/lee/jeong) 영구 삭제 — 약한 기본 비밀번호 'yeongga' 제거.
+  // 초기 시드로 만들어진 로컬 인증 샘플 계정만 대상. (글의 author_name 은 남으므로 표시는 유지)
+  if (!(await hasMigration(client, "remove-demo-members-v1"))) {
+    await client.execute(
+      `DELETE FROM users
+         WHERE auth_provider = 'local' AND role = 'member'
+           AND username IN ('kim','park','lee','jeong')`
+    );
+    await markMigration(client, "remove-demo-members-v1");
   }
 
   // 시드: 슬라이드
