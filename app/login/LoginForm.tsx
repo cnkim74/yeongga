@@ -71,7 +71,7 @@ export function LoginForm({
 
         <label className="block">
           <span className="kicker text-[var(--color-ink-mute)] mb-1.5 block">
-            아이디
+            아이디 또는 이메일
           </span>
           <input
             name="username"

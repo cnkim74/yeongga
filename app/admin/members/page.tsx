@@ -3,13 +3,15 @@ import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
 import { listUsers } from "@/lib/users-db";
 import { getCurrentUser } from "@/lib/auth";
-import { deleteMemberAction } from "./actions";
+import { deleteMemberAction, approveMemberAction } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminMembers() {
   const me = await getCurrentUser();
-  const users = await listUsers();
+  const allUsers = await listUsers();
+  const pending = allUsers.filter((u) => u.status === "pending");
+  const users = allUsers.filter((u) => u.status !== "pending");
   const adminCount = users.filter((u) => u.role === "admin").length;
   const memberCount = users.filter((u) => u.role === "member").length;
 
@@ -54,7 +56,55 @@ export default async function AdminMembers() {
           <Prop k="총" v={`${users.length}명`} />
           <Prop k="관리자" v={`${adminCount}명`} />
           <Prop k="회원" v={`${memberCount}명`} />
+          {pending.length > 0 && (
+            <Prop k="⏳ 승인 대기" v={`${pending.length}명`} />
+          )}
         </div>
+
+        {/* 승인 대기 */}
+        {pending.length > 0 && (
+          <div className="mb-10 rounded-xl border border-amber-300 bg-amber-50/60 p-5">
+            <h2 className="text-base font-semibold mb-1 text-amber-800">
+              ⏳ 가입 승인 대기 {pending.length}명
+            </h2>
+            <p className="text-sm text-amber-700/80 mb-4">
+              승인하면 해당 회원이 로그인할 수 있습니다. 거절하면 신청이 삭제됩니다.
+            </p>
+            <ul className="divide-y divide-amber-200">
+              {pending.map((u) => (
+                <li key={u.id} className="flex items-center gap-3 py-2.5">
+                  <Avatar src={u.avatar_url} name={u.name} />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate">
+                      {u.name}
+                      <ProviderTag provider={u.auth_provider} />
+                    </div>
+                    <div className="text-xs text-[var(--color-notion-mute)] font-mono truncate">
+                      {u.email ?? u.username}
+                    </div>
+                  </div>
+                  <form action={approveMemberAction}>
+                    <input type="hidden" name="id" value={u.id} />
+                    <button
+                      type="submit"
+                      className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] text-xs"
+                    >
+                      ✓ 승인
+                    </button>
+                  </form>
+                  <ConfirmDelete
+                    action={deleteMemberAction}
+                    hidden={{ id: u.id }}
+                    message={`${u.name} 님의 가입 신청을 거절(삭제)할까요?`}
+                    className="notion-icon-btn text-[#c4554d] hover:bg-[#ffe2dd] text-xs"
+                  >
+                    거절
+                  </ConfirmDelete>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="overflow-x-auto -mx-2">
           <table className="notion-table min-w-[1020px]">

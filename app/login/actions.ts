@@ -22,6 +22,11 @@ export async function loginAction(
   if (!user) {
     return { error: "아이디 또는 비밀번호가 올바르지 않습니다." };
   }
+  if (user.status === "pending") {
+    return {
+      error: "아직 관리자 승인 대기 중인 계정입니다. 승인 후 로그인하실 수 있습니다.",
+    };
+  }
 
   const session = await getSession();
   session.user = {

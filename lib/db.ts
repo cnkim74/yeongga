@@ -263,6 +263,8 @@ async function init(client: Client) {
   await addCol("avatar_url", "TEXT");
   await addCol("auth_provider", "TEXT NOT NULL DEFAULT 'local'");
   await addCol("provider_id", "TEXT");
+  // 가입 승인 상태 — 기존 계정은 모두 approved, 신규 자가가입만 pending
+  await addCol("status", "TEXT NOT NULL DEFAULT 'approved'");
 
   // ─── 마이그레이션: chapter_meta 에 hero_image 컬럼 추가 ──
   const cmCols = await client.execute("PRAGMA table_info(chapter_meta)");

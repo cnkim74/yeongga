@@ -12,6 +12,7 @@ export type User = {
   auth_provider: "local" | "google" | "naver";
   provider_id: string | null;
   role: "admin" | "member";
+  status: "pending" | "approved";
   joined_at: string | null;
   note: string | null;
   created_at: string;
@@ -29,6 +30,7 @@ function rowToUser(row: Record<string, unknown>): User {
     auth_provider: (row.auth_provider as User["auth_provider"]) ?? "local",
     provider_id: row.provider_id == null ? null : String(row.provider_id),
     role: row.role as "admin" | "member",
+    status: row.status === "pending" ? "pending" : "approved",
     joined_at: row.joined_at == null ? null : String(row.joined_at),
     note: row.note == null ? null : String(row.note),
     created_at: String(row.created_at),
@@ -40,10 +42,14 @@ export async function authenticate(
   password: string
 ): Promise<User | null> {
   const db = await getDb();
+  // 아이디(username) 또는 이메일로 로그인 허용
+  const ident = username.trim();
   const r = await db.execute({
-    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, password_hash, role, joined_at, note, created_at
-          FROM users WHERE username = ?`,
-    args: [username],
+    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, password_hash, role, status, joined_at, note, created_at
+          FROM users
+          WHERE username = ? OR LOWER(TRIM(email)) = LOWER(TRIM(?))
+          LIMIT 1`,
+    args: [ident, ident],
   });
   const row = r.rows[0] as unknown as UserRow | undefined;
   if (!row) return null;
@@ -54,7 +60,7 @@ export async function authenticate(
 export async function listUsers(): Promise<User[]> {
   const db = await getDb();
   const r = await db.execute(
-    `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, joined_at, note, created_at
+    `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, status, joined_at, note, created_at
      FROM users ORDER BY role DESC, joined_at ASC, id ASC`
   );
   return r.rows.map((r) => rowToUser(r as unknown as Record<string, unknown>));
@@ -77,7 +83,7 @@ export async function countUsers(): Promise<{ total: number; admins: number }> {
 export async function listRecentUsers(limit = 6): Promise<User[]> {
   const db = await getDb();
   const r = await db.execute({
-    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, joined_at, note, created_at
+    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, status, joined_at, note, created_at
           FROM users ORDER BY role DESC, joined_at ASC, id ASC LIMIT ?`,
     args: [limit],
   });
@@ -87,7 +93,7 @@ export async function listRecentUsers(limit = 6): Promise<User[]> {
 export async function getUser(id: number): Promise<User | null> {
   const db = await getDb();
   const r = await db.execute({
-    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, joined_at, note, created_at
+    sql: `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, status, joined_at, note, created_at
           FROM users WHERE id = ?`,
     args: [id],
   });
@@ -102,6 +108,7 @@ export async function createUser(input: {
   avatar_url?: string | null;
   password?: string | null; // 비워두면 무작위 — Google 전용 계정용
   role: "admin" | "member";
+  status?: "pending" | "approved";
   joined_at?: string | null;
   note?: string | null;
 }): Promise<{ ok: true; id: number } | { ok: false; error: string }> {
@@ -125,8 +132,8 @@ export async function createUser(input: {
   const passwordToHash = input.password || randomBytes(24).toString("hex");
 
   const r = await db.execute({
-    sql: `INSERT INTO users (username, name, email, avatar_url, password_hash, role, joined_at, note)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO users (username, name, email, avatar_url, password_hash, role, status, joined_at, note)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
       input.username,
       input.name,
@@ -134,6 +141,7 @@ export async function createUser(input: {
       input.avatar_url ?? null,
       hashPassword(passwordToHash),
       input.role,
+      input.status ?? "approved",
       input.joined_at ?? null,
       input.note ?? null,
     ],
@@ -201,10 +209,11 @@ export async function deleteUser(id: number) {
 }
 
 // Google OAuth — provider_id 또는 email로 기존 회원을 찾아 연결.
-// 미등록(매칭되는 회원 없음) 이면 null 반환 → 호출자가 거부 처리.
+// 매칭되는 회원이 없으면 'pending'(승인 대기) 회원으로 신규 생성한다.
 export async function findOrLinkGoogleUser(input: {
   googleId: string;
   email: string;
+  name?: string | null;
   picture?: string | null;
 }): Promise<User | null> {
   const db = await getDb();
@@ -223,19 +232,74 @@ export async function findOrLinkGoogleUser(input: {
     });
   }
 
-  if (r.rows.length === 0) return null;
+  // 기존 회원 — 구글 연결 정보 갱신 후 반환
+  if (r.rows.length > 0) {
+    const id = Number(r.rows[0].id);
+    await db.execute({
+      sql: `UPDATE users
+            SET auth_provider = 'google',
+                provider_id = ?,
+                email = ?,
+                avatar_url = COALESCE(?, avatar_url)
+            WHERE id = ?`,
+      args: [input.googleId, email, input.picture ?? null, id],
+    });
+    return getUser(id);
+  }
 
-  const id = Number(r.rows[0].id);
-
-  await db.execute({
-    sql: `UPDATE users
-          SET auth_provider = 'google',
-              provider_id = ?,
-              email = ?,
-              avatar_url = COALESCE(?, avatar_url)
-          WHERE id = ?`,
-    args: [input.googleId, email, input.picture ?? null, id],
+  // 신규 — 승인 대기(pending) 회원으로 생성
+  const username = await uniqueUsername(db, email);
+  const ins = await db.execute({
+    sql: `INSERT INTO users
+            (username, name, email, avatar_url, password_hash, role, status, auth_provider, provider_id, joined_at)
+          VALUES (?, ?, ?, ?, ?, 'member', 'pending', 'google', ?, ?)`,
+    args: [
+      username,
+      (input.name && input.name.trim()) || email.split("@")[0],
+      email,
+      input.picture ?? null,
+      hashPassword(randomBytes(24).toString("hex")),
+      input.googleId,
+      new Date().toISOString().slice(0, 10),
+    ],
   });
+  return getUser(Number(ins.lastInsertRowid));
+}
 
-  return getUser(id);
+/** username 후보가 비어있지 않고 유일하도록 보정 */
+async function uniqueUsername(
+  db: Awaited<ReturnType<typeof getDb>>,
+  base: string
+): Promise<string> {
+  let candidate = base || `user-${randomBytes(3).toString("hex")}`;
+  let n = 2;
+  // 최대 몇 번만 시도 (충돌은 사실상 없음)
+  for (let i = 0; i < 50; i++) {
+    const dup = await db.execute({
+      sql: "SELECT 1 FROM users WHERE username = ? LIMIT 1",
+      args: [candidate],
+    });
+    if (dup.rows.length === 0) return candidate;
+    candidate = `${base}-${n}`;
+    n += 1;
+  }
+  return `${base}-${randomBytes(4).toString("hex")}`;
+}
+
+/** 승인 대기 중인 회원 목록 (신청 최신순) */
+export async function listPendingUsers(): Promise<User[]> {
+  const db = await getDb();
+  const r = await db.execute(
+    `SELECT id, username, name, email, avatar_url, auth_provider, provider_id, role, status, joined_at, note, created_at
+     FROM users WHERE status = 'pending' ORDER BY id DESC`
+  );
+  return r.rows.map((r) => rowToUser(r as unknown as Record<string, unknown>));
+}
+
+export async function approveUser(id: number): Promise<void> {
+  const db = await getDb();
+  await db.execute({
+    sql: "UPDATE users SET status = 'approved' WHERE id = ?",
+    args: [id],
+  });
 }

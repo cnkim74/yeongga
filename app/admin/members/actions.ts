@@ -3,13 +3,28 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
-import { createUser, deleteUser, getUser, updateUser } from "@/lib/users-db";
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  updateUser,
+  approveUser,
+} from "@/lib/users-db";
 import { deleteUploadIfLocal } from "@/lib/uploads";
 
 export type MemberFormState = { error?: string };
 
 function refresh() {
   revalidatePath("/admin/members");
+}
+
+/** 가입 신청 승인 — 승인되면 해당 회원이 로그인할 수 있게 된다. */
+export async function approveMemberAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  if (!id) return;
+  await approveUser(id);
+  refresh();
 }
 
 export async function saveMemberAction(

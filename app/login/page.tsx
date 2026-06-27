@@ -10,12 +10,24 @@ export const metadata = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; need?: string; error?: string }>;
+  searchParams: Promise<{
+    next?: string;
+    need?: string;
+    error?: string;
+    registered?: string;
+    pending?: string;
+  }>;
 }) {
   const sp = await searchParams;
   const next = sp.next ?? "/";
   const needAdmin = sp.need === "admin";
   const initialError = sp.error;
+  const notice =
+    sp.registered === "1"
+      ? "가입 신청이 접수되었습니다. 관리자 승인 후 로그인하실 수 있습니다."
+      : sp.pending === "1"
+      ? "아직 관리자 승인 대기 중인 계정입니다. 승인되면 로그인하실 수 있습니다."
+      : null;
 
   const user = await getCurrentUser();
   // 에러 메시지가 있으면 (예: Google OAuth 실패) 로그인 상태여도 페이지를 그려서
@@ -76,10 +88,22 @@ export default async function LoginPage({
             영가회 계정으로 들어오세요.
           </p>
 
+          {notice && (
+            <div className="mb-6 text-sm bg-[var(--color-bg-soft)] border border-[var(--color-rule)] rounded-lg p-3 text-[var(--color-ink-soft)]">
+              {notice}
+            </div>
+          )}
+
           <LoginForm next={next} needAdmin={needAdmin} initialError={initialError} />
 
           <div className="mt-8 text-sm text-[var(--color-ink-mute)] text-center">
-            계정이 없으신가요? 운영진에게 요청하시면 계정을 발급해 드립니다.
+            계정이 없으신가요?{" "}
+            <Link
+              href={`/signup?next=${encodeURIComponent(next)}`}
+              className="text-[var(--color-accent)] underline hover:opacity-80"
+            >
+              회원가입
+            </Link>
           </div>
         </div>
       </div>

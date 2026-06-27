@@ -68,20 +68,22 @@ export async function GET(req: NextRequest) {
   const user = await findOrLinkGoogleUser({
     googleId: userInfo.sub,
     email: userInfo.email,
+    name: userInfo.name ?? null,
     picture: userInfo.picture ?? null,
   });
 
   if (!user) {
-    console.warn(
-      "[google oauth] no matching user for email",
-      userInfo.email,
-      "googleId",
-      userInfo.sub
-    );
-    return loginErrorRedirect(
-      req,
-      `등록되지 않은 계정입니다 (${userInfo.email}). 운영진에게 문의해 주세요.`
-    );
+    return loginErrorRedirect(req, "로그인 처리 중 오류가 발생했습니다.");
+  }
+
+  // 승인 대기(신규 가입 포함) — 세션 없이 안내 페이지로
+  if (user.status === "pending") {
+    const url = new URL("/login", req.url);
+    url.searchParams.set("pending", "1");
+    const res = NextResponse.redirect(url);
+    res.cookies.delete("g_oauth_state");
+    res.cookies.delete("g_oauth_next");
+    return res;
   }
 
   console.log(
