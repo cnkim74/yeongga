@@ -81,17 +81,6 @@ export default async function LoginPage({
           <div className="mt-8 text-sm text-[var(--color-ink-mute)] text-center">
             계정이 없으신가요? 운영진에게 요청하시면 계정을 발급해 드립니다.
           </div>
-
-          <div className="mt-12 pt-6 border-t border-[var(--color-rule)] text-xs text-[var(--color-ink-mute)] leading-relaxed">
-            <strong className="text-[var(--color-ink-soft)]">기본 계정 안내 (개발용):</strong>
-            <ul className="mt-2 space-y-1 font-mono">
-              <li>관리자 — admin / yeongga</li>
-              <li>회원 예시 — kim / yeongga</li>
-            </ul>
-            <div className="mt-2 text-[10px]">
-              운영 시작 전에 비밀번호를 반드시 변경하세요.
-            </div>
-          </div>
         </div>
       </div>
     </div>
