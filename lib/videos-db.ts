@@ -33,8 +33,9 @@ function rowToVideo(row: Record<string, unknown>): Video {
 
 export async function listVideos(): Promise<Video[]> {
   const db = await getDb();
+  // 게시판처럼 업로드 최신순. 추천(⭐) 한 편만 맨 위 고정.
   const r = await db.execute(
-    `SELECT * FROM videos ORDER BY featured DESC, position ASC, id DESC`
+    `SELECT * FROM videos ORDER BY featured DESC, id DESC`
   );
   return r.rows.map((row) => rowToVideo(row as unknown as Record<string, unknown>));
 }
@@ -80,8 +81,11 @@ export async function createVideo(input: {
   description?: string | null;
   inputUrl: string;
   featured: boolean;
+  thumbnailUrl?: string | null;
 }): Promise<{ ok: true; id: number } | { ok: false; error: string }> {
   const parsed = parseEmbed(input.inputUrl);
+  // 직접 올린 썸네일 우선, 없으면 유튜브 자동 썸네일
+  const thumbnail = (input.thumbnailUrl?.trim() || parsed.thumbnailUrl) ?? null;
   const db = await getDb();
   if (input.featured) {
     await db.execute("UPDATE videos SET featured = 0");
@@ -100,7 +104,7 @@ export async function createVideo(input: {
       parsed.embedUrl,
       parsed.provider,
       parsed.videoId,
-      parsed.thumbnailUrl,
+      thumbnail,
       input.featured ? 1 : 0,
       max + 1,
     ],
@@ -116,9 +120,11 @@ export async function updateVideo(
     description?: string | null;
     inputUrl: string;
     featured: boolean;
+    thumbnailUrl?: string | null;
   }
 ) {
   const parsed = parseEmbed(input.inputUrl);
+  const thumbnail = (input.thumbnailUrl?.trim() || parsed.thumbnailUrl) ?? null;
   const db = await getDb();
   if (input.featured) {
     await db.execute({
@@ -137,7 +143,7 @@ export async function updateVideo(
       parsed.embedUrl,
       parsed.provider,
       parsed.videoId,
-      parsed.thumbnailUrl,
+      thumbnail,
       input.featured ? 1 : 0,
       id,
     ],

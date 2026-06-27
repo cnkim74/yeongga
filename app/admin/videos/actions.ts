@@ -30,15 +30,16 @@ export async function saveVideoAction(
   const kicker = String(formData.get("kicker") ?? "").trim() || null;
   const description = String(formData.get("description") ?? "").trim() || null;
   const featured = formData.get("featured") === "on";
+  const thumbnailUrl = String(formData.get("thumbnailUrl") ?? "").trim() || null;
 
   if (!title) return { error: "제목은 비워둘 수 없습니다." };
   if (!inputUrl)
     return { error: "유튜브/비메오 URL을 붙여 넣어 주세요." };
 
   if (id) {
-    await updateVideo(id, { kicker, title, description, inputUrl, featured });
+    await updateVideo(id, { kicker, title, description, inputUrl, featured, thumbnailUrl });
   } else {
-    const r = await createVideo({ kicker, title, description, inputUrl, featured });
+    const r = await createVideo({ kicker, title, description, inputUrl, featured, thumbnailUrl });
     if (!r.ok) return { error: r.error };
   }
 

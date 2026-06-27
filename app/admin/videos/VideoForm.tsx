@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { saveVideoAction, type VideoFormState } from "./actions";
 import type { Video } from "@/lib/videos-db";
 
@@ -9,6 +9,41 @@ export function VideoForm({ video }: { video?: Video }) {
     saveVideoAction,
     {}
   );
+
+  const [thumbUrl, setThumbUrl] = useState(video?.thumbnail_url ?? "");
+  const [thumbUploading, setThumbUploading] = useState(false);
+  const [thumbErr, setThumbErr] = useState<string | null>(null);
+
+  async function uploadThumb(file: File) {
+    if (!file.type.startsWith("image/")) {
+      setThumbErr("이미지 파일만 업로드할 수 있습니다.");
+      return;
+    }
+    setThumbUploading(true);
+    setThumbErr(null);
+    try {
+      const { uploadToR2 } = await import("@/lib/r2-client");
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const blob = await uploadToR2(safeName, file, {
+        handleUploadUrl: "/api/upload/photo",
+        contentType: file.type || "image/jpeg",
+      });
+      setThumbUrl(blob.url);
+    } catch {
+      try {
+        const fd = new FormData();
+        fd.append("file", file);
+        const res = await fetch("/api/upload/photo", { method: "POST", body: fd });
+        const json = await res.json();
+        if (!json.ok) setThumbErr(json.error ?? "썸네일 업로드 실패");
+        else setThumbUrl(json.url);
+      } catch {
+        setThumbErr("썸네일 업로드 중 오류가 발생했습니다.");
+      }
+    } finally {
+      setThumbUploading(false);
+    }
+  }
 
   // edit 화면에서 다시 입력 받을 URL — embed_url 그대로 보여주거나 watch URL 복원
   const initialUrl = video
@@ -64,6 +99,47 @@ export function VideoForm({ video }: { video?: Video }) {
           defaultValue={video?.description ?? ""}
           className="notion-input w-full border border-[var(--color-notion-rule)] focus:border-[var(--color-notion-accent)]"
         />
+      </div>
+
+      {/* 썸네일 — 직접 업로드(선택), 비우면 유튜브 자동 */}
+      <div>
+        <Label>썸네일</Label>
+        <input type="hidden" name="thumbnailUrl" value={thumbUrl} />
+        {thumbUrl && (
+          <div className="mb-2 flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={thumbUrl}
+              alt="썸네일 미리보기"
+              className="w-40 aspect-video object-cover rounded border border-[var(--color-notion-rule)]"
+            />
+            <button
+              type="button"
+              onClick={() => setThumbUrl("")}
+              className="text-sm text-[#c4554d] hover:underline"
+            >
+              삭제
+            </button>
+          </div>
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          disabled={thumbUploading}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) uploadThumb(f);
+            e.target.value = "";
+          }}
+          className="notion-input w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-[var(--color-notion-hover)] file:px-3 file:py-1 file:text-sm file:cursor-pointer"
+        />
+        {thumbUploading && (
+          <div className="text-xs text-[var(--color-notion-mute)] mt-1">업로드 중…</div>
+        )}
+        {thumbErr && <div className="text-xs text-[#c4554d] mt-1">{thumbErr}</div>}
+        <div className="text-xs text-[var(--color-notion-mute)] mt-1">
+          비워두면 유튜브 영상의 기본 썸네일을 자동으로 사용합니다.
+        </div>
       </div>
 
       <label className="flex items-center gap-2 text-sm">
