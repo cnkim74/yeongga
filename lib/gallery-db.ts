@@ -74,6 +74,69 @@ export const listCategories = unstable_cache(
   { tags: ["gallery"], revalidate: CACHE_TTL }
 );
 
+export type Album = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  position: number;
+  cover: string | null;
+  photo_count: number;
+};
+
+/** 앨범 카드용 — 카테고리 + 대표 이미지(커버 없으면 첫 사진) + 사진 수.
+ *  publicOnly 면 공개 사진만으로 커버·개수 산정. */
+export const listAlbums = unstable_cache(
+  async (publicOnly = false): Promise<Album[]> => {
+    const db = await getDb();
+    const visFilter = publicOnly ? "AND pp.visibility = 'public'" : "";
+    const visFilter2 = publicOnly ? "AND pc.visibility = 'public'" : "";
+    const res = await db.execute(`
+      SELECT c.id, c.name, c.slug, c.description, c.position,
+             COALESCE(
+               c.cover_url,
+               (SELECT pp.image_url FROM photos pp
+                 WHERE pp.category_id = c.id ${visFilter}
+                 ORDER BY pp.position ASC, pp.id ASC LIMIT 1)
+             ) AS cover,
+             (SELECT COUNT(*) FROM photos pc
+                WHERE pc.category_id = c.id ${visFilter2}) AS photo_count
+      FROM photo_categories c
+      ORDER BY c.position ASC, c.id ASC
+    `);
+    return res.rows.map((r) => {
+      const row = r as Record<string, unknown>;
+      return {
+        id: Number(row.id),
+        name: String(row.name),
+        slug: String(row.slug),
+        description: row.description != null ? String(row.description) : null,
+        position: Number(row.position),
+        cover: row.cover != null ? String(row.cover) : null,
+        photo_count: Number(row.photo_count ?? 0),
+      };
+    });
+  },
+  ["gallery:albums"],
+  { tags: ["gallery"], revalidate: CACHE_TTL }
+);
+
+export async function getCategoryById(id: number): Promise<PhotoCategory | null> {
+  const db = await getDb();
+  const res = await db.execute({
+    sql: `SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position,
+                 COUNT(p.id) AS photo_count
+          FROM photo_categories c
+          LEFT JOIN photos p ON p.category_id = c.id
+          WHERE c.id = ?
+          GROUP BY c.id
+          LIMIT 1`,
+    args: [id],
+  });
+  if (res.rows.length === 0) return null;
+  return rowToCategory(res.rows[0] as Record<string, unknown>);
+}
+
 export async function getCategoryBySlug(slug: string): Promise<PhotoCategory | null> {
   const db = await getDb();
   const res = await db.execute({

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import {
   createCategory,
@@ -9,12 +10,155 @@ import {
   createPhoto,
   updatePhoto,
   deletePhoto,
+  getCategoryById,
+  listCategories,
+  listPhotos,
 } from "@/lib/gallery-db";
+import { deleteUploadIfLocal } from "@/lib/uploads";
 
 function refreshPaths() {
   revalidatePath("/gallery");
   revalidatePath("/admin/gallery");
   revalidateTag("gallery", "max"); // unstable_cache 무효화
+}
+
+// ─── 앨범(게시판식) 액션 ──────────────────────────────────────
+
+type AlbumImage = { image_url: string; file_name?: string };
+
+function parseAlbumImages(raw: FormDataEntryValue | null): AlbumImage[] {
+  if (!raw) return [];
+  try {
+    const arr = JSON.parse(String(raw));
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .filter((a) => a && typeof a.image_url === "string")
+      .map((a) => ({ image_url: String(a.image_url), file_name: a.file_name ? String(a.file_name) : undefined }));
+  } catch {
+    return [];
+  }
+}
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+async function uniqueSlug(base: string, excludeId?: number): Promise<string> {
+  const cats = await listCategories();
+  const taken = new Set(
+    cats.filter((c) => c.id !== excludeId).map((c) => c.slug)
+  );
+  let candidate = base || "album";
+  let n = 2;
+  while (taken.has(candidate)) {
+    candidate = `${base || "album"}-${n}`;
+    n += 1;
+  }
+  return candidate;
+}
+
+export async function createAlbumAction(fd: FormData) {
+  await requireAdmin();
+
+  const name = String(fd.get("name") ?? "").trim();
+  const description = String(fd.get("description") ?? "").trim() || null;
+  const slugInput = slugify(String(fd.get("slug") ?? ""));
+  const visibility =
+    fd.get("visibility") === "members-only" ? "members-only" : "public";
+  const images = parseAlbumImages(fd.get("images"));
+
+  if (!name) return { error: "앨범 제목을 입력해 주세요." };
+
+  const base = slugInput || slugify(name) || `album-${Date.now().toString(36)}`;
+  const slug = await uniqueSlug(base);
+  const cover_url = images[0]?.image_url ?? null;
+
+  const categoryId = await createCategory({ name, slug, description, cover_url });
+  for (let i = 0; i < images.length; i++) {
+    await createPhoto({
+      category_id: categoryId,
+      image_url: images[i].image_url,
+      position: i,
+      visibility,
+    });
+  }
+
+  refreshPaths();
+  redirect("/admin/gallery");
+}
+
+export async function updateAlbumAction(fd: FormData) {
+  await requireAdmin();
+
+  const id = Number(fd.get("id"));
+  if (!id) return { error: "ID가 없습니다." };
+  const album = await getCategoryById(id);
+  if (!album) return { error: "앨범을 찾을 수 없습니다." };
+
+  const name = String(fd.get("name") ?? "").trim();
+  const description = String(fd.get("description") ?? "").trim() || null;
+  const slugInput = slugify(String(fd.get("slug") ?? ""));
+  const visibility =
+    fd.get("visibility") === "members-only" ? "members-only" : "public";
+  const images = parseAlbumImages(fd.get("images"));
+
+  if (!name) return { error: "앨범 제목을 입력해 주세요." };
+
+  const slug =
+    slugInput && slugInput !== album.slug
+      ? await uniqueSlug(slugInput, id)
+      : album.slug;
+  const cover_url = images[0]?.image_url ?? null;
+
+  await updateCategory(id, { name, slug, description, cover_url });
+
+  // 사진 동기화 — image_url 기준
+  const existing = await listPhotos({ categoryId: id });
+  const byUrl = new Map(existing.map((p) => [p.image_url, p]));
+  const newUrls = new Set(images.map((im) => im.image_url));
+
+  for (let i = 0; i < images.length; i++) {
+    const url = images[i].image_url;
+    const found = byUrl.get(url);
+    if (found) {
+      await updatePhoto(found.id, { position: i, visibility });
+    } else {
+      await createPhoto({
+        category_id: id,
+        image_url: url,
+        position: i,
+        visibility,
+      });
+    }
+  }
+  // 빠진 사진 제거 + 스토리지 정리
+  for (const p of existing) {
+    if (!newUrls.has(p.image_url)) {
+      await deletePhoto(p.id);
+      await deleteUploadIfLocal(p.image_url);
+    }
+  }
+
+  refreshPaths();
+  redirect("/admin/gallery");
+}
+
+export async function deleteAlbumAction(fd: FormData) {
+  await requireAdmin();
+  const id = Number(fd.get("id"));
+  if (!id) return;
+  const photos = await listPhotos({ categoryId: id });
+  for (const p of photos) {
+    await deletePhoto(p.id);
+    await deleteUploadIfLocal(p.image_url);
+  }
+  await deleteCategory(id);
+  refreshPaths();
+  redirect("/admin/gallery");
 }
 
 // ─── 카테고리 액션 ────────────────────────────────────────────

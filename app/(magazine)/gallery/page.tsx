@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
-import { listCategories, listPhotos, listPhotosByCategory } from "@/lib/gallery-db";
+import {
+  listCategories,
+  listAlbums,
+  listPhotosByCategory,
+} from "@/lib/gallery-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { PhotoGrid } from "@/components/PhotoGrid";
 
@@ -20,21 +24,17 @@ export default async function GalleryPage({
 
   const categories = await listCategories();
 
-  // 비회원에게는 public만 노출
-  const visibility = user ? undefined : "public";
+  // 첫 화면(앨범 카드)용 — 비회원은 공개 사진 기준 커버·개수
+  const albums = await listAlbums(!user);
 
-  let photos: Awaited<ReturnType<typeof listPhotos>>;
+  // 특정 앨범을 열었을 때만 사진 로드
+  let photos: Awaited<ReturnType<typeof listPhotosByCategory>> = [];
   if (category) {
-    // 카테고리 필터
     const cat = categories.find((c) => c.slug === category);
     if (cat) {
       const allInCat = await listPhotosByCategory(category);
       photos = user ? allInCat : allInCat.filter((p) => p.visibility === "public");
-    } else {
-      photos = [];
     }
-  } else {
-    photos = await listPhotos(visibility ? { visibility } : undefined);
   }
 
   const activeCategory = category ? categories.find((c) => c.slug === category) : null;
@@ -101,17 +101,76 @@ export default async function GalleryPage({
             </div>
           )}
 
-          {/* 현재 카테고리 타이틀 */}
-          {activeCategory && (
-            <div className="mb-6">
-              <h2 className="display-md text-2xl sm:text-3xl">{activeCategory.name}</h2>
-              {activeCategory.description && (
-                <p className="text-[var(--color-ink-soft)] mt-2">{activeCategory.description}</p>
+          {category ? (
+            <>
+              {/* 앨범 상세 — 제목·설명 + 사진 그리드 */}
+              {activeCategory && (
+                <div className="mb-6">
+                  <Link
+                    href="/gallery"
+                    className="inline-flex items-center gap-1 text-sm text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] mb-3"
+                  >
+                    ← 전체 앨범
+                  </Link>
+                  <h2 className="display-md text-2xl sm:text-3xl">{activeCategory.name}</h2>
+                  {activeCategory.description && (
+                    <p className="text-[var(--color-ink-soft)] mt-2">
+                      {activeCategory.description}
+                    </p>
+                  )}
+                </div>
               )}
-            </div>
+              <PhotoGrid photos={photos} initialCategory={category} />
+            </>
+          ) : (
+            /* 첫 화면 — 앨범 카드 (썸네일 + 제목 + 설명) */
+            <>
+              {albums.length === 0 ? (
+                <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-16 text-center text-[var(--color-ink-mute)]">
+                  아직 등록된 앨범이 없습니다.
+                </div>
+              ) : (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {albums.map((al) => (
+                    <Link
+                      key={al.id}
+                      href={`/gallery?category=${al.slug}`}
+                      className="group flex flex-col rounded-2xl border border-[var(--color-rule)] overflow-hidden bg-white hover:shadow-lg transition-shadow"
+                    >
+                      <div className="relative aspect-[4/3] bg-[var(--color-bg-soft)] overflow-hidden">
+                        {al.cover ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={al.cover}
+                            alt={al.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-4xl text-[var(--color-ink-mute)]">
+                            🖼️
+                          </div>
+                        )}
+                        <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/55 text-white text-xs">
+                          사진 {al.photo_count}
+                        </span>
+                      </div>
+                      <div className="flex flex-col flex-1 p-4">
+                        <h2 className="display-md text-lg mb-1 group-hover:text-[var(--color-accent)] transition-colors">
+                          {al.name}
+                        </h2>
+                        {al.description && (
+                          <p className="text-sm text-[var(--color-ink-soft)] line-clamp-2">
+                            {al.description}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </>
           )}
-
-          <PhotoGrid photos={photos} initialCategory={category} />
         </div>
       </section>
     </>
