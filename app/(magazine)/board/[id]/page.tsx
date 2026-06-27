@@ -42,7 +42,6 @@ export default async function PostDetailPage({
   const canEdit = Boolean(isOwner || isAdmin);
 
   const imageAttachments = post.attachments.filter(isImageAttachment);
-  const fileAttachments = post.attachments.filter((a) => !isImageAttachment(a));
 
   return (
     <article className="pt-32 sm:pt-40 pb-24">
@@ -94,27 +93,20 @@ export default async function PostDetailPage({
                 </a>
                 <figcaption className="mt-1 text-xs text-[var(--color-ink-mute)] text-center">
                   {a.file_name}
-                  {" · "}
-                  <a
-                    href={`/api/board/download/${a.id}`}
-                    className="underline hover:text-[var(--color-accent)]"
-                  >
-                    다운로드 ↓
-                  </a>
                 </figcaption>
               </figure>
             ))}
           </div>
         )}
 
-        {/* 첨부파일 (이미지 외) */}
-        {fileAttachments.length > 0 && (
+        {/* 첨부파일 — 이미지 포함 전체 (다운로드) */}
+        {post.attachments.length > 0 && (
           <div className="mt-8 rounded-xl border border-[var(--color-rule)] p-4">
             <div className="text-sm font-semibold text-[var(--color-ink)] mb-3">
-              첨부파일 {fileAttachments.length}개
+              첨부파일 {post.attachments.length}개
             </div>
             <ul className="space-y-2">
-              {fileAttachments.map((a) => (
+              {post.attachments.map((a) => (
                 <li key={a.id}>
                   <a
                     href={`/api/board/download/${a.id}`}

@@ -13,6 +13,10 @@ function formatSize(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function isImageName(name: string): boolean {
+  return /\.(jpe?g|png|gif|webp|avif|bmp|heic|heif)$/i.test(name);
+}
+
 export function PostForm({
   post,
   isAdmin,
@@ -77,6 +81,17 @@ export function PostForm({
     setAttachments((prev) => prev.filter((a) => a.file_url !== url));
   }
 
+  function move(index: number, dir: -1 | 1) {
+    setAttachments((prev) => {
+      const to = index + dir;
+      if (to < 0 || to >= prev.length) return prev;
+      const next = [...prev];
+      const [item] = next.splice(index, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
@@ -134,22 +149,60 @@ export function PostForm({
           첨부파일
         </label>
         {attachments.length > 0 && (
-          <ul className="mb-3 space-y-1.5">
-            {attachments.map((a) => (
+          <ul className="mb-3 space-y-2">
+            {attachments.map((a, i) => (
               <li
                 key={a.file_url}
-                className="flex items-center gap-2 text-sm text-[var(--color-ink-soft)]"
+                className="flex items-center gap-3 rounded-lg border border-[var(--color-rule)] p-2"
               >
-                <span className="truncate max-w-md">📎 {a.file_name}</span>
-                {a.file_size > 0 && (
-                  <span className="text-xs text-[var(--color-ink-mute)]">
-                    {formatSize(a.file_size)}
+                {/* 썸네일/아이콘 */}
+                <span className="shrink-0 w-11 h-11 rounded bg-[var(--color-bg-soft)] border border-[var(--color-rule)] overflow-hidden flex items-center justify-center">
+                  {isImageName(a.file_name) ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={a.file_url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span aria-hidden="true">📎</span>
+                  )}
+                </span>
+
+                {/* 이름·크기 */}
+                <span className="flex-1 min-w-0">
+                  <span className="block truncate text-sm text-[var(--color-ink)]">
+                    {a.file_name}
                   </span>
-                )}
+                  {a.file_size > 0 && (
+                    <span className="block text-xs text-[var(--color-ink-mute)]">
+                      {formatSize(a.file_size)}
+                    </span>
+                  )}
+                </span>
+
+                {/* 순서 이동 */}
+                <div className="flex flex-col shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => move(i, -1)}
+                    disabled={i === 0}
+                    aria-label="위로"
+                    className="px-1.5 text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] disabled:opacity-30 disabled:cursor-not-allowed leading-none"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(i, 1)}
+                    disabled={i === attachments.length - 1}
+                    aria-label="아래로"
+                    className="px-1.5 text-[var(--color-ink-mute)] hover:text-[var(--color-ink)] disabled:opacity-30 disabled:cursor-not-allowed leading-none"
+                  >
+                    ▼
+                  </button>
+                </div>
+
                 <button
                   type="button"
                   onClick={() => removeAttachment(a.file_url)}
-                  className="text-red-500 hover:text-red-700 text-xs shrink-0"
+                  className="shrink-0 text-red-500 hover:text-red-700 text-xs"
                 >
                   삭제
                 </button>
@@ -173,7 +226,7 @@ export function PostForm({
           </div>
         )}
         <p className="mt-1 text-xs text-[var(--color-ink-mute)]">
-          여러 개 선택 가능, 모든 형식 (최대 300MB/개)
+          여러 개 선택 가능, 모든 형식 (최대 300MB/개). ▲▼로 순서를 바꾸면 그 순서대로 보입니다.
         </p>
       </div>
 
