@@ -85,6 +85,16 @@ export async function getPost(id: number): Promise<PostDetail | null> {
   };
 }
 
+export async function getAttachment(id: number): Promise<PostAttachment | null> {
+  const db = await getDb();
+  const res = await db.execute({
+    sql: "SELECT * FROM post_attachments WHERE id = ? LIMIT 1",
+    args: [id],
+  });
+  if (res.rows.length === 0) return null;
+  return rowToAttachment(res.rows[0] as Record<string, unknown>);
+}
+
 export async function incrementViews(id: number): Promise<void> {
   const db = await getDb();
   await db.execute({

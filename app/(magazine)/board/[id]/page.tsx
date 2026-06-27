@@ -94,6 +94,13 @@ export default async function PostDetailPage({
                 </a>
                 <figcaption className="mt-1 text-xs text-[var(--color-ink-mute)] text-center">
                   {a.file_name}
+                  {" · "}
+                  <a
+                    href={`/api/board/download/${a.id}`}
+                    className="underline hover:text-[var(--color-accent)]"
+                  >
+                    다운로드 ↓
+                  </a>
                 </figcaption>
               </figure>
             ))}
@@ -110,10 +117,7 @@ export default async function PostDetailPage({
               {fileAttachments.map((a) => (
                 <li key={a.id}>
                   <a
-                    href={a.file_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download={a.file_name}
+                    href={`/api/board/download/${a.id}`}
                     className="group flex items-center gap-3 hover:bg-[var(--color-bg-soft)] rounded-lg px-2 py-1.5 -mx-2 transition"
                   >
                     <span className="shrink-0 w-9 h-9 rounded bg-[var(--color-bg-soft)] border border-[var(--color-rule)] flex items-center justify-center text-[9px] font-bold text-[var(--color-ink-mute)] font-mono">
