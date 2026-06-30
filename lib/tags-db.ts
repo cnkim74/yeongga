@@ -1,6 +1,10 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
 import type { ArticleMeta, Visibility } from "./articles-db";
+
+// 검색/태그 결과 캐시 TTL — 10분. 글 수정 시 revalidateTag("articles")로 즉시 무효화.
+const SEARCH_TTL = 600;
 
 // ─── 태그 목록 (전체, 사용 횟수 포함) ────────────────────────────────────────
 export async function listAllTags(): Promise<{ tag: string; count: number }[]> {
@@ -101,43 +105,55 @@ function rowToMeta(row: Record<string, unknown>): ArticleMeta {
   };
 }
 
-export async function listArticlesByTag(tag: string): Promise<ArticleMeta[]> {
-  const db = await getDb();
-  const r = await db.execute({
-    sql: `SELECT a.id, a.chapter, a.slug, a.title, a.subtitle,
-                 a.author, a.excerpt, a.cover, a.date, a.visibility,
-                 a.created_at, a.updated_at
-          FROM articles a
-          JOIN article_tags t ON t.article_id = a.id
-          WHERE t.tag = ?
-          ORDER BY a.date DESC, a.id DESC`,
-    args: [tag],
-  });
-  return r.rows.map((row) =>
-    rowToMeta(row as unknown as Record<string, unknown>)
-  );
-}
+export const listArticlesByTag = unstable_cache(
+  async (tag: string): Promise<ArticleMeta[]> => {
+    const t0 = tag.trim();
+    if (!t0) return [];
+    const db = await getDb();
+    const r = await db.execute({
+      sql: `SELECT a.id, a.chapter, a.slug, a.title, a.subtitle,
+                   a.author, a.excerpt, a.cover, a.date, a.visibility,
+                   a.created_at, a.updated_at
+            FROM articles a
+            JOIN article_tags t ON t.article_id = a.id
+            WHERE t.tag = ?
+            ORDER BY a.date DESC, a.id DESC`,
+      args: [t0],
+    });
+    return r.rows.map((row) =>
+      rowToMeta(row as unknown as Record<string, unknown>)
+    );
+  },
+  ["tags:byTag"],
+  { tags: ["articles"], revalidate: SEARCH_TTL }
+);
 
 // ─── 텍스트 + 태그 복합 검색 ──────────────────────────────────────────────
-export async function searchArticles(
-  query: string
-): Promise<ArticleMeta[]> {
-  const db = await getDb();
-  const q = `%${query.trim()}%`;
-  const r = await db.execute({
-    sql: `SELECT DISTINCT a.id, a.chapter, a.slug, a.title, a.subtitle,
-                 a.author, a.excerpt, a.cover, a.date, a.visibility,
-                 a.created_at, a.updated_at
-          FROM articles a
-          LEFT JOIN article_tags t ON t.article_id = a.id
-          WHERE a.title LIKE ?
-             OR a.excerpt LIKE ?
-             OR a.author LIKE ?
-             OR t.tag LIKE ?
-          ORDER BY a.date DESC, a.id DESC`,
-    args: [q, q, q, q],
-  });
-  return r.rows.map((row) =>
-    rowToMeta(row as unknown as Record<string, unknown>)
-  );
-}
+// 2자 미만 질의는 DB를 건드리지 않는다(봇의 빈/단문 쿼리로 인한 풀스캔 폭증 방지).
+// 결과는 질의별로 캐시 — 같은 검색이 반복돼도 풀스캔을 다시 돌지 않음.
+export const searchArticles = unstable_cache(
+  async (query: string): Promise<ArticleMeta[]> => {
+    const q0 = query.trim();
+    if (q0.length < 2) return [];
+    const db = await getDb();
+    const q = `%${q0}%`;
+    const r = await db.execute({
+      sql: `SELECT DISTINCT a.id, a.chapter, a.slug, a.title, a.subtitle,
+                   a.author, a.excerpt, a.cover, a.date, a.visibility,
+                   a.created_at, a.updated_at
+            FROM articles a
+            LEFT JOIN article_tags t ON t.article_id = a.id
+            WHERE a.title LIKE ?
+               OR a.excerpt LIKE ?
+               OR a.author LIKE ?
+               OR t.tag LIKE ?
+            ORDER BY a.date DESC, a.id DESC`,
+      args: [q, q, q, q],
+    });
+    return r.rows.map((row) =>
+      rowToMeta(row as unknown as Record<string, unknown>)
+    );
+  },
+  ["search:articles"],
+  { tags: ["articles"], revalidate: SEARCH_TTL }
+);

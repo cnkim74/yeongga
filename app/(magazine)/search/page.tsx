@@ -22,13 +22,14 @@ export default async function SearchPage({
   searchParams: Promise<{ tag?: string; q?: string }>;
 }) {
   const { tag, q } = await searchParams;
+  const qTrim = (q ?? "").trim();
 
   const [allTags, articles] = await Promise.all([
     listAllTags(),
     tag
       ? listArticlesByTag(tag)
-      : q
-      ? searchArticles(q)
+      : qTrim.length >= 2
+      ? searchArticles(qTrim)
       : Promise.resolve([]),
   ]);
 
