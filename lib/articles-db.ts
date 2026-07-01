@@ -89,6 +89,57 @@ export const countAllArticles = unstable_cache(
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
+/** 회보 발행연도 목록 (유효한 4자리 연도만, 최신순) + 각 연도 글 수 */
+export const listYears = unstable_cache(
+  async (): Promise<{ year: string; count: number }[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT substr(date,1,4) AS yr, COUNT(*) AS n
+       FROM articles
+       WHERE substr(date,1,4) GLOB '[0-9][0-9][0-9][0-9]'
+       GROUP BY yr ORDER BY yr DESC`
+    );
+    return r.rows.map((row) => {
+      const rec = row as unknown as Record<string, unknown>;
+      return { year: String(rec.yr), count: Number(rec.n) };
+    });
+  },
+  ["articles:years"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
+
+/** 특정 발행연도의 글 */
+export const listArticlesByYear = unstable_cache(
+  async (year: string): Promise<ArticleMeta[]> => {
+    const y = year.trim();
+    if (!/^\d{4}$/.test(y)) return [];
+    const db = await getDb();
+    const r = await db.execute({
+      sql: `SELECT ${META_COLS} FROM articles WHERE substr(date,1,4) = ? ORDER BY date DESC, id DESC`,
+      args: [y],
+    });
+    return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
+  },
+  ["articles:byYear"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
+
+/** 슬러그 접두사로 글 조회 — 회장별(예: "5dae-") 시기 정리 글 묶음 */
+export const listArticlesBySlugPrefix = unstable_cache(
+  async (prefix: string): Promise<ArticleMeta[]> => {
+    const p = prefix.replace(/[%_]/g, "").trim();
+    if (!p) return [];
+    const db = await getDb();
+    const r = await db.execute({
+      sql: `SELECT ${META_COLS} FROM articles WHERE slug LIKE ? ORDER BY date ASC, id ASC`,
+      args: [`${p}%`],
+    });
+    return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
+  },
+  ["articles:bySlugPrefix"],
+  { tags: ["articles"], revalidate: CACHE_TTL }
+);
+
 /**
  * 특정 글의 본문(body)만 원본 .md 파일에서 다시 가져와 DB 업데이트.
  * 어드민에서 cover 등을 변경하다 본문이 깨진 경우 복원용.
