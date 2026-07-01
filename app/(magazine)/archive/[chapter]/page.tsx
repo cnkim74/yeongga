@@ -6,7 +6,7 @@ import { ChapterNavStrip } from "@/components/ChapterNavStrip";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { getChapter } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
-import { listUsers } from "@/lib/users-db";
+import { listAuthorAvatars } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
 
 // 빌드 타임 정적 생성 비활성화 (모임 챕터 100+편으로 60초 timeout 회피)
@@ -35,12 +35,12 @@ export default async function ChapterPage({
   const { chapter } = await params;
   const meta = getChapter(chapter);
   if (!meta) notFound();
-  const [articles, users, chapterMeta] = await Promise.all([
+  const [articles, avatars, chapterMeta] = await Promise.all([
     listChapterArticles(chapter),
-    listUsers(),
+    listAuthorAvatars(),
     getChapterMeta(chapter),
   ]);
-  const avatarByName = new Map(users.map((u) => [u.name, u.avatar_url]));
+  const avatarByName = new Map(Object.entries(avatars));
 
   // 우선순위: 챕터 hero_image (전용) > 메인 쇼케이스 cover_image (호환) > placeholder
   const heroImage = chapterMeta?.hero_image ?? chapterMeta?.cover_image ?? null;

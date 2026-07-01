@@ -3,7 +3,7 @@ import { ChapterIcon } from "@/components/ChapterIcon";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { chapters } from "@/lib/chapters";
 import { listAllArticles, type ArticleMeta } from "@/lib/articles-db";
-import { listUsers } from "@/lib/users-db";
+import { listAuthorAvatars } from "@/lib/users-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
 // force-dynamic — 글 수가 늘어나면서 빌드 시 SSG 생성에 60초 초과 timeout 발생.
@@ -16,7 +16,10 @@ export const metadata = {
 
 export default async function ArchiveIndex() {
   // 8 챕터 × 별도 쿼리 → 단일 쿼리 + 메모리 그룹핑 (9쿼리 → 2쿼리)
-  const [allArticles, users] = await Promise.all([listAllArticles(), listUsers()]);
+  const [allArticles, avatars] = await Promise.all([
+    listAllArticles(),
+    listAuthorAvatars(),
+  ]);
   const byChapter = new Map<string, ArticleMeta[]>();
   for (const a of allArticles) {
     const arr = byChapter.get(a.chapter) ?? [];
@@ -27,7 +30,7 @@ export default async function ArchiveIndex() {
     chapter: c,
     articles: c.comingSoon ? [] : byChapter.get(c.slug) ?? [],
   }));
-  const avatarByName = new Map(users.map((u) => [u.name, u.avatar_url]));
+  const avatarByName = new Map(Object.entries(avatars));
 
   return (
     <>

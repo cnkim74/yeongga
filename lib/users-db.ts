@@ -1,7 +1,32 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
+import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
 import { hashPassword, verifyPassword } from "./passwords";
+
+/**
+ * 저자 이름 → 아바타 URL 맵 (아바타 있는 사용자만).
+ * 공개 글/아카이브 페이지가 저자 아바타를 찾을 때 쓰는 캐시 조회.
+ * 예전엔 페이지마다 listUsers()로 전체 회원을 스캔해 Turso 읽기 폭증의 한 원인이었음.
+ */
+export const listAuthorAvatars = unstable_cache(
+  async (): Promise<Record<string, string>> => {
+    const db = await getDb();
+    const r = await db.execute(
+      "SELECT name, avatar_url FROM users WHERE avatar_url IS NOT NULL AND avatar_url != ''"
+    );
+    const map: Record<string, string> = {};
+    for (const row of r.rows) {
+      const rec = row as unknown as Record<string, unknown>;
+      if (rec.name != null && rec.avatar_url != null) {
+        map[String(rec.name)] = String(rec.avatar_url);
+      }
+    }
+    return map;
+  },
+  ["users:authorAvatars"],
+  { tags: ["members"], revalidate: 1800 }
+);
 
 export type User = {
   id: number;

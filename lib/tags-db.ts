@@ -7,19 +7,23 @@ import type { ArticleMeta, Visibility } from "./articles-db";
 const SEARCH_TTL = 600;
 
 // ─── 태그 목록 (전체, 사용 횟수 포함) ────────────────────────────────────────
-export async function listAllTags(): Promise<{ tag: string; count: number }[]> {
-  const db = await getDb();
-  const r = await db.execute(
-    `SELECT tag, COUNT(*) as count
-     FROM article_tags
-     GROUP BY tag
-     ORDER BY count DESC, tag`
-  );
-  return r.rows.map((row) => ({
-    tag: String(row.tag),
-    count: Number(row.count),
-  }));
-}
+export const listAllTags = unstable_cache(
+  async (): Promise<{ tag: string; count: number }[]> => {
+    const db = await getDb();
+    const r = await db.execute(
+      `SELECT tag, COUNT(*) as count
+       FROM article_tags
+       GROUP BY tag
+       ORDER BY count DESC, tag`
+    );
+    return r.rows.map((row) => ({
+      tag: String(row.tag),
+      count: Number(row.count),
+    }));
+  },
+  ["tags:all"],
+  { tags: ["articles"], revalidate: SEARCH_TTL }
+);
 
 // ─── 글 하나의 태그 ────────────────────────────────────────────────────────
 export async function getTagsForArticle(articleId: number): Promise<string[]> {

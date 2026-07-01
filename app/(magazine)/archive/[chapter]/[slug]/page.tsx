@@ -8,7 +8,7 @@ import {
   listChapterArticles,
 } from "@/lib/articles-db";
 import { getCurrentUser } from "@/lib/auth";
-import { listUsers } from "@/lib/users-db";
+import { listAuthorAvatars } from "@/lib/users-db";
 import { getTagsForArticle } from "@/lib/tags-db";
 import { ShareBar } from "@/components/ShareBar";
 import { AdminEditLink } from "@/components/AdminEditLink";
@@ -55,17 +55,15 @@ export default async function ArticlePage({
     isLocked = !user;
   }
 
-  const [all, users, tags] = await Promise.all([
+  const [all, avatars, tags] = await Promise.all([
     listChapterArticles(chapter),
-    listUsers(),
+    listAuthorAvatars(),
     getTagsForArticle(article.id),
   ]);
   const idx = all.findIndex((a) => a.slug === slug);
   const prev = idx >= 0 ? all[idx + 1] : undefined;
   const next = idx > 0 ? all[idx - 1] : undefined;
-  const authorAvatar = article.author
-    ? users.find((u) => u.name === article.author)?.avatar_url ?? null
-    : null;
+  const authorAvatar = article.author ? avatars[article.author] ?? null : null;
 
   return (
     <article>
