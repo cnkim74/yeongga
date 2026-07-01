@@ -45,8 +45,9 @@ export default async function SearchPage({
   let articles: ArticleMeta[] = [];
   let resultLabel = "";
   if (president) {
-    articles = await listArticlesBySlugPrefix(president);
     const p = getPresident(president);
+    if (p?.slugPrefix) articles = await listArticlesBySlugPrefix(p.slugPrefix);
+    else if (p?.keyword) articles = await searchArticles(p.keyword);
     resultLabel = p ? `${p.dae}대 ${p.name} 회장 시기 기록` : "회장별";
   } else if (year) {
     articles = await listArticlesByYear(year);
@@ -166,17 +167,28 @@ export default async function SearchPage({
           <p className="text-sm text-[var(--color-ink-mute)] mb-5">역대 회장의 재임 시기별 기록을 모아 봅니다.</p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {presidents.map((p) => {
-              const active = president === p.slugPrefix;
+              const active = president === p.id;
               return (
                 <Link
-                  key={p.slugPrefix}
-                  href={active ? "/search" : `/search?president=${p.slugPrefix}`}
-                  className={`rounded-2xl border p-4 transition ${
+                  key={p.id}
+                  href={active ? "/search" : `/search?president=${p.id}`}
+                  className={`relative rounded-2xl border p-4 transition ${
                     active
                       ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-white"
+                      : p.current
+                      ? "border-[var(--color-accent)] hover:bg-[var(--color-bg-soft)]"
                       : "border-[var(--color-rule)] hover:border-[var(--color-ink)] hover:bg-[var(--color-bg-soft)]"
                   }`}
                 >
+                  {p.current && (
+                    <span
+                      className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                        active ? "bg-white text-[var(--color-ink)]" : "bg-[var(--color-accent)] text-white"
+                      }`}
+                    >
+                      현 회장
+                    </span>
+                  )}
                   <div className={`text-xs mb-1 ${active ? "text-white/60" : "text-[var(--color-ink-mute)]"}`}>
                     제{p.dae}대
                   </div>
