@@ -92,7 +92,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           </span>
         </Link>
 
-        <ul className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+        <ul className="hidden xl:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
           {NAV.map((n) => {
             const active =
               n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
@@ -229,7 +229,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           <UserMenu user={user} />
           <button
             type="button"
-            className="pill-nav-icon md:hidden"
+            className="pill-nav-icon xl:hidden"
             aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
