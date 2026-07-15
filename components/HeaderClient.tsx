@@ -106,7 +106,6 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                     aria-haspopup="true"
                   >
                     {n.label}
-                    <span className="ml-1 text-[10px] opacity-60" aria-hidden="true">▾</span>
                   </Link>
                   {/* 호버 간격을 잇기 위한 투명 패딩 영역 (pt-2) + 드롭다운 */}
                   <div
@@ -162,70 +161,74 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
         </ul>
 
         <div className="flex items-center gap-1">
-          {/* e-Book 바로가기 — 가로 타원형 (아이콘 + 텍스트) */}
-          <Link
-            href="/ebooks"
-            className="pill-nav-pill hidden sm:inline-flex"
-            aria-label="e-Book 서재"
-            title="e-Book"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.8}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-[18px] h-[18px] shrink-0"
-              aria-hidden="true"
+          {/* 데스크톱·태블릿 전용 컨트롤 묶음 — 모바일에선 햄버거 메뉴로 이동 */}
+          <div className="hidden sm:flex items-center gap-1">
+            {/* e-Book 바로가기 — 가로 타원형 (아이콘 + 텍스트) */}
+            <Link
+              href="/ebooks"
+              className="pill-nav-pill"
+              aria-label="e-Book 서재"
+              title="e-Book"
             >
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-            </svg>
-            <span>e-Book</span>
-          </Link>
-
-          {/* 구분 여백 */}
-          <span className="hidden sm:block w-px h-4 bg-white/25 mx-1" aria-hidden="true" />
-
-          {/* 헤더 테마 토글 — 클라이언트 검토용 */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="pill-nav-icon"
-            aria-label={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
-            title={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
-          >
-            {isLight ? (
-              // 달 — 다크 모드로 전환할 수 있다는 의미
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-[18px] h-[18px] shrink-0"
+                aria-hidden="true"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
               </svg>
-            ) : (
-              // 해 — 라이트 모드로 전환할 수 있다는 의미
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-              </svg>
-            )}
-          </button>
+              <span>e-Book</span>
+            </Link>
 
-          <button
-            type="button"
-            onClick={() => setSizeOpen((v) => !v)}
-            className="pill-nav-icon"
-            aria-label="글자 크기 조절"
-            aria-expanded={sizeOpen}
-          >
-            <span style={{ fontFamily: "var(--font-serif)", fontSize: 16 }}>가</span>
-            <span
-              style={{ fontFamily: "var(--font-serif)", fontSize: 12 }}
-              className="-ml-0.5 mt-1"
+            {/* 구분 여백 */}
+            <span className="block w-px h-4 bg-white/25 mx-1" aria-hidden="true" />
+
+            {/* 헤더 테마 토글 — 클라이언트 검토용 */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="pill-nav-icon"
+              aria-label={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
+              title={isLight ? "어두운 헤더로 전환" : "밝은 헤더로 전환"}
             >
-              가
-            </span>
-          </button>
+              {isLight ? (
+                // 달 — 다크 모드로 전환할 수 있다는 의미
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              ) : (
+                // 해 — 라이트 모드로 전환할 수 있다는 의미
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSizeOpen((v) => !v)}
+              className="pill-nav-icon"
+              aria-label="글자 크기 조절"
+              aria-expanded={sizeOpen}
+            >
+              <span style={{ fontFamily: "var(--font-serif)", fontSize: 16 }}>가</span>
+              <span
+                style={{ fontFamily: "var(--font-serif)", fontSize: 12 }}
+                className="-ml-0.5 mt-1"
+              >
+                가
+              </span>
+            </button>
+          </div>
+
           <UserMenu user={user} />
           <button
             type="button"
