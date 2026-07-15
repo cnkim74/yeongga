@@ -87,7 +87,7 @@ export default async function ArchiveIndex() {
                     href={c.href}
                     className="text-sm underline underline-offset-4 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
                   >
-                    영상 보러 가기 →
+                    {c.linkLabel ?? "보러 가기"} →
                   </Link>
                 ) : (
                   !c.comingSoon && (
@@ -115,7 +115,7 @@ export default async function ArchiveIndex() {
                       {c.description}
                     </p>
                     <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition">
-                      영상 보러 가기 →
+                      {c.linkLabel ?? "보러 가기"} →
                     </span>
                   </Link>
                 ) : c.comingSoon ? (

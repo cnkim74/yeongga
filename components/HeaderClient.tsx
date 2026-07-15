@@ -13,9 +13,9 @@ const NAV = [
   { href: "/", label: "표지" },
   { href: "/archive", label: "아카이브", hasDropdown: true },
   { href: "/search", label: "검색" },
-  { href: "/videos", label: "영상" },
+  // '영상'(/videos)·'갤러리'(/gallery)는 상단 메뉴에서 숨김 —
+  // 아카이브 장(동영→영상, 영상→갤러리)으로 접근한다.
   { href: "/about", label: "소개" },
-  { href: "/gallery", label: "갤러리" },
   { href: "/board", label: "자료실" },
 ];
 
