@@ -51,7 +51,7 @@ export function ChapterNavStrip({ current }: { current: string }) {
                   <span aria-disabled="true">{content}</span>
                 ) : (
                   <Link
-                    href={`/archive/${c.slug}`}
+                    href={c.href ?? `/archive/${c.slug}`}
                     aria-current={active ? "page" : undefined}
                     className="block"
                   >

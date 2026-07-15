@@ -87,7 +87,7 @@ export default async function HomePage() {
                   </div>
                 ) : (
                   <Link
-                    href={`/archive/${c.slug}`}
+                    href={c.href ?? `/archive/${c.slug}`}
                     className="group flex flex-col items-center text-center p-6 sm:p-8 rounded-2xl hover:bg-[var(--color-bg-soft)] transition"
                   >
                     <ChapterIcon

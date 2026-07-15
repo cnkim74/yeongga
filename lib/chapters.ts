@@ -5,6 +5,10 @@ export type Chapter = {
   subtitle: string;
   description: string;
   comingSoon?: boolean;
+  // 이 장을 아카이브(/archive/{slug})가 아닌 다른 페이지로 연결할 때 사용.
+  // 예: 동영(動影)은 영상 페이지(/videos)와 같은 내용이라 그리로 보낸다.
+  // href 가 있으면 자체 글 목록·사이트맵·챕터 메타에서는 제외된다.
+  href?: string;
 };
 
 export const chapters: Chapter[] = [
@@ -63,8 +67,8 @@ export const chapters: Chapter[] = [
     number: "八",
     title: "동영(動影)",
     subtitle: "영상 아카이브",
-    description: "회의 영상을 모아두는 자리. 준비 중입니다.",
-    comingSoon: true,
+    description: "회의 영상은 '영상' 메뉴에서 보실 수 있습니다.",
+    href: "/videos",
   },
 ];
 

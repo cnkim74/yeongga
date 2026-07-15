@@ -124,7 +124,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                       {chapters.map((c) => (
                         <Link
                           key={c.slug}
-                          href={c.comingSoon ? "#" : `/archive/${c.slug}`}
+                          href={c.href ?? (c.comingSoon ? "#" : `/archive/${c.slug}`)}
                           className={`archive-drop-item ${c.comingSoon ? "archive-drop-disabled" : ""}`}
                           role="menuitem"
                           aria-disabled={c.comingSoon ? "true" : undefined}
@@ -287,7 +287,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                       {chapters.map((c) => (
                         <li key={c.slug}>
                           <Link
-                            href={c.comingSoon ? "#" : `/archive/${c.slug}`}
+                            href={c.href ?? (c.comingSoon ? "#" : `/archive/${c.slug}`)}
                             className={`block py-2.5 text-base ${
                               c.comingSoon
                                 ? "text-[var(--color-ink-mute)] opacity-50 cursor-not-allowed"

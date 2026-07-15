@@ -28,7 +28,8 @@ export default async function ArchiveIndex() {
   }
   const sections = chapters.map((c) => ({
     chapter: c,
-    articles: c.comingSoon ? [] : byChapter.get(c.slug) ?? [],
+    // 준비 중이거나 다른 페이지로 연결(href)되는 장은 자체 글 목록이 없다.
+    articles: c.comingSoon || c.href ? [] : byChapter.get(c.slug) ?? [],
   }));
   const avatarByName = new Map(Object.entries(avatars));
 
@@ -70,7 +71,7 @@ export default async function ArchiveIndex() {
                       </span>
                     ) : (
                       <Link
-                        href={`/archive/${c.slug}`}
+                        href={c.href ?? `/archive/${c.slug}`}
                         className="display-md text-3xl sm:text-4xl hover:text-[var(--color-accent)] transition"
                       >
                         {c.title}
@@ -81,18 +82,43 @@ export default async function ArchiveIndex() {
                 <p className="text-[var(--color-ink-soft)] leading-relaxed mb-6">
                   {c.description}
                 </p>
-                {!c.comingSoon && (
+                {c.href ? (
                   <Link
-                    href={`/archive/${c.slug}`}
+                    href={c.href}
                     className="text-sm underline underline-offset-4 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
                   >
-                    이 장 전체 보기 ({articles.length}편) →
+                    영상 보러 가기 →
                   </Link>
+                ) : (
+                  !c.comingSoon && (
+                    <Link
+                      href={`/archive/${c.slug}`}
+                      className="text-sm underline underline-offset-4 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+                    >
+                      이 장 전체 보기 ({articles.length}편) →
+                    </Link>
+                  )
                 )}
               </div>
 
               <div className="lg:col-span-8">
-                {c.comingSoon ? (
+                {c.href ? (
+                  <Link
+                    href={c.href}
+                    className="group flex flex-col items-center justify-center border border-[var(--color-rule)] rounded-2xl p-12 text-center hover:bg-[var(--color-bg-soft)] transition"
+                  >
+                    <ChapterIcon
+                      slug={c.slug}
+                      className="w-14 h-14 text-[var(--color-ink-soft)] mb-4 group-hover:text-[var(--color-ink)] transition"
+                    />
+                    <p className="text-[var(--color-ink-soft)] leading-relaxed mb-3">
+                      {c.description}
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition">
+                      영상 보러 가기 →
+                    </span>
+                  </Link>
+                ) : c.comingSoon ? (
                   <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-12 text-center">
                     <div className="inline-block text-xs tracking-widest text-[var(--color-ink-mute)] border border-[var(--color-rule)] rounded-full px-3 py-1 mb-4">
                       準備中

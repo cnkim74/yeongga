@@ -161,9 +161,9 @@ export async function listHomeChapterDisplays(): Promise<ChapterDisplay[]> {
   const metas = await listChapterMetas();
   const metaMap = new Map(metas.map((m) => [m.chapter_slug, m]));
 
-  // 2) chapters.ts 의 순서대로 메타 정합 + comingSoon 제외
+  // 2) chapters.ts 의 순서대로 메타 정합 + comingSoon·외부연결(href) 제외
   const candidates = chapters
-    .filter((c) => !c.comingSoon)
+    .filter((c) => !c.comingSoon && !c.href)
     .map((c) => {
       const meta = metaMap.get(c.slug) ?? {
         chapter_slug: c.slug,

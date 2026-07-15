@@ -16,7 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 챕터 아카이브
   for (const c of chapters) {
-    if (!c.comingSoon) {
+    if (!c.comingSoon && !c.href) {
       urls.push({ url: `${BASE}/archive/${c.slug}`, changeFrequency: "weekly" });
     }
   }
