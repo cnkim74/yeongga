@@ -124,7 +124,7 @@ export function ChapterIcon({
         </svg>
       );
 
-    // 七 영상(影像) — 창호(窓戶): 전통 격자 창
+    // 七 사진(寫眞) — 창호(窓戶): 전통 격자 창 (slug 는 yeongsang 유지)
     case "yeongsang":
       return (
         <svg {...base}>
@@ -139,7 +139,7 @@ export function ChapterIcon({
         </svg>
       );
 
-    // 八 동영(動影) — 청사초롱(燈籠): 전통 등불
+    // 八 영상(映像) — 청사초롱(燈籠): 전통 등불 (slug 는 dongyeong 유지)
     case "dongyeong":
       return (
         <svg {...base}>

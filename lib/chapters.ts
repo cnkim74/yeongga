@@ -6,7 +6,7 @@ export type Chapter = {
   description: string;
   comingSoon?: boolean;
   // 이 장을 아카이브(/archive/{slug})가 아닌 다른 페이지로 연결할 때 사용.
-  // 예: 동영(動影)→영상(/videos), 영상(影像)→갤러리(/gallery).
+  // 예: 사진(寫眞)→갤러리(/gallery), 영상(映像)→영상 페이지(/videos).
   // href 가 있으면 자체 글 목록·사이트맵·챕터 메타에서는 제외된다.
   href?: string;
   // 아카이브 페이지에서 연결 버튼에 쓰는 문구 (예: "영상 보러 가기").
@@ -59,7 +59,7 @@ export const chapters: Chapter[] = [
   {
     slug: "yeongsang",
     number: "七",
-    title: "영상(影像)",
+    title: "사진(寫眞)",
     subtitle: "사진 아카이브",
     description: "회의 사진을 모아 둔 갤러리입니다.",
     href: "/gallery",
@@ -68,7 +68,7 @@ export const chapters: Chapter[] = [
   {
     slug: "dongyeong",
     number: "八",
-    title: "동영(動影)",
+    title: "영상(映像)",
     subtitle: "영상 아카이브",
     description: "회의 영상을 모아 둔 자리입니다.",
     href: "/videos",
