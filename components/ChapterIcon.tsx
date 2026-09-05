@@ -23,7 +23,7 @@ export function ChapterIcon({
 
   switch (slug) {
 
-    // 一 연기(緣起) — 인장(印章): 도장과 손잡이
+    // 一 연혁(沿革) — 인장(印章): 도장과 손잡이 (slug 는 yeongi 유지)
     case "yeongi":
     case "yeon-gi":
       return (

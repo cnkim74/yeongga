@@ -17,8 +17,8 @@ export const chapters: Chapter[] = [
   {
     slug: "yeongi",
     number: "一",
-    title: "연기(緣起)",
-    subtitle: "영가회의 시작",
+    title: "연혁(沿革)",
+    subtitle: "영가회의 발자취",
     description: "회(會)의 발자취와 첫 모임의 기록. 창립의 인연과 정체성을 담았습니다.",
   },
   {

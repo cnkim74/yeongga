@@ -1,13 +1,18 @@
 // 푸터 — 라이트 모드: 아이보리 바탕 + 검정 텍스트
 //        다크 모드:  검정 바탕 + 흰 텍스트
 // .surface-tone 클래스가 globals.css 에서 데이터-테마 분기를 처리.
+import { LogoMark } from "./Logo";
+
 export function Footer() {
   return (
     <footer className="surface-tone border-t border-current/10">
       <div className="mx-auto max-w-6xl px-6 py-16 grid gap-10 sm:grid-cols-12">
         <div className="sm:col-span-6">
-          <div className="text-2xl font-bold mb-3 tracking-tight">
-            永嘉 · YEONGGA
+          <div className="flex items-center gap-3 mb-4">
+            <LogoMark size={52} />
+            <div className="text-2xl font-bold tracking-tight">
+              永嘉 · YEONGGA
+            </div>
           </div>
           <p className="surface-soft text-sm leading-relaxed max-w-md mb-5">
             오랜 인연으로 모인 회원들의 글과 모임을 기록하는 작은 매거진형
