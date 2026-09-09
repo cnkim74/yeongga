@@ -2,11 +2,16 @@
 import Link from "next/link";
 
 const TABS = [
-  { key: "about", href: "/about", label: "영가회 소개와 회장 인사말" },
-  { key: "presidents", href: "/about/presidents", label: "역대 회장 소개" },
+  { key: "about", href: "/about", label: "영가회 소개" },
+  { key: "greeting", href: "/about/greeting", label: "회장 인사말" },
+  { key: "presidents", href: "/about/presidents", label: "역대회장" },
 ] as const;
 
-export function AboutTabs({ current }: { current: "about" | "presidents" }) {
+export function AboutTabs({
+  current,
+}: {
+  current: "about" | "greeting" | "presidents";
+}) {
   return (
     <nav
       aria-label="소개 분류"

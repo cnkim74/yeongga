@@ -6,7 +6,7 @@ import { AboutTabs } from "@/components/AboutTabs";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "역대 회장 소개 — 영가회",
+  title: "역대회장 — 영가회",
   description: "영가회를 이끌어 온 역대 회장들을 소개합니다.",
 };
 
@@ -19,7 +19,7 @@ export default async function PresidentsPage() {
           <div className="kicker text-[var(--color-ink-mute)] mb-5">
             ABOUT · 歷代 會長
           </div>
-          <h1 className="display text-5xl sm:text-7xl mb-6">역대 회장 소개</h1>
+          <h1 className="display text-5xl sm:text-7xl mb-6">역대회장</h1>
           <p className="text-xl sm:text-2xl text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
             회를 이끌어 온 분들의 자리.
           </p>
@@ -78,8 +78,8 @@ export default async function PresidentsPage() {
           </p>
 
           <div className="mt-12 flex flex-wrap gap-3">
-            <Link href="/about" className="btn-pill ghost">
-              ← 영가회 소개
+            <Link href="/about/greeting" className="btn-pill ghost">
+              ← 회장 인사말
             </Link>
             <Link href="/archive" className="btn-pill">
               아카이브 펼치기 →

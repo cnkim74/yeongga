@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { getArticleBySlug } from "@/lib/articles-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { AboutTabs } from "@/components/AboutTabs";
 
@@ -7,15 +6,10 @@ import { AboutTabs } from "@/components/AboutTabs";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "영가회 소개와 회장 인사말 — 영가회",
+  title: "영가회 소개 — 영가회",
 };
 
 export default async function AboutPage() {
-  // 회장 인사말은 아카이브의 〈회장의 인사〉 글을 끌어와 소개한다.
-  const greeting = await getArticleBySlug("yeongi", "hoejang-insa").catch(
-    () => null
-  );
-
   return (
     <>
       <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-16 sm:pb-20">
@@ -38,41 +32,6 @@ export default async function AboutPage() {
 
       <section className="bg-[var(--color-paper)] py-16 sm:py-24">
         <div className="mx-auto max-w-3xl px-6">
-          {/* ── 회장 인사말 ── */}
-          {greeting && (
-            <div className="mb-16 rounded-2xl border border-[var(--color-rule)] bg-[var(--color-bg-soft)] p-8 sm:p-10">
-              <div className="kicker text-[var(--color-ink-mute)] mb-3">
-                卷頭言 · 회장 인사말
-              </div>
-              <h2 className="display-md text-2xl sm:text-3xl mb-2">
-                {greeting.title}
-              </h2>
-              {greeting.subtitle && (
-                <p className="text-[var(--color-ink-mute)] mb-4">
-                  {greeting.subtitle}
-                </p>
-              )}
-              {greeting.excerpt && (
-                <blockquote className="border-l-2 border-[var(--color-rule)] pl-4 text-lg leading-relaxed text-[var(--color-ink-soft)]">
-                  {greeting.excerpt}
-                </blockquote>
-              )}
-              <div className="mt-5 flex flex-wrap items-center gap-4">
-                <Link
-                  href="/archive/yeongi/hoejang-insa"
-                  className="btn-pill text-sm"
-                >
-                  인사말 전문 읽기 →
-                </Link>
-                {greeting.author && (
-                  <span className="text-sm text-[var(--color-ink-mute)]">
-                    {greeting.author}
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* ── 회 소개 ── */}
           <div className="prose-body space-y-7">
             <p>
@@ -123,8 +82,11 @@ export default async function AboutPage() {
           </div>
 
           <div className="mt-16 flex flex-wrap gap-3">
-            <Link href="/about/presidents" className="btn-pill">
-              역대 회장 소개 →
+            <Link href="/about/greeting" className="btn-pill">
+              회장 인사말 →
+            </Link>
+            <Link href="/about/presidents" className="btn-pill ghost">
+              역대회장
             </Link>
             <Link href="/archive" className="btn-pill ghost">
               아카이브 펼치기

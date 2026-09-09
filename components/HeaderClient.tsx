@@ -24,6 +24,15 @@ type NavItem = {
 // '영상'(/videos)·'갤러리'(/gallery)는 아카이브 장으로 접근한다.
 const NAV: NavItem[] = [
   { href: "/", label: "표지" },
+  {
+    href: "/about",
+    label: "소개",
+    items: [
+      { href: "/about", label: "영가회 소개" },
+      { href: "/about/greeting", label: "회장 인사말" },
+      { href: "/about/presidents", label: "역대회장" },
+    ],
+  },
   { href: "/archive", label: "아카이브", dropdown: "chapters" },
   {
     href: "/ebooks",
@@ -31,14 +40,6 @@ const NAV: NavItem[] = [
     items: [
       { href: "/ebooks", label: "40년사 책자" },
       { href: "/ebooks/hoebo", label: "영가회보" },
-    ],
-  },
-  {
-    href: "/about",
-    label: "소개",
-    items: [
-      { href: "/about", label: "영가회 소개와 회장 인사말" },
-      { href: "/about/presidents", label: "역대 회장 소개" },
     ],
   },
   {
