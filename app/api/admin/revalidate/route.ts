@@ -17,10 +17,20 @@ const TAGS = [
   "members",
 ] as const;
 
-export async function POST() {
+async function flush() {
   await requireAdmin();
   for (const tag of TAGS) {
     revalidateTag(tag, "max");
   }
   return NextResponse.json({ ok: true, revalidated: TAGS });
+}
+
+export async function POST() {
+  return flush();
+}
+
+// 관리자가 브라우저에서 주소를 열어 바로 갱신할 수 있게 GET 도 받는다.
+// (캐시 무효화는 멱등하고 admin 인증을 거치므로 안전)
+export async function GET() {
+  return flush();
 }
