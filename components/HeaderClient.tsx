@@ -6,16 +6,41 @@ import { useEffect, useState } from "react";
 import { ReadingSizeControl } from "./ReadingSizeControl";
 import { UserMenu } from "./UserMenu";
 import { Logo } from "./Logo";
+import { LiveSearch } from "./LiveSearch";
 import type { SessionUser } from "@/lib/session";
 import { chapters } from "@/lib/chapters";
 
-const NAV = [
+type NavSub = { href: string; label: string };
+type NavItem = {
+  href: string;
+  label: string;
+  // 아카이브는 챕터 목록을 그대로 펼친다.
+  dropdown?: "chapters";
+  // 그 밖의 메뉴는 하위 항목을 직접 지정한다.
+  items?: NavSub[];
+};
+
+// 상단 5개 메뉴. '검색'은 오른쪽 돋보기 버튼으로 옮겼고,
+// '영상'(/videos)·'갤러리'(/gallery)는 아카이브 장으로 접근한다.
+const NAV: NavItem[] = [
   { href: "/", label: "표지" },
-  { href: "/archive", label: "아카이브", hasDropdown: true },
-  { href: "/search", label: "검색" },
-  // '영상'(/videos)·'갤러리'(/gallery)는 상단 메뉴에서 숨김 —
-  // 아카이브 장(동영→영상, 영상→갤러리)으로 접근한다.
-  { href: "/about", label: "소개" },
+  { href: "/archive", label: "아카이브", dropdown: "chapters" },
+  {
+    href: "/ebooks",
+    label: "이북",
+    items: [
+      { href: "/ebooks", label: "40년사 책자" },
+      { href: "/ebooks/hoebo", label: "영가회보" },
+    ],
+  },
+  {
+    href: "/about",
+    label: "소개",
+    items: [
+      { href: "/about", label: "영가회 소개와 회장 인사말" },
+      { href: "/about/presidents", label: "역대 회장 소개" },
+    ],
+  },
   { href: "/board", label: "자료실" },
 ];
 
@@ -38,14 +63,25 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sizeOpen, setSizeOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>(DEFAULT_THEME);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    document.body.style.overflow = open || searchOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [open, searchOpen]);
+
+  // 검색 오버레이 — Esc 로 닫기
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [searchOpen]);
 
   // 첫 마운트 — localStorage 에서 테마 읽기, html 속성 동기화
   useEffect(() => {
@@ -96,7 +132,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           {NAV.map((n) => {
             const active =
               n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
-            if (n.hasDropdown && n.href === "/archive") {
+            if (n.dropdown === "chapters") {
               return (
                 <li key={n.href} className="group relative">
                   <Link
@@ -146,6 +182,37 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                 </li>
               );
             }
+            if (n.items) {
+              return (
+                <li key={n.href} className="group relative">
+                  <Link
+                    href={n.href}
+                    className="pill-nav-link"
+                    aria-current={active ? "page" : undefined}
+                    aria-haspopup="true"
+                  >
+                    {n.label}
+                  </Link>
+                  <div
+                    className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-opacity duration-150"
+                    role="menu"
+                  >
+                    <div className="archive-dropdown-panel min-w-[220px] rounded-2xl shadow-2xl py-2">
+                      {n.items.map((it) => (
+                        <Link
+                          key={it.href}
+                          href={it.href}
+                          className="archive-drop-item"
+                          role="menuitem"
+                        >
+                          {it.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </li>
+              );
+            }
             return (
               <li key={n.href}>
                 <Link
@@ -161,34 +228,25 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
         </ul>
 
         <div className="flex items-center gap-1">
+          {/* 검색 — 상단 메뉴 대신 돋보기 버튼으로 */}
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            className="pill-nav-icon"
+            aria-label="검색 열기"
+            title="검색"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" className="w-[18px] h-[18px]" aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+
           {/* 데스크톱·태블릿 전용 컨트롤 묶음 — 모바일에선 햄버거 메뉴로 이동 */}
           <div className="hidden sm:flex items-center gap-1">
-            {/* e-Book 바로가기 — 가로 타원형 (아이콘 + 텍스트) */}
-            <Link
-              href="/ebooks"
-              className="pill-nav-pill"
-              aria-label="e-Book 서재"
-              title="e-Book"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.8}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-[18px] h-[18px] shrink-0"
-                aria-hidden="true"
-              >
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-              </svg>
-              <span>e-Book</span>
-            </Link>
-
-            {/* 구분 여백 */}
-            <span className="block w-px h-4 bg-white/25 mx-1" aria-hidden="true" />
 
             {/* 헤더 테마 토글 — 클라이언트 검토용 */}
             <button
@@ -241,6 +299,48 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           </button>
         </div>
       </nav>
+
+      {searchOpen && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/45 backdrop-blur-[2px]"
+          role="dialog"
+          aria-modal="true"
+          aria-label="검색"
+          onClick={() => setSearchOpen(false)}
+        >
+          <div
+            className="mx-auto mt-24 max-w-2xl px-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="rounded-3xl bg-[var(--color-bg)] p-5 sm:p-6 shadow-2xl max-h-[75vh] overflow-auto">
+              <div className="mb-4 flex items-center justify-between">
+                <div className="kicker text-[var(--color-ink-mute)]">SEARCH · 검색</div>
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(false)}
+                  aria-label="검색 닫기"
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-ink-mute)] transition hover:bg-[var(--color-bg-soft)] hover:text-[var(--color-ink)]"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                  </svg>
+                </button>
+              </div>
+              <LiveSearch autoFocus onNavigate={() => setSearchOpen(false)} />
+
+              <div className="mt-5 border-t border-[var(--color-rule)] pt-4 text-center">
+                <Link
+                  href="/search"
+                  onClick={() => setSearchOpen(false)}
+                  className="text-sm text-[var(--color-ink-mute)] underline underline-offset-4 hover:text-[var(--color-ink)]"
+                >
+                  회장별 · 연도별로 둘러보기 →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {sizeOpen && (
         <div
@@ -313,20 +413,25 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                       ))}
                     </ul>
                   )}
+                  {/* 이북·소개 등 하위 항목 인라인 표시 */}
+                  {n.items && (
+                    <ul className="pl-8 pb-2">
+                      {n.items.map((it) => (
+                        <li key={it.href}>
+                          <Link
+                            href={it.href}
+                            className="block py-2.5 text-base text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+                            onClick={() => setOpen(false)}
+                          >
+                            {it.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               );
             })}
-            {/* 모바일에서는 e-Book도 메뉴에 포함 */}
-            <li>
-              <Link
-                href="/ebooks"
-                className="mobile-sheet-link"
-                aria-current={pathname.startsWith("/ebooks") ? "page" : undefined}
-                onClick={() => setOpen(false)}
-              >
-                📖 e-Book
-              </Link>
-            </li>
             {!user && (
               <li>
                 <Link

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireMember } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { listPosts } from "@/lib/board-db";
 
 export const dynamic = "force-dynamic";
@@ -16,8 +16,8 @@ function fmtDate(s: string): string {
 }
 
 export default async function BoardPage() {
-  await requireMember("/board");
-  const posts = await listPosts();
+  // 자료실은 로그인 없이 열람 가능 — 글쓰기만 회원 전용.
+  const [user, posts] = await Promise.all([getCurrentUser(), listPosts()]);
   const total = posts.length;
 
   // 비공지 글에 번호 부여 (최신글이 큰 번호). 공지는 📌 표시.
@@ -33,7 +33,7 @@ export default async function BoardPage() {
     <>
       <section className="relative pt-40 pb-16 overflow-hidden bg-[var(--color-bg-soft)]">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="kicker text-[var(--color-ink-mute)] mb-4">회원 전용 · 資料室</div>
+          <div className="kicker text-[var(--color-ink-mute)] mb-4">資料室</div>
           <h1 className="display text-5xl sm:text-7xl mb-4">자료실</h1>
           <p className="text-base text-[var(--color-ink-soft)]">
             영가회 회원들의 소식과 자료를 나누는 공간입니다.
@@ -45,14 +45,23 @@ export default async function BoardPage() {
         <div className="mx-auto max-w-5xl px-6">
           <div className="flex items-center justify-between mb-4">
             <div className="text-sm text-[var(--color-ink-mute)]">총 {total}건</div>
-            <Link href="/board/new" className="btn-pill text-sm">
-              ✏️ 글쓰기
-            </Link>
+            {user ? (
+              <Link href="/board/new" className="btn-pill text-sm">
+                ✏️ 글쓰기
+              </Link>
+            ) : (
+              <Link
+                href="/login?next=/board"
+                className="text-sm text-[var(--color-ink-mute)] underline underline-offset-4 hover:text-[var(--color-ink)]"
+              >
+                로그인하고 글쓰기
+              </Link>
+            )}
           </div>
 
           {total === 0 ? (
             <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-16 text-center text-[var(--color-ink-mute)]">
-              아직 등록된 글이 없습니다. 첫 글을 작성해 보세요.
+              아직 등록된 글이 없습니다.
             </div>
           ) : (
             <div className="border-t-2 border-[var(--color-ink)]">

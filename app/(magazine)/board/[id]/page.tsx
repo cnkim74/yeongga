@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCurrentUser, requireMember } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { getPost, incrementViews } from "@/lib/board-db";
 import { PostActions } from "../PostActions";
 
@@ -30,7 +30,6 @@ export default async function PostDetailPage({
 }) {
   const { id } = await params;
   const postId = Number(id);
-  await requireMember(`/board/${postId}`);
 
   const [user, post] = await Promise.all([getCurrentUser(), getPost(postId)]);
   if (!post) notFound();
@@ -105,11 +104,26 @@ export default async function PostDetailPage({
             <div className="text-sm font-semibold text-[var(--color-ink)] mb-3">
               첨부파일 {post.attachments.length}개
             </div>
+            {!user && (
+              <p className="mb-3 text-xs text-[var(--color-ink-mute)]">
+                🔒 첨부파일 내려받기는 회원 전용입니다.{" "}
+                <Link
+                  href={`/login?next=/board/${postId}`}
+                  className="underline hover:text-[var(--color-ink)]"
+                >
+                  로그인
+                </Link>
+              </p>
+            )}
             <ul className="space-y-2">
               {post.attachments.map((a) => (
                 <li key={a.id}>
                   <a
-                    href={`/api/board/download/${a.id}`}
+                    href={
+                      user
+                        ? `/api/board/download/${a.id}`
+                        : `/login?next=/board/${postId}`
+                    }
                     className="group flex items-center gap-3 hover:bg-[var(--color-bg-soft)] rounded-lg px-2 py-1.5 -mx-2 transition"
                   >
                     <span className="shrink-0 w-9 h-9 rounded bg-[var(--color-bg-soft)] border border-[var(--color-rule)] flex items-center justify-center text-[9px] font-bold text-[var(--color-ink-mute)] font-mono">
@@ -123,7 +137,7 @@ export default async function PostDetailPage({
                         {formatSize(a.file_size)}
                       </span>
                     )}
-                    <span className="text-xs text-[var(--color-ink-mute)] shrink-0">↓</span>
+                    <span className="text-xs text-[var(--color-ink-mute)] shrink-0">{user ? "↓" : "🔒"}</span>
                   </a>
                 </li>
               ))}

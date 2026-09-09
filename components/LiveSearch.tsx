@@ -22,7 +22,17 @@ function formatDate(iso: string) {
   ).padStart(2, "0")}`;
 }
 
-export function LiveSearch({ examples = [] }: { examples?: string[] }) {
+export function LiveSearch({
+  examples = [],
+  autoFocus = false,
+  onNavigate,
+}: {
+  examples?: string[];
+  // 헤더 검색 오버레이에서 열자마자 입력창에 커서를 둔다.
+  autoFocus?: boolean;
+  // 결과를 눌러 이동할 때 오버레이를 닫는 등의 후처리.
+  onNavigate?: () => void;
+}) {
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(false);
@@ -31,6 +41,10 @@ export function LiveSearch({ examples = [] }: { examples?: string[] }) {
   const abortRef = useRef<AbortController | null>(null);
 
   const query = q.trim();
+
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus]);
 
   // 입력할 때마다 디바운스(300ms) 후 검색 — 구글 자동완성처럼.
   useEffect(() => {
@@ -159,6 +173,7 @@ export function LiveSearch({ examples = [] }: { examples?: string[] }) {
                   <li key={`${a.chapter}/${a.slug}`}>
                     <Link
                       href={`/archive/${a.chapter}/${a.slug}`}
+                      onClick={onNavigate}
                       className="group flex items-baseline justify-between gap-6 px-2 py-5 transition hover:bg-[var(--color-bg-soft)]"
                     >
                       <div>

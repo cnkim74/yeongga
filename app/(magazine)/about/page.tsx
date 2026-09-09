@@ -1,17 +1,24 @@
 import Link from "next/link";
+import { getArticleBySlug } from "@/lib/articles-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
+import { AboutTabs } from "@/components/AboutTabs";
 
 // 빌드 타임 정적 생성 비활성화 (PageHeroBg DB 호출 timeout 회피)
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "회 소개 — 영가회",
+  title: "영가회 소개와 회장 인사말 — 영가회",
 };
 
 export default async function AboutPage() {
+  // 회장 인사말은 아카이브의 〈회장의 인사〉 글을 끌어와 소개한다.
+  const greeting = await getArticleBySlug("yeongi", "hoejang-insa").catch(
+    () => null
+  );
+
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-24 sm:pb-32">
+      <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-16 sm:pb-20">
         <PageHeroBg page="about" />
         <div className="relative mx-auto max-w-4xl px-6">
           <div className="kicker text-[var(--color-ink-mute)] mb-5">
@@ -27,8 +34,46 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-[var(--color-paper)] py-24 sm:py-32">
+      <AboutTabs current="about" />
+
+      <section className="bg-[var(--color-paper)] py-16 sm:py-24">
         <div className="mx-auto max-w-3xl px-6">
+          {/* ── 회장 인사말 ── */}
+          {greeting && (
+            <div className="mb-16 rounded-2xl border border-[var(--color-rule)] bg-[var(--color-bg-soft)] p-8 sm:p-10">
+              <div className="kicker text-[var(--color-ink-mute)] mb-3">
+                卷頭言 · 회장 인사말
+              </div>
+              <h2 className="display-md text-2xl sm:text-3xl mb-2">
+                {greeting.title}
+              </h2>
+              {greeting.subtitle && (
+                <p className="text-[var(--color-ink-mute)] mb-4">
+                  {greeting.subtitle}
+                </p>
+              )}
+              {greeting.excerpt && (
+                <blockquote className="border-l-2 border-[var(--color-rule)] pl-4 text-lg leading-relaxed text-[var(--color-ink-soft)]">
+                  {greeting.excerpt}
+                </blockquote>
+              )}
+              <div className="mt-5 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/archive/yeongi/hoejang-insa"
+                  className="btn-pill text-sm"
+                >
+                  인사말 전문 읽기 →
+                </Link>
+                {greeting.author && (
+                  <span className="text-sm text-[var(--color-ink-mute)]">
+                    {greeting.author}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ── 회 소개 ── */}
           <div className="prose-body space-y-7">
             <p>
               영가회는 본래 한 고향에서 자란 벗들이 도시에 자리 잡은 뒤에도
@@ -45,9 +90,14 @@ export default async function AboutPage() {
             <h2>아카이브 사용법</h2>
             <ul>
               <li>
-                글은 여덟 개의 장(章)으로 나누어 두었습니다 — <strong>연기,
-                모임, 글, 사람, 자취, 향, 영상, 동영.</strong> 위쪽의 <em>아카이브</em>
+                글은 여덟 개의 장(章)으로 나누어 두었습니다 — <strong>연혁,
+                모임, 글, 사람, 자취, 향, 사진, 영상.</strong> 위쪽의 <em>아카이브</em>
                 메뉴에서 장을 골라 들어가실 수 있습니다.
+              </li>
+              <li>
+                찾으시는 내용이 있으면 화면 오른쪽 위의 <strong>돋보기</strong>
+                단추를 눌러 보세요. 글자를 입력하는 즉시 관련된 글을 찾아
+                드립니다.
               </li>
               <li>
                 본문 글자는 본명조 계열로 표시됩니다. 화면이 작거나 눈이
@@ -55,8 +105,8 @@ export default async function AboutPage() {
                 글자 크기를 다섯 단계로 조절하실 수 있습니다.
               </li>
               <li>
-                사진은 회 내부 운영용 <a href="/admin">집무실</a>에서
-                분류·태그를 정리한 뒤 본문에 인용됩니다.
+                지난 《영가회보》와 40년사 책자는 <em>이북</em> 메뉴에서
+                넘겨 보실 수 있습니다.
               </li>
             </ul>
 
@@ -73,11 +123,11 @@ export default async function AboutPage() {
           </div>
 
           <div className="mt-16 flex flex-wrap gap-3">
-            <Link href="/archive" className="btn-pill">
-              아카이브 펼치기 →
+            <Link href="/about/presidents" className="btn-pill">
+              역대 회장 소개 →
             </Link>
-            <Link href="/" className="btn-pill ghost">
-              표지로 돌아가기
+            <Link href="/archive" className="btn-pill ghost">
+              아카이브 펼치기
             </Link>
           </div>
         </div>

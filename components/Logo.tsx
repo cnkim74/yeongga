@@ -18,10 +18,10 @@ const SIZES: Record<
   Size,
   { mark: number; word: number; sub: number; gap: number; subTracking: number }
 > = {
-  sm: { mark: 38, word: 24, sub: 11, gap: 11, subTracking: 0.14 },
-  md: { mark: 46, word: 30, sub: 13, gap: 14, subTracking: 0.16 },
-  lg: { mark: 64, word: 40, sub: 15, gap: 18, subTracking: 0.18 },
-  xl: { mark: 96, word: 56, sub: 20, gap: 22, subTracking: 0.2 },
+  sm: { mark: 38, word: 24, sub: 11, gap: 7, subTracking: 0.14 },
+  md: { mark: 46, word: 30, sub: 13, gap: 9, subTracking: 0.16 },
+  lg: { mark: 64, word: 40, sub: 15, gap: 12, subTracking: 0.18 },
+  xl: { mark: 96, word: 56, sub: 20, gap: 15, subTracking: 0.2 },
 };
 
 const SUB_LINES = ["디지털 아카이브", "창립 50주년"];
