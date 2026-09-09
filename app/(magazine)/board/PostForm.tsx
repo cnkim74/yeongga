@@ -230,7 +230,24 @@ export function PostForm({
         </p>
       </div>
 
-      {/* 공지 (관리자만) */}
+      {/* 게시판 구분 (관리자만) — 공지사항 / 자료실 */}
+      {isAdmin && (
+        <div>
+          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
+            게시판
+          </label>
+          <select
+            name="kind"
+            defaultValue={post?.kind ?? "material"}
+            className="form-input w-full sm:w-56"
+          >
+            <option value="material">자료실</option>
+            <option value="notice">공지사항</option>
+          </select>
+        </div>
+      )}
+
+      {/* 공지 등록 — 해당 게시판 안에서 상단 고정 (관리자만) */}
       {isAdmin && (
         <label className="flex items-center gap-2 text-sm text-[var(--color-ink)]">
           <input
@@ -239,7 +256,7 @@ export function PostForm({
             defaultChecked={post?.pinned}
             className="w-4 h-4"
           />
-          📌 공지로 등록 (목록 상단 고정)
+          📌 공지로 등록 (이 게시판 목록 맨 위에 고정)
         </label>
       )}
 

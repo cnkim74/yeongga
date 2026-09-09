@@ -11,8 +11,12 @@ export type PostAttachment = {
   position: number;
 };
 
+export type PostKind = "notice" | "material";
+
 export type Post = {
   id: number;
+  // 소속 게시판 — 공지사항 / 자료실
+  kind: PostKind;
   title: string;
   body: string;
   author_id: number | null;
@@ -29,6 +33,7 @@ export type PostDetail = Post & { attachments: PostAttachment[] };
 function rowToPost(row: Record<string, unknown>): Post {
   return {
     id: Number(row.id),
+    kind: row.kind === "notice" ? "notice" : "material",
     title: String(row.title),
     body: String(row.body ?? ""),
     author_id: row.author_id != null ? Number(row.author_id) : null,
@@ -53,14 +58,16 @@ function rowToAttachment(row: Record<string, unknown>): PostAttachment {
 }
 
 /** 목록 — 공지(pinned) 먼저, 그다음 최신순. 첨부 개수 포함. */
-export async function listPosts(): Promise<PostWithMeta[]> {
+export async function listPosts(kind?: PostKind): Promise<PostWithMeta[]> {
   const db = await getDb();
-  const res = await db.execute(
-    `SELECT p.*,
+  const res = await db.execute({
+    sql: `SELECT p.*,
             (SELECT COUNT(*) FROM post_attachments a WHERE a.post_id = p.id) AS attachment_count
      FROM posts p
-     ORDER BY p.pinned DESC, p.id DESC`
-  );
+     ${kind ? "WHERE p.kind = ?" : ""}
+     ORDER BY p.pinned DESC, p.id DESC`,
+    args: kind ? [kind] : [],
+  });
   return res.rows.map((r) => {
     const row = r as Record<string, unknown>;
     return { ...rowToPost(row), attachment_count: Number(row.attachment_count ?? 0) };
@@ -111,6 +118,7 @@ export type AttachmentInput = {
 };
 
 export async function createPost(data: {
+  kind?: PostKind;
   title: string;
   body: string;
   author_id: number | null;
@@ -120,9 +128,10 @@ export async function createPost(data: {
 }): Promise<number> {
   const db = await getDb();
   const res = await db.execute({
-    sql: `INSERT INTO posts (title, body, author_id, author_name, pinned)
-          VALUES (?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO posts (kind, title, body, author_id, author_name, pinned)
+          VALUES (?, ?, ?, ?, ?, ?)`,
     args: [
+      data.kind ?? "material",
       data.title,
       data.body,
       data.author_id,
@@ -138,6 +147,7 @@ export async function createPost(data: {
 export async function updatePost(
   id: number,
   data: {
+    kind?: PostKind;
     title: string;
     body: string;
     pinned?: boolean;
@@ -150,6 +160,10 @@ export async function updatePost(
   if (data.pinned !== undefined) {
     sets.push("pinned = ?");
     args.push(data.pinned ? 1 : 0);
+  }
+  if (data.kind !== undefined) {
+    sets.push("kind = ?");
+    args.push(data.kind);
   }
   args.push(id);
   await db.execute({ sql: `UPDATE posts SET ${sets.join(", ")} WHERE id = ?`, args });

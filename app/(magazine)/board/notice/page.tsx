@@ -12,8 +12,10 @@ export const metadata = {
 };
 
 export default async function NoticePage() {
-  const [user, all] = await Promise.all([getCurrentUser(), listPosts()]);
-  const posts = all.filter((p) => p.pinned);
+  const [user, posts] = await Promise.all([
+    getCurrentUser(),
+    listPosts("notice"),
+  ]);
 
   return (
     <>

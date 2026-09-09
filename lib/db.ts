@@ -266,6 +266,17 @@ async function init(client: Client) {
   // 가입 승인 상태 — 기존 계정은 모두 approved, 신규 자가가입만 pending
   await addCol("status", "TEXT NOT NULL DEFAULT 'approved'");
 
+  // ─── 마이그레이션: posts 에 kind 컬럼 추가 ──
+  // 소식은 두 게시판으로 나뉜다 — 공지사항(notice) / 자료실(material).
+  // pinned 는 게시판 안에서 글을 위로 고정하는 별개 기능.
+  const postCols = await client.execute("PRAGMA table_info(posts)");
+  const postColNames = postCols.rows.map((r) => String(r.name));
+  if (!postColNames.includes("kind")) {
+    await client.execute(
+      `ALTER TABLE posts ADD COLUMN kind TEXT NOT NULL DEFAULT 'material'`
+    );
+  }
+
   // ─── 마이그레이션: chapter_meta 에 hero_image 컬럼 추가 ──
   const cmCols = await client.execute("PRAGMA table_info(chapter_meta)");
   const cmColNames = cmCols.rows.map((r) => String(r.name));

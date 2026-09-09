@@ -13,8 +13,11 @@ export const metadata = {
 
 export default async function BoardPage() {
   // 자료실은 로그인 없이 열람 가능 — 글쓰기만 회원 전용.
-  const [user, all] = await Promise.all([getCurrentUser(), listPosts()]);
-  const posts = all.filter((p) => !p.pinned);
+  // 공지 등록(📌)된 글도 자료실 안에서 상단 고정으로 함께 보인다.
+  const [user, posts] = await Promise.all([
+    getCurrentUser(),
+    listPosts("material"),
+  ]);
 
   return (
     <>
