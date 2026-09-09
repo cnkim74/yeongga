@@ -41,7 +41,14 @@ const NAV: NavItem[] = [
       { href: "/about/presidents", label: "역대 회장 소개" },
     ],
   },
-  { href: "/board", label: "자료실" },
+  {
+    href: "/board",
+    label: "소식",
+    items: [
+      { href: "/board/notice", label: "공지사항" },
+      { href: "/board", label: "자료실" },
+    ],
+  },
 ];
 
 type Theme = "dark" | "light";
