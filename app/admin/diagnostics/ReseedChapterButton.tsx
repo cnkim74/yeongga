@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { forceReseedChapterAction } from "./actions";
+import { getChapter } from "@/lib/chapters";
 
 export function ReseedChapterButton({ chapter }: { chapter: string }) {
   const [result, setResult] = useState<string | null>(null);
@@ -18,15 +19,8 @@ export function ReseedChapterButton({ chapter }: { chapter: string }) {
     });
   }
 
-  const chapterLabels: Record<string, string> = {
-    yeongi: "연기",
-    moim: "모임",
-    geul: "글",
-    saram: "사람",
-    jachui: "자취",
-    hyang: "향",
-  };
-  const label = chapterLabels[chapter] ?? chapter;
+  // 장 이름은 lib/chapters.ts 를 원본으로 삼는다 (따로 적어 두면 이름이 바뀔 때 어긋난다)
+  const label = getChapter(chapter)?.title ?? chapter;
 
   return (
     <div className="flex items-center gap-2">
