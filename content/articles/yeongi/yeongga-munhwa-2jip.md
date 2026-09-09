@@ -8,7 +8,7 @@ tags: "영가회, 永嘉會, 연기, 영가문화, 2집, 그단새스무해, 199
 visibility: public
 ---
 
-> *편집실 안내 — 이 글은 1998년 7월 10일 발간된 영가회 두 번째 회보 — **영가문화 제2집 《그단새 스무해》** — 을 정리한 자리입니다. 1대 김해길 회장(`/archive/saram/1dae-kim-haegil`) 의 마무리 자리이자, 모임 챕터의 〈1998 영가문화 제2집 발간〉(`/archive/moim/1998-yeongga-munhwa-2-balgan`) 과 한 호흡으로 호응하는 자리. 제1집 《그단새 다섯 해》(`/archive/yeongi/yeongga-munhwa-1jip`) 와 짝이 되는 결.*
+> *편집실 안내 — 이 글은 1998년 7월 10일 발간된 영가회 두 번째 회보 — **영가문화 제2집 《그단새 스무해》** — 을 정리한 자리입니다. 1대 김해길 회장(`/archive/saram/1dae-kim-haegil`) 의 마무리 자리이자, 모임 챕터의 〈1998 영가문화 제2집 발간〉(`/archive/moim/1998-yeongga-munhwa-2-balgan`) 과 한 호흡으로 호응하는 자리. 제1집 《그단새 다섯 해》(`/archive/yeongi/yeongga-munhwa-1jip`) 와 짝이 되는 모습.*
 
 ## 1998년 7월 10일, 창립 20주년의 자리
 
