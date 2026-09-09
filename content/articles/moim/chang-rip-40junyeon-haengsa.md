@@ -5,7 +5,7 @@ author: "편집실"
 date: "2017-01-01"
 excerpt: "2017년 창립 40주년, 40년사 발표와 원로 회고가 어우러진 역사적 자리"
 tags: "영가회, 모임, 40주년, 2017년, 2010년대, 창립기념, 40년사"
-visibility: public
+visibility: private
 ---
 
 ## 40년의 무게

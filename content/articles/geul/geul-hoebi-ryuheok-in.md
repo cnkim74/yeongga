@@ -5,7 +5,7 @@ author: "류혁인"
 date: "2026-05-10"
 excerpt: "의무감에서 습관으로, 마침내 감사함으로 내게 된 회비에 담긴 40년의 의미"
 tags: "영가회, 글, 회원기고, 수필, 류혁인, 3대"
-visibility: public
+visibility: private
 ---
 
 ## 처음에는 의무감이었다

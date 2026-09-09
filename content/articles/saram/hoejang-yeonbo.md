@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "영가회 역대 회장 명단, 재임 기간, 주요 업적을 한눈에 정리한 연보"
 tags: "영가회, 사람, 역대회장, 연보, 40년사"
-visibility: public
+visibility: private
 ---
 
 ## 역대 회장 일람

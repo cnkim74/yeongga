@@ -5,7 +5,7 @@ author: "최민식"
 date: "2026-05-10"
 excerpt: "안동 출신끼리만 통하는 농담과 사투리 에피소드, 웃음 속에 담긴 향수"
 tags: "영가회, 글, 회원기고, 수필, 안동, 유머, 사투리"
-visibility: public
+visibility: private
 ---
 
 ## 안동 사람들만 아는 농담

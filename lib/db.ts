@@ -654,6 +654,66 @@ async function init(client: Client) {
     await markMigration(client, "purge-wrong-5dae-munhwasang-v1");
   }
 
+  // ── 창작·오독 글 20편 영구 비공개 (2026-09-09 전수 점검) ──────────────
+  // 《영가회 40년사》 545쪽을 전부 OCR 해 색인을 만든 뒤, 40년사를 근거로
+  // 든 글 202편의 사실(인명·직함·날짜·장소·숫자)을 원문과 1:1 대조한 결과.
+  //
+  // (가) 가공 인물·가공 직함 — 책 7쪽의 실제 역대회장은
+  //     초대 김해길 · 2대 류목기 · 3대 금창태 · 4대 허동진 ·
+  //     5대 류종묵 · 6대 김봉구 · 7대 김계동 이다.
+  //     그런데 아래 글들은 2대 이상두 / 3대 류혁인 / 4대 김남식 으로 적고
+  //     하지 않은 말을 인용부호로 실었다. '김남식' 은 책 전체에 없는 인물이고,
+  //     '이상두' 는 실존하나 창립 발기인·회칙 초안자였을 뿐 회장이 아니다(27~33쪽).
+  //
+  // (나) 실명 회원 명의의 창작 수필 — 저자로 적힌 이양숙·최민식은 책 전체에
+  //     등장하지 않는 사람이고, 박정희·류혁인·김해길 명의의 글도 책에 없다.
+  //
+  // (다) 근거 없는 행사 기록 — "1985년 봄, 버스 한 대, 마흔 명" 같은
+  //     구체적 수치가 어떤 자료에도 없다.
+  //
+  // (라) 협찬 명단 오독 5편 — 책 62쪽 한 줄을 잘못 읽은 뒤 그 위에 경력까지
+  //     지어냈다. 실제 원문은 오경의(전 마사회장, 국악인 9명) · 권영우(세명대
+  //     총장) · 정동호(안동시장) · 강재우(대명웨딩홀) 이고, 136쪽의 하이닉스
+  //     사장은 김종갑이다. 이름 교정만으로는 본문이 성립하지 않아 함께 내린다.
+  //
+  // 원본 .md 파일은 보존한다 — 자료가 확인되면 정확히 다시 쓰기 위함.
+  if (!(await hasMigration(client, "purge-fabricated-2026-09-v1"))) {
+    const fabricated: [string, string][] = [
+      ["geul", "geul-andong-gil-leeyangsuk"],
+      ["geul", "geul-yeongssi-sohwa-choiminsik"],
+      ["geul", "geul-sonju-giong-parkjunghee"],
+      ["geul", "geul-hoebi-ryuheok-in"],
+      ["geul", "geul-cheot-chamsuk-kimhaegilh"],
+      ["saram", "hoejang-yeonbo"],
+      ["saram", "1dae-hoejang-choong"],
+      ["saram", "wonro-chamsuk-gieok"],
+      ["saram", "myungsa-oh-yeongnam"],
+      ["saram", "myungsa-kwon-yeongjo"],
+      ["saram", "myungsa-jeong-donghoon"],
+      ["saram", "myungsa-kim-junggam"],
+      ["saram", "myungsa-kang-jaewoo"],
+      ["yeongi", "2dae-hoejang-sidae"],
+      ["yeongi", "1990-balseo-moim"],
+      ["yeongi", "2010-saedae-gyoryu"],
+      ["yeongi", "chang-rip-20junyeon"],
+      ["moim", "sinnyeon-haerye"],
+      ["moim", "andong-tabang-1hoe"],
+      ["moim", "chang-rip-40junyeon-haengsa"],
+    ];
+    for (const [chapter, slug] of fabricated) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+      // 재시드 차단 — 파일은 남기되 사이트에는 다시 오르지 않도록
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "purge-fabricated-2026-09-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [

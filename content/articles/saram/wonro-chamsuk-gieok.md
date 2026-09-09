@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "창립 초기 회원 중 고령이 되거나 고인이 된 분들을 추모하는 기록"
 tags: "영가회, 사람, 원로, 창립, 1977년, 추모, 40년사"
-visibility: public
+visibility: private
 ---
 
 ## 기억의 의무

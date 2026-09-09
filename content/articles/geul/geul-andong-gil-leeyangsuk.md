@@ -5,7 +5,7 @@ author: "이양숙"
 date: "2026-05-10"
 excerpt: "명절 안동 귀성길의 풍경과 타향살이의 향수를 담은 수필"
 tags: "영가회, 글, 회원기고, 수필, 안동, 향수"
-visibility: public
+visibility: private
 ---
 
 ## 경부고속도로 위에서

@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "3대 류혁인, 4대 김남식 회장 시기 회원 100명 돌파와 영가문화지 창간"
 tags: "영가회, 연기, 3대, 4대, 류혁인, 김남식, 1990년대, 영가문화"
-visibility: public
+visibility: private
 ---
 
 ## 3대 류혁인 회장 — 도약의 기반

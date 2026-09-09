@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "원로 세대에서 젊은 임원으로 넘어가는 세대교체, 온라인 소통 도입과 회원 유지의 과제"
 tags: "영가회, 연기, 5대, 6대, 7대, 2010년대, 세대교체"
-visibility: public
+visibility: private
 ---
 
 ## 원로 세대의 은퇴와 빈자리

@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "혼란기를 수습하고 정기 모임과 회칙을 안정화한 이상두 회장의 재임 이야기"
 tags: "영가회, 연기, 2대, 이상두, 1980년대, 1981년"
-visibility: public
+visibility: private
 ---
 
 ## 창립 후의 혼란, 그리고 수습

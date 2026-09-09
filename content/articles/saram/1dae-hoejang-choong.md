@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "1977년 영가회 창립을 주도한 초대 회장의 생애와 향우회 설립의 동기"
 tags: "영가회, 사람, 역대회장, 1대, 창립, 1977년"
-visibility: public
+visibility: private
 ---
 
 ## 안동을 떠나온 사람

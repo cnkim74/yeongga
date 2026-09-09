@@ -5,7 +5,7 @@ author: "편집실"
 date: "1985-01-01"
 excerpt: "1985년 봄 영가회 최초 안동 단체 탐방, 버스 한 대로 내려간 회원들의 하루"
 tags: "영가회, 모임, 안동탐방, 1985년, 1980년대, 하회마을, 도산서원"
-visibility: public
+visibility: private
 ---
 
 ## 버스 한 대, 마흔 명의 귀향

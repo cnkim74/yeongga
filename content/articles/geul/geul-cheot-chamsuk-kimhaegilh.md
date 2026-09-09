@@ -5,7 +5,7 @@ author: "김해길"
 date: "2026-05-10"
 excerpt: "서울 낯선 곳에서 처음 들은 안동 사투리, 영가회가 서울살이의 닻이 된 이야기"
 tags: "영가회, 글, 회원기고, 수필, 김해길, 창립"
-visibility: public
+visibility: private
 ---
 
 ## 낯선 서울에서 낯익은 말을

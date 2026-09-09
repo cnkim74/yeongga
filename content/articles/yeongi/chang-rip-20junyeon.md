@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "1997년 창립 20주년, 100여 명이 모여 두 세대의 인연을 확인한 기념행사"
 tags: "영가회, 연기, 20주년, 1997년, 1990년대, 창립기념"
-visibility: public
+visibility: private
 ---
 
 ## 20년이라는 시간

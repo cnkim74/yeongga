@@ -5,7 +5,7 @@ author: "박정희"
 date: "2026-05-10"
 excerpt: "손주에게 안동과 영가회를 남겨주고 싶어 기억이 사라지기 전에 쓴 기록"
 tags: "영가회, 글, 회원기고, 수필, 안동, 기억, 40년사"
-visibility: public
+visibility: private
 ---
 
 ## 손주가 물었다

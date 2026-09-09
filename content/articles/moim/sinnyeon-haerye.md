@@ -5,7 +5,7 @@ author: "편집실"
 date: "2026-05-10"
 excerpt: "매년 1월 영가회가 한 해를 여는 신년하례의 전통과 의미"
 tags: "영가회, 모임, 신년하례, 정기모임, 연례행사"
-visibility: public
+visibility: private
 ---
 
 ## 해가 바뀌면 먼저 인사부터
