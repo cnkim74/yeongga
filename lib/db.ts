@@ -790,7 +790,9 @@ async function init(client: Client) {
   // 물결·한결같이…)은 먼저 가려 두고 건드리지 않는다.
   // 파일 내용으로 통째로 갈아끼우지 않고 DB 본문에 같은 규칙을 적용한다 —
   // 집무실에서 따로 고친 글을 덮어쓰지 않기 위함.
-  if (!(await hasMigration(client, "tidy-gyeol-2026-09-v1"))) {
+  // v2: 관형형 '…하는 결.' 규칙을 뒤늦게 넣어 키를 올렸다. 이미 정리된
+  //     글에 다시 돌려도 바뀔 것이 없으므로 그대로 다시 실행해도 안전하다.
+  if (!(await hasMigration(client, "tidy-gyeol-2026-09-v2"))) {
     const KEEP =
       /결과|결정|결국|결코|결의안|결의|결혼|결산|결말|결론|결합|결성|결속|결심|결재|결석|결손|결함|결딴|결박|결핵|결여|결근|결선|결점|결층|결제|결판|결투|결권|결백|결호|결항|결괘|결절|결집|결막|결단|결기|결승|결연|비결|연결|판결|해결|체결|타결|종결|단결|대결|한결|나뭇결|살결|물결|숨결|의결/g;
 
@@ -877,7 +879,7 @@ async function init(client: Client) {
     for (let i = 0; i < gyeolUpdates.length; i += 50) {
       await client.batch(gyeolUpdates.slice(i, i + 50));
     }
-    await markMigration(client, "tidy-gyeol-2026-09-v1");
+    await markMigration(client, "tidy-gyeol-2026-09-v2");
   }
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
