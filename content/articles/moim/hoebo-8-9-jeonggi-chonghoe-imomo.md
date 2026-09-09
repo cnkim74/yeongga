@@ -16,24 +16,24 @@ visibility: public
 
 **"지대과제를 인식하고 해결하려는 실천지성(實踐知性) 찾아야."**
 
-## 한 결의 특강 — '안동 독립운동시에서 찾는 현대 선비의 길'
+## 특강 — '안동 독립운동시에서 찾는 현대 선비의 길'
 
 정기총회의 한 호의 가장 단정한 특강:
 
-- **안동의 한 결의 독립운동 자취** — 동산 류인식·일송 김동삼(관련: 〈[8-6호 만주벌 호랑이](/archive/saram/hoebo-8-6-ilsong-kim-dongsam)〉)·임청각 등
-- **현대 선비의 길** — 한 시대 한 결의 안동 정신을 한 호의 자리에서 다시 짚는 결
-- **실천지성** — 한 결의 가장 단정한 키워드
+- **안동의 독립운동 자취** — 동산 류인식·일송 김동삼(관련: 〈[8-6호 만주벌 호랑이](/archive/saram/hoebo-8-6-ilsong-kim-dongsam)〉)·임청각 등
+- **현대 선비의 길** — 한 시대 안동 정신을 한 호의 자리에서 다시 짚는 결
+- **실천지성** — 가장 단정한 키워드
 
-8-1호 〈[이동수 혁신과 보수](/archive/geul/hoebo-8-1-lee-dongsu-hyeoksin-boso)〉·8-5호 〈[안호삼 선비문화](/archive/geul/hoebo-8-5-anhosam-seonbi-munhwa)〉·8-6호 〈[남영찬 안동 선비 혁신 DNA](/archive/geul/hoebo-8-4-nam-yeongchan-hyeoksin-dna)〉 의 한 결의 후속.
+8-1호 〈[이동수 혁신과 보수](/archive/geul/hoebo-8-1-lee-dongsu-hyeoksin-boso)〉·8-5호 〈[안호삼 선비문화](/archive/geul/hoebo-8-5-anhosam-seonbi-munhwa)〉·8-6호 〈[남영찬 안동 선비 혁신 DNA](/archive/geul/hoebo-8-4-nam-yeongchan-hyeoksin-dna)〉 의 후속.
 
 ## 영가골프회 — 5월부터 시작
 
-- 8-2호 출발 → 8-9호 5월 시작 — 한 결로 이어진 자취 (관련: 〈[8-2호 영가골프회 출발](/archive/jachui/hoebo-8-2-golfhoe-jaechulbal)〉)
+- 8-2호 출발 → 8-9호 5월 시작 — 이어진 자취 (관련: 〈[8-2호 영가골프회 출발](/archive/jachui/hoebo-8-2-golfhoe-jaechulbal)〉)
 
 ## 편집실의 정리
 
 - **'실천지성 찾아야'** — 한 호의 가장 단정한 한 마디
-- **'안동 독립운동시에서 찾는 현대 선비의 길'** — 한 결의 특강
+- **'안동 독립운동시에서 찾는 현대 선비의 길'** — 특강
 - 영가골프회 5월 시작 등 한 호의 단정한 일상
 
 영가회 한 호의 단정한 자리.

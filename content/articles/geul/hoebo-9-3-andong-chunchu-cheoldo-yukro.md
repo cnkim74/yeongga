@@ -16,8 +16,8 @@ visibility: public
 
 **'일제가 장악한 철도와 육로.'**
 
-- **일제 강점기 철도·육로** — 한 시대 한 결의 가장 무거운 자취
-- 8-9호 〈[시베리아 횡단철도](/archive/geul/hoebo-8-9-andong-chunchu-3-1)〉 의 한 결의 후속
+- **일제 강점기 철도·육로** — 한 시대 가장 무거운 자취
+- 8-9호 〈[시베리아 횡단철도](/archive/geul/hoebo-8-9-andong-chunchu-3-1)〉 의 후속
 
 — 정종수 / 前 인행MS BS사장
 

@@ -13,8 +13,8 @@ visibility: public
 ## ① '산불특별법' 국회 본회의 통과… 피해지역 종합대책 마련
 
 - **'산불특별법'** — 한 호의 가장 큰 입법 자취
-- 9-1호 〈[역대급 산불](/archive/jachui/hoebo-9-1-sanbul-seongkeum)〉·9-2호 〈[성금 3억 8천](/archive/jachui/hoebo-9-2-3eok-8000-jeondal)〉 의 한 결의 가장 단정한 입법 결과
-- **피해지역 종합대책 마련** — 한 호의 가장 단정한 결
+- 9-1호 〈[역대급 산불](/archive/jachui/hoebo-9-1-sanbul-seongkeum)〉·9-2호 〈[성금 3억 8천](/archive/jachui/hoebo-9-2-3eok-8000-jeondal)〉 의 가장 단정한 입법 결과
+- **피해지역 종합대책 마련** — 한 호의 가장 단정한 모습
 
 ## ② 영가회 원로회원 하반기 간담회 개최
 
@@ -23,11 +23,11 @@ visibility: public
 ## ③ 안동 출향인 '경북지역 국립의대학 설립' 한목소리
 
 - 8-8호·8-13호 〈[국립의대 신설 촉구](/archive/jachui/hoebo-8-13-gukrip-uidae-toron)〉 의 한 호의 가장 큰 후속
-- 9-3호 〈[권민영 의원 특별기고 국립의대](/archive/geul/hoebo-9-3-kwon-minyeong-uidae)〉 와 한 결의 호응
+- 9-3호 〈[권민영 의원 특별기고 국립의대](/archive/geul/hoebo-9-3-kwon-minyeong-uidae)〉 와 호응
 
 ## ④ 안동시 올해의 '명예로운 안동인상'·시민상 수상자 시상
 
-- 8-8호 〈[명예로운 안동인상 김영식·권영식](/archive/jachui/hoebo-8-8-myeongyero-andong-in-sang)〉·8-12호 〈[권한기 안동인상](/archive/jachui/hoebo-8-12-kwon-hangi-noblesse)〉 의 한 결의 가장 자랑스런 후속
+- 8-8호 〈[명예로운 안동인상 김영식·권영식](/archive/jachui/hoebo-8-8-myeongyero-andong-in-sang)〉·8-12호 〈[권한기 안동인상](/archive/jachui/hoebo-8-12-kwon-hangi-noblesse)〉 의 가장 자랑스런 후속
 
 ## 편집실의 정리
 

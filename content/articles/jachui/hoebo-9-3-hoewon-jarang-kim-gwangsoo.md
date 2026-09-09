@@ -16,14 +16,14 @@ visibility: public
 
 **김광수** 회원 — **故 행과 이순신 백의종군길, 도보여행기 출간**.
 
-- **이순신 백의종군길** — 한 시대 한 결의 가장 정성스런 자취
-- **도보여행기 출간** — 한 호의 가장 자랑스런 결
-- 8-4호 〈[류상영 병역 명문가](/archive/geul/hoebo-8-4-byeongryeok-myeongmunga)〉·8-8호 〈[박근식 안보태세](/archive/geul/hoebo-8-8-park-geunsik-anbo-taese)〉 의 한 결의 가장 단정한 후속
+- **이순신 백의종군길** — 한 시대 가장 정성스런 자취
+- **도보여행기 출간** — 한 호의 가장 자랑스런 일
+- 8-4호 〈[류상영 병역 명문가](/archive/geul/hoebo-8-4-byeongryeok-myeongmunga)〉·8-8호 〈[박근식 안보태세](/archive/geul/hoebo-8-8-park-geunsik-anbo-taese)〉 의 가장 단정한 후속
 
 ## 편집실의 정리
 
 - **회원 동정 + 김광수 도보여행기 출간**
-- 한 결의 자랑스런 자취
+- 자랑스런 자취
 
 영가회 한 호의 따뜻한 자리.
 

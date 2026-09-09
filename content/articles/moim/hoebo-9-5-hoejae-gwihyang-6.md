@@ -21,7 +21,7 @@ visibility: public
 ## 한 호의 자취
 
 - **제6회 회재 선생 마지막 귀향길 재현** — 한 호의 가장 정성스런 자리
-- **퇴계 귀향길**(9-4호 〈[퇴계 귀향길 3월](/archive/jachui/hoebo-9-4-toigye-gwihyang-3wol)〉)과 한 결의 단정한 자취
+- **퇴계 귀향길**(9-4호 〈[퇴계 귀향길 3월](/archive/jachui/hoebo-9-4-toigye-gwihyang-3wol)〉)과 단정한 자취
 
 ## 편집실의 정리
 

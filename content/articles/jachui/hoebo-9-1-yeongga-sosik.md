@@ -18,12 +18,12 @@ visibility: public
 
 ## 산불 의연금 동참
 
-9-1호 머리기사 〈[역대급 안동 산불 성금](/archive/jachui/hoebo-9-1-sanbul-seongkeum)〉 의 한 결의 가장 정성스런 후속.
+9-1호 머리기사 〈[역대급 안동 산불 성금](/archive/jachui/hoebo-9-1-sanbul-seongkeum)〉 의 가장 정성스런 후속.
 
 ## 안동 고향사랑기부·안동출신 독립운동가 후손 후원에 동참
 
-- **고향사랑기부** (관련: 〈[8-9호 도내 2위·예천 전국 5위](/archive/hyang/hoebo-8-9-gohyangsarang-donnae-2wi)〉) 의 한 결의 후속
-- **안동출신 독립운동가 후손 후원** — 일송 김동삼(관련: 〈[8-6호 만주벌 호랑이](/archive/saram/hoebo-8-6-ilsong-kim-dongsam)〉)·동산 류인식(관련: 〈[8-1호 이동수 글](/archive/geul/hoebo-8-1-lee-dongsu-hyeoksin-boso)〉)·임청각(관련: 〈[8-11호 임청각 복원](/archive/jachui/hoebo-8-11-imcheonggak-bokwon)〉) 의 한 결의 가장 정성스런 후속
+- **고향사랑기부** (관련: 〈[8-9호 도내 2위·예천 전국 5위](/archive/hyang/hoebo-8-9-gohyangsarang-donnae-2wi)〉) 의 후속
+- **안동출신 독립운동가 후손 후원** — 일송 김동삼(관련: 〈[8-6호 만주벌 호랑이](/archive/saram/hoebo-8-6-ilsong-kim-dongsam)〉)·동산 류인식(관련: 〈[8-1호 이동수 글](/archive/geul/hoebo-8-1-lee-dongsu-hyeoksin-boso)〉)·임청각(관련: 〈[8-11호 임청각 복원](/archive/jachui/hoebo-8-11-imcheonggak-bokwon)〉) 의 가장 정성스런 후속
 
 ## 영가회보 발행 후원금 + 영가골프회 신입회원 연중 모집
 

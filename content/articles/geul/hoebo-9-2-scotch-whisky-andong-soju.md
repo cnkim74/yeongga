@@ -17,7 +17,7 @@ visibility: public
 **'스카치위스키와 안동소주.'**
 
 - **스코틀랜드 스카치위스키 + 안동소주** — 두 결의 한 자리에서 한 호로 만남
-- 8-12호 〈[찜닭·안동소주 33선](/archive/hyang/hoebo-8-12-jjimdak-andong-soju)〉·9-1호 〈[K-미식벨트](/archive/hyang/hoebo-9-1-misik-vault-jeontongju)〉 의 한 결의 가장 글로벌 후속
+- 8-12호 〈[찜닭·안동소주 33선](/archive/hyang/hoebo-8-12-jjimdak-andong-soju)〉·9-1호 〈[K-미식벨트](/archive/hyang/hoebo-9-1-misik-vault-jeontongju)〉 의 가장 글로벌 후속
 
 ## ② 재해의 역설… 도심으로 몰리는 인파 — 정종수
 
@@ -25,8 +25,8 @@ visibility: public
 
 **'재해의 역설… 도심으로 몰리는 인파.'**
 
-- 안동 산불 재해 후 — 도심으로 몰리는 인파의 한 결의 역설
-- 한 시대 한 결의 가장 무거운 자취
+- 안동 산불 재해 후 — 도심으로 몰리는 인파의 역설
+- 한 시대 가장 무거운 자취
 
 — 이재일 / 정종수
 

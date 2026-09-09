@@ -18,9 +18,9 @@ visibility: public
 
 ## ② 영가회 원로회의 간담회 — '산불피해 복구에 힘을 보태자'
 
-- **원로회의 의장 류종묵** (관련: 〈[8-3호 원로회의 의장 추대](/archive/moim/hoebo-8-3-wonro-ochanhoe)〉) 의 한 결의 가장 정성스런 자취
-- **'산불피해 복구에 힘을 보태자'** — 한 결의 가장 단정한 다짐
-- 9-1호 〈[역대급 산불 성금](/archive/jachui/hoebo-9-1-sanbul-seongkeum)〉·9-2호 〈[3억 8천 전달](/archive/jachui/hoebo-9-2-3eok-8000-jeondal)〉 의 한 결의 가장 큰 자취
+- **원로회의 의장 류종묵** (관련: 〈[8-3호 원로회의 의장 추대](/archive/moim/hoebo-8-3-wonro-ochanhoe)〉) 의 가장 정성스런 자취
+- **'산불피해 복구에 힘을 보태자'** — 가장 단정한 다짐
+- 9-1호 〈[역대급 산불 성금](/archive/jachui/hoebo-9-1-sanbul-seongkeum)〉·9-2호 〈[3억 8천 전달](/archive/jachui/hoebo-9-2-3eok-8000-jeondal)〉 의 가장 큰 자취
 
 ## 편집실의 정리
 

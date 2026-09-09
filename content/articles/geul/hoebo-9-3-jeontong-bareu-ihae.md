@@ -14,7 +14,7 @@ visibility: public
 
 **'전통과 역사 바로 이해하자(溫故而知新).'**
 
-- **온고이지신(溫故而知新)** — 한 결의 가장 단정한 한자
+- **온고이지신(溫故而知新)** — 가장 단정한 한자
 - 8-10호 〈[권혁수 전통문화 새로운 이해와 전승](/archive/geul/hoebo-8-10-kwon-hyeoksu-jeontong-munhwa)〉 의 한 호 후속
 
 — 정대학 / 노무법인 중앙 대표·전 산업부장관
@@ -23,9 +23,9 @@ visibility: public
 
 **'명문가의 뿌리찾기 — 安東(上)金氏: 先 안동김씨, 김방경 후손으로 飮水思源 교훈도 잘 알려져.'**
 
-- **先 안동김씨(上金氏)** — 한 결의 가장 깊은 안동 가문 (관련: 〈[8-12호 안동김씨 명문집안](/archive/geul/hoebo-8-12-andong-kim-myeongmunjip)〉)
-- **김방경** — 고려시대의 한 결의 안동김씨 시조 (관련: 〈[andong-yeoksa-inmul](/archive/hyang/andong-yeoksa-inmul)〉)
-- **음수사원(飮水思源)** — '물을 마시며 그 근원을 생각한다'는 한 결의 한자 교훈
+- **先 안동김씨(上金氏)** — 가장 깊은 안동 가문 (관련: 〈[8-12호 안동김씨 명문집안](/archive/geul/hoebo-8-12-andong-kim-myeongmunjip)〉)
+- **김방경** — 고려시대의 안동김씨 시조 (관련: 〈[andong-yeoksa-inmul](/archive/hyang/andong-yeoksa-inmul)〉)
+- **음수사원(飮水思源)** — '물을 마시며 그 근원을 생각한다'는 한자 교훈
 
 — 남승룡 / 한국가곡문화원장
 

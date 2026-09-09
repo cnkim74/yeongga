@@ -12,11 +12,11 @@ visibility: public
 
 ## ① 경북지역, 올해 중에 사통팔달의 철도 인프라 구축된다
 
-8-9호 〈[KTX 서울역 연장](/archive/hyang/hoebo-8-9-ktx-seoul-yeokjang)〉·8-10호 〈[신공항 철도 안동 연장](/archive/hyang/hoebo-8-10-singonghang-cheoldo)〉 의 한 결의 후속. 경북지역이 한 호의 자리에서 — **사통팔달(四通八達) 철도 인프라**를 한 결로 구축한다.
+8-9호 〈[KTX 서울역 연장](/archive/hyang/hoebo-8-9-ktx-seoul-yeokjang)〉·8-10호 〈[신공항 철도 안동 연장](/archive/hyang/hoebo-8-10-singonghang-cheoldo)〉 의 후속. 경북지역이 한 호의 자리에서 — **사통팔달(四通八達) 철도 인프라**를 구축한다.
 
 ## ② 도청재진 안동·예천 공동개최, 도청이전 10주년 기념
 
-2008.6.13 도청이전 결정(관련: 〈[8-2호 진평구 도청이전](/archive/geul/hoebo-8-2-jin-pyeonggu-gyeongbuk-doc-iijeon)〉) 후 10주년 기념. 안동·예천 공동개최로 한 결로 단정.
+2008.6.13 도청이전 결정(관련: 〈[8-2호 진평구 도청이전](/archive/geul/hoebo-8-2-jin-pyeonggu-gyeongbuk-doc-iijeon)〉) 후 10주년 기념. 안동·예천 공동개최로 단정.
 
 ## ③ 농어촌의 안투홍정
 
@@ -24,7 +24,7 @@ visibility: public
 
 ## ④ 예천군 제씨모색 학숙단체 학술대회 개최
 
-예천군의 한 결의 학숙단체(學術團體) 학술대회 자취.
+예천군의 학숙단체(學術團體) 학술대회 자취.
 
 ## 편집실의 정리
 
