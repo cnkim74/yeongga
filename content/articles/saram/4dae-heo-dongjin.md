@@ -63,7 +63,7 @@ visibility: public
 
 - **2007년 1월 10일** — 취임식 + 신년하례식 (`/archive/moim/4dae-heo-dongjin-chuim`)
 - **2007~2010년** — 매년 영가문화상 제4~7회 시상식 (3대에서 받은 결을 이어 감)
-- **2008년 상반기** — 해외문화유적탐방 (중국 산동성 곡부·태산, 회원 김민연 기고문 발간) (`/archive/moim/4dae-2008-haeoe-tambang`)
+- **2008년 상반기** — 해외문화유적탐방 (중국 산동성 곡부·태산, 회원 김만연 기고문 발간) (`/archive/moim/4dae-2008-haeoe-tambang`)
 - **2009년** — 회칙 3차 개정 (`/archive/moim/4dae-2009-hoechik-3cha`)
 - **2010년** — 4대 회장기 종료, 5대 회장기 이사회로 결을 넘김 (`/archive/moim/4dae-heo-dongjin-jongryo`)
 
