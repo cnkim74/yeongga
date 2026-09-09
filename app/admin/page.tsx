@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
+import { RevalidateButton } from "@/components/admin/RevalidateButton";
 import {
   IconHome,
   IconSlides,
@@ -109,6 +110,10 @@ export default async function AdminHome() {
 
         {/* ─── 데이터 관리 ─── */}
         <SectionTitle ko="데이터 관리" hanja="管理" />
+
+        <div className="mb-8">
+          <RevalidateButton />
+        </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
           <DbCard href="/admin/slides"      Icon={IconSlides}     title="홈 슬라이드"
