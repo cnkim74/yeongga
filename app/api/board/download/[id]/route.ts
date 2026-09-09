@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { getCurrentUser } from "@/lib/auth";
 import { getAttachment } from "@/lib/board-db";
 
 export const runtime = "nodejs";
@@ -28,12 +27,7 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  // 자료실은 회원 전용 — 로그인 확인
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
-  }
-
+  // 자료실 첨부는 공개 — 로그인 없이 내려받을 수 있다.
   const { id } = await params;
   const att = await getAttachment(Number(id));
   if (!att) {
