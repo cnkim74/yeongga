@@ -995,6 +995,108 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-1-restore-v1");
   }
 
+  // ── 영가회보 8-2호 원문 복원 + 지면 사진 (2026-09-11) ────────────────
+  // 8-2호 12면을 판독해 21편을 원문 그대로 다시 썼다. 필자·인명이 틀린 글이
+  // 여럿이었다: 진평구→정동호, 김상영→강보영, 이종묵→이동필, 권용오→권원오,
+  // 김명일→김영일, '운치림·윤서환'→윤좌형·윤세형(필자 정윤호), '평직'→퇴직(권영규).
+  // 11면 '추모의 글 — 유천(柳泉) 김광원'은 원문에 없고 실제로는 이동익 서예 작품 소개였다.
+  // 옛 행을 지워 파일에서 다시 시드되게 하고, 사진 36장을 앨범 〈영가회보 8-2호〉로 등록한다.
+  if (!(await hasMigration(client, "hoebo-8-2-restore-v1"))) {
+    const restored82: [string, string][] = [
+      ["jachui", "hoebo-8-2-haengjeong-tonghap-josa"],
+      ["hyang", "hoebo-8-2-wellness-50sun"],
+      ["moim", "hoebo-8-2-sangsaeng-toron-6wol"],
+      ["hyang", "hoebo-8-2-ktx-seoul-chulbal"],
+      ["geul", "hoebo-8-2-jeong-jongsu-sangsaeng"],
+      ["jachui", "hoebo-8-2-golfhoe-jaechulbal"],
+      ["hyang", "hoebo-8-2-jibang-somyeol-teukbyeolbeop"],
+      ["jachui", "hoebo-8-2-yoon-suk-yeol-andong-gongyak"],
+      ["jachui", "hoebo-8-2-hoewon-dongjeong"],
+      ["geul", "hoebo-8-2-jin-pyeonggu-gyeongbuk-doc-iijeon"],
+      ["geul", "hoebo-8-2-kim-sangyoung-jibang-somyeol"],
+      ["geul", "hoebo-8-2-kim-hwidong-gwicheon-ha"],
+      ["geul", "hoebo-8-2-yeongga-galchae-gwigeoraesa"],
+      ["geul", "hoebo-8-2-kwon-yongo-jeongsin-munhwa"],
+      ["saram", "hoebo-8-2-yeongga-saramdeul-2-un-seo-hyeongje"],
+      ["jachui", "hoebo-8-2-andong-yeongyeoseo-noraebi"],
+      ["jachui", "hoebo-8-2-gihoek-daedam-seyoung-group"],
+      ["geul", "hoebo-8-2-andong-mat-2-gangodeungeo"],
+      ["geul", "hoebo-8-2-chumo-yucheon-kim-gwangwon"],
+      ["geul", "hoebo-8-2-pyeongjik-haengbok-chatgi-1"],
+      ["jachui", "hoebo-8-2-singyu-hoewon-sebeop-sangsik"],
+    ];
+    for (const [chapter, slug] of restored82) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-2호 (2022 봄호)", "hoebo-8-2", "2022년 4월 15일 발행 《영가회보》 8-2호 지면에 실린 사진", "/archive-photos/hoebo/8-2/p01-1.webp", 101],
+    });
+    const cat82 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-2"],
+    });
+    const cat82Id = Number(cat82.rows[0].id);
+    const photos82: [string, string, string, number][] = [
+      ["p01-1", "드론으로 촬영한 하회마을", "2022-04-15", 1],
+      ["p02-1", "정종수 영가회 수석부회장", "2022-04-15", 2],
+      ["p02-2", "영가골프회 첫 월례회", "2022-03-30", 2],
+      ["p03-1", "박광주 기아자동차 상무이사", "2022-04-15", 3],
+      ["p03-4", "권기진 안동고 총동창회 회장", "2022-04-15", 3],
+      ["p03-3", "권순한 소이상사 대표이사 회장", "2022-04-15", 3],
+      ["p03-7", "권택기 전 국회의원", "2022-04-15", 3],
+      ["p03-8", "김한조 전 하나금융지주 부회장", "2022-04-15", 3],
+      ["p03-2", "김형동 국회의원", "2022-04-15", 3],
+      ["p03-5", "남영찬 법무법인 클라스 대표변호사", "2022-04-15", 3],
+      ["p03-6", "박대섭 전 국방부 차관보", "2022-04-15", 3],
+      ["p06-1", "김광홍 전 청원·청주 통합추진위원회 위원장", "2022-04-15", 6],
+      ["p06-2", "이삼걸 강원랜드 대표이사", "2022-04-15", 6],
+      ["p07-1", "정동호 안동시 초대·2대 민선시장", "2022-04-15", 7],
+      ["p08-1", "강보영 대한민국시도민회연합 이사장", "2022-04-15", 8],
+      ["p08-2", "김휘동 전 안동시장", "2022-04-15", 8],
+      ["p09-1", "이동필 전 농림축산식품부 장관", "2022-04-15", 9],
+      ["p09-2", "권원오 전 안동향우회장", "2022-04-15", 9],
+      ["p10-2", "정윤호 전 안동MBC 보도국장", "2022-04-15", 10],
+      ["p10-5", "구 안동역 앞 '안동역에서' 노래비", "2022-04-15", 10],
+      ["p10-6", "안영모 세영그룹 회장", "2022-04-15", 10],
+      ["p10-1", "세영그룹 사옥", "2022-04-15", 10],
+      ["p11-1", "유천 이동익 서예 작품 — 퇴계 이황 시 '반타석'", "2022-04-15", 11],
+      ["p11-2", "권영규 전 서울부시장", "2022-04-15", 11],
+      ["p12-2", "신규회원 권인소", "2022-04-15", 12],
+      ["p12-6", "신규회원 권호욱", "2022-04-15", 12],
+      ["p12-10", "신규회원 김돈한", "2022-04-15", 12],
+      ["p12-3", "신규회원 김성환", "2022-04-15", 12],
+      ["p12-7", "신규회원 김태원", "2022-04-15", 12],
+      ["p12-11", "신규회원 김한광", "2022-04-15", 12],
+      ["p12-12", "신규회원 박규희", "2022-04-15", 12],
+      ["p12-4", "신규회원 박기호", "2022-04-15", 12],
+      ["p12-8", "신규회원 신승관", "2022-04-15", 12],
+      ["p12-13", "신규회원 이동탁", "2022-04-15", 12],
+      ["p12-5", "신규회원 이원욱", "2022-04-15", 12],
+      ["p12-9", "신규회원 이형희", "2022-04-15", 12],
+    ];
+    let pos82 = 0;
+    for (const [file, title, takenAt, page] of photos82) {
+      const url = `/archive-photos/hoebo/8-2/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat82Id, title, `《영가회보》 8-2호 (2022년 봄호) ${page}면`, url, takenAt, pos82],
+        });
+      }
+      pos82++;
+    }
+    await markMigration(client, "hoebo-8-2-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -1387,7 +1489,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v34";
+  const seedKey = "content-seed-v35";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
