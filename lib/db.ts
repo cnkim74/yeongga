@@ -1677,6 +1677,122 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-7-restore-v1");
   }
 
+  // 영가회보 8-8호(2023 가을호) 원문 복원: 24편 재시드 + 지면에 없는 창작 인터뷰 1편 비공개 + 지면 사진 갤러리 앨범
+  if (!(await hasMigration(client, "hoebo-8-8-restore-v1"))) {
+    const restored88: [string, string][] = [
+      ["jachui", "hoebo-8-8-seongugu-jonsok"],
+      ["jachui", "hoebo-8-8-yeongga-gyeongje-yeonguwon-mamuri"],
+      ["hyang", "hoebo-8-8-andong-nal-haengsa"],
+      ["geul", "hoebo-8-8-jeong-jongsu-jibang-balgyeon"],
+      ["jachui", "hoebo-8-8-myeongyero-andong-in-sang"],
+      ["jachui", "hoebo-8-8-seoul-andong-5-bunya"],
+      ["jachui", "hoebo-8-8-hoewon-dongjeong"],
+      ["jachui", "hoebo-8-8-ryu-mokki-pungsan-interview"],
+      ["moim", "hoebo-8-8-tuja-yuchi-jamun-uiwonhoe"],
+      ["moim", "hoebo-8-8-yeokdae-hoejang-wonro-gandam"],
+      ["hyang", "hoebo-8-8-gohyangsarang-3eok"],
+      ["jachui", "hoebo-8-8-chungnyeo-siljongja"],
+      ["geul", "hoebo-8-8-lee-jaeil-yejeongdoen-mirae"],
+      ["jachui", "hoebo-8-8-andong-dae-gukripuidae"],
+      ["hyang", "hoebo-8-8-okdong-parkgolf"],
+      ["geul", "hoebo-8-8-kim-jisook-doonong"],
+      ["geul", "hoebo-8-8-park-geunsik-anbo-taese"],
+      ["geul", "hoebo-8-8-kwon-sejun-yecheon-doyak"],
+      ["geul", "hoebo-8-8-andong-chunchu-gukmang-sanha"],
+      ["geul", "hoebo-8-8-kim-changjun-oppenheimer"],
+      ["geul", "hoebo-8-8-cheongbaek-li-bobaek-dang"],
+      ["geul", "hoebo-8-8-do-jaeeok-baekdugancang-nakdong"],
+      ["geul", "hoebo-8-8-andong-mat-9-honjip-jangi"],
+      ["jachui", "hoebo-8-8-yeongga-sosik"],
+    ];
+    for (const [chapter, slug] of restored88) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    // 3면에 실린 적 없는 '김영식·권영식 스페셜 인터뷰' — purge-fabricated 와 같은 방식으로 내림(파일 보존)
+    const fabricated88: [string, string][] = [
+      ["geul", "hoebo-8-8-kim-yeongsik-kwon-yeongsik-interview"],
+    ];
+    for (const [chapter, slug] of fabricated88) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-8호 (2023 가을호)", "hoebo-8-8", "2023년 10월 15일 발행 《영가회보》 8-8호 지면에 실린 사진", "/archive-photos/hoebo/8-8/p05-1.webp", 107],
+    });
+    const cat88 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-8"],
+    });
+    const cat88Id = Number(cat88.rows[0].id);
+    const photos88: [string, string, string, number][] = [
+      ["p01-1", "경북도청신도시 9개 주민단체의 안동·예천 선거구 존속 촉구 기자회견", "2023-09-27", 1],
+      ["p01-2", "안동시 승격 60주년 기념 '안동의 날' 행사", "2023-10-03", 1],
+      ["p02-1", "정종수 영가회 수석부회장", "2023-10-15", 2],
+      ["p02-2", "서울특별시-안동시 교류강화 업무협약", "2023-10-06", 2],
+      ["p02-3", "명예로운 안동인상 김영식 전 재경안동향우회장", "2023-10-15", 2],
+      ["p02-4", "명예로운 안동인상 권영식 넷마블(주) 대표이사", "2023-10-15", 2],
+      ["p02-5", "자랑스런 안동시민상 김숙자 전 (주)회곡양조장 대표", "2023-10-15", 2],
+      ["p02-6", "명예로운 안동인상 이재하 삼보모터스(주) 대표이사", "2023-10-15", 2],
+      ["p02-7", "특별상 박성수 전 안동시 부시장", "2023-10-15", 2],
+      ["p03-2", "김성한 DGB생명보험 대표이사", "2023-10-15", 3],
+      ["p03-3", "김형동 국회의원", "2023-10-15", 3],
+      ["p03-4", "남영찬 법무법인 클라스 대표(영가경제연구원 이사장)", "2023-10-15", 3],
+      ["p03-5", "류종묵 영가회 원로대표회의 의장", "2023-10-15", 3],
+      ["p03-6", "류진 한국경제인협회 회장(풍산그룹 회장)", "2023-10-15", 3],
+      ["p03-7", "조봉환 영가경제연구원 원장", "2023-10-15", 3],
+      ["p04-2", "류목기 제2대 영가회장(풍산그룹 상임고문)", "2023-09-14", 4],
+      ["p04-7", "류목기 제2대 영가회장 인터뷰", "2023-09-14", 4],
+      ["p04-5", "류목기 제2대 영가회장", "2023-09-14", 4],
+      ["p04-6", "류목기 자서전 「무서잡록」(無序雜錄)", "2023-10-15", 4],
+      ["p05-2", "안동시 투자유치자문위원회 출범식", "2023-10-03", 5],
+      ["p05-1", "영가회 원로회원·임원 간담회 (역대 회장 참석)", "2023-09-14", 5],
+      ["p06-2", "이재욱 전 농림축산식품부 차관", "2023-10-15", 6],
+      ["p06-3", "안동시민 국립의과대학 유치 궐기대회", "2023-10-15", 6],
+      ["p07-1", "김의승 서울특별시 행정1부시장", "2023-10-15", 7],
+      ["p07-2", "박대섭 전 국방부 인사복지실장", "2023-10-15", 7],
+      ["p08-1", "권세준 한국정책방송 사장", "2023-10-15", 8],
+      ["p08-2", "정윤호 前 안동MBC 보도국장", "2023-10-15", 8],
+      ["p09-2", "김원 서울시립대 부총장 역임·안동시장학재단 공동이사장", "2023-10-15", 9],
+      ["p10-6", "남승섭 前 한국정신문화재단 사무처장", "2023-10-15", 10],
+      ["p10-3", "'寶白堂' 현판", "2023-10-15", 10],
+      ["p10-5", "만휴정 현판 '吾家無寶物 寶物惟淸白'", "2023-10-15", 10],
+      ["p10-4", "만휴정 현판 '持身謹愼 待人忠厚'", "2023-10-15", 10],
+      ["p10-7", "2023 안동국제탈춤페스티벌", "2023-10-15", 10],
+      ["p11-3", "권오춘 퇴계학진흥회 부회장", "2023-10-15", 11],
+      ["p11-2", "이유대 영가회 사무총장", "2023-10-15", 11],
+      ["p11-4", "북안동농협 '안동마' 광고홍보물", "2023-10-15", 11],
+      ["p11-5", "북안동농협 마제품 '잊지마' 광고홍보물", "2023-10-15", 11],
+      ["p12-3", "문종호 영가회 사무국장", "2023-10-15", 12],
+    ];
+    let pos88 = 0;
+    for (const [file, title, takenAt, page] of photos88) {
+      const url = `/archive-photos/hoebo/8-8/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat88Id, title, `《영가회보》 8-8호 (2023년 가을호) ${page}면`, url, takenAt, pos88],
+        });
+      }
+      pos88++;
+    }
+    await markMigration(client, "hoebo-8-8-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -2069,7 +2185,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v40";
+  const seedKey = "content-seed-v41";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
