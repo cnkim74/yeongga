@@ -1793,6 +1793,117 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-8-restore-v1");
   }
 
+  // 영가회보 8-9호(2024 겨울호) 원문 복원: 25편 재시드 + 지면 사진 갤러리 앨범
+  if (!(await hasMigration(client, "hoebo-8-9-restore-v1"))) {
+    const restored89: [string, string][] = [
+      ["jachui", "hoebo-8-9-410-chongseon"],
+      ["jachui", "hoebo-8-9-yeogeowido-hwiho"],
+      ["moim", "hoebo-8-9-jeonggi-chonghoe"],
+      ["geul", "hoebo-8-9-yunsangbu-sinnyeonsa"],
+      ["jachui", "hoebo-8-9-nuga-twina"],
+      ["jachui", "hoebo-8-9-andong-yeokjeom-saeop"],
+      ["jachui", "hoebo-8-9-hoewon-dongjeong"],
+      ["hyang", "hoebo-8-9-gohyangsarang-donnae-2wi"],
+      ["jachui", "hoebo-8-9-gyeongbuk-baljeon-hyeobuihoe"],
+      ["hyang", "hoebo-8-9-ktx-seoul-yeokjang"],
+      ["jachui", "hoebo-8-9-andong-ingu-15man"],
+      ["geul", "hoebo-8-9-lee-jaebeom-gieop-saraya"],
+      ["moim", "hoebo-8-9-jeonggi-chonghoe-imomo"],
+      ["geul", "hoebo-8-9-park-jaebeom-jeongsin-munhwa"],
+      ["jachui", "hoebo-8-9-noinaingu-26peo"],
+      ["moim", "hoebo-8-9-jaegyeong-hyangwoo-1000"],
+      ["jachui", "hoebo-8-9-jang-wonseok-changlip-juyeok"],
+      ["geul", "hoebo-8-9-kim-gukju-jiyeok-daehak"],
+      ["geul", "hoebo-8-9-kim-huidong-20segi-hyeoksin"],
+      ["geul", "hoebo-8-9-kim-gwangsik-gugu-saemyeong"],
+      ["geul", "hoebo-8-9-toigye-yeoseongdeul"],
+      ["geul", "hoebo-8-9-kim-daewon-jeongja"],
+      ["geul", "hoebo-8-9-andong-chunchu-3-1"],
+      ["geul", "hoebo-8-9-ryu-yeongcheol-sigan-namyeon"],
+      ["jachui", "hoebo-8-9-yeongga-sosik"],
+    ];
+    for (const [chapter, slug] of restored89) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-9호 (2024 겨울호)", "hoebo-8-9", "2024년 1월 22일 발행 《영가회보》 8-9호 지면에 실린 사진", "/archive-photos/hoebo/8-9/p01-5.webp", 108],
+    });
+    const cat89 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-9"],
+    });
+    const cat89Id = Number(cat89.rows[0].id);
+    const photos89: [string, string, string, number][] = [
+      ["p01-4", "이동익 원로회원 신년휘호 '與古爲徒'", "2024-01-22", 1],
+      ["p01-5", "영가회 2024년 정기총회", "2024-01-19", 1],
+      ["p02-10", "문상부 영가회 회장", "2024-01-22", 2],
+      ["p02-11", "제22대 총선 안동·예천 — 김형동 국민의힘 국회의원", "2024-01-22", 2],
+      ["p02-14", "제22대 총선 안동·예천 — 김명호 전 경북도의원", "2024-01-22", 2],
+      ["p02-13", "제22대 총선 안동·예천 — 안형진 변호사", "2024-01-22", 2],
+      ["p02-12", "제22대 총선 안동·예천 — 김의승 전 서울시 행정1부시장", "2024-01-22", 2],
+      ["p02-15", "제22대 총선 안동·예천 — 권용수 건국대 교수", "2024-01-22", 2],
+      ["p03-3", "김성철 넷마블 문화재단 대표", "2024-01-22", 3],
+      ["p03-5", "김영일 영가회 감사", "2024-01-22", 3],
+      ["p03-4", "남영찬 영가경제연구원 이사장", "2024-01-22", 3],
+      ["p03-9", "류종묵 영가회 원로대표회의 의장", "2024-01-22", 3],
+      ["p03-8", "최명배 엑시콘그룹 회장", "2024-01-22", 3],
+      ["p03-6", "최진석 변호사(안동고 총동창회장)", "2024-01-22", 3],
+      ["p03-7", "최진수 NH농협은행 경북본부장", "2024-01-22", 3],
+      ["p03-10", "권영진 전 대구시장", "2024-01-22", 3],
+      ["p03-13", "신규회원 김명호", "2024-01-22", 3],
+      ["p03-14", "신규회원 장영환", "2024-01-22", 3],
+      ["p03-12", "김원 원로회원 수필집 「공자는 미래학자인가」", "2024-01-22", 3],
+      ["p03-1", "김원 원로회원", "2024-01-22", 3],
+      ["p04-1", "경북발전협의회 발족 모임", "2024-01-22", 4],
+      ["p04-2", "안동시 농축특산물 직거래장터 개장식", "2024-01-17", 4],
+      ["p05-1", "이희범 한국정신문화재단 이사장", "2024-01-22", 5],
+      ["p05-2", "정기총회 특강 — 김희곤 국립대한민국임시정부기념관장", "2024-01-19", 5],
+      ["p05-10", "정기총회에 참석한 영가회 회원들", "2024-01-19", 5],
+      ["p05-5", "정기총회에 참석한 영가회 회원들 (2)", "2024-01-19", 5],
+      ["p06-1", "금경수 재경안동시향우회장", "2024-01-22", 6],
+      ["p06-2", "재경안동시향우회 송년의 밤 행사", "2023-12-08", 6],
+      ["p06-3", "재경안동시향우회 송년의 밤 참석자들", "2023-12-08", 6],
+      ["p06-4", "제2차 안동시 투자유치자문위원회", "2023-12-06", 6],
+      ["p07-2", "장원석 원로회원 기획인터뷰", "2024-01-22", 7],
+      ["p07-1", "장원석 원로회원", "2024-01-22", 7],
+      ["p07-3", "장원석 원로회원이 회원들에게 주려고 쓴 서예작품들", "2024-01-22", 7],
+      ["p08-1", "정태주 국립안동대학교 총장", "2024-01-22", 8],
+      ["p08-2", "김승종 일송김동삼선생기념사업회 학술이사", "2024-01-22", 8],
+      ["p09-1", "김균식 경인매일 회장", "2024-01-22", 9],
+      ["p09-4", "남승섭 前 한국정신문화재단 사무처장", "2024-01-22", 9],
+      ["p10-1", "김대원 미술관장", "2024-01-22", 10],
+      ["p10-2", "김대원 〈고산정〉, 2021년작", "2024-01-22", 10],
+      ["p10-4", "김대원 〈만휴정〉, 2018년작", "2024-01-22", 10],
+      ["p10-3", "김대원 〈백운정〉, 2020년작", "2024-01-22", 10],
+      ["p10-5", "정윤호 前 안동MBC 보도국장", "2024-01-22", 10],
+      ["p11-1", "이종섭 목우촌펫 부사장·철학박사", "2024-01-22", 11],
+      ["p12-3", "이유대 영가회 사무총장", "2024-01-22", 12],
+      ["p12-4", "의약품 원료 헴프로 재배중인 대마", "2024-01-22", 12],
+      ["p12-5", "문종호 영가회 사무국장", "2024-01-22", 12],
+    ];
+    let pos89 = 0;
+    for (const [file, title, takenAt, page] of photos89) {
+      const url = `/archive-photos/hoebo/8-9/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat89Id, title, `《영가회보》 8-9호 (2024년 겨울호) ${page}면`, url, takenAt, pos89],
+        });
+      }
+      pos89++;
+    }
+    await markMigration(client, "hoebo-8-9-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -2185,7 +2296,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v41";
+  const seedKey = "content-seed-v42";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
