@@ -21,7 +21,7 @@ visibility: public
 | 인물 | 결 |
 |---|---|
 | **이중대** | 박약회 회장 |
-| **문상부** | 영가회장 (8대 윤상부와 별개 또는 표기 변화) |
+| **문상부** | 영가회장 (8대 문상부와 별개 또는 표기 변화) |
 | **류상번** | 박약회 서울지회장 (관련: 〈[8-1호 故 금창태 추모](/archive/geul/hoebo-8-1-chumo-kum-changtae)〉) |
 
 8-7호 〈[권원오 박약회의 행복아카데미](/archive/geul/hoebo-8-7-kwon-wono-bakyak-academy)〉·8-5호 〈[권용근 박약회 영가회사무국장](/archive/geul/hoebo-8-5-kwon-yonggeun-tonghap-sangsaeng)〉 의 가장 큰 후속.

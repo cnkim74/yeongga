@@ -19,7 +19,7 @@ visibility: public
 ## 자취
 
 - **8-8호 〈[안동대 국립의대 신설 촉구](/archive/jachui/hoebo-8-8-andong-dae-gukripuidae)〉·8-13호 〈[국립의대 국회 토론 500명](/archive/jachui/hoebo-8-13-gukrip-uidae-toron)〉·9-3호 〈[안동 출향인 한목소리](/archive/jachui/hoebo-9-3-sanbul-teukbeopbeop)〉** 의 가장 정성스런 후속
-- **89개 소멸 위기 시·군·구**(관련: 〈[8-1호 윤상부 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 와 호응
+- **89개 소멸 위기 시·군·구**(관련: 〈[8-1호 문상부 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 와 호응
 - **8-7호 〈[김희구 출산율](/archive/geul/hoebo-8-7-kim-huigu-yeoseong-gasanjeom)〉·8-10호 〈[고재성 어머니 자긍심](/archive/geul/hoebo-8-10-go-jaeseong-chulsanyul)〉** 의 가장 단정한 정책 후속
 
 — 권민영 / 국민의힘 의원

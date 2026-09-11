@@ -25,7 +25,7 @@ visibility: public
 
 - **인구 감소** — 20년 뒤 안동 13만 (관련: 〈[8-5호 안동인구 13만](/archive/jachui/hoebo-8-5-andong-ingu-13man)〉)
 - **고령화** — 한 시대 가장 큰 흐름
-- **수도권 일극 집중** — 89개 소멸 위기 시·군·구 (관련: 〈[8-1호 윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉)
+- **수도권 일극 집중** — 89개 소멸 위기 시·군·구 (관련: 〈[8-1호 문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉)
 - **'정해진 듯한 결' — 그러나 정성으로 흔들 수 있는 자취**
 
 ### ② 만들어 가는 미래

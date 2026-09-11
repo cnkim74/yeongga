@@ -277,6 +277,17 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   display: block;
 }
 
+/* 원본 지면에서 옮긴 사진 — 이미지 바로 다음 줄의 *기울임* 을 캡션으로 */
+.prose-body p > img { margin-bottom: 0.5em; border-radius: 4px; }
+.prose-body p > img + em {
+  display: block;
+  margin: 0 auto 1.8em;
+  text-align: center;
+  font-style: normal;
+  font-size: 0.85em;
+  color: var(--color-ink-mute);
+}
+
 /* 포커스 링 — 노인 사용자 위한 분명한 표시 */
 :focus-visible {
   outline: 2px solid var(--color-accent);

@@ -882,6 +882,119 @@ async function init(client: Client) {
     await markMigration(client, "tidy-gyeol-2026-09-v2");
   }
 
+  // ── 8대 회장 성함 교정: 윤상부 → 문상부 (2026-09-11) ─────────────────
+  // 《영가회보》 8-1호 2면 인물사진 캡션이 '영가회장 문상부', 같은 면 기사가
+  // '◇회장 문상부 … 문상부 회장 체제가 들어선 작년 6월부터'이다.
+  // 8-3·8-5·8-9·8-13·9-1호와 40년사 어디에도 '윤상부'는 없다.
+  // 초기 아카이빙 때 '문'을 '윤'으로 잘못 읽어 91편 242곳에 퍼졌다.
+  if (!(await hasMigration(client, "fix-8dae-name-munsangbu-v1"))) {
+    for (const col of ["title", "subtitle", "excerpt", "body"]) {
+      await client.execute(
+        `UPDATE articles SET ${col} = REPLACE(${col}, '윤상부', '문상부') WHERE ${col} LIKE '%윤상부%'`
+      );
+    }
+    // 태그는 (article_id, tag) 기본키라 먼저 새 이름으로 넣고 옛 이름을 지운다
+    await client.execute(
+      "INSERT OR IGNORE INTO article_tags (article_id, tag) SELECT article_id, REPLACE(tag, '윤상부', '문상부') FROM article_tags WHERE tag LIKE '%윤상부%'"
+    );
+    await client.execute("DELETE FROM article_tags WHERE tag LIKE '%윤상부%'");
+    await markMigration(client, "fix-8dae-name-munsangbu-v1");
+  }
+
+  // ── 영가회보 8-1호 원문 복원 + 지면 사진 (2026-09-11) ────────────────
+  // 8-1호 12면 전 지면을 판독해 사이트 글 22편을 원문의 순서와 문장 그대로
+  // 다시 썼다. 생성기가 끼워 넣은 소제목·〈편집실의 정리〉와 원문과 달라진
+  // 문장을 걷어냈고, 직함·제목 오기(이동수=안동문화원장, 김광림=퇴계학연구원
+  // 이사장, 김형동·권영세 메시지 제목 뒤바뀜, 이직상·박찬갑)를 바로잡았다.
+  // 옛 행을 지워 파일에서 다시 시드되게 하고(seedKey 상향), 지면에서 꺼낸
+  // 사진 25장을 갤러리 앨범 〈영가회보 8-1호〉로 등록한다.
+  // 사진 파일은 public/archive-photos/hoebo/8-1/ 에 둔다.
+  if (!(await hasMigration(client, "hoebo-8-1-restore-v1"))) {
+    const restored81: [string, string][] = [
+      ["moim", "hoebo-8-1-yeongga-himang-forum-1cha"],
+      ["jachui", "hoebo-8-1-munhwasang-jisok"],
+      ["geul", "hoebo-8-1-yunsangbu-column"],
+      ["jachui", "hoebo-8-1-hoechik-imwon"],
+      ["hyang", "hoebo-8-1-gohyangse"],
+      ["hyang", "hoebo-8-1-jungangseon-bokseonhwa"],
+      ["jachui", "hoebo-8-1-daepyo-gwangwangji"],
+      ["jachui", "hoebo-8-1-hoebo-jachui"],
+      ["saram", "hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon"],
+      ["jachui", "hoebo-8-1-gihoek-daedam-poongsan-heungkuk"],
+      ["geul", "hoebo-8-1-chumo-kum-changtae"],
+      ["jachui", "hoebo-8-1-40nyeon-1-yeongga-sangrokhoe"],
+      ["geul", "hoebo-8-1-kim-gwangrim-andong-naeil"],
+      ["geul", "hoebo-8-1-yun-byeongjin-tonghap-gyeoldan"],
+      ["geul", "hoebo-8-1-lee-dongsu-hyeoksin-boso"],
+      ["geul", "hoebo-8-1-kim-hwidong-gwicheon-sang"],
+      ["geul", "hoebo-8-1-kwon-yeongse-message"],
+      ["geul", "hoebo-8-1-jaebalgan-chukha-5in"],
+      ["geul", "hoebo-8-1-yeongga-madang-kim-daewon-sumuk"],
+      ["saram", "hoebo-8-1-hanam-ryu-hansang"],
+      ["geul", "hoebo-8-1-andong-mat-1-guksi"],
+      ["jachui", "hoebo-8-1-singyu-hoewon-tukbyeol-hoebi"],
+    ];
+    for (const [chapter, slug] of restored81) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-1호 (2022 겨울호)", "hoebo-8-1", "2022년 1월 15일 발행 《영가회보》 8-1호 지면에 실린 사진", "/archive-photos/hoebo/8-1/p01-1.webp", 100],
+    });
+    const cat81 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-1"],
+    });
+    const cat81Id = Number(cat81.rows[0].id);
+    const photos81: [string, string, string, number][] = [
+      ["p01-1", "제1차 영가희망포럼 참석인사 기념촬영", "2021-11-30", 1],
+      ["p01-2", "제1차 영가희망포럼에 참석한 주요인사들", "2021-11-30", 1],
+      ["p02-1", "문상부 영가회장", "2022-01-15", 2],
+      ["p03-1", "안동 월영교", "2022-01-15", 3],
+      ["p03-5", "이용태 박약회 회장", "2022-01-15", 3],
+      ["p03-4", "강보영 대구경북시도민회 회장", "2022-01-15", 3],
+      ["p03-7", "권순한 소이상사 대표이사 회장", "2022-01-15", 3],
+      ["p03-3", "류상번 영가회 감사", "2022-01-15", 3],
+      ["p03-2", "권기진 (주)명진팜 대표이사", "2022-01-15", 3],
+      ["p03-6", "남영찬 한국자원봉사포럼회장", "2022-01-15", 3],
+      ["p04-1", "풍산", "2022-01-15", 4],
+      ["p05-1", "류종묵 (주)흥국 회장", "2022-01-15", 5],
+      ["p05-2", "(주)흥국 공장", "2022-01-15", 5],
+      ["p06-1", "김광림 퇴계학연구원·국제퇴계학회이사장", "2022-01-15", 6],
+      ["p06-2", "윤병진 안동 예천 통합추진위 수석간사", "2022-01-15", 6],
+      ["p07-1", "이동수 안동문화원장", "2022-01-15", 7],
+      ["p07-2", "김휘동 전 안동시장", "2022-01-15", 7],
+      ["p08-2", "김형동 국회의원", "2022-01-15", 8],
+      ["p08-1", "권영세 안동시장", "2022-01-15", 8],
+      ["p08-4", "김호석 안동시의회 의장", "2022-01-15", 8],
+      ["p08-3", "김영식 재경안동향우회 회장", "2022-01-15", 8],
+      ["p10-2", "김대원 화백", "2022-01-15", 10],
+      ["p10-1", "김대원 〈토계의 고가와 들녘〉, 화선지에 수묵, 1997년작", "2022-01-15", 10],
+      ["p10-3", "하남 류한상 유고 서화 — 죽풍취성 창월반음", "2022-01-15", 10],
+      ["p10-4", "하남 류한상 유고 글씨 — 원세개의 안중근 의사 추모시", "2022-01-15", 10],
+    ];
+    let pos81 = 0;
+    for (const [file, title, takenAt, page] of photos81) {
+      const url = `/archive-photos/hoebo/8-1/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat81Id, title, `《영가회보》 8-1호 (2022년 겨울호) ${page}면`, url, takenAt, pos81],
+        });
+      }
+      pos81++;
+    }
+    await markMigration(client, "hoebo-8-1-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -1097,7 +1210,7 @@ async function init(client: Client) {
   //      경조사 규정의 자취(7대 김계동 회장기 입회비 30→20만 원 인하),
   //      영가문화상 운영 규정의 자취(2005 제정·2011 개정), 재경 안동
   //      9개 고등학교 친선체육대회(2018.10.27 제44회).
-  // v22: 영가회보 8-1호(2022년 겨울호) 5편 PoC 추가 — 윤상부 8대 회장
+  // v22: 영가회보 8-1호(2022년 겨울호) 5편 PoC 추가 — 문상부 8대 회장
   //      칼럼 〈영가회의 르네상스를 위해 앞장서겠습니다〉(글), 영가희망
   //      포럼 제1차(이희범 전 산자부장관 발제·김휘동 전 안동시장 토론,
   //      2021.11.30)(모임), 영가문화상 지속 선정키로(2022.1.8 이사회,
@@ -1151,7 +1264,7 @@ async function init(client: Client) {
   //      카테고리, 회원수첩·부회장 4명·연회비 20만, 회원 동정, 고위
   //      공무원 현황, 신규회원·대평산업), 향(고향사랑기부제 1월 시행,
   //      소비기한·만나이, 토끼해·봉제사접빈객), 사람(안동의 경제인 ⑤
-  //      정현섭 정미·건축·광업·정치), 글(윤상부 신년사, 권용근 특별기고
+  //      정현섭 정미·건축·광업·정치), 글(문상부 신년사, 권용근 특별기고
   //      통합·상생, 안호삼 선비문화·지식인 사회화, 정만규 행복찾기 ④
   //      감사하며 살아가기, 남영찬 선비정신·자원봉사, 김유진 귀농귀촌
   //      돈과 사람, 남승룡 영호루, 안동사투리 핸나 알밥, 안동의 맛 ⑤
@@ -1222,7 +1335,7 @@ async function init(client: Client) {
   //      김광식 연어, 안동김씨 명문, 황만수 제도화, 안동유교 23단체,
   //      영가회 소식.
   //      8-13호(2025년 겨울호, 21편): 통합 북부저해, 을사년 휘호,
-  //      정기총회 2/7, 2024 영가문화상 차전놀이·선행상 김인근, 윤상부
+  //      정기총회 2/7, 2024 영가문화상 차전놀이·선행상 김인근, 문상부
   //      회고 송구, 2024원로간담·송년1000, 권기창 CEO, 회원동정·미술상
   //      진교, KTX 1시간45분, 박정희 동상, 코레일 50% 할인, 차전놀이
   //      대통령상, 김광호 교만필패, 국립의대 국회토론, 산림과학 최우수,
@@ -1274,7 +1387,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v33";
+  const seedKey = "content-seed-v34";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

@@ -23,7 +23,7 @@ visibility: public
 
 **〈인구감소지역 지원법〉**이 한 호의 본회의를 통과했다.
 
-지난해 정부가 지정한 〈소멸 위기 89개 시·군·구〉의 한 자리 — 안동시도 포함된 자취 (관련: 〈[윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) — 에 응답이 한 호의 입법으로 자리잡은 모습.
+지난해 정부가 지정한 〈소멸 위기 89개 시·군·구〉의 한 자리 — 안동시도 포함된 자취 (관련: 〈[문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) — 에 응답이 한 호의 입법으로 자리잡은 모습.
 
 지방소멸 대응 특별법 (관련: 〈[지방소멸 대응 특별법](/archive/hyang/hoebo-8-2-jibang-somyeol-teukbyeolbeop)〉) 과 짜인 한 호의 자취.
 

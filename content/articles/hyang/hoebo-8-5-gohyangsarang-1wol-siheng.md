@@ -30,7 +30,7 @@ visibility: public
 
 영가회 회원 200여 분의 출향인사가 고향 안동에 닿게 되는 한 호의 새 통로.
 
-**'89개 소멸 위기 시·군·구'의 안동** (관련: 〈[윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 단정한 응답.
+**'89개 소멸 위기 시·군·구'의 안동** (관련: 〈[문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 단정한 응답.
 
 ## 편집실의 정리
 

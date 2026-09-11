@@ -31,7 +31,7 @@ visibility: public
 
 - **영가회 1억·향우회 3억 약정** (관련: 〈[8-7호 기부 약정](/archive/jachui/hoebo-8-7-gohyangsarang-yakjeong)〉) 의 가장 단정한 결과
 - **23,000여명 기부자** (8-8호) — 한 호의 가장 큰 자취
-- **'89개 소멸 위기 시·군·구의 안동·예천'** (관련: 〈[8-1호 윤상부 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 단단한 응답
+- **'89개 소멸 위기 시·군·구의 안동·예천'** (관련: 〈[8-1호 문상부 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 단단한 응답
 
 ## 편집실의 정리
 

@@ -34,7 +34,7 @@ visibility: public
 ## 왜 안동대 국립의대인가
 
 - **의료 결의 가장 심각한 결핍** — 경북 북부의 가장 무거운 자취
-- **89개 소멸 위기 시·군·구의 안동** (관련: 〈[8-1호 윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) — 인구·청년·의료 결의 한 호의 응답
+- **89개 소멸 위기 시·군·구의 안동** (관련: 〈[8-1호 문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) — 인구·청년·의료 결의 한 호의 응답
 - **안동대 — 국립대학** — 가장 단정한 그릇
 - **바이오 생명 국가산단** (관련: 〈[8-6호 국가산단](/archive/hyang/hoebo-8-6-bio-saengmyeong-gukgasandan)〉) 의 한 결과 호응
 

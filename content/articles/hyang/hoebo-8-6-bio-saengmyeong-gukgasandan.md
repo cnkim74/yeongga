@@ -27,7 +27,7 @@ visibility: public
 
 ## 한 호의 호재 — 안동에 닿는 자취
 
-- **소멸 위기 89개 시·군·구의 안동** (관련: 〈[윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 큰 산업 응답
+- **소멸 위기 89개 시·군·구의 안동** (관련: 〈[문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 큰 산업 응답
 - **출향인사·기업의 안동 회귀** 동력 (관련: 〈[지방소멸 특별법](/archive/hyang/hoebo-8-2-jibang-somyeol-teukbyeolbeop)〉)
 - **윤석열 정부 공약** (관련: 〈[안동 공약](/archive/jachui/hoebo-8-2-yoon-suk-yeol-andong-gongyak)〉) 의 한 자리에 실현
 

@@ -28,7 +28,7 @@ visibility: public
 
 ## 자취 — 창립 47년의 정신
 
-8대 윤상부 회장기에 한 호 더 단단해진 영가회의 자취 — 그 깊은 출발점이 한 자리에 모인 모습. 8-3호 〈[원로회의 의장 류종묵 추대](/archive/moim/hoebo-8-3-wonro-ochanhoe)〉·8-8호 〈[역대 회장 모두 참석 간담회](/archive/moim/hoebo-8-8-yeokdae-hoejang-wonro-gandam)〉 의 한 호 가장 깊은 자리.
+8대 문상부 회장기에 한 호 더 단단해진 영가회의 자취 — 그 깊은 출발점이 한 자리에 모인 모습. 8-3호 〈[원로회의 의장 류종묵 추대](/archive/moim/hoebo-8-3-wonro-ochanhoe)〉·8-8호 〈[역대 회장 모두 참석 간담회](/archive/moim/hoebo-8-8-yeokdae-hoejang-wonro-gandam)〉 의 한 호 가장 깊은 자리.
 
 ## 편집실의 정리
 

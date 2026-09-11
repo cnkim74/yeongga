@@ -12,7 +12,7 @@ visibility: public
 
 ## ① 토끼는 우리 생활과 정서에서 친근한 동물
 
-2023년은 **계묘년(癸卯年)** — 검은 토끼의 해 (관련: 〈[윤상부 신년사](/archive/geul/hoebo-8-5-yunsangbu-sinnyeonsa)〉).
+2023년은 **계묘년(癸卯年)** — 검은 토끼의 해 (관련: 〈[문상부 신년사](/archive/geul/hoebo-8-5-yunsangbu-sinnyeonsa)〉).
 
 토끼는 한 시대 우리 생활과 정서에서 한 호 더 가까이 닿는 동물:
 

@@ -26,7 +26,7 @@ visibility: public
 
 - **첫 회 수상자**: **채수남 씨**
 - **선행 자취** — 한 시대 안동인의 한 자리의 정성
-- **8대 윤상부 회장기**의 새 상
+- **8대 문상부 회장기**의 새 상
 
 8-3호 영가문화·봉사상 대상자 추천(관련: 〈[영가문화·봉사상 추천](/archive/jachui/hoebo-8-3-yeongga-munhwasang-chuchun)〉) → 8-4호 영가문화상 대상자 추천(관련: 〈[영가문화상 추천·로고](/archive/jachui/hoebo-8-4-munhwasang-chuchun-rogo-jeongyeong)〉) → 8-5호 시상의 자취.
 

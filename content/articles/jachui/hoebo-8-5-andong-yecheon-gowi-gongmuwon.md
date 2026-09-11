@@ -24,7 +24,7 @@ visibility: public
 
 - **출향인사 회원이 한 자리에 만나야 할 한 시대의 자취**
 - **(가칭)영가경제포럼**(관련: 〈[(가칭)영가경제포럼](/archive/jachui/hoebo-8-5-yeongga-gyeongje-forum-changlip)〉)·**영가희망포럼**·**행정통합** 의 한 자리에서 한 호 더 가까이 호응할 분들
-- **윤상부 회장의 한 호의 신년사 — '관심과 참여'**(관련: 〈[윤상부 신년사](/archive/geul/hoebo-8-5-yunsangbu-sinnyeonsa)〉) 와 짜인 자취
+- **문상부 회장의 한 호의 신년사 — '관심과 참여'**(관련: 〈[문상부 신년사](/archive/geul/hoebo-8-5-yunsangbu-sinnyeonsa)〉) 와 짜인 자취
 
 (*편집실 주: 자세한 분야별 명단·이름·직급·기관은 회보 원본을 직접 확인해 주시면 한 자리에서 정확하게 만나 보실 수 있습니다.*)
 

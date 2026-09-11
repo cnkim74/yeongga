@@ -12,7 +12,7 @@ visibility: public
 
 ## 한 호의 입법 자취
 
-안동시 등 89개 소멸 위기 시·군·구(관련: 〈[윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉)를 위해 통과된 **〈인구감소지역지원특별법〉**의 한 호의 후속.
+안동시 등 89개 소멸 위기 시·군·구(관련: 〈[문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉)를 위해 통과된 **〈인구감소지역지원특별법〉**의 한 호의 후속.
 
 8-3호 5면의 〈[지원법 본회의 통과](/archive/jachui/hoebo-8-3-yeongga-munhwasang-chuchun)〉의 다음 자리.
 

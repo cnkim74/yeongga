@@ -37,7 +37,7 @@ visibility: public
 
 ## 출향인사 회원의 응답
 
-- **'89개 소멸 위기 시·군·구의 안동'** (관련: 〈[8-1호 윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 단정한 응답
+- **'89개 소멸 위기 시·군·구의 안동'** (관련: 〈[8-1호 문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 에 가장 단정한 응답
 - **수구초심(首丘初心)** (관련: 〈[8-7호 수구초심 특별기고](/archive/geul/hoebo-8-7-sugu-chosim-gohyangsarang)〉) 의 한 호의 가장 큰 결과
 - **23,000명의 정성** — 한 호의 가장 단단한 대목
 

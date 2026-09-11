@@ -33,7 +33,7 @@ visibility: public
 
 - **회원 200여 분의 자취** — 한 자리에 모은 원수첩
 - **이름·생년·직책·기관·연락처·고향(읍·면) 등** 한 호의 자세한 정리
-- **8대 윤상부 회장기의 정체성 정리** — 공식 로고(관련: 〈[로고 잠정확정](/archive/jachui/hoebo-8-4-munhwasang-chuchun-rogo-jeongyeong)〉) 와 한 호의 한 대목으로 짜인 자리
+- **8대 문상부 회장기의 정체성 정리** — 공식 로고(관련: 〈[로고 잠정확정](/archive/jachui/hoebo-8-4-munhwasang-chuchun-rogo-jeongyeong)〉) 와 한 호의 한 대목으로 짜인 자리
 
 ## 회원 연회비 접수·영가회보 원고 모집
 

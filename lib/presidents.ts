@@ -8,7 +8,7 @@
 //   초대 김해길 p27 / 2대 류목기 p55 / 3대 금창태 p103 / 4대 허동진 p131 /
 //   5대 류종묵 p180 / 6대 김봉구 p239·249 / 7대 김계동 p285.
 // 8·9대는 40년사 이후라 《영가회보》 근거 —
-//   8-8호 역대회장 간담(7대 2017~2020, 8대 윤상부 2021~), 9-1호 박대섭 9대 취임.
+//   8-1호 5면 〈영가회 40년〉(7대 2017~2021, 8대 문상부 2021~), 9-1호 박대섭 9대 취임.
 
 export type President = {
   id: string; // URL 파라미터용 식별자 (?president=<id>)
@@ -28,8 +28,8 @@ export const presidents: President[] = [
   { id: "4dae", dae: 4, name: "허동진", hanja: "許東珍", term: "2007~2010", slugPrefix: "4dae-" },
   { id: "5dae", dae: 5, name: "류종묵", hanja: "柳鍾默", term: "2011~2014", slugPrefix: "5dae-" },
   { id: "6dae", dae: 6, name: "김봉구", hanja: "金鳳求", term: "2015~2016", slugPrefix: "6dae-" },
-  { id: "7dae", dae: 7, name: "김계동", hanja: "金啓東", term: "2017~2020", slugPrefix: "7dae-" },
-  { id: "8dae", dae: 8, name: "윤상부", term: "2021~2024", keyword: "윤상부" },
+  { id: "7dae", dae: 7, name: "김계동", hanja: "金啓東", term: "2017~2021", slugPrefix: "7dae-" },
+  { id: "8dae", dae: 8, name: "문상부", term: "2021~2024", keyword: "문상부" },
   { id: "9dae", dae: 9, name: "박대섭", term: "2025~현재", keyword: "박대섭", current: true },
 ];
 

@@ -19,7 +19,7 @@ visibility: public
 
 ## 의미
 
-- **'89개 소멸 위기 시·군·구'** (관련: 〈[8-1호 윤상부 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 의 작지만 정성스런 반등
+- **'89개 소멸 위기 시·군·구'** (관련: 〈[8-1호 문상부 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉) 의 작지만 정성스런 반등
 - **귀농귀촌 시·군 10위** (관련: 〈[8-7호 귀농귀촌](/archive/hyang/hoebo-8-7-gwinongguicun-jeonguk-10wi)〉) 의 자취
 - **만들어 가는 미래**(관련: 〈[8-8호 이재일 글](/archive/geul/hoebo-8-8-lee-jaeil-yejeongdoen-mirae)〉) 의 한 호의 가장 단정한 결과
 

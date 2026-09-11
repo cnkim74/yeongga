@@ -21,7 +21,7 @@ visibility: public
 ### ① 지방소멸
 
 - **89개 소멸 위기 시·군·구**의 가장 큰 자취
-- **안동도 포함** (관련: 〈[8-1호 윤상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉)
+- **안동도 포함** (관련: 〈[8-1호 문상부 회장 칼럼](/archive/geul/hoebo-8-1-yunsangbu-column)〉)
 - 한 시대 가장 무거운 결
 
 ### ② 도농상생 — 새 응답
