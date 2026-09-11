@@ -1569,6 +1569,114 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-6-restore-v1");
   }
 
+  // 영가회보 8-7호(2023 여름호) 원문 복원: 21편 재시드 + 지면 사진 갤러리 앨범
+  if (!(await hasMigration(client, "hoebo-8-7-restore-v1"))) {
+    const restored87: [string, string][] = [
+      ["jachui", "hoebo-8-7-gohyangsarang-yakjeong"],
+      ["jachui", "hoebo-8-7-gunwi-daegu-pyeoni"],
+      ["geul", "hoebo-8-7-sugu-chosim-gohyangsarang"],
+      ["jachui", "hoebo-8-7-myeongye-hoewon-3-bun"],
+      ["jachui", "hoebo-8-7-sangsaeng-hyeopjeong-hyeoprokyak"],
+      ["hyang", "hoebo-8-7-gwinongguicun-jeonguk-10wi"],
+      ["jachui", "hoebo-8-7-hoewon-dongjeong"],
+      ["jachui", "hoebo-8-7-huh-dongjin-50nyeon"],
+      ["jachui", "hoebo-8-7-andong-dongseoul-siwae-buseu"],
+      ["saram", "hoebo-8-7-chumo-jo-yeongil-sijoshiin"],
+      ["geul", "hoebo-8-7-kwon-yeongchal-tteok-sirui"],
+      ["jachui", "hoebo-8-7-yeongga-gyeongje-seminar"],
+      ["geul", "hoebo-8-7-im-jaegong-cha-han-jan"],
+      ["geul", "hoebo-8-7-seok-geun-tteonan-jikineun"],
+      ["geul", "hoebo-8-7-kim-huigu-yeoseong-gasanjeom"],
+      ["geul", "hoebo-8-7-kwon-yeongcheol-renaissance"],
+      ["geul", "hoebo-8-7-kwon-wono-bakyak-academy"],
+      ["geul", "hoebo-8-7-kim-gyosik-ireobeorin-munhwa-yusan"],
+      ["geul", "hoebo-8-7-jeong-jaeseok-jeongsin-munhwa"],
+      ["geul", "hoebo-8-7-andong-mat-7-hanwoo-ha"],
+      ["jachui", "hoebo-8-7-yeongga-sosik"],
+    ];
+    for (const [chapter, slug] of restored87) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-7호 (2023 여름호)", "hoebo-8-7", "2023년 7월 15일 발행 《영가회보》 8-7호 지면에 실린 사진", "/archive-photos/hoebo/8-7/p06-1.webp", 106],
+    });
+    const cat87 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-7"],
+    });
+    const cat87Id = Number(cat87.rows[0].id);
+    const photos87: [string, string, string, number][] = [
+      ["p01-1", "영가회 회원들과 권기창 안동시장의 고향사랑기부금 약정식", "2023-05-15", 1],
+      ["p02-1", "권기창 안동시장", "2023-07-15", 2],
+      ["p02-2", "명예회원 권영진 전 대구시장", "2023-07-15", 2],
+      ["p02-4", "명예회원 정태주 국립안동대학교 총장", "2023-07-15", 2],
+      ["p02-3", "명예회원 권태형 안동농협조합장", "2023-07-15", 2],
+      ["p02-5", "안동시·예천군 도청신도시 상생 행정협의회 협약식", "2023-05-30", 2],
+      ["p03-2", "권기익 안동시의회 의장", "2023-07-15", 3],
+      ["p03-3", "권오을 전 국회의원", "2023-07-15", 3],
+      ["p03-4", "권정달 안동성소병원 이사장", "2023-07-15", 3],
+      ["p03-5", "금경수 대정산업(주) 대표이사", "2023-07-15", 3],
+      ["p03-6", "김의승 서울시 행정1부시장", "2023-07-15", 3],
+      ["p03-7", "김형동 국회의원", "2023-07-15", 3],
+      ["p03-8", "남화영 소방청장", "2023-07-15", 3],
+      ["p03-9", "문상부 영가회장·정종수 수석부회장 (칠곡 다부동 전적기념관)", "2023-06-20", 3],
+      ["p03-10", "안영모 세영그룹 회장", "2023-07-15", 3],
+      ["p03-11", "유철균 경북연구원장", "2023-07-15", 3],
+      ["p03-12", "이원욱 세무법인 정담 대표세무사", "2023-07-15", 3],
+      ["p03-13", "정태주 국립안동대학교 총장", "2023-07-15", 3],
+      ["p03-14", "최명배 엑시콘 와이아이케이 그룹 회장 (한-홍콩 비즈니스라운드테이블)", "2023-07-15", 3],
+      ["p04-1", "허동진 우당장학문화재단 이사장", "2023-07-15", 4],
+      ["p04-2", "허동진 이사장 인터뷰", "2023-07-15", 4],
+      ["p04-3", "허동진 인터뷰 지면 삽입 사진 — 감사패", "2023-07-15", 4],
+      ["p04-4", "허동진 인터뷰 지면 삽입 사진 — 훈장", "2023-07-15", 4],
+      ["p04-5", "시조시인 조영일", "2023-07-15", 4],
+      ["p05-1", "정담 — 정종수 부회장, 권영진 전 대구시장, 문상부 회장", "2023-07-15", 5],
+      ["p05-2", "지방분권에 대해 역설하는 권영진 전 대구시장", "2023-07-15", 5],
+      ["p06-1", "영가경제연구원 창립 기념 세미나 참석 주요인사들", "2023-05-15", 6],
+      ["p06-2", "문상부 영가회장 인사말", "2023-05-15", 6],
+      ["p06-3", "남영찬 영가경제연구원 이사장", "2023-05-15", 6],
+      ["p07-1", "주제발표 — 최종익 안동시 경제산업국장", "2023-05-15", 7],
+      ["p07-2", "주제발표 — 이재갑 안동시의원", "2023-05-15", 7],
+      ["p07-3", "영가경제연구원 창립 기념 세미나 종합토론회", "2023-05-15", 7],
+      ["p08-2", "양재곤 재경대구경북시도민회장", "2023-07-15", 8],
+      ["p08-1", "석근 제35대 재경예천군민회장", "2023-07-15", 8],
+      ["p09-2", "김봉구 고려대 명예교수·영가회 제6대회장", "2023-07-15", 9],
+      ["p09-1", "권태형 안동농협 조합장", "2023-07-15", 9],
+      ["p10-2", "권원오 박약회 상임부회장", "2023-07-15", 10],
+      ["p10-1", "김균식 경인매일신문 회장", "2023-07-15", 10],
+      ["p11-2", "금경수 재경안동향우회장", "2023-07-15", 11],
+      ["p11-3", "이유대 영가회 사무총장", "2023-07-15", 11],
+      ["p11-4", "육회", "2023-07-15", 11],
+      ["p11-5", "갈비찜", "2023-07-15", 11],
+      ["p12-3", "신규회원 김균식", "2023-07-15", 12],
+      ["p12-4", "신규회원 김성한", "2023-07-15", 12],
+      ["p12-8", "신규회원 박수용", "2023-07-15", 12],
+      ["p12-5", "신규회원 이종섭", "2023-07-15", 12],
+      ["p12-6", "문종호 영가회 사무국장", "2023-07-15", 12],
+    ];
+    let pos87 = 0;
+    for (const [file, title, takenAt, page] of photos87) {
+      const url = `/archive-photos/hoebo/8-7/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat87Id, title, `《영가회보》 8-7호 (2023년 여름호) ${page}면`, url, takenAt, pos87],
+        });
+      }
+      pos87++;
+    }
+    await markMigration(client, "hoebo-8-7-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -1961,7 +2069,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v39";
+  const seedKey = "content-seed-v40";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
