@@ -1335,6 +1335,123 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-4-restore-v1");
   }
 
+  // 영가회보 8-5호(2023 겨울호) 원문 복원: 28편 재시드 + 지면 사진 갤러리 앨범
+  if (!(await hasMigration(client, "hoebo-8-5-restore-v1"))) {
+    const restored85: [string, string][] = [
+      ["jachui", "hoebo-8-5-tonghap-hukkeun-dala-olla"],
+      ["jachui", "hoebo-8-5-yeoseong-hoewon-chamyeo"],
+      ["moim", "hoebo-8-5-jeonggi-chonghoe-sinnyeonhoe"],
+      ["jachui", "hoebo-8-5-yeongga-gyeongje-forum-changlip"],
+      ["jachui", "hoebo-8-5-jang-wonseok-chamyeo-yeongga-hwiho"],
+      ["geul", "hoebo-8-5-yunsangbu-sinnyeonsa"],
+      ["jachui", "hoebo-8-5-myeongye-hoewon-2-bun"],
+      ["geul", "hoebo-8-5-kwon-yonggeun-tonghap-sangsaeng"],
+      ["jachui", "hoebo-8-5-munhwasang-jeong-gwangyeong-chae-sunam"],
+      ["jachui", "hoebo-8-5-hoewon-dongjeong"],
+      ["geul", "hoebo-8-5-anhosam-seonbi-munhwa"],
+      ["jachui", "hoebo-8-5-seongugu-hwakjeong"],
+      ["jachui", "hoebo-8-5-andong-ingu-13man"],
+      ["hyang", "hoebo-8-5-gohyangsarang-1wol-siheng"],
+      ["jachui", "hoebo-8-5-unesco-3dae-categori"],
+      ["jachui", "hoebo-8-5-yeongga-sosik-baepo-buhoejang"],
+      ["moim", "hoebo-8-5-jaegyeong-hyangwoo-songnyeon"],
+      ["saram", "hoebo-8-5-yeongga-saramdeul-5-jeong-hyeonseop"],
+      ["jachui", "hoebo-8-5-andong-yecheon-gowi-gongmuwon"],
+      ["hyang", "hoebo-8-5-sobi-gihan-man-nai"],
+      ["geul", "hoebo-8-5-pyeongjik-haengbok-chatgi-4"],
+      ["geul", "hoebo-8-5-yeongga-galchae-seonbi-jawonbongsa"],
+      ["geul", "hoebo-8-5-kim-yujin-guinong"],
+      ["geul", "hoebo-8-5-banchu-yeonghoru"],
+      ["geul", "hoebo-8-5-andong-sat-uri-haenna-albap"],
+      ["geul", "hoebo-8-5-andong-mat-5-jjimdak"],
+      ["hyang", "hoebo-8-5-tokki-bongjesa"],
+      ["jachui", "hoebo-8-5-yeongga-sosik"],
+    ];
+    for (const [chapter, slug] of restored85) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-5호 (2023 겨울호)", "hoebo-8-5", "2023년 1월 15일 발행 《영가회보》 8-5호 지면에 실린 사진", "/archive-photos/hoebo/8-5/p01-4.webp", 104],
+    });
+    const cat85 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-5"],
+    });
+    const cat85Id = Number(cat85.rows[0].id);
+    const photos85: [string, string, string, number][] = [
+      ["p01-4", "제1회 안동눈빛축제 (탈춤공원 일대)", "2022-12-16", 1],
+      ["p01-5", "장원석 창립회원 신년휘호 '參與永嘉'", "2023-01-15", 1],
+      ["p02-11", "영가회장 문상부", "2023-01-15", 2],
+      ["p02-9", "명예회원 류철균 대구경북연구원장", "2023-01-15", 2],
+      ["p02-10", "명예회원 이동원 한국정신문화재단 대표이사", "2023-01-15", 2],
+      ["p02-8", "권중근 예천·안동 행정구역통합 신도시추진위원회 위원장", "2023-01-15", 2],
+      ["p03-12", "영가문화상 정광영 시인", "2023-01-15", 3],
+      ["p03-13", "영가선행상 채수남 씨", "2023-01-15", 3],
+      ["p03-2", "권기욱 우평건설 회장", "2023-01-15", 3],
+      ["p03-3", "권인소 카이스트 공과대학 교수", "2023-01-15", 3],
+      ["p03-4", "권정달 전 한국자유총연맹 총재", "2023-01-15", 3],
+      ["p03-10", "김경한 일송김동삼선생기념사업회 회장", "2023-01-15", 3],
+      ["p03-5", "김한광 ㈜무썸 회장", "2023-01-15", 3],
+      ["p03-6", "김형동 국회의원", "2023-01-15", 3],
+      ["p03-8", "서정국 풍산그룹 부사장", "2023-01-15", 3],
+      ["p03-7", "이용태 (사)박약회 회장", "2023-01-15", 3],
+      ["p03-9", "최진수 농협본부 농촌지원부장", "2023-01-15", 3],
+      ["p03-11", "「선비문화의 빛과 그림자」 표지 (김경동)", "2023-01-15", 3],
+      ["p04-1", "신도시 추진위원회 행정구역통합 서명운동", "2023-01-15", 4],
+      ["p04-2", "안동시 고향사랑기부제 홍보전단지", "2023-01-15", 4],
+      ["p04-3", "재경대구경북시도민회 회장 이·취임식 (강보영·양재곤)", "2022-12-29", 4],
+      ["p05-1", "재경안동향우회 송년의 밤", "2022-12-08", 5],
+      ["p05-2", "영가회 로고", "2023-01-15", 5],
+      ["p06-1", "새해 초대석 — 원로회의 류종묵 의장", "2022-12-21", 6],
+      ["p06-2", "새해 초대석 — 류종묵 의장 인터뷰", "2022-12-21", 6],
+      ["p07-1", "정윤호 전 안동MBC 보도국장", "2023-01-15", 7],
+      ["p08-1", "김정호 경북대 교수", "2023-01-15", 8],
+      ["p08-2", "권영규 전 서울부시장", "2023-01-15", 8],
+      ["p09-2", "남영찬 법무법인 클라스 대표변호사", "2023-01-15", 9],
+      ["p09-1", "김태진 공인회계사", "2023-01-15", 9],
+      ["p10-3", "남승섭 한국국학진흥원 자문위원", "2023-01-15", 10],
+      ["p10-4", "공민왕 친필 '映湖樓' 현판", "2023-01-15", 10],
+      ["p11-2", "안동식혜", "2023-01-15", 11],
+      ["p11-3", "작자미상 '토끼와호랑이'", "2023-01-15", 11],
+      ["p12-1", "신규회원 권상희", "2023-01-15", 12],
+      ["p12-5", "신규회원 권영식", "2023-01-15", 12],
+      ["p12-8", "신규회원 김태곤", "2023-01-15", 12],
+      ["p12-10", "신규회원 김학배", "2023-01-15", 12],
+      ["p12-2", "신규회원 류경희", "2023-01-15", 12],
+      ["p12-6", "신규회원 류광준", "2023-01-15", 12],
+      ["p12-9", "신규회원 박병구", "2023-01-15", 12],
+      ["p12-12", "신규회원 신난향", "2023-01-15", 12],
+      ["p12-3", "신규회원 안종하", "2023-01-15", 12],
+      ["p12-4", "신규회원 이인용", "2023-01-15", 12],
+      ["p12-11", "신규회원 이정화", "2023-01-15", 12],
+      ["p12-7", "신규회원 전중선", "2023-01-15", 12],
+      ["p12-13", "금경수 대정산업(주) 대표", "2023-01-15", 12],
+      ["p12-14", "대정산업(주) 포장 제품", "2023-01-15", 12],
+      ["p12-15", "금경수 대정산업(주) 대표 (공장)", "2023-01-15", 12],
+    ];
+    let pos85 = 0;
+    for (const [file, title, takenAt, page] of photos85) {
+      const url = `/archive-photos/hoebo/8-5/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat85Id, title, `《영가회보》 8-5호 (2023년 겨울호) ${page}면`, url, takenAt, pos85],
+        });
+      }
+      pos85++;
+    }
+    await markMigration(client, "hoebo-8-5-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -1727,7 +1844,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v37";
+  const seedKey = "content-seed-v38";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
