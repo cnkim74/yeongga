@@ -1097,6 +1097,129 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-2-restore-v1");
   }
 
+  // 영가회보 8-3호(2022 여름호) 원문 복원: 25편 재시드 + 지면 사진 갤러리 앨범
+  if (!(await hasMigration(client, "hoebo-8-3-restore-v1"))) {
+    const restored83: [string, string][] = [
+      ["jachui", "hoebo-8-3-tonghap-geupmulsal"],
+      ["hyang", "hoebo-8-3-andongho-dalbit-yahaeng"],
+      ["moim", "hoebo-8-3-kwon-gichang-anndong-chuim"],
+      ["hyang", "hoebo-8-3-yecheon-gonchung-chukje"],
+      ["geul", "hoebo-8-3-kim-myeongho-akiles-geon"],
+      ["jachui", "hoebo-8-3-myeongye-hoewon"],
+      ["moim", "hoebo-8-3-wonro-ochanhoe"],
+      ["jachui", "hoebo-8-3-hoewon-dongjeong"],
+      ["jachui", "hoebo-8-3-kim-jeonghyun-cheoltap-sanjang-suhun"],
+      ["jachui", "hoebo-8-3-andong-ingu-gamso-yeojeon"],
+      ["jachui", "hoebo-8-3-uijang-cheyukdaehoe"],
+      ["hyang", "hoebo-8-3-gohyangse-siheungryeong"],
+      ["jachui", "hoebo-8-3-yeongga-munhwasang-chuchun"],
+      ["moim", "hoebo-8-3-dangsun-chukhayeon"],
+      ["saram", "hoebo-8-3-yeongga-saramdeul-3-kim-heunghak"],
+      ["geul", "hoebo-8-3-andong-mat-3-jjimdak"],
+      ["geul", "hoebo-8-3-kim-huidong-jeongsin-munhwa-brand"],
+      ["geul", "hoebo-8-3-jeong-changsik-45nyeon-samusil"],
+      ["geul", "hoebo-8-3-kim-daryeong-ingu-gamso-jiwon"],
+      ["geul", "hoebo-8-3-hwang-seonseok-myeondanwi-jutaek"],
+      ["geul", "hoebo-8-3-andong-palgyeong"],
+      ["geul", "hoebo-8-3-pyeongjik-haengbok-chatgi-2"],
+      ["geul", "hoebo-8-3-kwon-giseong-gilsangji-sang"],
+      ["geul", "hoebo-8-3-andong-sambe"],
+      ["jachui", "hoebo-8-3-yeongga-sosik"],
+    ];
+    for (const [chapter, slug] of restored83) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-3호 (2022 여름호)", "hoebo-8-3", "2022년 7월 15일 발행 《영가회보》 8-3호 지면에 실린 사진", "/archive-photos/hoebo/8-3/p01-1.webp", 102],
+    });
+    const cat83 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-3"],
+    });
+    const cat83Id = Number(cat83.rows[0].id);
+    const photos83: [string, string, string, number][] = [
+      ["p01-1", "민선8기 권기창 안동시장 취임", "2022-07-01", 1],
+      ["p01-2", "김학동 예천군수 취임", "2022-07-01", 1],
+      ["p01-3", "월영교의 여름 (안동시 제공)", "2022-07-15", 1],
+      ["p02-1", "김정호 경북대 교수", "2022-07-15", 2],
+      ["p02-9", "명예회원 권기창 안동시장", "2022-07-15", 2],
+      ["p02-10", "명예회원 이동필 전 농림축산식품부 장관", "2022-07-15", 2],
+      ["p02-7", "명예회원 권기익 안동시의회 의장", "2022-07-15", 2],
+      ["p02-8", "명예회원 권석환 안동문화원장", "2022-07-15", 2],
+      ["p02-5", "명예회원 이동시 안동상공회의소 회장", "2022-07-15", 2],
+      ["p02-6", "명예회원 권순협 안동농협조합장", "2022-07-15", 2],
+      ["p02-3", "명예회원 남승섭 한국국학진흥 자문위원", "2022-07-15", 2],
+      ["p02-4", "명예회원 정윤호 전 안동MBC 보도국장", "2022-07-15", 2],
+      ["p02-2", "영가회 원로회원 오찬 간담회", "2022-06-29", 2],
+      ["p03-1", "김세동 문화일보 논설위원", "2022-07-15", 3],
+      ["p03-3", "김의승 서울특별시 제1행정부시장", "2022-07-15", 3],
+      ["p03-8", "김휘동 수필집 「생명」", "2022-07-15", 3],
+      ["p03-4", "박대섭 국군예비역불자연합회장", "2022-07-15", 3],
+      ["p03-5", "손영호 한국장애인단체총연합회 상임대표", "2022-07-15", 3],
+      ["p03-6", "송병일 경찰인재개발원장", "2022-07-15", 3],
+      ["p03-7", "조은희 국회의원", "2022-07-15", 3],
+      ["p03-2", "황현탁 「그곳엔 ?!이 있었다」", "2022-07-15", 3],
+      ["p03-9", "철탑산업훈장을 수훈하는 김정현 대표", "2022-05-25", 3],
+      ["p03-10", "제일 HR아웃소싱그룹 본사 제1,2사옥", "2022-07-15", 3],
+      ["p04-1", "안동시의회 제9대 의원", "2022-07-01", 4],
+      ["p04-2", "재경안동향우회 체육대회", "2022-06-04", 4],
+      ["p05-2", "안동농협 에이플 사과", "2022-07-15", 5],
+      ["p05-1", "권기창 안동시장 취임식에 참석한 주요인사들", "2022-07-01", 5],
+      ["p06-1", "당선축하연 — 주요참석자들의 축하케이크 나눔식", "2022-06-24", 6],
+      ["p06-4", "권기창 안동시장과 조은희 의원에 대한 축하 화환 전달", "2022-06-24", 6],
+      ["p06-5", "당선축하연 — 권기창 안동시장", "2022-06-24", 6],
+      ["p06-10", "당선축하연 — 조은희 국회의원", "2022-06-24", 6],
+      ["p06-2", "당선축하연 — 취임축하 참석인사들", "2022-06-24", 6],
+      ["p06-3", "당선축하연 — 화기애애한 저녁식사", "2022-06-24", 6],
+      ["p06-11", "당선축하연 — 류목기 병산재단 이사장", "2022-06-24", 6],
+      ["p06-6", "당선축하연 — 권기욱 우평건설 회장", "2022-06-24", 6],
+      ["p06-8", "당선축하연 — 권인소 카이스트 교수", "2022-06-24", 6],
+      ["p06-12", "당선축하연 — 김영식 재경안동향우회장", "2022-06-24", 6],
+      ["p06-7", "당선축하연 — 김태원 NH투자증권 부사장", "2022-06-24", 6],
+      ["p06-9", "당선축하연 — 권정달 전 국회의원", "2022-06-24", 6],
+      ["p06-13", "당선축하연 — 강보영 대한민국시도민회연합 이사장", "2022-06-24", 6],
+      ["p07-1", "정윤호 전 안동MBC 보도국장", "2022-07-15", 7],
+      ["p07-3", "안동찜닭", "2022-07-15", 7],
+      ["p07-2", "권기진 ㈜명진팜 대표이사 (출향 향토기업)", "2022-07-15", 7],
+      ["p08-1", "김휘동 대구대 초빙교수·전 안동시장", "2022-07-15", 8],
+      ["p08-2", "장원석 영가회 창립회원", "2022-07-15", 8],
+      ["p09-2", "강보영 대한민국시도민회연합 이사장", "2022-07-15", 9],
+      ["p09-1", "황현탁 전 주일한국대사관 공사", "2022-07-15", 9],
+      ["p10-3", "남승섭 한국국학진흥 자문위원", "2022-07-15", 10],
+      ["p10-2", "권영규 전 서울부시장", "2022-07-15", 10],
+      ["p11-1", "권기성 세명대 석좌교수", "2022-07-15", 11],
+      ["p11-3", "강주모 송파농협 상임감사", "2022-07-15", 11],
+      ["p11-2", "베틀에서 베를 짜는 모습 (지면 옛 사진)", "2022-07-15", 11],
+      ["p12-7", "신규회원 강경철", "2022-07-15", 12],
+      ["p12-2", "신규회원 강신헌", "2022-07-15", 12],
+      ["p12-3", "신규회원 강의국", "2022-07-15", 12],
+      ["p12-4", "신규회원 남화영", "2022-07-15", 12],
+      ["p12-5", "신규회원 손명철", "2022-07-15", 12],
+      ["p12-6", "신규회원 정상태", "2022-07-15", 12],
+    ];
+    let pos83 = 0;
+    for (const [file, title, takenAt, page] of photos83) {
+      const url = `/archive-photos/hoebo/8-3/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat83Id, title, `《영가회보》 8-3호 (2022년 여름호) ${page}면`, url, takenAt, pos83],
+        });
+      }
+      pos83++;
+    }
+    await markMigration(client, "hoebo-8-3-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -1489,7 +1612,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v35";
+  const seedKey = "content-seed-v36";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
