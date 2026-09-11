@@ -1220,6 +1220,121 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-3-restore-v1");
   }
 
+  // 영가회보 8-4호(2022 가을호) 원문 복원: 22편 재시드 + 지면 사진 갤러리 앨범
+  if (!(await hasMigration(client, "hoebo-8-4-restore-v1"))) {
+    const restored84: [string, string][] = [
+      ["jachui", "hoebo-8-4-tonghap-bunri-gongyeon"],
+      ["hyang", "hoebo-8-4-gaeul-chukje"],
+      ["geul", "hoebo-8-4-nam-yeongchan-hyeoksin-dna"],
+      ["moim", "hoebo-8-4-chulhyang-gidaep-gandamhoe"],
+      ["jachui", "hoebo-8-4-munhwasang-chuchun-rogo-jeongyeong"],
+      ["jachui", "hoebo-8-4-hoewon-dongjeong"],
+      ["jachui", "hoebo-8-4-gihoek-daedam-dongbang"],
+      ["hyang", "hoebo-8-4-gohyangse-10man-13man"],
+      ["moim", "hoebo-8-4-ryu-jongmuk-haksaeng-gyeongnyeo"],
+      ["moim", "hoebo-8-4-munhwa-yujeok-tambang"],
+      ["jachui", "hoebo-8-4-3dae-munhwa-gwon-saeop"],
+      ["moim", "hoebo-8-4-yeongga-himang-forum-2022"],
+      ["saram", "hoebo-8-4-yeongga-saramdeul-4-kwon-yongcheol"],
+      ["geul", "hoebo-8-4-kwon-giseong-gilsangji-ha"],
+      ["geul", "hoebo-8-4-kwon-wono-haengbok-academy"],
+      ["geul", "hoebo-8-4-byeongryeok-myeongmunga"],
+      ["geul", "hoebo-8-4-andong-3da-3mu"],
+      ["geul", "hoebo-8-4-pyeongjik-haengbok-chatgi-3"],
+      ["moim", "hoebo-8-4-yecheongun-andong-yeoreum"],
+      ["geul", "hoebo-8-4-andong-mat-4-muneo"],
+      ["geul", "hoebo-8-4-chunpa-jang-wonseok-seoye"],
+      ["jachui", "hoebo-8-4-yeongga-sosik"],
+    ];
+    for (const [chapter, slug] of restored84) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-4호 (2022 가을호)", "hoebo-8-4", "2022년 10월 15일 발행 《영가회보》 8-4호 지면에 실린 사진", "/archive-photos/hoebo/8-4/p01-1.webp", 103],
+    });
+    const cat84 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-4"],
+    });
+    const cat84Id = Number(cat84.rows[0].id);
+    const photos84: [string, string, string, number][] = [
+      ["p01-1", "2022 영가희망포럼", "2022-09-15", 1],
+      ["p01-2", "안동국제탈춤페스티벌 차전놀이", "2022-10-02", 1],
+      ["p02-1", "남영찬 법무법인 클라스 대표변호사", "2022-10-15", 2],
+      ["p02-4", "출향기업체 대표들과 김형동 의원·권기창 시장 간담회", "2022-10-06", 2],
+      ["p02-3", "출향기업체 대표 간담회", "2022-10-06", 2],
+      ["p02-2", "영가회 공식로고", "2022-10-15", 2],
+      ["p03-3", "금춘수 한화그룹 부회장", "2022-10-15", 3],
+      ["p03-4", "김준현 경인약품 대표이사", "2022-10-15", 3],
+      ["p03-5", "김대원 화백", "2022-10-15", 3],
+      ["p03-6", "김형동 국회의원", "2022-10-15", 3],
+      ["p03-8", "류상번 (사)박약회 서울지회장", "2022-10-15", 3],
+      ["p03-7", "안영모 세영그룹 회장 명예경영학박사 학위수여", "2022-08-19", 3],
+      ["p03-2", "이직상 영가회 부회장", "2022-10-15", 3],
+      ["p03-9", "권기욱 우평건설 회장", "2022-10-15", 3],
+      ["p03-10", "권기욱 우평건설 회장", "2022-10-15", 3],
+      ["p04-1", "류종묵 전 영가회장과 안동고 출신 서울대 재학생들", "2022-08-26", 4],
+      ["p04-2", "안동 동부권 3대문화권사업 드론사진", "2022-10-15", 4],
+      ["p05-2", "영가희망포럼 — 경청하고 있는 참석자들", "2022-09-15", 5],
+      ["p05-1", "영가희망포럼 — 토론회 참가자들의 국민의례", "2022-09-15", 5],
+      ["p05-4", "영가희망포럼 — 주제발표 장면", "2022-09-15", 5],
+      ["p05-3", "권기창 안동시장의 주제발표 PDF 한장면", "2022-09-15", 5],
+      ["p06-1", "영가희망포럼 토론자 김선기 전 국가균형발전위원회 기획총괄국장", "2022-09-15", 6],
+      ["p06-2", "영가희망포럼 토론자 유철균 대구경북연구원장", "2022-09-15", 6],
+      ["p07-1", "영가희망포럼 토론자 이동원 한국정신문화재단 대표", "2022-09-15", 7],
+      ["p07-2", "영가희망포럼 토론자 이재갑 안동시의회 의원", "2022-09-15", 7],
+      ["p07-5", "인사말을 하고 있는 문상부 영가회 회장", "2022-09-15", 7],
+      ["p07-3", "영가희망포럼 토론회 축하 화환", "2022-09-15", 7],
+      ["p07-4", "진지하면서도 화기애애한 토론회장", "2022-09-15", 7],
+      ["p07-6", "진지하면서도 화기애애한 토론회장", "2022-09-15", 7],
+      ["p08-1", "정윤호 전 안동MBC 보도국장", "2022-10-15", 8],
+      ["p08-2", "권기성 세명대 석좌교수", "2022-10-15", 8],
+      ["p09-1", "권원오 대구경북시도민회 상근부회장", "2022-10-15", 9],
+      ["p09-2", "병역명문가 인증 표창패", "2022-10-15", 9],
+      ["p10-6", "남승섭 한국국학진흥원 자문위원", "2022-10-15", 10],
+      ["p10-7", "안동시군 통합전의 안동군기", "2022-10-15", 10],
+      ["p10-8", "권영규 전 서울부시장", "2022-10-15", 10],
+      ["p11-3", "권세준 재경 예천군민회 용문면민회장", "2022-10-15", 11],
+      ["p11-2", "삶아 놓은 안동 문어", "2022-10-15", 11],
+      ["p11-1", "춘파 장원석 회원의 서예작품 '敬'", "2022-10-15", 11],
+      ["p12-2", "신규회원 권기석", "2022-10-15", 12],
+      ["p12-3", "신규회원 김성동", "2022-10-15", 12],
+      ["p12-4", "신규회원 김승호", "2022-10-15", 12],
+      ["p12-5", "신규회원 김완진", "2022-10-15", 12],
+      ["p12-6", "신규회원 마숙룡", "2022-10-15", 12],
+      ["p12-7", "신규회원 신종수", "2022-10-15", 12],
+      ["p12-8", "신규회원 이유억", "2022-10-15", 12],
+      ["p12-9", "신규회원 이조원", "2022-10-15", 12],
+      ["p12-10", "신규회원 조은희", "2022-10-15", 12],
+      ["p12-11", "신규회원 최민석", "2022-10-15", 12],
+      ["p12-12", "신규회원 최진수", "2022-10-15", 12],
+      ["p12-14", "김돈한 비씨엔씨 대표", "2022-10-15", 12],
+      ["p12-16", "비씨엔씨 로고", "2022-10-15", 12],
+      ["p12-15", "비씨엔씨 사옥", "2022-10-15", 12],
+    ];
+    let pos84 = 0;
+    for (const [file, title, takenAt, page] of photos84) {
+      const url = `/archive-photos/hoebo/8-4/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat84Id, title, `《영가회보》 8-4호 (2022년 가을호) ${page}면`, url, takenAt, pos84],
+        });
+      }
+      pos84++;
+    }
+    await markMigration(client, "hoebo-8-4-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -1612,7 +1727,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v36";
+  const seedKey = "content-seed-v37";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
