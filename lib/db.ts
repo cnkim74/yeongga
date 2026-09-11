@@ -1904,6 +1904,119 @@ async function init(client: Client) {
     await markMigration(client, "hoebo-8-9-restore-v1");
   }
 
+  // 영가회보 8-10호(2024 봄호) 원문 복원: 27편 + 8-9호 장원석 인터뷰(사진 보강) 재시드, 지면 사진 갤러리 앨범
+  if (!(await hasMigration(client, "hoebo-8-10-restore-v1"))) {
+    const restored810: [string, string][] = [
+      ["jachui", "hoebo-8-10-kim-hyeongdong-jaesun"],
+      ["hyang", "hoebo-8-10-hahoe-seonyu"],
+      ["jachui", "hoebo-8-10-andong-ingu-jujum"],
+      ["moim", "hoebo-8-10-yecheon-tambang"],
+      ["jachui", "hoebo-8-10-gohyangsarang-myeongyeae"],
+      ["geul", "hoebo-8-10-nam-yeongchan-22dae"],
+      ["jachui", "hoebo-8-10-sasang-choedae-yeoso-yadae"],
+      ["jachui", "hoebo-8-10-hoewon-dongjeong-bueum"],
+      ["geul", "hoebo-8-10-hwang-honggyu-special-column"],
+      ["jachui", "hoebo-8-10-pyegyo-andong-shi-nae"],
+      ["hyang", "hoebo-8-10-rakgojae-hahoe"],
+      ["hyang", "hoebo-8-10-singonghang-cheoldo"],
+      ["jachui", "hoebo-8-10-gyoyuk-baljeon-tukgu"],
+      ["jachui", "hoebo-8-10-songgang-misulgwan"],
+      ["geul", "hoebo-8-10-go-jaeseong-chulsanyul"],
+      ["jachui", "hoebo-8-10-yecheon-baekjongwon"],
+      ["jachui", "hoebo-8-10-andong-nonghyup-1-wi"],
+      ["geul", "hoebo-8-10-kwon-hyeoksu-jeontong-munhwa"],
+      ["jachui", "hoebo-8-10-kim-won-jisikin-seonbi"],
+      ["geul", "hoebo-8-10-kwon-seokhwa-inuyeji"],
+      ["geul", "hoebo-8-10-kim-seungjong-20segi-jung"],
+      ["geul", "hoebo-8-10-jo-jeonghwan-sosangjin"],
+      ["geul", "hoebo-8-10-andong-chunchu-makseur-mosk"],
+      ["geul", "hoebo-8-10-toigye-hyeonpan-dosan"],
+      ["geul", "hoebo-8-10-andong-hyanggyo"],
+      ["geul", "hoebo-8-10-ryu-yeongcheol-ha"],
+      ["jachui", "hoebo-8-10-yeongga-sosik"],
+      ["jachui", "hoebo-8-9-jang-wonseok-changlip-juyeok"],
+    ];
+    for (const [chapter, slug] of restored810) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position) VALUES (?, ?, ?, ?, ?)",
+      args: ["영가회보 8-10호 (2024 봄호)", "hoebo-8-10", "2024년 4월 17일 발행 《영가회보》 8-10호 지면에 실린 사진", "/archive-photos/hoebo/8-10/p01-7.webp", 109],
+    });
+    const cat810 = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo-8-10"],
+    });
+    const cat810Id = Number(cat810.rows[0].id);
+    const photos810: [string, string, string, number][] = [
+      ["p01-6", "김형동 국민의힘 의원", "2024-04-17", 1],
+      ["p01-7", "안동선유줄불놀이 2023년 시연회 모습 (안동시 제공)", "2024-04-17", 1],
+      ["p01-5", "안동 고향사랑 '명예愛전당' 제막식", "2024-03-28", 1],
+      ["p01-4", "예천 초간정", "2024-04-17", 1],
+      ["p02-1", "남영찬 법무법인 클라스한결 대표변호사", "2024-04-17", 2],
+      ["p02-2", "제22대 총선 당선인 — 조은희 (서울 서초갑, 영가회원)", "2024-04-17", 2],
+      ["p02-3", "제22대 총선 당선인 — 권영진 (대구 달서병, 영가회 명예회원)", "2024-04-17", 2],
+      ["p02-4", "제22대 총선 당선인 — 임종득 (영주·영양·봉화)", "2024-04-17", 2],
+      ["p02-5", "제22대 총선 당선인 — 임이자 (상주·문경)", "2024-04-17", 2],
+      ["p02-6", "제22대 총선 당선인 — 박형수 (의성·청송·영덕·울진)", "2024-04-17", 2],
+      ["p02-7", "안동 벚꽃 명소로 손꼽히는 월영교에서 천리천을 잇는 산책로. 오른쪽 낙동강 건너가 영호루 (안동시 제공)", "2024-04-17", 2],
+      ["p03-2", "강의국 한국도슨트협회장", "2024-04-17", 3],
+      ["p03-3", "권기익 안동시의회의장", "2024-04-17", 3],
+      ["p03-4", "류광준 과학기술혁신본부장", "2024-04-17", 3],
+      ["p03-5", "류상번 박약회 서울지회장", "2024-04-17", 3],
+      ["p03-7", "박규희 전 농협중앙회 조합감사위원장", "2024-04-17", 3],
+      ["p03-6", "이동필 농촌살리기현장네트워크 이사장", "2024-04-17", 3],
+      ["p03-8", "이인용 전 삼성전자 CR담당 사장", "2024-04-17", 3],
+      ["p03-9", "이재환 안동시시설관리공단 이사장", "2024-04-17", 3],
+      ["p03-13", "황현탁 전 주일한국대사관 홍보공사", "2024-04-17", 3],
+      ["p03-12", "황현탁 자전적 산문 『세상구경』 표지", "2024-04-17", 3],
+      ["p04-1", "한옥호텔 '락고재 하회' 외부", "2024-04-17", 4],
+      ["p04-2", "송강미술관 전시실 내부", "2024-04-17", 4],
+      ["p05-1", "김봉구 고려대 명예교수·영가회 전 회장", "2024-04-17", 5],
+      ["p06-1", "권세준 예천군문화원 이사·문학박사", "2024-04-17", 6],
+      ["p06-2", "영가회 2024년 제1차 이사회", "2024-04-02", 6],
+      ["p07-2", "김원 원로회원 기획인터뷰", "2024-04-17", 7],
+      ["p07-1", "고택 앞에서 문상부 영가회장(왼쪽)과 김원 원로회원", "2024-04-17", 7],
+      ["p08-2", "권석환 안동문화원장", "2024-04-17", 8],
+      ["p08-1", "김승종 일송김동삼선생기념사업회 학술이사", "2024-04-17", 8],
+      ["p09-2", "조봉환 영가경제연구원 원장", "2024-04-17", 9],
+      ["p09-1", "정윤호 前 안동MBC 보도국장", "2024-04-17", 9],
+      ["p10-1", "김호태 안동문화지킴이 이사장", "2024-04-17", 10],
+      ["p10-2", "도산서당 현판 '陶山書堂'", "2024-04-17", 10],
+      ["p10-8", "도산서당 전경", "2024-04-17", 10],
+      ["p10-5", "도산서당 현판 글씨 '陶'", "2024-04-17", 10],
+      ["p10-4", "도산서당 현판 글씨 '山'", "2024-04-17", 10],
+      ["p10-3", "도산서당 현판 '山'자 아래 획 확대", "2024-04-17", 10],
+      ["p10-7", "도산서당 현판 글씨 '書'", "2024-04-17", 10],
+      ["p10-6", "도산서당 현판 글씨 '堂'", "2024-04-17", 10],
+      ["p10-9", "장의한 안동향교 교무부장", "2024-04-17", 10],
+      ["p11-1", "이종섭 목우촌펫 부사장·철학박사", "2024-04-17", 11],
+      ["p11-2", "김경식 영가골프회 운영위원장·골프칼럼니스트", "2024-04-17", 11],
+      ["p12-5", "이유대 영가회 사무총장", "2024-04-17", 12],
+      ["p12-3", "문종호 영가회 사무국장", "2024-04-17", 12],
+    ];
+    let pos810 = 0;
+    for (const [file, title, takenAt, page] of photos810) {
+      const url = `/archive-photos/hoebo/8-10/${file}.webp`;
+      const has = await client.execute({
+        sql: "SELECT 1 FROM photos WHERE image_url = ? LIMIT 1",
+        args: [url],
+      });
+      if (has.rows.length === 0) {
+        await client.execute({
+          sql: "INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility) VALUES (?, ?, ?, ?, ?, ?, 'public')",
+          args: [cat810Id, title, `《영가회보》 8-10호 (2024년 봄호) ${page}면`, url, takenAt, pos810],
+        });
+      }
+      pos810++;
+    }
+    await markMigration(client, "hoebo-8-10-restore-v1");
+  }
+
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
     const slugs = [
@@ -2296,7 +2409,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v42";
+  const seedKey = "content-seed-v43";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
