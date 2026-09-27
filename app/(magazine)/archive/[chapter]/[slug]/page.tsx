@@ -1,3 +1,4 @@
+import { isUndated } from "@/lib/undated";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -126,9 +127,11 @@ export default async function ArticlePage({
             </p>
           )}
           <div className={`flex flex-wrap items-center gap-x-5 gap-y-2 text-sm ${article.cover ? "text-white/70" : "text-[var(--color-ink-mute)]"}`}>
-            <span className="font-mono tabular-nums">
-              {formatDate(article.date)}
-            </span>
+            {!isUndated(chapter, slug) && (
+              <span className="font-mono tabular-nums">
+                {formatDate(article.date)}
+              </span>
+            )}
             {article.author && (
               <span className="inline-flex items-center gap-2">
                 <AuthorAvatar

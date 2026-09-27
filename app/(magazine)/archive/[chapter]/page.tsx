@@ -1,3 +1,4 @@
+import { isUndated } from "@/lib/undated";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -159,7 +160,7 @@ export default async function ChapterPage({
                         </p>
                       )}
                       <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-[var(--color-ink-mute)]">
-                        <span>{formatDate(a.date)}</span>
+                        {!isUndated(chapter, a.slug) && <span>{formatDate(a.date)}</span>}
                         {a.author && (
                           <span className="inline-flex items-center gap-2">
                             <span aria-hidden="true">·</span>
