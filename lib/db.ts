@@ -2409,7 +2409,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v43";
+  const seedKey = "content-seed-v44";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

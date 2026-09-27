@@ -1,9 +1,16 @@
+import fs from "fs";
+import path from "path";
+import Image from "next/image";
 import Link from "next/link";
 import { getArticleBySlug } from "@/lib/articles-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { AboutTabs } from "@/components/AboutTabs";
 
 export const dynamic = "force-dynamic";
+
+// 현직 회장 사진 — public/brand/president-9dae.jpg 가 있을 때만 노출한다.
+const PORTRAIT_FILE = "president-9dae.jpg";
+const PORTRAIT_SRC = `/brand/${PORTRAIT_FILE}`;
 
 export const metadata = {
   title: "회장 인사말 — 영가회",
@@ -14,6 +21,10 @@ export default async function GreetingPage() {
   // 아카이브에 실린 〈회장의 인사〉 글을 그대로 보여 준다.
   const greeting = await getArticleBySlug("yeongi", "hoejang-insa").catch(
     () => null
+  );
+
+  const hasPortrait = fs.existsSync(
+    path.join(process.cwd(), "public", "brand", PORTRAIT_FILE)
   );
 
   return (
@@ -44,9 +55,20 @@ export default async function GreetingPage() {
                 dangerouslySetInnerHTML={{ __html: greeting.html }}
               />
               {greeting.author && (
-                <p className="mt-10 text-right text-[var(--color-ink-soft)]">
-                  {greeting.author}
-                </p>
+                <div className="mt-12 flex items-center justify-end gap-5">
+                  {hasPortrait && (
+                    <Image
+                      src={PORTRAIT_SRC}
+                      alt={`영가회 ${greeting.author}`}
+                      width={112}
+                      height={112}
+                      className="h-28 w-28 rounded-full object-cover object-top border border-[var(--color-rule)]"
+                    />
+                  )}
+                  <p className="text-[var(--color-ink-soft)]">
+                    {greeting.author}
+                  </p>
+                </div>
               )}
             </>
           ) : (
