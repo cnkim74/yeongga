@@ -173,8 +173,7 @@ export function Logo({
   }
 
   // horizontal — 로고 | 영가회 디지털 50년사 | 슬로건
-  //   슬로건은 1280~1319px 구간에서만 숨긴다. 그 구간은 가운데 메뉴(xl 이상에서 노출)가
-  //   절대 중앙 배치라 락업과 겹치고, 1279px 이하에서는 메뉴 자체가 숨겨져 자리가 넉넉하다.
+  //   가운데 메뉴를 24px 오른쪽으로 밀어(HeaderClient) 좁은 데스크톱에서도 겹치지 않는다.
   return (
     <div
       className={`inline-flex items-center ${className}`}
@@ -188,11 +187,8 @@ export function Logo({
         <>
           {divider("d1")}
           <span style={subTitleStyle}>{SUB_TITLE}</span>
-          {divider("d2", "hidden max-[1279px]:block min-[1320px]:block")}
-          <span
-            className="hidden max-[1279px]:inline min-[1320px]:inline"
-            style={sloganStyle}
-          >
+          {divider("d2")}
+          <span style={sloganStyle}>
             {SLOGAN}
           </span>
         </>

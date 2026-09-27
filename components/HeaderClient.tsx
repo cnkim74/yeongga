@@ -136,7 +136,9 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           </span>
         </Link>
 
-        <ul className="hidden xl:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+        {/* 가운데 메뉴 — 왼쪽 로고 락업(로고 | 부제 | 슬로건)이 길어 정중앙에 두면
+            좁은 데스크톱(1280~1320px)에서 겹친다. 24px 오른쪽으로 밀어 자리를 만든다. */}
+        <ul className="hidden xl:flex items-center gap-1 absolute left-1/2 translate-x-[calc(-50%+24px)]">
           {NAV.map((n) => {
             const active =
               n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
