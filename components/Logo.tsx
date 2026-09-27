@@ -1,5 +1,5 @@
 // 永嘉會 아카이브 — 브랜드 로고 컴포넌트
-// 로고 락업 = [원형 메달리온] + [永嘉會 워드마크(붓글씨)] + (옵션)〈디지털 아카이브 / 창립 50주년〉
+// 로고 락업 = [원형 메달리온] + [永嘉會 워드마크(붓글씨)] + (옵션)〈영가회 디지털 50년사 | 슬로건〉
 //   · 메달리온: 금색 엔소(원) 안에 永嘉會 세로 붓글씨. 자체 어두운 배경 + 금빛이라
 //     밝은/어두운 테마 양쪽에서 원형으로 잘 어울린다(테마 무관).
 //   · 워드마크: 영가회보 제호 필체 PNG(흰/검 글씨 — 테마에 따라 전환).
@@ -18,13 +18,16 @@ const SIZES: Record<
   Size,
   { mark: number; word: number; sub: number; gap: number; subTracking: number }
 > = {
-  sm: { mark: 38, word: 24, sub: 11, gap: 7, subTracking: 0.14 },
-  md: { mark: 46, word: 30, sub: 13, gap: 9, subTracking: 0.16 },
-  lg: { mark: 64, word: 40, sub: 15, gap: 12, subTracking: 0.18 },
-  xl: { mark: 96, word: 56, sub: 20, gap: 15, subTracking: 0.2 },
+  sm: { mark: 38, word: 24, sub: 11, gap: 5, subTracking: 0.14 },
+  md: { mark: 46, word: 30, sub: 13, gap: 7, subTracking: 0.1 },
+  lg: { mark: 64, word: 40, sub: 15, gap: 9, subTracking: 0.12 },
+  xl: { mark: 96, word: 56, sub: 20, gap: 12, subTracking: 0.14 },
 };
 
-const SUB_LINES = ["디지털 아카이브", "창립 50주년"];
+const SUB_TITLE = "영가회 디지털 50년사";
+const SLOGAN = "친목도모 상부상조 후진양성 고향발전";
+
+const SERIF = "'Noto Serif KR','Nanum Myeongjo',var(--font-serif),serif";
 
 // 원형 금색 메달리온 마크
 export function LogoMark({
@@ -107,25 +110,41 @@ export function Logo({
   }
 
   const subColor = inverse ? "rgba(10,10,10,0.85)" : "rgba(255,255,255,0.92)";
+  const sloganColor = inverse ? "rgba(10,10,10,0.6)" : "rgba(255,255,255,0.7)";
   const dividerColor = inverse ? "rgba(0,0,0,0.22)" : "rgba(255,255,255,0.32)";
 
-  const anniversaryBlock = showAnniversary ? (
-    <div
+  const subTitleStyle = {
+    fontSize: s.sub,
+    color: subColor,
+    letterSpacing: `${s.subTracking}em`,
+    fontFamily: SERIF,
+    whiteSpace: "nowrap" as const,
+    lineHeight: 1.2,
+  };
+
+  const sloganStyle = {
+    fontSize: Math.max(10, s.sub - 2),
+    color: sloganColor,
+    letterSpacing: "0.02em",
+    fontFamily: SERIF,
+    whiteSpace: "nowrap" as const,
+    lineHeight: 1.2,
+  };
+
+  // 세로 구분선 — 락업 높이의 60% 정도만 차지하게
+  const divider = (key: string, extraClass = "") => (
+    <span
+      key={key}
+      aria-hidden="true"
+      className={extraClass}
       style={{
-        fontSize: s.sub,
-        color: subColor,
-        letterSpacing: `${s.subTracking}em`,
-        fontFamily:
-          "'Noto Serif KR','Nanum Myeongjo',var(--font-serif),serif",
-        whiteSpace: "nowrap",
-        lineHeight: 1.35,
+        width: 1,
+        height: Math.round(s.mark * 0.6),
+        background: dividerColor,
+        flexShrink: 0,
       }}
-    >
-      {SUB_LINES.map((line) => (
-        <div key={line}>{line}</div>
-      ))}
-    </div>
-  ) : null;
+    />
+  );
 
   if (variant === "stacked") {
     return (
@@ -134,12 +153,18 @@ export function Logo({
         <div className="mt-2">
           <Wordmark height={s.word} inverse={inverse} />
         </div>
-        {anniversaryBlock && <div className="mt-2">{anniversaryBlock}</div>}
+        {showAnniversary && (
+          <div className="mt-2 text-center">
+            <div style={subTitleStyle}>{SUB_TITLE}</div>
+            <div style={{ ...sloganStyle, marginTop: 2 }}>{SLOGAN}</div>
+          </div>
+        )}
       </div>
     );
   }
 
-  // horizontal — 메달리온 + 워드마크 + (옵션) 세로 구분선 + 두 줄 부제
+  // horizontal — 로고 | 영가회 디지털 50년사 | 슬로건
+  //   슬로건은 자리가 넉넉한 2xl 이상에서만 노출(가운데 메뉴와 겹침 방지).
   return (
     <div
       className={`inline-flex items-center ${className}`}
@@ -148,14 +173,14 @@ export function Logo({
       <LogoMark size={s.mark} />
       <Wordmark height={s.word} inverse={inverse} />
       {showAnniversary && (
-        <div
-          style={{
-            borderLeft: `1px solid ${dividerColor}`,
-            paddingLeft: s.gap,
-          }}
-        >
-          {anniversaryBlock}
-        </div>
+        <>
+          {divider("d1")}
+          <span style={subTitleStyle}>{SUB_TITLE}</span>
+          {divider("d2", "hidden 2xl:block")}
+          <span className="hidden 2xl:inline" style={sloganStyle}>
+            {SLOGAN}
+          </span>
+        </>
       )}
     </div>
   );
