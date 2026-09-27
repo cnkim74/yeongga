@@ -16,12 +16,20 @@ const JEHO_RATIO = 518 / 171;
 
 const SIZES: Record<
   Size,
-  { mark: number; word: number; sub: number; gap: number; subTracking: number }
+  {
+    mark: number;
+    word: number;
+    sub: number;
+    gap: number;
+    // 메달리온 ↔ 永嘉會 워드마크 사이는 한 덩어리로 보이게 더 좁힌다.
+    markGap: number;
+    subTracking: number;
+  }
 > = {
-  sm: { mark: 38, word: 24, sub: 11, gap: 5, subTracking: 0.14 },
-  md: { mark: 46, word: 30, sub: 13, gap: 7, subTracking: 0.1 },
-  lg: { mark: 64, word: 40, sub: 15, gap: 9, subTracking: 0.12 },
-  xl: { mark: 96, word: 56, sub: 20, gap: 12, subTracking: 0.14 },
+  sm: { mark: 38, word: 24, sub: 11, gap: 5, markGap: 1, subTracking: 0.14 },
+  md: { mark: 46, word: 30, sub: 13, gap: 7, markGap: 2, subTracking: 0.04 },
+  lg: { mark: 64, word: 40, sub: 15, gap: 9, markGap: 3, subTracking: 0.12 },
+  xl: { mark: 96, word: 56, sub: 20, gap: 12, markGap: 4, subTracking: 0.14 },
 };
 
 const SUB_TITLE = "영가회 디지털 50년사";
@@ -114,7 +122,7 @@ export function Logo({
   const dividerColor = inverse ? "rgba(0,0,0,0.22)" : "rgba(255,255,255,0.32)";
 
   const subTitleStyle = {
-    fontSize: s.sub,
+    fontSize: Math.max(11, s.sub - 1),
     color: subColor,
     letterSpacing: `${s.subTracking}em`,
     fontFamily: SERIF,
@@ -123,7 +131,8 @@ export function Logo({
   };
 
   const sloganStyle = {
-    fontSize: Math.max(10, s.sub - 2),
+    fontSize: Math.max(10, s.sub - 3),
+    wordSpacing: "-0.12em",
     color: sloganColor,
     letterSpacing: "0.02em",
     fontFamily: SERIF,
@@ -164,20 +173,26 @@ export function Logo({
   }
 
   // horizontal — 로고 | 영가회 디지털 50년사 | 슬로건
-  //   슬로건은 자리가 넉넉한 2xl 이상에서만 노출(가운데 메뉴와 겹침 방지).
+  //   슬로건은 1280~1319px 구간에서만 숨긴다. 그 구간은 가운데 메뉴(xl 이상에서 노출)가
+  //   절대 중앙 배치라 락업과 겹치고, 1279px 이하에서는 메뉴 자체가 숨겨져 자리가 넉넉하다.
   return (
     <div
       className={`inline-flex items-center ${className}`}
       style={{ gap: s.gap }}
     >
-      <LogoMark size={s.mark} />
-      <Wordmark height={s.word} inverse={inverse} />
+      <span className="inline-flex items-center" style={{ gap: s.markGap }}>
+        <LogoMark size={s.mark} />
+        <Wordmark height={s.word} inverse={inverse} />
+      </span>
       {showAnniversary && (
         <>
           {divider("d1")}
           <span style={subTitleStyle}>{SUB_TITLE}</span>
-          {divider("d2", "hidden 2xl:block")}
-          <span className="hidden 2xl:inline" style={sloganStyle}>
+          {divider("d2", "hidden max-[1279px]:block min-[1320px]:block")}
+          <span
+            className="hidden max-[1279px]:inline min-[1320px]:inline"
+            style={sloganStyle}
+          >
             {SLOGAN}
           </span>
         </>
