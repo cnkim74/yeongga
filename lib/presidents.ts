@@ -19,18 +19,73 @@ export type President = {
   slugPrefix?: string;
   keyword?: string;
   current?: boolean;
+  // 얼굴 사진 — 지면 캡션으로 본인이 확인된 사진만 넣는다(없으면 생략).
+  photo?: string;
+  photoNote?: string;
 };
 
 export const presidents: President[] = [
   { id: "1dae", dae: 1, name: "김해길", hanja: "金海吉", term: "1977~1998", slugPrefix: "1dae-" },
-  { id: "2dae", dae: 2, name: "류목기", hanja: "柳穆基", term: "1999~2002", slugPrefix: "2dae-" },
+  {
+    id: "2dae",
+    dae: 2,
+    name: "류목기",
+    hanja: "柳穆基",
+    term: "1999~2002",
+    slugPrefix: "2dae-",
+    photo: "/archive-photos/hoebo/8-8/p04-2.webp",
+    photoNote: "《영가회보》 8-8호 4면",
+  },
   { id: "3dae", dae: 3, name: "금창태", hanja: "琴昌泰", term: "2003~2006", slugPrefix: "3dae-" },
-  { id: "4dae", dae: 4, name: "허동진", hanja: "許東珍", term: "2007~2010", slugPrefix: "4dae-" },
-  { id: "5dae", dae: 5, name: "류종묵", hanja: "柳鍾默", term: "2011~2014", slugPrefix: "5dae-" },
-  { id: "6dae", dae: 6, name: "김봉구", hanja: "金鳳求", term: "2015~2016", slugPrefix: "6dae-" },
+  {
+    id: "4dae",
+    dae: 4,
+    name: "허동진",
+    hanja: "許東珍",
+    term: "2007~2010",
+    slugPrefix: "4dae-",
+    photo: "/archive-photos/hoebo/8-7/p04-1.webp",
+    photoNote: "《영가회보》 8-7호 4면",
+  },
+  {
+    id: "5dae",
+    dae: 5,
+    name: "류종묵",
+    hanja: "柳鍾默",
+    term: "2011~2014",
+    slugPrefix: "5dae-",
+    photo: "/archive-photos/hoebo/8-9/p03-9.webp",
+    photoNote: "《영가회보》 8-9호 3면",
+  },
+  {
+    id: "6dae",
+    dae: 6,
+    name: "김봉구",
+    hanja: "金鳳求",
+    term: "2015~2016",
+    slugPrefix: "6dae-",
+    photo: "/archive-photos/hoebo/8-7/p09-2.webp",
+    photoNote: "《영가회보》 8-7호 9면",
+  },
   { id: "7dae", dae: 7, name: "김계동", hanja: "金啓東", term: "2017~2021", slugPrefix: "7dae-" },
-  { id: "8dae", dae: 8, name: "문상부", term: "2021~2024", keyword: "문상부" },
-  { id: "9dae", dae: 9, name: "박대섭", term: "2025~현재", keyword: "박대섭", current: true },
+  {
+    id: "8dae",
+    dae: 8,
+    name: "문상부",
+    term: "2021~2024",
+    keyword: "문상부",
+    photo: "/archive-photos/hoebo/8-5/p02-11.webp",
+    photoNote: "《영가회보》 8-5호 2면",
+  },
+  {
+    id: "9dae",
+    dae: 9,
+    name: "박대섭",
+    term: "2025~현재",
+    keyword: "박대섭",
+    current: true,
+    photo: "/brand/president-9dae.jpg",
+  },
 ];
 
 export function getPresident(id: string): President | undefined {

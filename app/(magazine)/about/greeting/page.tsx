@@ -50,25 +50,31 @@ export default async function GreetingPage() {
         <div className="mx-auto max-w-3xl px-6">
           {greeting ? (
             <>
+              {hasPortrait && (
+                <figure className="mb-10 text-center sm:float-right sm:mb-6 sm:ml-10 sm:text-center">
+                  <Image
+                    src={PORTRAIT_SRC}
+                    alt={`영가회 ${greeting.author ?? "회장"}`}
+                    width={240}
+                    height={240}
+                    priority
+                    className="mx-auto h-48 w-48 rounded-full border border-[var(--color-rule)] object-cover object-top shadow-sm sm:h-56 sm:w-56"
+                  />
+                  {greeting.author && (
+                    <figcaption className="mt-3 text-sm text-[var(--color-ink-mute)]">
+                      {greeting.author}
+                    </figcaption>
+                  )}
+                </figure>
+              )}
               <div
                 className="prose-body"
                 dangerouslySetInnerHTML={{ __html: greeting.html }}
               />
               {greeting.author && (
-                <div className="mt-12 flex items-center justify-end gap-5">
-                  {hasPortrait && (
-                    <Image
-                      src={PORTRAIT_SRC}
-                      alt={`영가회 ${greeting.author}`}
-                      width={112}
-                      height={112}
-                      className="h-28 w-28 rounded-full object-cover object-top border border-[var(--color-rule)]"
-                    />
-                  )}
-                  <p className="text-[var(--color-ink-soft)]">
-                    {greeting.author}
-                  </p>
-                </div>
+                <p className="mt-12 clear-both text-right text-[var(--color-ink-soft)]">
+                  {greeting.author}
+                </p>
               )}
             </>
           ) : (

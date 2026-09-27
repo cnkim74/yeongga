@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { presidents } from "@/lib/presidents";
 import { PageHeroBg } from "@/components/PageHeroBg";
@@ -35,25 +36,44 @@ export default async function PresidentsPage() {
               <li key={p.id}>
                 <Link
                   href={`/search?president=${p.id}`}
-                  className="group flex items-baseline justify-between gap-6 px-2 py-6 transition hover:bg-[var(--color-bg-soft)]"
+                  className="group flex items-center justify-between gap-6 px-2 py-6 transition hover:bg-[var(--color-bg-soft)]"
                 >
-                  <div>
-                    <div className="mb-1 text-sm text-[var(--color-ink-mute)]">
-                      제{p.dae}대
-                      {p.current && (
-                        <span className="ml-2 rounded-full bg-[var(--color-accent)] px-2 py-0.5 text-[11px] font-semibold text-white">
-                          현 회장
-                        </span>
-                      )}
+                  <div className="flex items-center gap-5">
+                    {p.photo ? (
+                      <Image
+                        src={p.photo}
+                        alt={`제${p.dae}대 회장 ${p.name}`}
+                        width={88}
+                        height={88}
+                        className="h-[72px] w-[72px] shrink-0 rounded-full border border-[var(--color-rule)] object-cover object-top sm:h-[88px] sm:w-[88px]"
+                      />
+                    ) : (
+                      // 확인된 사진이 없는 회장은 이름 한 글자로 대신한다.
+                      <span
+                        aria-hidden="true"
+                        className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full border border-dashed border-[var(--color-rule)] bg-[var(--color-bg-soft)] text-xl text-[var(--color-ink-mute)] sm:h-[88px] sm:w-[88px]"
+                      >
+                        {p.hanja ? p.hanja.slice(0, 1) : p.name.slice(0, 1)}
+                      </span>
+                    )}
+                    <div>
+                      <div className="mb-1 text-sm text-[var(--color-ink-mute)]">
+                        제{p.dae}대
+                        {p.current && (
+                          <span className="ml-2 rounded-full bg-[var(--color-accent)] px-2 py-0.5 text-[11px] font-semibold text-white">
+                            현 회장
+                          </span>
+                        )}
+                      </div>
+                      <h2 className="display-md text-2xl sm:text-3xl transition group-hover:text-[var(--color-accent)]">
+                        {p.name}
+                        {p.hanja && (
+                          <span className="ml-2 text-lg text-[var(--color-ink-mute)]">
+                            {p.hanja}
+                          </span>
+                        )}
+                      </h2>
                     </div>
-                    <h2 className="display-md text-2xl sm:text-3xl transition group-hover:text-[var(--color-accent)]">
-                      {p.name}
-                      {p.hanja && (
-                        <span className="ml-2 text-lg text-[var(--color-ink-mute)]">
-                          {p.hanja}
-                        </span>
-                      )}
-                    </h2>
                   </div>
                   <div className="shrink-0 text-right">
                     <div className="font-mono text-sm text-[var(--color-ink-mute)] tabular-nums">
@@ -69,7 +89,9 @@ export default async function PresidentsPage() {
           </ul>
 
           <p className="mt-8 text-sm text-[var(--color-ink-mute)]">
-            회장 이름을 누르시면 그 시기의 기록을 모아 보실 수 있습니다. 역대
+            사진은 《영가회보》 지면에서 본인으로 확인된 것만 실었고, 아직 찾지
+            못한 회장은 성함의 한 글자로 대신했습니다. 회장 이름을 누르시면 그
+            시기의 기록을 모아 보실 수 있습니다. 역대
             회장 약사(略史)는{" "}
             <Link href="/ebooks" className="underline hover:text-[var(--color-ink)]">
               40년사 책자
