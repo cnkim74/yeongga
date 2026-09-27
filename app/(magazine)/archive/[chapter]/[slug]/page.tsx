@@ -18,6 +18,11 @@ import { GAEventOnMount } from "@/components/GAEventOnMount";
  * 캐시 전략:
  * - 공개 글: getCurrentUser() 미호출 → 쿠키 의존 없음 → 1시간 ISR 캐시
  * - 회원전용 글: getCurrentUser() 호출 → 쿠키 의존 → 자동으로 동적 렌더링
+ *
+ * 주의: 새 글을 배포한 직후 이 URL 을 열면(시딩 전이라 notFound) 404 응답이
+ * 그대로 1시간 캐시된다. 새 글 반영 확인은 force-dynamic 인 챕터 목록
+ * (/archive/<chapter>)에서 하고, 404 가 캐시됐다면 이 파일을 고쳐 재배포해
+ * 프리렌더 캐시를 새로 만든다(빈 커밋은 산출물이 같아 효과 없음).
  */
 export const revalidate = 3600;
 
