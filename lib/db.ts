@@ -2026,6 +2026,55 @@ async function init(client: Client) {
     await markMigration(client, "greeting-newyear-fix-v1");
   }
 
+  // 갤러리 카테고리 단순화 — 호수별 앨범 10개(hoebo-8-1…8-10)를 〈영가회보〉 한 앨범으로 합친다.
+  // 사진 설명에 이미 "《영가회보》 8-N호 (…) N면" 이 들어 있어 호수 구분은 그대로 남는다.
+  if (!(await hasMigration(client, "gallery-merge-hoebo-v1"))) {
+    await client.execute({
+      sql: `INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position)
+            VALUES (?, ?, ?, ?, ?)`,
+      args: [
+        "영가회보",
+        "hoebo",
+        "《영가회보》 지면에 실린 사진 — 8-1호(2022 겨울호)부터 호수 순서대로",
+        "/archive-photos/hoebo/8-1/p01-1.webp",
+        20,
+      ],
+    });
+    const merged = await client.execute({
+      sql: "SELECT id FROM photo_categories WHERE slug = ?",
+      args: ["hoebo"],
+    });
+    const mergedId = Number(merged.rows[0].id);
+
+    // 호수 순서(8-1 → 8-10)대로 이어 붙이며 position 을 다시 매긴다.
+    let pos = 0;
+    for (let n = 1; n <= 10; n++) {
+      const slug = `hoebo-8-${n}`;
+      const cat = await client.execute({
+        sql: "SELECT id FROM photo_categories WHERE slug = ?",
+        args: [slug],
+      });
+      if (cat.rows.length === 0) continue;
+      const oldId = Number(cat.rows[0].id);
+      const photos = await client.execute({
+        sql: "SELECT id FROM photos WHERE category_id = ? ORDER BY position, id",
+        args: [oldId],
+      });
+      for (const row of photos.rows) {
+        await client.execute({
+          sql: "UPDATE photos SET category_id = ?, position = ? WHERE id = ?",
+          args: [mergedId, pos, Number(row.id)],
+        });
+        pos++;
+      }
+      await client.execute({
+        sql: "DELETE FROM photo_categories WHERE id = ?",
+        args: [oldId],
+      });
+    }
+    await markMigration(client, "gallery-merge-hoebo-v1");
+  }
+
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
