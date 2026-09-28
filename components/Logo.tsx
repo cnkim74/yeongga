@@ -26,10 +26,10 @@ const SIZES: Record<
     subTracking: number;
   }
 > = {
-  sm: { mark: 38, word: 24, sub: 11, gap: 5, markGap: 1, subTracking: 0.14 },
-  md: { mark: 46, word: 30, sub: 13, gap: 7, markGap: 2, subTracking: 0.04 },
-  lg: { mark: 64, word: 40, sub: 15, gap: 9, markGap: 3, subTracking: 0.12 },
-  xl: { mark: 96, word: 56, sub: 20, gap: 12, markGap: 4, subTracking: 0.14 },
+  sm: { mark: 40, word: 26, sub: 11, gap: 8, markGap: 6, subTracking: 0.02 },
+  md: { mark: 56, word: 42, sub: 13, gap: 12, markGap: 9, subTracking: 0.02 },
+  lg: { mark: 64, word: 46, sub: 14, gap: 14, markGap: 10, subTracking: 0.02 },
+  xl: { mark: 96, word: 60, sub: 18, gap: 16, markGap: 12, subTracking: 0.02 },
 };
 
 const SUB_TITLE = "영가회 디지털 50년사";
@@ -122,7 +122,7 @@ export function Logo({
   const dividerColor = inverse ? "rgba(0,0,0,0.22)" : "rgba(255,255,255,0.32)";
 
   const subTitleStyle = {
-    fontSize: Math.max(11, s.sub - 1),
+    fontSize: Math.max(11, s.sub - 2),
     color: subColor,
     letterSpacing: `${s.subTracking}em`,
     fontFamily: SERIF,
@@ -131,8 +131,7 @@ export function Logo({
   };
 
   const sloganStyle = {
-    fontSize: Math.max(10, s.sub - 3),
-    wordSpacing: "-0.12em",
+    fontSize: s.sub + 2,
     color: sloganColor,
     letterSpacing: "0.02em",
     fontFamily: SERIF,
@@ -172,25 +171,43 @@ export function Logo({
     );
   }
 
-  // horizontal — 로고 | 영가회 디지털 50년사 | 슬로건
-  //   가운데 메뉴를 24px 오른쪽으로 밀어(HeaderClient) 좁은 데스크톱에서도 겹치지 않는다.
+  // horizontal — [메달리온] [永嘉會 + 그 아래 '영가회 디지털 50년사'] | [슬로건]
+  //   부제는 워드마크 폭에 맞춰 넣고, 슬로건은 오른쪽에 조금 크게 둔다.
+  const wordWidth = Math.round(s.word * JEHO_RATIO);
   return (
     <div
       className={`inline-flex items-center ${className}`}
       style={{ gap: s.gap }}
     >
-      <span className="inline-flex items-center" style={{ gap: s.markGap }}>
-        <LogoMark size={s.mark} />
+      <LogoMark size={s.mark} />
+      <span
+        className="inline-flex flex-col items-center"
+        style={{ gap: 2, marginLeft: s.markGap - s.gap }}
+      >
         <Wordmark height={s.word} inverse={inverse} />
+        {showAnniversary && (
+          <span
+            aria-label={SUB_TITLE}
+            style={{
+              ...subTitleStyle,
+              // 워드마크와 같은 폭으로 글자를 고르게 벌린다.
+              width: wordWidth,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            {Array.from(SUB_TITLE.replace(/ /g, "\u2009")).map((ch, i) => (
+              <span key={i} aria-hidden="true">
+                {ch}
+              </span>
+            ))}
+          </span>
+        )}
       </span>
       {showAnniversary && (
         <>
           {divider("d1")}
-          <span style={subTitleStyle}>{SUB_TITLE}</span>
-          {divider("d2")}
-          <span style={sloganStyle}>
-            {SLOGAN}
-          </span>
+          <span style={sloganStyle}>{SLOGAN}</span>
         </>
       )}
     </div>

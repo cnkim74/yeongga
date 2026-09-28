@@ -398,14 +398,14 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   align-items: center;
   justify-content: space-between;
   padding: 8px 8px 8px 22px;
-  height: 68px;
+  height: 84px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
 }
 
 .pill-nav-link {
-  padding: 8px 16px;
+  padding: 10px 18px;
   border-radius: 999px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.85);
   transition: background 0.15s ease, color 0.15s ease;
