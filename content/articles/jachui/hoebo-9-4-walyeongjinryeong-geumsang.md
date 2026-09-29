@@ -16,7 +16,7 @@ visibility: public
 
 - **브뤼셀 금상** — 한 호의 가장 단정한 일
 - **안동소주**의 한 호의 가장 정성스런 세계 자취
-- 9-3호 〈[2차 영가포럼 안동소주](/archive/moim/hoebo-9-3-yeongga-forum-2cha-soju)〉의 단단한 후속
+- 9-3호 〈[2차 영가포럼 안동소주](/archive/moim/9dae-2025-forum-2)〉의 단단한 후속
 
 ## 한 호의 자취
 

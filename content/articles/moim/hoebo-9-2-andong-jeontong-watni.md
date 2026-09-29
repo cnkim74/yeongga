@@ -20,7 +20,7 @@ visibility: public
 
 - **여행이 곧 기부** — 가장 단정한 도농상생
 - **영가회·재경안동시향우회·재경예천군민회·재경안동선장회·부산영가회**의 자매 모임 결합
-- 9-1호 〈[정기총회 200명](/archive/moim/hoebo-9-1-jeonggi-chonghoe-200)〉 → 9-2호 〈[왔니껴투어 참여](/archive/moim/hoebo-9-2-andong-jeontong-watni)〉의 가장 자랑스런 자취
+- 9-1호 〈[정기총회 200명](/archive/moim/9dae-2025-jeonggi-chonghoe)〉 → 9-2호 〈[왔니껴투어 참여](/archive/moim/hoebo-9-2-andong-jeontong-watni)〉의 가장 자랑스런 자취
 
 ## 편집실의 정리
 

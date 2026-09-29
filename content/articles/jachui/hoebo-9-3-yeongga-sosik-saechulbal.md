@@ -20,7 +20,7 @@ visibility: public
 
 - **6.3억 가양주** — 가장 큰 규모
 - **70년만에 국회 의원회관 멍에 매다** — 한 호의 가장 자랑스런 자취
-- 9-3호 〈[제2회 영가포럼 특집](/archive/moim/hoebo-9-3-yeongga-forum-teukjip)〉 의 가장 정성스런 후속
+- 9-3호 〈[제2회 영가포럼 특집](/archive/moim/9dae-2025-forum-2)〉 의 가장 정성스런 후속
 
 ## 편집실의 정리
 

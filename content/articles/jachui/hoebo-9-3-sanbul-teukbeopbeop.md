@@ -18,7 +18,7 @@ visibility: public
 
 ## ② 영가회 원로회원 하반기 간담회 개최
 
-- 9-2호 〈[원로회의 간담회 산불피해 복구](/archive/moim/hoebo-9-2-yeongga-forum-2cha-9wol)〉 의 한 호 후속
+- 9-2호 〈[원로회의 간담회 산불피해 복구](/archive/moim/9dae-2025-forum-2)〉 의 한 호 후속
 
 ## ③ 안동 출향인 '경북지역 국립의대학 설립' 한목소리
 

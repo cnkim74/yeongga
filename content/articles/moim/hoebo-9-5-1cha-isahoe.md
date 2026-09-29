@@ -15,8 +15,8 @@ visibility: public
 영가회 1차 이사회가 한 호의 자리에서 열렸다.
 
 - **9월 영가포럼 만전 기하기로** — 한 호의 가장 단정한 의지
-- 9-2호 〈[영가포럼 2차 9월](/archive/moim/hoebo-9-2-yeongga-forum-2cha-9wol)〉의 한 호 단단한 준비
-- 9-3호 〈[2차 영가포럼 안동소주](/archive/moim/hoebo-9-3-yeongga-forum-2cha-soju)〉의 한 호 후속 준비
+- 9-2호 〈[영가포럼 2차 9월](/archive/moim/9dae-2025-forum-2)〉의 한 호 단단한 준비
+- 9-3호 〈[2차 영가포럼 안동소주](/archive/moim/9dae-2025-forum-2)〉의 한 호 후속 준비
 
 ## 한 호의 자취
 

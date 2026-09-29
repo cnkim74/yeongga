@@ -2272,6 +2272,49 @@ async function init(client: Client) {
     await markMigration(client, "moim-cleanup-2026-09-v1");
   }
 
+  // 같은 행사를 다룬 글을 한 편으로 합치고, 합쳐진 쪽을 내린다.
+  if (!(await hasMigration(client, "moim-merge-2026-09-v2"))) {
+    const mergedAway: [string, string][] = [
+      ["moim", "hoebo-9-4-jeonggi-chonghoe-2026"],
+      ["moim", "hoebo-9-4-jeonggi-chonghoe-imomo"],
+      ["moim", "hoebo-9-1-jeonggi-chonghoe-200"],
+      ["moim", "hoebo-8-13-jeonggi-chonghoe-yego"],
+      ["moim", "hoebo-9-3-yeongga-forum-2cha-soju"],
+      ["moim", "hoebo-9-3-yeongga-forum-teukjip"],
+      ["moim", "hoebo-9-2-yeongga-forum-2cha-9wol"],
+      ["moim", "hoebo-9-2-yeongga-forum-1cha"],
+      ["moim", "2024-jeonggi-chonghoe"],
+      ["moim", "hoebo-8-9-jeonggi-chonghoe-imomo"],
+      ["moim", "hoebo-8-11-yecheon-tambang-300"],
+    ];
+    for (const [chapter, slug] of mergedAway) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: [chapter, slug],
+      });
+    }
+    // 합쳐서 내용이 바뀐 글은 파일에서 다시 시드되도록 행만 지운다.
+    const reseed = [
+      "9dae-2026-sinnyeon-chonghoe-49",
+      "9dae-2025-jeonggi-chonghoe",
+      "9dae-2025-forum-2",
+      "9dae-2025-forum-1",
+      "hoebo-8-10-yecheon-tambang",
+      "hoebo-8-9-jeonggi-chonghoe",
+    ];
+    for (const slug of reseed) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["moim", slug],
+      });
+    }
+    await markMigration(client, "moim-merge-2026-09-v2");
+  }
+
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
@@ -2665,7 +2708,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v46";
+  const seedKey = "content-seed-v47";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

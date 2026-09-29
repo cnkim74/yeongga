@@ -17,7 +17,7 @@ visibility: public
 - **대한민국 전통주** — 한 호의 가장 단정한 자리
 - **미래 전략** — 한 호의 정성스런 일
 - 9-1호 〈[미식 Vault 전통주](/archive/hyang/hoebo-9-1-misik-vault-jeontongju)〉의 한 호 후속
-- 9-3호 〈[2차 영가포럼 안동소주](/archive/moim/hoebo-9-3-yeongga-forum-2cha-soju)〉의 단단한 후속
+- 9-3호 〈[2차 영가포럼 안동소주](/archive/moim/9dae-2025-forum-2)〉의 단단한 후속
 - 9-4호 〈[월영진룡유주 브뤼셀 금상](/archive/jachui/hoebo-9-4-walyeongjinryeong-geumsang)〉의 한 자리
 
 ## 한 호의 자취
