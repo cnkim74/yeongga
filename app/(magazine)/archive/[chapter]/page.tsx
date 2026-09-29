@@ -42,8 +42,7 @@ export default async function ChapterPage({
     getChapterMeta(chapter),
   ]);
 
-  // 연혁은 회의 걸어온 길이라 오래된 순으로 보여 준다.
-  const ordered = chapter === "yeongi" ? [...articles].reverse() : articles;
+  const ordered = articles;
   const avatarByName = new Map(Object.entries(avatars));
 
   // 우선순위: 챕터 hero_image (전용) > 메인 쇼케이스 cover_image (호환) > placeholder

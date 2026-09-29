@@ -2853,6 +2853,26 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-rewrite-v1");
   }
 
+  // 연혁에 회장 취임 기록을 더하고, 창립총회 글을 보강해 다시 시드한다.
+  if (!(await hasMigration(client, "yeongi-hoejang-v1"))) {
+    for (const slug of [
+      "3dae-chuim",
+      "4dae-chuim",
+      "5dae-chuim",
+      "6dae-chuim",
+      "7dae-chuim",
+      "8dae-chuim",
+      "9dae-chuim",
+      "1977-changrip-namgang",
+    ]) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["yeongi", slug],
+      });
+    }
+    await markMigration(client, "yeongi-hoejang-v1");
+  }
+
 
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
@@ -3247,7 +3267,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v51";
+  const seedKey = "content-seed-v52";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
