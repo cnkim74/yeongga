@@ -2817,6 +2817,42 @@ async function init(client: Client) {
     await markMigration(client, "hoemu-rewrite-v1");
   }
 
+  // 연혁 장 다시 쓰기 — 제목·날짜·문장을 고쳐 파일에서 다시 시드한다.
+  if (!(await hasMigration(client, "yeongi-rewrite-v1"))) {
+    const yeongiSlugs = [
+      "1977-changrip-namgang",
+      "2010-saedae-gyoryu",
+      "2dae-hoejang-sidae",
+      "45junyeon-insamal",
+      "andong-jeongcheseong",
+      "chang-rip-20junyeon",
+      "chang-rip-40junyeon",
+      "digital-50nyeonsa-2026",
+      "digital-archive-sijak",
+      "hoebo-buhwal-2022",
+      "hoechik-gaejeong-2024",
+      "hoechik-jeongsin",
+      "hoejang-insa",
+      "ireum-byeoncheon",
+      "je49cha-chonghoe-2026",
+      "next-50nyeon-bijeon",
+      "sadan-beobin-2025",
+      "wonro-hoeui-2025",
+      "yeongga-cheongnyeon-2026",
+      "yeongga-forum-chulbeom-2025",
+      "yeongga-munhwa-1jip",
+      "yeongga-munhwa-2jip",
+      "yeongga-munhwasang-sijak",
+    ];
+    for (const slug of yeongiSlugs) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["yeongi", slug],
+      });
+    }
+    await markMigration(client, "yeongi-rewrite-v1");
+  }
+
 
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
@@ -3211,7 +3247,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v50";
+  const seedKey = "content-seed-v51";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

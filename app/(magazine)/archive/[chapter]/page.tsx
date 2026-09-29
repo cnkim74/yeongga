@@ -41,6 +41,9 @@ export default async function ChapterPage({
     listAuthorAvatars(),
     getChapterMeta(chapter),
   ]);
+
+  // 연혁은 회의 걸어온 길이라 오래된 순으로 보여 준다.
+  const ordered = chapter === "yeongi" ? [...articles].reverse() : articles;
   const avatarByName = new Map(Object.entries(avatars));
 
   // 우선순위: 챕터 hero_image (전용) > 메인 쇼케이스 cover_image (호환) > placeholder
@@ -118,13 +121,13 @@ export default async function ChapterPage({
       {/* 글 목록 */}
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-4xl px-6">
-          {articles.length === 0 ? (
+          {ordered.length === 0 ? (
             <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-16 text-center text-[var(--color-ink-mute)]">
               이 장에는 아직 등재된 글이 없습니다.
             </div>
           ) : (
             <ol className="space-y-12 sm:space-y-16">
-              {articles.map((a, i) => (
+              {ordered.map((a, i) => (
                 <li
                   key={a.slug}
                   className="grid gap-3 sm:gap-6 sm:grid-cols-12 items-start"
