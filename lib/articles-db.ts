@@ -222,7 +222,7 @@ export const getArticleBySlug = unstable_cache(
   // 캐시 키에 버전을 둔다 — 새 글을 올린 직후 그 URL 을 열면 "글 없음(null)"이
   // 데이터 캐시에 30분간 남고, 이 캐시는 재배포로도 지워지지 않는다.
   // 그럴 때 관리자 로그인 상태로 /api/admin/revalidate 를 열거나, 이 버전을 올린다.
-  ["articles:bySlug:v2"],
+  ["articles:bySlug", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
