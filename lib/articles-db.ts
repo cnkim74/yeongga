@@ -6,6 +6,8 @@ import { looksLikeHTML, renderMarkdown } from "./markdown";
 // 캐시 TTL — 30분. 글 추가·수정 시 admin action 의 revalidateTag("articles") 로 즉시 무효화하므로
 // 길게 잡아도 편집 반영은 즉시. 봇 크롤링 등으로 인한 전체 글 풀스캔 재조회 폭증을 막는다.
 const CACHE_TTL = 1800;
+// 데이터 캐시는 재배포로 지워지지 않는다. 내용을 일괄로 고친 뒤에는 이 값을 올린다.
+const CACHE_VER = "v3";
 
 export type Visibility = "public" | "members-only";
 
@@ -62,7 +64,7 @@ export const listAllArticles = unstable_cache(
     );
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
   },
-  ["articles:listAll"],
+  ["articles:listAll", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
@@ -75,7 +77,7 @@ export const listChapterArticles = unstable_cache(
     });
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
   },
-  ["articles:listChapter"],
+  ["articles:listChapter", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
@@ -85,7 +87,7 @@ export const countAllArticles = unstable_cache(
     const r = await db.execute(`SELECT COUNT(*) as n FROM articles`);
     return Number(r.rows[0].n);
   },
-  ["articles:countAll"],
+  ["articles:countAll", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
@@ -104,7 +106,7 @@ export const listYears = unstable_cache(
       return { year: String(rec.yr), count: Number(rec.n) };
     });
   },
-  ["articles:years"],
+  ["articles:years", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
@@ -120,7 +122,7 @@ export const listArticlesByYear = unstable_cache(
     });
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
   },
-  ["articles:byYear"],
+  ["articles:byYear", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
@@ -136,7 +138,7 @@ export const listArticlesBySlugPrefix = unstable_cache(
     });
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
   },
-  ["articles:bySlugPrefix"],
+  ["articles:bySlugPrefix", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
@@ -199,7 +201,7 @@ export const getLatestPerChapter = unstable_cache(
     `);
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
   },
-  ["articles:latestPerChapter"],
+  ["articles:latestPerChapter", CACHE_VER],
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
