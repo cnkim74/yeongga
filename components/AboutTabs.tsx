@@ -1,16 +1,17 @@
-// 소개 두 갈래 전환 탭 — 영가회 소개와 회장 인사말 | 역대 회장 소개
+// 소개 전환 탭 — 영가회 소개 · 회장 인사말 · 역대회장 · 회칙
 import Link from "next/link";
 
 const TABS = [
   { key: "about", href: "/about", label: "영가회 소개" },
   { key: "greeting", href: "/about/greeting", label: "회장 인사말" },
   { key: "presidents", href: "/about/presidents", label: "역대회장" },
+  { key: "hoechik", href: "/about/hoechik", label: "회칙" },
 ] as const;
 
 export function AboutTabs({
   current,
 }: {
-  current: "about" | "greeting" | "presidents";
+  current: "about" | "greeting" | "presidents" | "hoechik";
 }) {
   return (
     <nav
