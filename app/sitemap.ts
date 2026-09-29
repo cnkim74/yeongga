@@ -6,6 +6,9 @@ const BASE = "https://yeongga.com";
 
 // 1시간마다 재생성 — 봇이 sitemap 으로 실제 글을 색인하게 해 /search 크롤을 줄인다.
 export const revalidate = 3600;
+// 빌드 때 만들지 않는다 — 시드·마이그레이션이 도는 첫 DB 접속이 빌드의 60초 제한을
+// 넘겨 배포가 통째로 실패한 적이 있다. 첫 요청 때 만들고 그 뒤로는 캐시된다.
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPaths = ["", "/archive", "/gallery", "/videos", "/about", "/ebooks"];

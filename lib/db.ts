@@ -3235,6 +3235,17 @@ async function init(client: Client) {
   );
 
   const articlesDir = path.join(process.cwd(), "content", "articles");
+  // 한 건씩 INSERT 하면 글 수백 편에 태그까지 수천 번 왕복이라 함수 시간 제한을 넘긴다.
+  // 문장을 모아 batch 로 보내고, 태그는 방금 넣은 글의 id 를 하위 질의로 찾는다.
+  type SeedStmt = { sql: string; args: (string | number | null)[] };
+  const pending: SeedStmt[] = [];
+  const flushSeed = async (force = false) => {
+    if (pending.length === 0) return;
+    if (!force && pending.length < 200) return;
+    const chunk = pending.splice(0, pending.length);
+    await client.batch(chunk, "write");
+  };
+
   if (fs.existsSync(articlesDir)) {
     for (const chapterSlug of fs.readdirSync(articlesDir)) {
       const chapterDir = path.join(articlesDir, chapterSlug);
@@ -3254,7 +3265,7 @@ async function init(client: Client) {
           v === "members-only" || v === "members" || v === "private"
             ? "members-only"
             : "public";
-        await client.execute({
+        pending.push({
           sql: `INSERT OR IGNORE INTO articles
                 (chapter, slug, title, subtitle, author, excerpt, cover, date, visibility, body)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -3279,25 +3290,20 @@ async function init(client: Client) {
             .split(",")
             .map((t: string) => t.trim())
             .filter(Boolean);
-          if (tags.length > 0) {
-            const row = await client.execute({
-              sql: "SELECT id FROM articles WHERE chapter = ? AND slug = ?",
-              args: [chapterSlug, slug],
+          for (const tag of tags) {
+            pending.push({
+              sql: `INSERT OR IGNORE INTO article_tags (article_id, tag)
+                    SELECT id, ? FROM articles WHERE chapter = ? AND slug = ?`,
+              args: [tag, chapterSlug, slug],
             });
-            if (row.rows.length > 0) {
-              const articleId = Number(row.rows[0].id);
-              for (const tag of tags) {
-                await client.execute({
-                  sql: "INSERT OR IGNORE INTO article_tags (article_id, tag) VALUES (?, ?)",
-                  args: [articleId, tag],
-                });
-              }
-            }
           }
         }
+        await flushSeed();
       }
     }
+    await flushSeed(true);
   }
+
   await markMigration(client, seedKey);
   } // ← shouldSeed 끝
 
