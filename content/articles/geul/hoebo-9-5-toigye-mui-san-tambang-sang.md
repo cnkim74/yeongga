@@ -19,7 +19,7 @@ visibility: public
 - **정수민** — 영가청년·사진가 (9-5호 〈[영가청년의 출범](/archive/moim/hoebo-9-5-yeongga-cheongnyeon-chulbeom)〉 자취 위)
 - **무이산 상하사적지** — 한 호의 가장 정성스런 자리
 - **'과거의 스승과 현재의 후학이 교감'** — 한 호의 가장 단단한 자취
-- 9-5호 〈[김원동 무이산 화재편](/archive/moim/hoebo-9-5-mui-san-tambang-ki-sang)〉의 한 호 동행
+- 9-5호 〈[김원동 무이산 화재편](/archive/moim/hoebo-9-5-mui-san-bonghang)〉의 한 호 동행
 - **〈하〉편으로 이어진다**
 
 ## 한 호의 자취

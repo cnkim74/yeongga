@@ -2234,6 +2234,44 @@ async function init(client: Client) {
     await markMigration(client, "gallery-events-2024-2026-v1");
   }
 
+  // 행사 장 정리 — 같은 탐방을 다룬 세 편을 한 편으로 합치고,
+  // 영가회와 상관없는 외부 행사·향우회 행사 기사를 내린다.
+  if (!(await hasMigration(client, "moim-cleanup-2026-09-v1"))) {
+    const takedown: [string, string][] = [
+      ["moim", "hoebo-9-4-mui-san-tambang"],
+      ["moim", "hoebo-9-5-mui-san-tambang-ki-sang"],
+      ["moim", "hoebo-9-4-jaegyeong-songnyeon-cheyuk"],
+      ["moim", "hoebo-9-4-21segi-inmun-forum"],
+      ["moim", "hoebo-9-4-girayeon-yangroyeon"],
+      ["moim", "hoebo-9-5-hoejae-gwihyang-6"],
+      ["moim", "hoebo-8-11-jaegyeong-andong-cheyuk"],
+      ["moim", "hoebo-8-9-jaegyeong-hyangwoo-1000"],
+      ["moim", "hoebo-8-5-jaegyeong-hyangwoo-songnyeon"],
+      ["saram", "hoebo-9-4-kemu-gyeongsu-baljaeon"],
+    ];
+    for (const [chapter, slug] of takedown) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: [chapter, slug],
+      });
+    }
+
+    // 합친 글은 파일에서 다시 시드되도록 행만 지운다.
+    await client.execute({
+      sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+      args: ["moim", "hoebo-9-5-mui-san-bonghang"],
+    });
+    await client.execute({
+      sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+      args: ["geul", "hoebo-9-5-toigye-mui-san-tambang-sang"],
+    });
+    await markMigration(client, "moim-cleanup-2026-09-v1");
+  }
+
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
   if (!(await hasMigration(client, "clear-saram-32-48-covers-v1"))) {
@@ -2627,7 +2665,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v45";
+  const seedKey = "content-seed-v46";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
