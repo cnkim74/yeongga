@@ -263,6 +263,37 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   text-decoration-thickness: 1px;
 }
 
+/* 본문 표 — 기본값으로 두면 칸이 좁아 글자가 줄줄이 끊긴다.
+   좁은 화면에서는 표만 가로로 밀어서 볼 수 있게 한다. */
+.prose-body table {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1.6em 0;
+  font-size: 0.95em;
+  line-height: 1.65;
+}
+.prose-body thead th {
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 0.7em 1em;
+  border-bottom: 2px solid var(--color-rule);
+  color: var(--color-ink);
+}
+.prose-body tbody td {
+  padding: 0.7em 1em;
+  border-bottom: 1px solid var(--color-rule);
+  vertical-align: top;
+}
+.prose-body tbody tr:last-child td { border-bottom: none; }
+/* 날짜·구분처럼 짧은 첫 칸은 줄바꿈하지 않는다 */
+.prose-body tbody td:first-child { white-space: nowrap; }
+.prose-body tbody tr:hover { background: var(--color-bg-soft); }
+
 .prose-body hr {
   border: none;
   border-top: 1px solid var(--color-rule);
