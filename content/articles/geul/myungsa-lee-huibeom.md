@@ -27,9 +27,9 @@ PDF 04 (3대 회장기) 의 〈4명 축하연〉 자리(`/archive/moim/3dae-2003
 이 자리에서 함께 영전을 축하받으신 네 분:
 
 - **김광림(金光琳)** — 통계청장 → 재정경제부 차관 (`/archive/geul/myungsa-kim-gwangrim`)
-- **김원(金 원)** — 전 서울시립대학교 부총장 → 장관급 중앙도시계획위원장 (`/archive/geul/myungsa-kim-wonjung`)
+- **김원** — 전 서울시립대학교 부총장 → 장관급 중앙도시계획위원장 (`/archive/geul/myungsa-kim-won`)
 - **이희범(李熙範)** — 한국행성신문 본부 이사장 → 서울 산업대학교 총장 (이 글의 주인공)
-- **권령건(權寧建)** — 안동대학교 총장 (`/archive/geul/myungsa-kwon-ryeonggeon`)
+- **권영건(權寧建)** — 안동대학교 총장 (`/archive/geul/myungsa-kwon-ryeonggeon`)
 
 ## 2011년 — 제5대 한국경영자총협회(경총) 회장
 

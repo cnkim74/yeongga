@@ -3259,6 +3259,56 @@ async function init(client: Client) {
     await markMigration(client, "moim-40nyeonsa-fact-v1");
   }
 
+  // 40년사 원문 전수 대조 2차 (2026-09-30) — 확인된 사실 오류를 바로잡음
+  //   · 2003.4.15 축하연 인명: 김원중·이재범·권령건 → 김원·이희범·권영건,
+  //     장소도 소피텔 앰배서더가 아니라 엠버서더호텔 (40년사 106~107쪽)
+  //   · 1999.10.21 김호진·김경한 축하 → 김호진 노동부 장관·이유택 송파구청장
+  //     (40년사 81~82쪽). 약력·일화도 김경한이 아니라 김호진의 것
+  //   · 2000 정기총회: 6.2 조선호텔 72명 → 1.27 엠버서더호텔 103명 (77쪽).
+  //     6.2 조선호텔 79명은 권오을 의원 당선 축하 조찬회로 따로 세움
+  //   · 하동 탐방 5.15 → 4.15 (125쪽) · 서산 탐방 10.13 → 10.18 (202쪽)
+  //   · 라오스 탐방 일자 확정 2016.10.31~11.4 (274쪽)
+  //   · 첫 해외탐방은 2008년이 아니라 2007년 11월 베트남 (134쪽)
+  //   · 이재범·김원중은 이희범·김원의 오독이라 영구 삭제
+  if (!(await hasMigration(client, "moim-40nyeonsa-fact-v2"))) {
+    for (const slug of ["myungsa-lee-jaebeom", "myungsa-kim-wonjung"]) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["geul", slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["geul", slug],
+      });
+    }
+    const touched: [string, string][] = [
+      ["geul", "3dae-geum-changtae"],
+      ["geul", "myungsa-kim-gwangrim"],
+      ["geul", "myungsa-kim-won"],
+      ["geul", "myungsa-kwon-ryeonggeon"],
+      ["geul", "myungsa-lee-huibeom"],
+      ["jachui", "sajin-2000-2003"],
+      ["moim", "2000-gaeul-jeonggimoim"],
+      ["moim", "2dae-1999-3jang-chukha"],
+      ["moim", "2dae-2000-jeongi-isihyeong"],
+      ["moim", "2dae-2000-kwon-oeul-chukha"],
+      ["moim", "3dae-2003-chukha-4myeong"],
+      ["moim", "3dae-2006-tambang-hadong"],
+      ["moim", "4dae-heo-dongjin-jongryo"],
+      ["moim", "4dae-jeonggi-haengsa-mum"],
+      ["moim", "5dae-2012-haeoe-seosan"],
+      ["moim", "6dae-2016-haeoe-laos"],
+      ["moim", "7dae-2018-kim-hwidong-sajinjeonsihoe"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "moim-40nyeonsa-fact-v2");
+  }
+
 
 
 
@@ -3655,7 +3705,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v61";
+  const seedKey = "content-seed-v62";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
