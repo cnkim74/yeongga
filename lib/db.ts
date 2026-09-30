@@ -3669,6 +3669,34 @@ async function init(client: Client) {
     await markMigration(client, "geul-gigo-restore-v1");
   }
 
+  // 향 검수 — 문화재 안내를 원문으로 (2026-09-30)
+  // 40년사 제4편(441~452쪽)을 고해상도로 다시 읽어 바로잡았다.
+  //  - 전탑 글이 운흥동 오층전탑(보물56)과 조탑동 오층전탑(보물57)을 뒤섞고
+  //    법흥사지 칠층전탑의 높이 17m·기단폭 7.5m를 빠뜨렸다. 복원 연도도 1969년.
+  //  - 예안향교는 공자 등 한·중 성현 봉향, 27위 봉안은 안동향교다(444~445쪽).
+  //  - 안동시민헌장 첫 문장은 '문화와 전통'이며 '永嘉의 얼'이라는 말은 없다(451쪽).
+  //  - 용계 은행나무 설명의 '권태사 신도비'는 원문에 없다. 송암 선생이
+  //    은행계를 조직해 보호했고, 임하댐 때 15m 상식공사를 했다(446~447쪽).
+  //  - 독립유공자 수는 책 안에서 265·326·339·356명으로 서로 다르다.
+  if (!(await hasMigration(client, "hyang-audit-v1"))) {
+    const touched: [string, string][] = [
+      ["hyang", "andong-bakmulgwan"],
+      ["hyang", "andong-dosan-seowon"],
+      ["hyang", "andong-heonjang"],
+      ["hyang", "andong-jayeon-myeongseung"],
+      ["hyang", "andong-jeontap-seokbul"],
+      ["hyang", "andong-taesamyo-hyanggyo"],
+      ["hyang", "hahoe-maeul-yusan"],
+      ["hyang", "yeongga-hyang-uimi"],
+      ["yeongi", "andong-jeongcheseong"],
+      ["yeongi", "next-50nyeon-bijeon"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({ sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?", args: [chapter, slug] });
+    }
+    await markMigration(client, "hyang-audit-v1");
+  }
+
 
 
 
@@ -4065,7 +4093,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v72";
+  const seedKey = "content-seed-v73";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
