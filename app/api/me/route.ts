@@ -11,11 +11,19 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) {
-    return NextResponse.json({ loggedIn: false, isAdmin: false });
+    return NextResponse.json(
+      { loggedIn: false, isAdmin: false, user: null },
+      { headers: { "Cache-Control": "private, no-store" } }
+    );
   }
-  return NextResponse.json({
-    loggedIn: true,
-    isAdmin: user.role === "admin",
-    name: user.name,
-  });
+  return NextResponse.json(
+    {
+      loggedIn: true,
+      isAdmin: user.role === "admin",
+      name: user.name,
+      // 머리글의 회원 메뉴가 쓰는 값 — 이름·아이디·구분
+      user: { name: user.name, username: user.username, role: user.role },
+    },
+    { headers: { "Cache-Control": "private, no-store" } }
+  );
 }

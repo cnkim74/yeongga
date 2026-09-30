@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ReadingSizeControl } from "./ReadingSizeControl";
 import { UserMenu } from "./UserMenu";
+import { useSessionUser } from "./useSessionUser";
 import { Logo } from "./Logo";
 import { LiveSearch } from "./LiveSearch";
 import type { SessionUser } from "@/lib/session";
@@ -69,7 +70,8 @@ function applyHtmlTheme(theme: Theme) {
   }
 }
 
-export function HeaderClient({ user }: { user: SessionUser | null }) {
+export function HeaderClient() {
+  const { user, loading: userLoading } = useSessionUser();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sizeOpen, setSizeOpen] = useState(false);
@@ -299,7 +301,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
             </button>
           </div>
 
-          <UserMenu user={user} />
+          <UserMenu user={user} loading={userLoading} />
           <button
             type="button"
             className="pill-nav-icon lg:hidden"
@@ -444,7 +446,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                 </li>
               );
             })}
-            {!user && (
+            {!user && !userLoading && (
               <li>
                 <Link
                   href="/login"

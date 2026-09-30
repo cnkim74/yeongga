@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { ChapterNavStrip } from "@/components/ChapterNavStrip";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
-import { getChapter } from "@/lib/chapters";
+import { getChapter, chapters } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
@@ -13,7 +13,16 @@ import { groupByEra } from "@/lib/president-era";
 
 // 빌드 타임 정적 생성 비활성화 (모임 챕터 100+편으로 60초 timeout 회피)
 // 매 요청 SSR + Next.js fetch 캐시 활용
-export const dynamic = "force-dynamic";
+// 미리 만들어 두고 CDN 이 내주게 한다 (10분마다 새로 만듦).
+// 집무실에서 글을 고치면 revalidatePath 로 곧바로 새로 만들어지므로
+// 회원이 보는 내용이 늦어지지 않는다.
+export const revalidate = 600;
+export const dynamicParams = true;
+
+// 장은 여덟 개로 정해져 있다. 미리 만들어 두면 CDN 이 곧바로 내준다.
+export function generateStaticParams() {
+  return chapters.filter((c) => !c.href).map((c) => ({ chapter: c.slug }));
+}
 
 export async function generateMetadata({
   params,

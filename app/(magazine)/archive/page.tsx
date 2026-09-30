@@ -6,9 +6,10 @@ import { listAllArticles, type ArticleMeta } from "@/lib/articles-db";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
-// force-dynamic — 글 수가 늘어나면서 빌드 시 SSG 생성에 60초 초과 timeout 발생.
-// /archive/[chapter] 와 동일한 방식으로 요청 시점에 동적 렌더링.
-export const dynamic = "force-dynamic";
+// 미리 만들어 두고 CDN 이 내주게 한다 (10분마다 새로 만듦).
+// 집무실에서 글을 고치면 revalidatePath 로 곧바로 새로 만들어지므로
+// 회원이 보는 내용이 늦어지지 않는다.
+export const revalidate = 600;
 
 export const metadata = {
   title: "아카이브 — 영가회",

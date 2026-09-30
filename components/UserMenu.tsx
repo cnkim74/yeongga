@@ -5,7 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import { logoutAction } from "@/app/login/actions";
 import type { SessionUser } from "@/lib/session";
 
-export function UserMenu({ user }: { user: SessionUser | null }) {
+export function UserMenu({
+  user,
+  loading = false,
+}: {
+  user: SessionUser | null;
+  loading?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -19,6 +25,12 @@ export function UserMenu({ user }: { user: SessionUser | null }) {
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, [open]);
+
+  // 아직 로그인 상태를 모르는 동안에는 자리만 잡아 둔다.
+  // 그래야 '로그인' 이 보였다가 이름으로 바뀌며 깜빡이지 않는다.
+  if (loading) {
+    return <span className="pill-nav-link opacity-0 select-none" aria-hidden="true">로그인</span>;
+  }
 
   if (!user) {
     return (
