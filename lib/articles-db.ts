@@ -12,7 +12,7 @@ import {
 // 길게 잡아도 편집 반영은 즉시. 봇 크롤링 등으로 인한 전체 글 풀스캔 재조회 폭증을 막는다.
 const CACHE_TTL = 1800;
 // 데이터 캐시는 재배포로 지워지지 않는다. 내용을 일괄로 고친 뒤에는 이 값을 올린다.
-const CACHE_VER = "v16";
+const CACHE_VER = "v17";
 
 export type Visibility = "public" | "members-only";
 

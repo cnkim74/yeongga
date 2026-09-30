@@ -3229,6 +3229,36 @@ async function init(client: Client) {
     await markMigration(client, "merge-saram-into-geul-v1");
   }
 
+  // 40년사 원문 대조로 창립 기록 바로잡음 (2026-09-30)
+  //   · 창립총회: 1977.3.26 18:00 종로구 견지동 덕수빌딩 지하 1층 연회장, 61명
+  //     (그동안 "3.25 인사동 다실 남강, 7명" 으로 잘못 적혀 있었다)
+  //   · 남강은 다실이 아니라 조계사 뒤·인사동의 한정식집이며 창립 준비 모임 장소
+  //   · 덕수빌딩은 창립총회 결의로 초창기부터 쓴 사무실 (1980년 이전이 아님)
+  //   · 출범 당시 이름은 영가상록회(永嘉常綠會)
+  //   · 2014 강남 탐방 4.17~21 남경 포함, 2008 해외탐방 5.1 산동성,
+  //     박석무 특강 2011.1.7 로 날짜 확정
+  if (!(await hasMigration(client, "moim-40nyeonsa-fact-v1"))) {
+    const touched: [string, string][] = [
+      ["moim", "1977-1980-namgang-gieok"],
+      ["moim", "1977-changrip-chongdae"],
+      ["moim", "1977-hoechik-jejeong"],
+      ["moim", "1980-jeongi-sinnyeon"],
+      ["moim", "1980s-deoksu-sigi"],
+      ["moim", "1dae-jeonggi-haengsa-mum"],
+      ["moim", "4dae-2008-haeoe-tambang"],
+      ["moim", "5dae-2011-tukgang-bak-seok-mu"],
+      ["moim", "5dae-2014-haeoe-jiangnan"],
+      ["yeongi", "1977-changrip-namgang"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "moim-40nyeonsa-fact-v1");
+  }
+
 
 
 
@@ -3625,7 +3655,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v60";
+  const seedKey = "content-seed-v61";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
