@@ -1,13 +1,18 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
-import { looksLikeHTML, renderMarkdown } from "./markdown";
+import {
+  looksLikeHTML,
+  looksLikeWrappedMarkdown,
+  renderMarkdown,
+  unwrapMarkdown,
+} from "./markdown";
 
 // 캐시 TTL — 30분. 글 추가·수정 시 admin action 의 revalidateTag("articles") 로 즉시 무효화하므로
 // 길게 잡아도 편집 반영은 즉시. 봇 크롤링 등으로 인한 전체 글 풀스캔 재조회 폭증을 막는다.
 const CACHE_TTL = 1800;
 // 데이터 캐시는 재배포로 지워지지 않는다. 내용을 일괄로 고친 뒤에는 이 값을 올린다.
-const CACHE_VER = "v13";
+const CACHE_VER = "v14";
 
 export type Visibility = "public" | "members-only";
 
@@ -53,6 +58,9 @@ function rowToMeta(row: Record<string, unknown>): ArticleMeta {
 
 // 본문이 HTML이면 그대로, 마크다운이면 렌더해서 HTML로 (마이그레이션 전 호환)
 async function bodyToHTML(body: string): Promise<string> {
+  if (looksLikeWrappedMarkdown(body)) {
+    return await renderMarkdown(unwrapMarkdown(body));
+  }
   return looksLikeHTML(body) ? body : await renderMarkdown(body);
 }
 
