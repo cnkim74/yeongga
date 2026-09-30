@@ -3097,6 +3097,27 @@ async function init(client: Client) {
     await markMigration(client, "moim-title-fix-v1");
   }
 
+  // 무이산 해외문화탐방 3편 병합 — 9-4호 예고 · 9-5호 7면 글은 9-5호 1면
+  // 통합 글(hoebo-9-5-mui-san-bonghang)에 내용이 모두 들어가 영구 삭제.
+  // 통합 글 제목에서 '[기획특집]' 계열 문구를 걷고 간결하게 정리.
+  if (!(await hasMigration(client, "moim-muisan-merge-v1"))) {
+    for (const slug of ["hoebo-9-4-mui-san-tambang", "hoebo-9-5-mui-san-tambang-ki-sang"]) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["moim", slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["moim", slug],
+      });
+    }
+    await client.execute({
+      sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+      args: ["moim", "hoebo-9-5-mui-san-bonghang"],
+    });
+    await markMigration(client, "moim-muisan-merge-v1");
+  }
+
 
 
 
@@ -3493,7 +3514,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v57";
+  const seedKey = "content-seed-v58";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
