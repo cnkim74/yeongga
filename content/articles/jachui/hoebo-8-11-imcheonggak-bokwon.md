@@ -14,4 +14,4 @@ visibility: public
 
 안동 **임청각**의 복원사업이 — **가속화**.
 
-9명의 독립운동가를 배출한 안동 독립운동 유적(관련: 〈[8-6호 일송 김동삼](/archive/saram/hoebo-8-6-ilsong-kim-dongsam)〉) 의 가장 단단한 후속.
+9명의 독립운동가를 배출한 안동 독립운동 유적(관련: 〈[8-6호 일송 김동삼](/archive/geul/hoebo-8-6-ilsong-kim-dongsam)〉) 의 가장 단단한 후속.

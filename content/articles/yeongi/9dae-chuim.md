@@ -23,5 +23,5 @@ visibility: public
 ## 함께 보기
 
 - [취임식 기록](/archive/moim/9dae-2025-jeonggi-chonghoe)
-- [박대섭 회장 이야기](/archive/saram/9dae-bak-daeseop)
-- [역대 회장 연보](/archive/saram/hoejang-yeonbo)
+- [박대섭 회장 이야기](/archive/geul/9dae-bak-daeseop)
+- [역대 회장 연보](/archive/geul/hoejang-yeonbo)

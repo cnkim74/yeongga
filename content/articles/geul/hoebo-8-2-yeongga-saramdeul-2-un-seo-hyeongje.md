@@ -30,6 +30,6 @@ visibility: public
 
 ## 함께 보기
 
-- [안동의 경제인 〈1〉 국담 권태연](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon) (8-1호)
+- [안동의 경제인 〈1〉 국담 권태연](/archive/geul/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon) (8-1호)
 
 출처: 《영가회보》 8-2호 (2022년 봄호) 10면

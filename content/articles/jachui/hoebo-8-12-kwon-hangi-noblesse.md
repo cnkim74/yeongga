@@ -21,4 +21,4 @@ visibility: public
 - **'명예로운 안동인상' 수상** — 인정
 - **노블레스 오블리주(Noblesse Oblige)** — 사회 책임
 
-8-1호 〈[국담 권태연 갑술년 쌀 500가마니](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉 · 8-7호 〈[허동진 50년 장학](/archive/jachui/hoebo-8-7-huh-dongjin-50nyeon)〉 · 8-4호 〈[류종묵 학생 격려](/archive/moim/hoebo-8-4-ryu-jongmuk-haksaeng-gyeongnyeo)〉 의 가장 단단한 자취.
+8-1호 〈[국담 권태연 갑술년 쌀 500가마니](/archive/geul/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉 · 8-7호 〈[허동진 50년 장학](/archive/jachui/hoebo-8-7-huh-dongjin-50nyeon)〉 · 8-4호 〈[류종묵 학생 격려](/archive/moim/hoebo-8-4-ryu-jongmuk-haksaeng-gyeongnyeo)〉 의 가장 단단한 자취.

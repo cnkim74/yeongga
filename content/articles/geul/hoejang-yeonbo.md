@@ -49,12 +49,12 @@ visibility: public
 
 각 회장의 자세한 약사는 인물 장에 따로 자리해 있습니다.
 
-- 초대 [김해길](/archive/saram/1dae-kim-haegil)
-- 2대 [류목기](/archive/saram/2dae-ryu-mokgi)
-- 3대 [금창태](/archive/saram/3dae-geum-changtae)
-- 4대 [허동진](/archive/saram/4dae-heo-dongjin)
-- 5대 [류종묵](/archive/saram/5dae-ryu-jongmuk)
-- 6대 [김봉구](/archive/saram/6dae-kim-bonggu)
-- 7대 [김계동](/archive/saram/7dae-kim-gyedong)
+- 초대 [김해길](/archive/geul/1dae-kim-haegil)
+- 2대 [류목기](/archive/geul/2dae-ryu-mokgi)
+- 3대 [금창태](/archive/geul/3dae-geum-changtae)
+- 4대 [허동진](/archive/geul/4dae-heo-dongjin)
+- 5대 [류종묵](/archive/geul/5dae-ryu-jongmuk)
+- 6대 [김봉구](/archive/geul/6dae-kim-bonggu)
+- 7대 [김계동](/archive/geul/7dae-kim-gyedong)
 
 출처: 《영가회 40년사》 7쪽, 27쪽, 32~33쪽, 55쪽, 103쪽, 131쪽, 180쪽, 239쪽, 285쪽 / 《영가회보》 8-8호·9-1호

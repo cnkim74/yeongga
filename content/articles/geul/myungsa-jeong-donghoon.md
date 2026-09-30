@@ -45,4 +45,4 @@ visibility: private
 
 정동훈 안동시장은 — 1990년대 후반 안동시청을 받쳐 오신 분. 안동 시정이 — 영가회의 결과 단정하게 만나는 자리에 직접 함께해 주신 결의 주인공.
 
-후일 — 김휘동(전 안동시장, `/archive/jachui/seohwa-kim-hwidong` · `/archive/saram/myungsa-kim-huigon` 참조) · 권영세 시장(`/archive/hyang/andong-heonjang`) 등 — 안동시청이 이어 온 흐름 속에서, 정동훈 안동시장은 그 한 자리.
+후일 — 김휘동(전 안동시장, `/archive/jachui/seohwa-kim-hwidong` · `/archive/geul/myungsa-kim-huigon` 참조) · 권영세 시장(`/archive/hyang/andong-heonjang`) 등 — 안동시청이 이어 온 흐름 속에서, 정동훈 안동시장은 그 한 자리.

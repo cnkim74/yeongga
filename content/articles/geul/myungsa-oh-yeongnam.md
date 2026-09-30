@@ -31,8 +31,8 @@ visibility: private
 같은 자리의 협찬자 명단을 보면, 영가회의 정기 모임이 어떻게 구성되었는가가 흡으로 보입니다:
 
 - **1부 행사** — 회원 친목 · 식사 · 결산 등
-- **강재우** (대명해상 회장) — 만찬 식대 (`/archive/saram/myungsa-kang-jaewoo`)
-- **정동훈** (안동시장) — 안동소주 1상자 (`/archive/saram/myungsa-jeong-donghoon`)
+- **강재우** (대명해상 회장) — 만찬 식대 (`/archive/geul/myungsa-kang-jaewoo`)
+- **정동훈** (안동시장) — 안동소주 1상자 (`/archive/geul/myungsa-jeong-donghoon`)
 - **권영조** (대명대학교 총장) — 카랜다 120부
 
 - **2부 행사** — 문화 · 예술 공연

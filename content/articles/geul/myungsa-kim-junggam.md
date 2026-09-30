@@ -20,7 +20,7 @@ visibility: private
 
 ## 함께 축하받으신 이희범 안동대 총장
 
-이 자리에서 함께 취임 축하를 받으신 분 — **이희범(李熙範)** 회원(`/archive/saram/myungsa-lee-huibeom`).
+이 자리에서 함께 취임 축하를 받으신 분 — **이희범(李熙範)** 회원(`/archive/geul/myungsa-lee-huibeom`).
 
 이희범 회원은 — 2003년에는 〈한국행성신문 본부 이사장 → 서울 산업대학교 총장〉로 영가회의 자리에 함께해 주신 분(2003년 4명 축하연, `/archive/moim/3dae-2003-chukha-4myeong`).
 

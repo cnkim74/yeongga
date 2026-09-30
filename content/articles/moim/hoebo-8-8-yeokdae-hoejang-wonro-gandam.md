@@ -21,10 +21,10 @@ visibility: public
 ## 함께 보기
 
 - ["'청렴결백, 정도경영'은 예나 지금이나 불변의 조직철학" — 류목기 제2대 영가회장 인터뷰 (4면, 같은 날)](/archive/jachui/hoebo-8-8-ryu-mokki-pungsan-interview)
-- [제2대 류목기(柳穆基) 회장](/archive/saram/2dae-ryu-mokgi)
-- [제4대 허동진(許東珍) 회장](/archive/saram/4dae-heo-dongjin)
-- [제5대 류종묵(柳鍾默) 회장](/archive/saram/5dae-ryu-jongmuk)
-- [제6대 김봉구(金 鳳 求) 회장](/archive/saram/6dae-kim-bonggu)
-- [제7대 김계동(金啓東) 회장](/archive/saram/7dae-kim-gyedong)
+- [제2대 류목기(柳穆基) 회장](/archive/geul/2dae-ryu-mokgi)
+- [제4대 허동진(許東珍) 회장](/archive/geul/4dae-heo-dongjin)
+- [제5대 류종묵(柳鍾默) 회장](/archive/geul/5dae-ryu-jongmuk)
+- [제6대 김봉구(金 鳳 求) 회장](/archive/geul/6dae-kim-bonggu)
+- [제7대 김계동(金啓東) 회장](/archive/geul/7dae-kim-gyedong)
 
 출처: 《영가회보》 8-8호 (2023년 가을호) 5면

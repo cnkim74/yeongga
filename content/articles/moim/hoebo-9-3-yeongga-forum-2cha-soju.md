@@ -21,7 +21,7 @@ visibility: private
 
 **'안동소주 등 전통주 · 가양주 규제 완화 절실.'**
 
-- **안동소주** (관련: 〈[8-1호 국담 권태연](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) · **가양주(家釀酒)** — 안동 양반가의 전통
+- **안동소주** (관련: 〈[8-1호 국담 권태연](/archive/geul/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) · **가양주(家釀酒)** — 안동 양반가의 전통
 - **한일정상 만찬 테이블에 올랐던 안동소주 · 찜닭** (관련: 〈[안동소주 찜닭 한일정상](/archive/jachui/hoebo-9-3-soju-jjimdak-hanil)〉) 위
 
 ## 규모 — 가양주 11종, 종가 종손·종부 30여 명

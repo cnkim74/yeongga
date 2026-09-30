@@ -39,6 +39,6 @@ visibility: public
 
 영가문화상은 격년 시상입니다. 제1회는 2006년 1월 9일 신년하례회 자리에서 안동문화지킴이에게 수여했습니다.
 
-인물: [3대 금창태 회장](/archive/saram/3dae-geum-changtae)
+인물: [3대 금창태 회장](/archive/geul/3dae-geum-changtae)
 
 출처: 《영가회 40년사》 102~129쪽

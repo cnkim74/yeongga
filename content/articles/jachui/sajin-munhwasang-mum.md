@@ -12,7 +12,7 @@ visibility: public
 
 ## 영가문화상의 결
 
-**금창태 3대 회장의 한 말씀**(`/archive/saram/3dae-geum-changtae`) :
+**금창태 3대 회장의 한 말씀**(`/archive/geul/3dae-geum-changtae`) :
 
 > "**회는 모이는 자리만으로는 부족하다. 회가 무엇을 기억해 둘 것인지를 결정해 두어야 — 다음 세대가 회를 이어 갈 수 있다.**"
 

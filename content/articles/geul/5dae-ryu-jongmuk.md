@@ -45,9 +45,9 @@ visibility: public
 
 5대 류종묵 회장의 취임을 알린 — **2011년 1월 7일 프레지던트호텔 신년하례식**의 자리에는 회원 **120여 명**이 함께해 주신 자리. 외부 명사 세 분이 함께해 주신 결(`/archive/moim/5dae-ryu-jongmuk-chuim`):
 
-- **이희범(李熙範)** — 한국경영자총협회(경총) 회장 (`/archive/saram/myungsa-lee-huibeom`)
-- **권오을(權五乙)** — 국회사무총장 (`/archive/saram/myungsa-kwon-oeul`)
-- **권영복(權榮復)** — 새서울그룹 회장 (`/archive/saram/myungsa-kwon-yeongbok`)
+- **이희범(李熙範)** — 한국경영자총협회(경총) 회장 (`/archive/geul/myungsa-lee-huibeom`)
+- **권오을(權五乙)** — 국회사무총장 (`/archive/geul/myungsa-kwon-oeul`)
+- **권영복(權榮復)** — 새서울그룹 회장 (`/archive/geul/myungsa-kwon-yeongbok`)
 
 세 분 모두 류 회장의 취임을 축하해 주시며, 영가회의 다음 걸음에 대한 짧은 덕담을 남기셨다.
 

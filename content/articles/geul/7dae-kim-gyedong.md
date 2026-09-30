@@ -61,7 +61,7 @@ visibility: public
 - **감사**로 회의 자금 · 운용을 점검하시던 시기
 - 그리고 **회장**으로 회를 직접 이끄시는 지금까지
 
-회원들 사이에서 김 회장을 "**영가회의 산 증인**" 이라 부르는 까닭이 여기에 있다. 1대 김해길 회장(`/archive/saram/1dae-kim-haegil`) 초창기부터 — 류종묵 5대 회장(`/archive/saram/5dae-ryu-jongmuk`) · 김봉구 6대 회장(`/archive/saram/6dae-kim-bonggu`) 의 시기를 지나, 지금의 회까지 — **김 회장은 차근차근를 빠짐없이 함께해 오신 분**.
+회원들 사이에서 김 회장을 "**영가회의 산 증인**" 이라 부르는 까닭이 여기에 있다. 1대 김해길 회장(`/archive/geul/1dae-kim-haegil`) 초창기부터 — 류종묵 5대 회장(`/archive/geul/5dae-ryu-jongmuk`) · 김봉구 6대 회장(`/archive/geul/6dae-kim-bonggu`) 의 시기를 지나, 지금의 회까지 — **김 회장은 차근차근를 빠짐없이 함께해 오신 분**.
 
 ## 영가회 40년사 편찬의 결
 
@@ -73,9 +73,9 @@ visibility: public
 
 김 회장이 사무국장으로 자리하셨던 회장기를 정리하면:
 
-- **3대 금창태 회장기(2003~2006)** — **총무간사** (`/archive/saram/3dae-geum-changtae`)
-- **4대 허동진 회장기(2007~2010)** — **사무국장** (`/archive/saram/4dae-heo-dongjin`)
-- **5대 류종묵 회장기(2011~2014)** — 사무국장 → 상임부회장 (`/archive/saram/5dae-ryu-jongmuk`)
-- **6대 김봉구 회장기(2015~2016)** — **상임부회장** (`/archive/saram/6dae-kim-bonggu`)
+- **3대 금창태 회장기(2003~2006)** — **총무간사** (`/archive/geul/3dae-geum-changtae`)
+- **4대 허동진 회장기(2007~2010)** — **사무국장** (`/archive/geul/4dae-heo-dongjin`)
+- **5대 류종묵 회장기(2011~2014)** — 사무국장 → 상임부회장 (`/archive/geul/5dae-ryu-jongmuk`)
+- **6대 김봉구 회장기(2015~2016)** — **상임부회장** (`/archive/geul/6dae-kim-bonggu`)
 
 — **다섯 회장기 약 15년 동안 회를 한 결도 거르지 않고 받쳐 주신 결**.

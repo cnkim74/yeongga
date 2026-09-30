@@ -88,7 +88,7 @@ visibility: public
 
 - [영가회 명예회원 위촉 — 권영진 · 정태주 · 권태형 (2면)](/archive/jachui/hoebo-8-7-myeongye-hoewon-3-bun)
 - ['한국 정신문화의 수도' 안동, 그리고 안동향우회 — 금경수 재경안동향우회장 취임사 (11면)](/archive/geul/hoebo-8-7-jeong-jaeseok-jeongsin-munhwa)
-- [조영일 시조시인 별세 (4면)](/archive/saram/hoebo-8-7-chumo-jo-yeongil-sijoshiin)
+- [조영일 시조시인 별세 (4면)](/archive/geul/hoebo-8-7-chumo-jo-yeongil-sijoshiin)
 - [회원 동정 — 8-6호 (2023년 봄호)](/archive/jachui/hoebo-8-6-hoewon-dongjeong) (8-6호)
 
 출처: 《영가회보》 8-7호 (2023년 여름호) 3면

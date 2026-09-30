@@ -40,7 +40,7 @@ visibility: public
 
 ## 함께 보기
 
-- [안동의 경제인 〈1〉 국담 권태연](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon) (8-1호)
-- [안동의 경제인 〈2〉 윤좌형, 윤세형 형제](/archive/saram/hoebo-8-2-yeongga-saramdeul-2-un-seo-hyeongje) (8-2호)
+- [안동의 경제인 〈1〉 국담 권태연](/archive/geul/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon) (8-1호)
+- [안동의 경제인 〈2〉 윤좌형, 윤세형 형제](/archive/geul/hoebo-8-2-yeongga-saramdeul-2-un-seo-hyeongje) (8-2호)
 
 출처: 《영가회보》 8-3호 (2022년 여름호) 7면

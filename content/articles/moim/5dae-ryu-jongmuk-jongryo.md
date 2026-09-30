@@ -26,6 +26,6 @@ visibility: public
 
 ## 자료
 
-상세 평전은 별도 인물 평전(`/archive/saram/5dae-ryu-jongmuk`) 에서 마주하실 수 있습니다.
+상세 평전은 별도 인물 평전(`/archive/geul/5dae-ryu-jongmuk`) 에서 마주하실 수 있습니다.
 
 출처: 《영가회 40년사》 178~181쪽

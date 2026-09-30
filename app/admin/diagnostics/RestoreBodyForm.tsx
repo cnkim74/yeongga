@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { restoreArticleBodyAction } from "./actions";
 
 export function RestoreBodyForm({
-  defaultChapter = "saram",
+  defaultChapter = "geul",
   defaultSlug = "",
 }: {
   defaultChapter?: string;
@@ -48,7 +48,6 @@ export function RestoreBodyForm({
             <option value="yeongi">yeongi (연기)</option>
             <option value="moim">moim (모임)</option>
             <option value="geul">geul (글)</option>
-            <option value="saram">saram (사람)</option>
             <option value="jachui">jachui (자취)</option>
             <option value="hyang">hyang (향)</option>
           </select>

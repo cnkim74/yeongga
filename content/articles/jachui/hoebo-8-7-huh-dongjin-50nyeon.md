@@ -47,6 +47,6 @@ visibility: public
 
 ## 함께 보기
 
-- [제4대 허동진(許東珍) 회장 — 2007~2010](/archive/saram/4dae-heo-dongjin)
+- [제4대 허동진(許東珍) 회장 — 2007~2010](/archive/geul/4dae-heo-dongjin)
 
 출처: 《영가회보》 8-7호 (2023년 여름호) 4면

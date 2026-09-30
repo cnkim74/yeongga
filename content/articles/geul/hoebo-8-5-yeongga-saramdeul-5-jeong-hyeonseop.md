@@ -30,9 +30,9 @@ visibility: public
 
 ## 함께 보기
 
-- [안동의 경제인 〈1〉 국담 권태연](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon) (8-1호)
-- [안동의 경제인 〈2〉 윤좌형, 윤세형 형제](/archive/saram/hoebo-8-2-yeongga-saramdeul-2-un-seo-hyeongje) (8-2호)
-- [안동의 경제인 〈3〉 근대 기업인 김중학](/archive/saram/hoebo-8-3-yeongga-saramdeul-3-kim-heunghak) (8-3호)
-- [안동의 경제인 〈4〉 근대 기업인 권중렬](/archive/saram/hoebo-8-4-yeongga-saramdeul-4-kwon-yongcheol) (8-4호)
+- [안동의 경제인 〈1〉 국담 권태연](/archive/geul/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon) (8-1호)
+- [안동의 경제인 〈2〉 윤좌형, 윤세형 형제](/archive/geul/hoebo-8-2-yeongga-saramdeul-2-un-seo-hyeongje) (8-2호)
+- [안동의 경제인 〈3〉 근대 기업인 김중학](/archive/geul/hoebo-8-3-yeongga-saramdeul-3-kim-heunghak) (8-3호)
+- [안동의 경제인 〈4〉 근대 기업인 권중렬](/archive/geul/hoebo-8-4-yeongga-saramdeul-4-kwon-yongcheol) (8-4호)
 
 출처: 《영가회보》 8-5호 (2023년 겨울호) 7면

@@ -22,5 +22,5 @@ visibility: public
 
 ## 함께 보기
 
-- [문상부 회장 이야기](/archive/saram/8dae-mun-sangbu)
-- [역대 회장 연보](/archive/saram/hoejang-yeonbo)
+- [문상부 회장 이야기](/archive/geul/8dae-mun-sangbu)
+- [역대 회장 연보](/archive/geul/hoejang-yeonbo)

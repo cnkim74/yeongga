@@ -26,6 +26,6 @@ visibility: public
 ## 함께 보기
 
 - 〈[2010.12.31 허동진 4대 회장 임기 마무리](/archive/moim/4dae-heo-dongjin-jongryo)〉
-- 인물: [4대 허동진 회장](/archive/saram/4dae-heo-dongjin)
+- 인물: [4대 허동진 회장](/archive/geul/4dae-heo-dongjin)
 
 출처: 《영가회 40년사》 130~131쪽

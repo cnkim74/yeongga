@@ -72,7 +72,7 @@ visibility: public
 
 ## 연관 자리
 
-- [강민창 — 재경안동향우회 8대 회장](/archive/saram/myungsa-kang-minchang) — 1972 〈永嘉회담〉의 첫 자리를 만든 한 사람
-- [황현탁 명사](/archive/saram/myungsa-hwang-hyeontak) — 안동을 소재로 한 예술작품·오페라 〈아! 징비록〉의 한 자리
+- [강민창 — 재경안동향우회 8대 회장](/archive/geul/myungsa-kang-minchang) — 1972 〈永嘉회담〉의 첫 자리를 만든 한 사람
+- [황현탁 명사](/archive/geul/myungsa-hwang-hyeontak) — 안동을 소재로 한 예술작품·오페라 〈아! 징비록〉의 한 자리
 
 출처: 《영가회 40년사》 마지막 페이지 (539쪽) · 322쪽 (제2편 〈역대회장의 약사〉 — 7대 김계동 회장기 2018.10.4 박약회·체육대회 참석)

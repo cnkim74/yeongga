@@ -28,6 +28,6 @@ visibility: public
 
 ## 함께 보기
 
-- [김광림](/archive/saram/myungsa-kim-gwangrim) · [김원중](/archive/saram/myungsa-kim-wonjung) · [이재범](/archive/saram/myungsa-lee-jaebeom) · [권령건](/archive/saram/myungsa-kwon-ryeonggeon)
+- [김광림](/archive/geul/myungsa-kim-gwangrim) · [김원중](/archive/geul/myungsa-kim-wonjung) · [이재범](/archive/geul/myungsa-lee-jaebeom) · [권령건](/archive/geul/myungsa-kwon-ryeonggeon)
 
 출처: 《영가회 40년사》 481쪽

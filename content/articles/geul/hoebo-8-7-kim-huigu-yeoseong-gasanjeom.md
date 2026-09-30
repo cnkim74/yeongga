@@ -36,6 +36,6 @@ visibility: public
 
 ## 함께 보기
 
-- [제6대 김봉구(金 鳳 求) 회장 — 2015~2016](/archive/saram/6dae-kim-bonggu)
+- [제6대 김봉구(金 鳳 求) 회장 — 2015~2016](/archive/geul/6dae-kim-bonggu)
 
 출처: 《영가회보》 8-7호 (2023년 여름호) 9면

@@ -3188,6 +3188,26 @@ async function init(client: Client) {
     await markMigration(client, "moim-data-only-v1");
   }
 
+  // 인물(saram) 장을 기고(geul) 로 합침 (2026-09-30)
+  // 인물 평전 59편을 기고 장으로 옮기고, 옛 주소는 next.config.ts 에서 넘긴다.
+  if (!(await hasMigration(client, "merge-saram-into-geul-v1"))) {
+    // 같은 슬러그가 기고에 이미 있으면 뒤에 -inmul 을 붙여 충돌을 피한다
+    await client.execute(`
+      UPDATE articles SET slug = slug || '-inmul'
+      WHERE chapter = 'saram'
+        AND slug IN (SELECT slug FROM articles WHERE chapter = 'geul')
+    `);
+    await client.execute(
+      "UPDATE articles SET chapter = 'geul' WHERE chapter = 'saram'",
+    );
+    await client.execute(`
+      UPDATE OR IGNORE seeded_deletions SET chapter = 'geul' WHERE chapter = 'saram'
+    `);
+    await client.execute("DELETE FROM seeded_deletions WHERE chapter = 'saram'");
+    await client.execute("DELETE FROM chapter_meta WHERE chapter_slug = 'saram'");
+    await markMigration(client, "merge-saram-into-geul-v1");
+  }
+
 
 
 
@@ -3584,7 +3604,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v59";
+  const seedKey = "content-seed-v60";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

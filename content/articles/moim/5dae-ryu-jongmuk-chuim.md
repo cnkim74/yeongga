@@ -31,6 +31,6 @@ visibility: public
 
 - 〈[2011.1.7 회칙 4차 개정](/archive/moim/5dae-2011-hoechik-4cha)〉
 - 〈[2014.12.31 류종묵 5대 회장 임기 마무리](/archive/moim/5dae-ryu-jongmuk-jongryo)〉
-- 인물: [5대 류종묵 회장](/archive/saram/5dae-ryu-jongmuk)
+- 인물: [5대 류종묵 회장](/archive/geul/5dae-ryu-jongmuk)
 
 출처: 《영가회 40년사》 180~181쪽

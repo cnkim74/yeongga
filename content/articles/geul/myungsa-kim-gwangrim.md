@@ -33,9 +33,9 @@ visibility: public
 이 자리에서 함께 영전을 축하받으신 네 분:
 
 - **김광림(金光琳)** — 통계청장 → 재정경제부 차관 (이 글의 주인공)
-- **김원(金 원)** — 전 서울시립대학교 부총장 → 장관급 중앙도시계획위원장 (`/archive/saram/myungsa-kim-wonjung`)
-- **이희범(李熙範)** — 한국행성신문 본부 이사장 → 서울 산업대학교 총장 (`/archive/saram/myungsa-lee-huibeom`)
-- **권령건(權寧建)** — 안동대학교 총장 (`/archive/saram/myungsa-kwon-ryeonggeon`)
+- **김원(金 원)** — 전 서울시립대학교 부총장 → 장관급 중앙도시계획위원장 (`/archive/geul/myungsa-kim-wonjung`)
+- **이희범(李熙範)** — 한국행성신문 본부 이사장 → 서울 산업대학교 총장 (`/archive/geul/myungsa-lee-huibeom`)
+- **권령건(權寧建)** — 안동대학교 총장 (`/archive/geul/myungsa-kwon-ryeonggeon`)
 
 네 분 모두 영가회의 회원이며, 같은 해 봄에 한국 사회의 굵직한 자리에 함께 오르신 자리. 영가회의 사십 년 결에서도 흔치 않은 자리.
 

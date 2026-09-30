@@ -17,8 +17,8 @@ visibility: private
 — 5명의 부회장 명단의 가장 첫 자리에 — **강재우 대명해상 회장**이 단정하게 자리한 모습.
 
 이후 — 함께 부회장으로 자리한 분들 중에서:
-- **금창태** — 3대 회장(`/archive/saram/3dae-geum-changtae`)
-- **허동진** — 4대 회장(`/archive/saram/4dae-heo-dongjin`)
+- **금창태** — 3대 회장(`/archive/geul/3dae-geum-changtae`)
+- **허동진** — 4대 회장(`/archive/geul/4dae-heo-dongjin`)
 
 — 두 분이 다음 결의 회장으로 자연스럽게 이어진 풍경. 강재우 회장도 그 가장 첫 자리에 함께해 주신 결.
 
@@ -41,7 +41,7 @@ visibility: private
 2대 류목기 회장 취임식 자리에서 함께한 다른 부회장 명단:
 
 - **강재우** — 대명해상 회장 (이 글의 주인공)
-- **금창태** — 후일 3대 회장 (`/archive/saram/3dae-geum-changtae`)
-- **허동진** — 후일 4대 회장 (`/archive/saram/4dae-heo-dongjin`)
+- **금창태** — 후일 3대 회장 (`/archive/geul/3dae-geum-changtae`)
+- **허동진** — 후일 4대 회장 (`/archive/geul/4dae-heo-dongjin`)
 
 — 5명의 부회장이 한 회를 흡으로 받쳐 주신 가장 첫 자리.

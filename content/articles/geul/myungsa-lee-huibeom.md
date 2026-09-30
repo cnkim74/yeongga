@@ -26,10 +26,10 @@ PDF 04 (3대 회장기) 의 〈4명 축하연〉 자리(`/archive/moim/3dae-2003
 
 이 자리에서 함께 영전을 축하받으신 네 분:
 
-- **김광림(金光琳)** — 통계청장 → 재정경제부 차관 (`/archive/saram/myungsa-kim-gwangrim`)
-- **김원(金 원)** — 전 서울시립대학교 부총장 → 장관급 중앙도시계획위원장 (`/archive/saram/myungsa-kim-wonjung`)
+- **김광림(金光琳)** — 통계청장 → 재정경제부 차관 (`/archive/geul/myungsa-kim-gwangrim`)
+- **김원(金 원)** — 전 서울시립대학교 부총장 → 장관급 중앙도시계획위원장 (`/archive/geul/myungsa-kim-wonjung`)
 - **이희범(李熙範)** — 한국행성신문 본부 이사장 → 서울 산업대학교 총장 (이 글의 주인공)
-- **권령건(權寧建)** — 안동대학교 총장 (`/archive/saram/myungsa-kwon-ryeonggeon`)
+- **권령건(權寧建)** — 안동대학교 총장 (`/archive/geul/myungsa-kwon-ryeonggeon`)
 
 ## 2011년 — 제5대 한국경영자총협회(경총) 회장
 
@@ -46,8 +46,8 @@ PDF 04 (3대 회장기) 의 〈4명 축하연〉 자리(`/archive/moim/3dae-2003
 같은 2011년 1월 — **5대 류종묵 회장 취임식**(프레지던트호텔, 회원 120여 명 참석) 자리에 외부 명사 세 분으로 함께해 주신 결(`/archive/moim/5dae-ryu-jongmuk-chuim`):
 
 - **이희범** — 한국경영자총협회(경총) 회장 (이 글의 주인공)
-- **권오을(權五乙)** — 국회사무총장 (`/archive/saram/myungsa-kwon-oeul`)
-- **권영복(權榮復)** — 새서울그룹 회장 (`/archive/saram/myungsa-kwon-yeongbok`)
+- **권오을(權五乙)** — 국회사무총장 (`/archive/geul/myungsa-kwon-oeul`)
+- **권영복(權榮復)** — 새서울그룹 회장 (`/archive/geul/myungsa-kwon-yeongbok`)
 
 세 분 모두 류 회장의 취임을 축하해 주시며, 영가회의 다음 걸음에 대한 짧은 덕담을 남기셨다.
 

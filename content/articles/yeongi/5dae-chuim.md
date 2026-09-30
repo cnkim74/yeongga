@@ -23,5 +23,5 @@ visibility: public
 ## 함께 보기
 
 - [취임식 기록](/archive/moim/5dae-ryu-jongmuk-chuim)
-- [류종묵 회장 이야기](/archive/saram/5dae-ryu-jongmuk)
-- [역대 회장 연보](/archive/saram/hoejang-yeonbo)
+- [류종묵 회장 이야기](/archive/geul/5dae-ryu-jongmuk)
+- [역대 회장 연보](/archive/geul/hoejang-yeonbo)

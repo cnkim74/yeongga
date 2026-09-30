@@ -30,6 +30,6 @@ visibility: public
 ## 함께 보기
 
 - 〈[2006.12.31 금창태 3대 회장 임기 마무리](/archive/moim/3dae-geum-changtae-jongryo)〉
-- 인물: [3대 금창태 회장](/archive/saram/3dae-geum-changtae)
+- 인물: [3대 금창태 회장](/archive/geul/3dae-geum-changtae)
 
 출처: 《영가회 40년사》 102~103쪽

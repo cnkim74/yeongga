@@ -43,8 +43,8 @@ visibility: public
 
 영가회 회원 중 의료의 받쳐 오신 분들:
 
-- **류목기 2대 회장** — 고려병원(현 강북삼성병원) 행정부원장 (`/archive/saram/2dae-ryu-mokgi`)
-- **홍영재 박사** — 서울 강남 산부인과 / 〈암을 넘어 100세까지〉 특강 (5대 회장기) (`/archive/saram/myungsa-hong-yeongjae`)
+- **류목기 2대 회장** — 고려병원(현 강북삼성병원) 행정부원장 (`/archive/geul/2dae-ryu-mokgi`)
+- **홍영재 박사** — 서울 강남 산부인과 / 〈암을 넘어 100세까지〉 특강 (5대 회장기) (`/archive/geul/myungsa-hong-yeongjae`)
 - **강보영 회원** — **안동병원 이사장** (이 글의 주인공)
 
 — 한국 의료을 두루 받쳐 오신 세 분의 자리.

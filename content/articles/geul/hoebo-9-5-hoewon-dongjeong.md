@@ -14,5 +14,5 @@ visibility: public
 
 10여 분 회원 한 분 한 분의 자취.
 
-- 9-4호 〈[회원 동정](/archive/saram/hoebo-9-4-hoewon-dongjeong)〉의 후속
+- 9-4호 〈[회원 동정](/archive/geul/hoebo-9-4-hoewon-dongjeong)〉의 후속
 - 9대 박대섭 회장기의 회원 자취

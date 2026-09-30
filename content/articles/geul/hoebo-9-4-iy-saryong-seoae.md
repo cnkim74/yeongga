@@ -14,5 +14,5 @@ visibility: public
 
 이상룡 국무령 · 서애 유성룡 · 유천 이동익 — 안동 인물 자취.
 
-- **이상룡(李相龍)** — 임시정부 초대 국무령 (9-4호 〈[이상룡 100주년](/archive/saram/hoebo-9-4-iy-saryong-100junyeon)〉)
+- **이상룡(李相龍)** — 임시정부 초대 국무령 (9-4호 〈[이상룡 100주년](/archive/geul/hoebo-9-4-iy-saryong-100junyeon)〉)
 - **서애 유성룡(柳成龍)** — 단단한 학자

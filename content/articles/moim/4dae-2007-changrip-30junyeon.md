@@ -38,7 +38,7 @@ visibility: public
 
 ## 함께 보기
 
-- [창립 발기회원 — 공로패를 받은 열한 분](/archive/saram/wonro-chamsuk-gieok)
+- [창립 발기회원 — 공로패를 받은 열한 분](/archive/geul/wonro-chamsuk-gieok)
 - [永嘉會의 2008년도 상반기 해외문화유적탐방 — 中國 山東省 曲阜·泰山](/archive/geul/geul-2008-haeoe-tambang) · 김만연
 
 출처: 《영가회 40년사》 134쪽

@@ -36,6 +36,6 @@ visibility: public
 
 1999~2002년의 신년하례회와 문화유적탐방 가운데 개별 기록이 남지 않은 행사가 있습니다. 자료가 확보되면 개별 글로 보완합니다.
 
-인물: [2대 류목기 회장](/archive/saram/2dae-ryu-mokgi)
+인물: [2대 류목기 회장](/archive/geul/2dae-ryu-mokgi)
 
 출처: 《영가회 40년사》 54~99쪽

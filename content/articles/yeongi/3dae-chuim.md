@@ -22,5 +22,5 @@ visibility: public
 ## 함께 보기
 
 - [취임식 기록](/archive/moim/3dae-geum-changtae-chuim)
-- [금창태 회장 이야기](/archive/saram/3dae-geum-changtae)
-- [역대 회장 연보](/archive/saram/hoejang-yeonbo)
+- [금창태 회장 이야기](/archive/geul/3dae-geum-changtae)
+- [역대 회장 연보](/archive/geul/hoejang-yeonbo)

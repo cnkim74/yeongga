@@ -13,6 +13,6 @@ visibility: public
 ## 안동 식문화 두 자취
 
 - **안동찜닭** (관련: 〈[8-3호 안동찜닭 골목](/archive/geul/hoebo-8-3-andong-mat-3-jjimdak)〉 · 〈[8-5호 안동찜닭 ⑤](/archive/geul/hoebo-8-5-andong-mat-5-jjimdak)〉) — 1980년대 안동구시장의 자취
-- **안동소주** (관련: 〈[8-1호 국담 권태연 안동소주](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) — 1915년 국담 권태연의 안동주조회사 자취 위
+- **안동소주** (관련: 〈[8-1호 국담 권태연 안동소주](/archive/geul/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) — 1915년 국담 권태연의 안동주조회사 자취 위
 
 두 결의 국가대표 인정.

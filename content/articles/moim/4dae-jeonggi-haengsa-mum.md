@@ -39,6 +39,6 @@ visibility: public
 
 2008년 해외탐방의 정확한 일정과 방문지, 2009년 정기 행사 기록은 회보 보관본을 확인해 보완합니다.
 
-인물: [4대 허동진 회장](/archive/saram/4dae-heo-dongjin)
+인물: [4대 허동진 회장](/archive/geul/4dae-heo-dongjin)
 
 출처: 《영가회 40년사》 130~179쪽

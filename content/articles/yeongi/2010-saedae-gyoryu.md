@@ -47,6 +47,6 @@ visibility: public
 7대 김계동 회장기에 《영가회 40년사》가 편찬됩니다. 발행인은 김계동 회장이었고, 편찬고문에는 2대부터 6대까지의 역대 회장이 모두 이름을 올렸습니다.
 
 - [창립 40주년과 《영가회 40년사》 편찬](/archive/yeongi/chang-rip-40junyeon)
-- [역대 회장 연보 — 초대부터 현재까지](/archive/saram/hoejang-yeonbo)
+- [역대 회장 연보 — 초대부터 현재까지](/archive/geul/hoejang-yeonbo)
 
 출처: 《영가회 40년사》 219쪽, 239쪽, 265쪽, 287~288쪽, 294쪽, 315쪽

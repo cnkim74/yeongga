@@ -25,6 +25,6 @@ visibility: public
 ## 함께 보기
 
 - 〈[1998.10.24 임시총회 — 회장 선임과 회칙 2차 개정](/archive/moim/1998-imsi-chongdae)〉
-- 인물: [2대 류목기 회장](/archive/saram/2dae-ryu-mokgi)
+- 인물: [2대 류목기 회장](/archive/geul/2dae-ryu-mokgi)
 
 출처: 《영가회 40년사》 54~57쪽

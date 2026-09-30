@@ -9,6 +9,17 @@ const nextConfig: NextConfig = {
     // serverActions 한도는 폼 기반 업로드 안전망용.
     serverActions: { bodySizeLimit: "50mb" },
   },
+  // 인물(四) 장을 기고(三) 로 합쳤다 — 옛 주소는 새 주소로 넘긴다
+  async redirects() {
+    return [
+      {
+        source: "/archive/saram/:slug",
+        destination: "/archive/geul/:slug",
+        permanent: true,
+      },
+      { source: "/archive/saram", destination: "/archive/geul", permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       // Cloudflare R2 — 영가회 커스텀 도메인 (운영)

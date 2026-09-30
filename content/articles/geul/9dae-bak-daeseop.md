@@ -54,4 +54,4 @@ visibility: public
 
 - [9대 박대섭 회장 취임 — 2025.2.7](/archive/yeongi/9dae-chuim)
 - [2025.2.7 정기총회 — 회장 이·취임과 영가문화상 시상](/archive/moim/9dae-2025-jeonggi-chonghoe)
-- [역대 회장 연보](/archive/saram/hoejang-yeonbo)
+- [역대 회장 연보](/archive/geul/hoejang-yeonbo)

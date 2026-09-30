@@ -24,6 +24,6 @@ visibility: public
 ## 함께 보기
 
 - 〈[2003.1.15 금창태 3대 회장 취임](/archive/moim/3dae-geum-changtae-chuim)〉
-- 인물: [3대 금창태 회장](/archive/saram/3dae-geum-changtae)
+- 인물: [3대 금창태 회장](/archive/geul/3dae-geum-changtae)
 
 출처: 《영가회 40년사》 102~105쪽

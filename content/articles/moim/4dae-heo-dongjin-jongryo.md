@@ -25,6 +25,6 @@ visibility: public
 ## 함께 보기
 
 - 〈[2007.1.10 허동진 4대 회장 취임](/archive/moim/4dae-heo-dongjin-chuim)〉
-- 인물: [4대 허동진 회장](/archive/saram/4dae-heo-dongjin)
+- 인물: [4대 허동진 회장](/archive/geul/4dae-heo-dongjin)
 
 출처: 《영가회 40년사》 130~133쪽

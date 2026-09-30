@@ -25,6 +25,6 @@ visibility: public
 
 - 〈[1998.10.24 류목기 2대 회장 취임](/archive/moim/2dae-ryu-mokgi-chuim)〉
 - 〈[2003.1.15 금창태 3대 회장 취임](/archive/moim/3dae-geum-changtae-chuim)〉
-- 인물: [2대 류목기 회장](/archive/saram/2dae-ryu-mokgi)
+- 인물: [2대 류목기 회장](/archive/geul/2dae-ryu-mokgi)
 
 출처: 《영가회 40년사》 54~57쪽

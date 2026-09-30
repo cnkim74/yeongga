@@ -38,7 +38,7 @@ visibility: private
 
 ## 영가회 결의 단정한 풍경
 
-같은 자리의 협찬자 명단에 함께 자리한 분들(`/archive/saram/myungsa-jeong-donghoon`·`/archive/saram/myungsa-kang-jaewoo`·`/archive/saram/myungsa-oh-yeongnam`):
+같은 자리의 협찬자 명단에 함께 자리한 분들(`/archive/geul/myungsa-jeong-donghoon`·`/archive/geul/myungsa-kang-jaewoo`·`/archive/geul/myungsa-oh-yeongnam`):
 
 - **강재우** (대명해상 회장) — 만찬 식대
 - **허동진** (풍림화섬 회장) — 기념품

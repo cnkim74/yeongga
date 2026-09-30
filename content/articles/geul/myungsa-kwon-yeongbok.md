@@ -14,8 +14,8 @@ visibility: public
 
 5대 류종묵 회장 취임식 — **2011년 1월 7일 프레지던트호텔**(회원 120여 명 참석) 자리에 — 외부 명사 세 분이 함께해 주신 결(`/archive/moim/5dae-ryu-jongmuk-chuim`):
 
-- **이희범(李熙範)** — 한국경영자총협회(경총) 회장 (`/archive/saram/myungsa-lee-huibeom`)
-- **권오을(權五乙)** — 국회사무총장 (`/archive/saram/myungsa-kwon-oeul`)
+- **이희범(李熙範)** — 한국경영자총협회(경총) 회장 (`/archive/geul/myungsa-lee-huibeom`)
+- **권오을(權五乙)** — 국회사무총장 (`/archive/geul/myungsa-kwon-oeul`)
 - **권영복(權榮復)** — **새서울그룹 회장** (이 글의 주인공)
 
 세 분 모두 — 류 회장의 취임을 축하해 주시며, 영가회의 다음 걸음에 대한 짧은 덕담을 남기셨다.
@@ -40,7 +40,7 @@ visibility: public
 
 ## 허동진 명예회장과 짝이 된 결
 
-권영복 회원의 또 한 자리는 — 같은 5대 류종묵 회장 취임식 자리에서 **허동진(許東珍) 4대 명예회장**(`/archive/saram/4dae-heo-dongjin`) 께서 — **100만원의 자발적 협찬으로 회를 다음 분께 단정하게 넘기는 결을 보여 주신 자리**(`/archive/moim/5dae-ryu-jongmuk-chuim`) — 와 흡 같은 풍경.
+권영복 회원의 또 한 자리는 — 같은 5대 류종묵 회장 취임식 자리에서 **허동진(許東珍) 4대 명예회장**(`/archive/geul/4dae-heo-dongjin`) 께서 — **100만원의 자발적 협찬으로 회를 다음 분께 단정하게 넘기는 결을 보여 주신 자리**(`/archive/moim/5dae-ryu-jongmuk-chuim`) — 와 흡 같은 풍경.
 
 > "**회를 한 사람에서 다음 사람으로 넘기는 자리에는, 자기 결의 한 자락을 함께 보태 두는 결이 자연스러운 자리입니다.**"
 

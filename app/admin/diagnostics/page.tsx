@@ -77,7 +77,6 @@ export default async function DiagnosticsPage() {
               <ReseedChapterButton chapter="yeongi" />
               <ReseedChapterButton chapter="moim" />
               <ReseedChapterButton chapter="geul" />
-              <ReseedChapterButton chapter="saram" />
               <ReseedChapterButton chapter="jachui" />
               <ReseedChapterButton chapter="hyang" />
             </div>
@@ -85,7 +84,7 @@ export default async function DiagnosticsPage() {
         </Section>
 
         <Section title="글 본문 복원" hanja="本文復元">
-          <RestoreBodyForm defaultChapter="saram" defaultSlug="2dae-ryu-mokgi" />
+          <RestoreBodyForm defaultChapter="geul" defaultSlug="2dae-ryu-mokgi" />
         </Section>
 
         <Section title="삭제 차단 목록" hanja="削除記錄">

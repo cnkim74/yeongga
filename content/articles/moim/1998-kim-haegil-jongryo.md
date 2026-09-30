@@ -29,6 +29,6 @@ visibility: public
 ## 함께 보기
 
 - 〈[1998.10.24 임시총회 — 류목기 2대 회장 선임](/archive/moim/1998-imsi-chongdae)〉
-- 인물: [초대 김해길 회장](/archive/saram/1dae-kim-haegil)
+- 인물: [초대 김해길 회장](/archive/geul/1dae-kim-haegil)
 
 출처: 《영가회 40년사》 26~29쪽

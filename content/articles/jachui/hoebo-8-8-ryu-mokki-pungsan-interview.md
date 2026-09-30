@@ -52,6 +52,6 @@ visibility: public
 ## 함께 보기
 
 - [역대 영가회장 모두 참석한 원로회원과 임원 간담회 (5면, 같은 날)](/archive/moim/hoebo-8-8-yeokdae-hoejang-wonro-gandam)
-- [제2대 류목기(柳穆基) 회장 — 1999~2002](/archive/saram/2dae-ryu-mokgi)
+- [제2대 류목기(柳穆基) 회장 — 1999~2002](/archive/geul/2dae-ryu-mokgi)
 
 출처: 《영가회보》 8-8호 (2023년 가을호) 4면

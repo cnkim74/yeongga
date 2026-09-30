@@ -41,4 +41,4 @@ visibility: public
 
 - [8대 문상부 회장 취임 — 2021](/archive/yeongi/8dae-chuim)
 - [《영가회보》 부활 — 2022.1.15](/archive/yeongi/hoebo-buhwal-2022)
-- [역대 회장 연보](/archive/saram/hoejang-yeonbo)
+- [역대 회장 연보](/archive/geul/hoejang-yeonbo)

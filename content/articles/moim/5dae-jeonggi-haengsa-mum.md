@@ -45,6 +45,6 @@ visibility: public
 
 2014년 강남 탐방과 연천 탐방의 정확한 일자는 회보 보관본을 확인해 보완합니다. 이 시기 영가문화상은 2012년 제4회, 2014년 제5회입니다(격년 시상).
 
-인물: [5대 류종묵 회장](/archive/saram/5dae-ryu-jongmuk)
+인물: [5대 류종묵 회장](/archive/geul/5dae-ryu-jongmuk)
 
 출처: 《영가회 40년사》 180~239쪽

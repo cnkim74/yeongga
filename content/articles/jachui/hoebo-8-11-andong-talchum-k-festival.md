@@ -19,4 +19,4 @@ visibility: public
 - **안동국제탈춤페스티벌** — 안동 축제 (관련: 〈[8-4호 안동 가을 축제](/archive/hyang/hoebo-8-4-gaeul-chukje)〉)
 - **K-Festival 2024 마케팅 부문 대상** — 인정
 - **유네스코 인류무형문화유산 한국의 탈춤** (관련: 〈[8-5호 유네스코 3대 카테고리](/archive/jachui/hoebo-8-5-unesco-3dae-categori)〉) 의 가장 큰 결과
-- **하남 류한상** (관련: 〈[8-1호 하남 류한상](/archive/saram/hoebo-8-1-hanam-ryu-hansang)〉) 의 자취
+- **하남 류한상** (관련: 〈[8-1호 하남 류한상](/archive/geul/hoebo-8-1-hanam-ryu-hansang)〉) 의 자취

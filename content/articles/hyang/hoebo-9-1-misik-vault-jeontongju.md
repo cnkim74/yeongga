@@ -17,5 +17,5 @@ visibility: public
 
 ## ② 안동 전통주 — 'K-미식벨트 조성사업' 밸트 형성
 
-- **안동 전통주** — 안동소주(관련: 〈[8-1호 국담 권태연](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) 의 자취 위
+- **안동 전통주** — 안동소주(관련: 〈[8-1호 국담 권태연](/archive/geul/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) 의 자취 위
 - 8-12호 〈[찜닭 · 소주 33선](/archive/hyang/hoebo-8-12-jjimdak-andong-soju)〉 의 후속

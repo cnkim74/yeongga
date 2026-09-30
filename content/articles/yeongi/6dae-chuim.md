@@ -23,5 +23,5 @@ visibility: public
 ## 함께 보기
 
 - [취임식 기록](/archive/moim/6dae-2015-sinnyeon)
-- [김봉구 회장 이야기](/archive/saram/6dae-kim-bonggu)
-- [역대 회장 연보](/archive/saram/hoejang-yeonbo)
+- [김봉구 회장 이야기](/archive/geul/6dae-kim-bonggu)
+- [역대 회장 연보](/archive/geul/hoejang-yeonbo)
