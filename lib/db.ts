@@ -3387,6 +3387,28 @@ async function init(client: Client) {
     await markMigration(client, "geul-toc-check-v1");
   }
 
+  // 창립 준비 모임 기록 복원 (2026-09-30)
+  // 1976년 9~12월 준비 모임 일정은 장원석 창립회원의 기록(40년사 329~331쪽)에
+  // 남아 있다. 앞서 근거 없는 서술로 보고 지웠으나 원문에 있는 사실이므로
+  // 되살리고, 김명년 창립회원의 다른 회고(30~32쪽)를 나란히 붙였다.
+  // 회 이름은 3차 모임(1976.12.10)에서 '영가상록회'로 정해졌다(331쪽).
+  if (!(await hasMigration(client, "changrip-record-v1"))) {
+    const touched: [string, string][] = [
+      ["moim", "1977-changrip-chongdae"],
+      ["moim", "1977-1980-namgang-gieok"],
+      ["moim", "1980s-deoksu-sigi"],
+      ["yeongi", "1977-changrip-namgang"],
+      ["yeongi", "ireum-byeoncheon"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "changrip-record-v1");
+  }
+
 
 
 
@@ -3783,7 +3805,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v65";
+  const seedKey = "content-seed-v66";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
