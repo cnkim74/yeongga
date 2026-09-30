@@ -4509,13 +4509,31 @@ async function init(client: Client) {
 
 export async function getDb(): Promise<Client> {
   if (_client) {
-    if (_initPromise) await _initPromise;
+    if (_initPromise) {
+      try {
+        await _initPromise;
+      } catch (e) {
+        // 준비가 한 번 실패했다고 이 인스턴스를 영영 못 쓰게 두면
+        // 잠깐의 연결 끊김이 그대로 긴 장애가 된다. 비워 두고 다시 시도한다.
+        _client = null;
+        _initPromise = null;
+        throw e;
+      }
+    }
     return _client;
   }
-  _client = makeClient();
-  _initPromise = init(_client);
-  await _initPromise;
-  return _client;
+  const client = makeClient();
+  const p = init(client);
+  _client = client;
+  _initPromise = p;
+  try {
+    await p;
+  } catch (e) {
+    _client = null;
+    _initPromise = null;
+    throw e;
+  }
+  return client;
 }
 
 // ─── 임베드 URL 파서 ────────────────────────────
