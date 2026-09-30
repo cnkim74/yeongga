@@ -3309,6 +3309,34 @@ async function init(client: Client) {
     await markMigration(client, "moim-40nyeonsa-fact-v2");
   }
 
+  // 기고 장 40년사 대조 (2026-09-30) — 인물 글 인명 오류와 회고문 전재 오류
+  //   · 권영조 대명대 총장 → 권영우 세명대학교 총장 (62쪽)
+  //   · 오영남 / 국악인 5명 → 오경의 / 국악인 9명 (62쪽)
+  //   · 정동훈 → 정동호 안동시장 (62쪽)
+  //   · 김중감 → 김종갑 하이닉스 사장, 함께 축하받은 이는 이희범이 아니라
+  //     이희재 안동대학교 총장 (136·139~140쪽)
+  //   · 김계헌 정림회 멤버 → 김계현 창립회원, 커피숍에서 맞은 이는 총무
+  //     권화섭 (363쪽)
+  //   · 류종묵 회고문 〈안동모임에서 만났던 사람들〉 전재를 362~365쪽 원문과
+  //     다시 맞춤 (이회대→이희대, 대화선→태화루, 박걸리→막걸리 등 다수)
+  if (!(await hasMigration(client, "geul-40nyeonsa-fact-v1"))) {
+    const touched: [string, string][] = [
+      ["geul", "geul-andong-saramdeul"],
+      ["geul", "myungsa-jeong-donghoon"],
+      ["geul", "myungsa-kim-gyeheon"],
+      ["geul", "myungsa-kim-junggam"],
+      ["geul", "myungsa-kwon-yeongjo"],
+      ["geul", "myungsa-oh-yeongnam"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "geul-40nyeonsa-fact-v1");
+  }
+
 
 
 
@@ -3705,7 +3733,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v62";
+  const seedKey = "content-seed-v63";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
