@@ -9,7 +9,9 @@ import rehypeStringify from "rehype-stringify";
 export async function renderMarkdown(md: string): Promise<string> {
   const processed = await unified()
     .use(remarkParse)
-    .use(remarkGfm)
+    // 물결표 하나(~)는 취소선으로 보지 않는다.
+    // "119~121 · 223~224쪽" 처럼 범위 표기가 둘이면 그 사이가 취소선이 되어 버린다.
+    .use(remarkGfm, { singleTilde: false })
     .use(remarkRehype)
     .use(rehypeSlug)
     .use(rehypeStringify)
