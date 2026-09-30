@@ -2944,6 +2944,21 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-2jip-takedown-v1");
   }
 
+  // 8·9대 회장 인물 글 추가, 연혁 취임 글에서 연결
+  if (!(await hasMigration(client, "saram-8-9dae-v1"))) {
+    for (const [chapter, slug] of [
+      ["yeongi", "8dae-chuim"],
+      ["yeongi", "9dae-chuim"],
+    ] as [string, string][]) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "saram-8-9dae-v1");
+  }
+
+
 
 
 
@@ -3339,7 +3354,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v54";
+  const seedKey = "content-seed-v55";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
