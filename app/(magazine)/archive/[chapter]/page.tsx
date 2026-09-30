@@ -9,6 +9,7 @@ import { getChapter } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
+import { groupByEra } from "@/lib/president-era";
 
 // 빌드 타임 정적 생성 비활성화 (모임 챕터 100+편으로 60초 timeout 회피)
 // 매 요청 SSR + Next.js fetch 캐시 활용
@@ -43,10 +44,86 @@ export default async function ChapterPage({
   ]);
 
   const ordered = articles;
+  // 행사 장은 연도 대신 회장기로 묶어 보여 준다
+  const eraGroups = chapter === "moim" ? groupByEra(ordered) : null;
   const avatarByName = new Map(Object.entries(avatars));
 
   // 우선순위: 챕터 hero_image (전용) > 메인 쇼케이스 cover_image (호환) > placeholder
   const heroImage = chapterMeta?.hero_image ?? chapterMeta?.cover_image ?? null;
+
+  const renderList = (list: { item: (typeof ordered)[number]; index: number }[]) => (
+    <ol className="space-y-12 sm:space-y-16">
+              {list.map(({ item: a, index: i }) => (
+                <li
+                  key={a.slug}
+                  className="grid gap-3 sm:gap-6 sm:grid-cols-12 items-start"
+                >
+                  <div className="sm:col-span-2 text-3xl sm:text-4xl text-[var(--color-ink-mute)] font-mono tabular-nums">
+                    {String(articles.length - i).padStart(2, "0")}
+                  </div>
+                  <div className={a.cover ? "sm:col-span-7" : "sm:col-span-10"}>
+                    <Link
+                      href={`/archive/${chapter}/${a.slug}`}
+                      className="group block"
+                    >
+                      <h2 className="display-md text-2xl sm:text-4xl mb-3 group-hover:text-[var(--color-accent)] transition">
+                        {a.visibility === "members-only" && (
+                          <span
+                            className="inline-block mr-2 text-base align-middle text-[var(--color-ink-mute)]"
+                            aria-label="회원 전용"
+                            title="회원 전용"
+                          >
+                            🔒
+                          </span>
+                        )}
+                        {a.title}
+                      </h2>
+                      {a.subtitle && (
+                        <div className="text-[var(--color-ink-mute)] mb-3">
+                          {a.subtitle}
+                        </div>
+                      )}
+                      {a.excerpt && (
+                        <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed">
+                          {a.excerpt}
+                        </p>
+                      )}
+                      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-[var(--color-ink-mute)]">
+                        {!isUndated(chapter, a.slug) && <span>{formatDate(a.date)}</span>}
+                        {a.author && (
+                          <span className="inline-flex items-center gap-2">
+                            <span aria-hidden="true">·</span>
+                            <AuthorAvatar
+                              src={avatarByName.get(a.author)}
+                              name={a.author}
+                              size={22}
+                            />
+                            <span>{a.author}</span>
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  </div>
+                  {a.cover && (
+                    <div className="sm:col-span-3">
+                      <Link href={`/archive/${chapter}/${a.slug}`} tabIndex={-1} aria-hidden="true">
+                        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
+                          <Image
+                            src={a.cover}
+                            alt=""
+                            fill
+                            sizes="(max-width: 640px) 100vw, 33vw"
+                            className="object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      </Link>
+                    </div>
+                  )}
+                </li>
+              ))}
+    </ol>
+  );
 
   return (
     <>
@@ -124,78 +201,46 @@ export default async function ChapterPage({
             <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-16 text-center text-[var(--color-ink-mute)]">
               이 장에는 아직 등재된 글이 없습니다.
             </div>
-          ) : (
-            <ol className="space-y-12 sm:space-y-16">
-              {ordered.map((a, i) => (
-                <li
-                  key={a.slug}
-                  className="grid gap-3 sm:gap-6 sm:grid-cols-12 items-start"
-                >
-                  <div className="sm:col-span-2 text-3xl sm:text-4xl text-[var(--color-ink-mute)] font-mono tabular-nums">
-                    {String(articles.length - i).padStart(2, "0")}
+          ) : eraGroups ? (
+            <div className="space-y-20">
+              {/* 회장기 바로가기 */}
+              <nav aria-label="회장기 바로가기" className="-mt-4">
+                <ul className="flex flex-wrap gap-2">
+                  {eraGroups.map((g) => (
+                    <li key={`nav-${g.era.dae}`}>
+                      <a
+                        href={`#${g.era.id}`}
+                        className="inline-flex items-baseline gap-1.5 rounded-full border border-[var(--color-rule)] px-4 py-2 text-base text-[var(--color-ink-soft)] transition hover:border-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
+                      >
+                        <span className="font-semibold">{g.era.dae}대</span>
+                        <span>{g.era.name}</span>
+                        <span className="text-sm text-[var(--color-ink-mute)]">
+                          {g.items.length}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              {eraGroups.map((g) => (
+                <section key={g.era.dae} id={g.era.id} className="scroll-mt-28">
+                  <div className="mb-8 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b-2 border-[var(--color-ink)] pb-3">
+                    <h2 className="display-md text-2xl sm:text-3xl">
+                      제{g.era.dae}대 {g.era.name}
+                    </h2>
+                    <span className="text-[var(--color-ink-mute)]">
+                      {g.era.term}
+                    </span>
+                    <span className="ml-auto text-sm text-[var(--color-ink-mute)]">
+                      {g.items.length}편
+                    </span>
                   </div>
-                  <div className={a.cover ? "sm:col-span-7" : "sm:col-span-10"}>
-                    <Link
-                      href={`/archive/${chapter}/${a.slug}`}
-                      className="group block"
-                    >
-                      <h2 className="display-md text-2xl sm:text-4xl mb-3 group-hover:text-[var(--color-accent)] transition">
-                        {a.visibility === "members-only" && (
-                          <span
-                            className="inline-block mr-2 text-base align-middle text-[var(--color-ink-mute)]"
-                            aria-label="회원 전용"
-                            title="회원 전용"
-                          >
-                            🔒
-                          </span>
-                        )}
-                        {a.title}
-                      </h2>
-                      {a.subtitle && (
-                        <div className="text-[var(--color-ink-mute)] mb-3">
-                          {a.subtitle}
-                        </div>
-                      )}
-                      {a.excerpt && (
-                        <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed">
-                          {a.excerpt}
-                        </p>
-                      )}
-                      <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-[var(--color-ink-mute)]">
-                        {!isUndated(chapter, a.slug) && <span>{formatDate(a.date)}</span>}
-                        {a.author && (
-                          <span className="inline-flex items-center gap-2">
-                            <span aria-hidden="true">·</span>
-                            <AuthorAvatar
-                              src={avatarByName.get(a.author)}
-                              name={a.author}
-                              size={22}
-                            />
-                            <span>{a.author}</span>
-                          </span>
-                        )}
-                      </div>
-                    </Link>
-                  </div>
-                  {a.cover && (
-                    <div className="sm:col-span-3">
-                      <Link href={`/archive/${chapter}/${a.slug}`} tabIndex={-1} aria-hidden="true">
-                        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden">
-                          <Image
-                            src={a.cover}
-                            alt=""
-                            fill
-                            sizes="(max-width: 640px) 100vw, 33vw"
-                            className="object-cover"
-                            loading="lazy"
-                          />
-                        </div>
-                      </Link>
-                    </div>
-                  )}
-                </li>
+                  {renderList(g.items)}
+                </section>
               ))}
-            </ol>
+            </div>
+          ) : (
+            renderList(ordered.map((item, index) => ({ item, index })))
           )}
         </div>
       </section>
