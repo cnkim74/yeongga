@@ -35,7 +35,6 @@ const NAV: NavItem[] = [
     ],
   },
   { href: "/archive", label: "아카이브", dropdown: "chapters" },
-  { href: "/members", label: "회원" },
   {
     href: "/ebooks",
     label: "이북",

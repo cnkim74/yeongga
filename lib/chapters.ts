@@ -31,7 +31,7 @@ export const chapters: Chapter[] = [
   {
     slug: "geul",
     number: "三",
-    title: "기고·인물",
+    title: "기고",
     subtitle: "회원이 남긴 글과 인물 기록",
     description:
       "회원들이 남긴 수필과 기고문, 그리고 역대 회장과 명사들의 인물 기록을 함께 담았습니다.",
@@ -67,6 +67,16 @@ export const chapters: Chapter[] = [
     description: "회의 영상을 모아 둔 자리입니다.",
     href: "/videos",
     linkLabel: "영상 보러 가기",
+  },
+  {
+    slug: "hoewon",
+    number: "八",
+    title: "회원(會員)",
+    subtitle: "회원 명단",
+    description:
+      "회원수첩에 오른 회원들입니다. 성명과 직장·직위만 실었고 주소와 연락처는 공개하지 않습니다.",
+    href: "/members",
+    linkLabel: "회원 명단 보러 가기",
   },
 ];
 

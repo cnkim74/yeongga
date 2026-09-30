@@ -74,7 +74,8 @@ export function ChapterIcon({
         </svg>
       );
 
-    // 四 사람 — 갓(笠): 선비의 전통 모자
+    // 사람·회원 — 갓(笠): 선비의 전통 모자
+    case "hoewon":
     case "saram":
       return (
         <svg {...base}>
