@@ -18,6 +18,8 @@ export type DirectoryEntry = {
 // 김두현(金斗鉉)(1939년 生) — 뒤의 생년은 읽어서 버린다.
 // 줄 끝이 잘려도 이름으로 알아보도록 앞부분만 본다.
 const NAME_LINE = /^([가-힣]{2,5})\(([一-鿿]{1,5})\)/;
+/** 생년까지 붙은 이름 — 줄 중간에 있어도 찾는다 */
+const NAME_WITH_YEAR = /([가-힣]{2,5})\(([一-鿿]{1,5})\)\s*\(\s*\d{4}\s*년\s*生\s*\)/;
 const PHONE = /^[\d(]?[\d\-*()\s]{6,}$/;
 const LABEL = /^(현직|경력|자택|직장|사무실|회사|본적|주소|학력|비고)\s*/;
 /** 공개하지 않는 항목 — 집·회사 주소는 저장하지 않는다 */
@@ -41,25 +43,49 @@ export function parseDirectoryPage(
   let bag = new Map<string, string[]>();
   let label = "";
 
+  const flush = (name: string, hanja: string) => {
+    out.push({
+      name,
+      hanja,
+      position: (bag.get("현직") ?? []).join(" · "),
+      career: (bag.get("경력") ?? []).join(" · "),
+      pageNo,
+    });
+    bag = new Map();
+    label = "";
+  };
+
   for (const raw of text.split("\n")) {
-    const line = raw.trim();
+    let line = raw.trim();
     if (!line) continue;
-    const nameMatch = NAME_LINE.exec(line);
-    if (nameMatch) {
-      // 한 사람 몫을 넘어서면 앞사람 것이 섞인 것이므로 버린다
-      const overflow = [...bag.values()].reduce((n, v) => n + v.length, 0) > 12;
-      if (overflow) bag = new Map();
-      out.push({
-        name: nameMatch[1],
-        hanja: nameMatch[2],
-        position: (bag.get("현직") ?? []).join(" · "),
-        career: (bag.get("경력") ?? []).join(" · "),
-        pageNo,
-      });
-      bag = new Map();
-      label = "";
+
+    // 이름은 줄 첫머리에 오기도 하고, 앞 줄이 붙어 중간에 오기도 한다.
+    // 생년이 붙은 형태를 찾아 그 앞은 앞사람 항목으로, 뒤는 다음 항목으로 나눈다.
+    let m = NAME_WITH_YEAR.exec(line);
+    while (m) {
+      const before = line.slice(0, m.index).trim();
+      if (before) {
+        const lm = LABEL.exec(before);
+        if (lm) {
+          label = lm[1];
+          pushLine(bag, label, before.slice(lm[0].length));
+        } else if (label) {
+          pushLine(bag, label, before);
+        }
+      }
+      flush(m[1], m[2]);
+      line = line.slice(m.index + m[0].length).trim();
+      m = NAME_WITH_YEAR.exec(line);
+    }
+    if (!line) continue;
+
+    // 생년 없이 이름만 있는 줄
+    const only = NAME_LINE.exec(line);
+    if (only && line.length <= only[0].length + 2) {
+      flush(only[1], only[2]);
       continue;
     }
+
     if (line === "M" || line === "F" || /^\d{1,3}$/.test(line)) continue;
     if (PHONE.test(line)) continue;
 
