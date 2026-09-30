@@ -28,9 +28,24 @@ export function DirectoryForm({ current }: { current: string }) {
 
       <div>
         <label className="block text-[11px] text-[var(--admin-mute)] mb-1">
-          회원수첩 PDF
+          회원수첩 PDF 파일
         </label>
         <input type="file" name="file" accept="application/pdf" className="text-sm" />
+      </div>
+
+      <div>
+        <label className="block text-[11px] text-[var(--admin-mute)] mb-1">
+          또는 이북 PDF 주소 (cdn.yeongga.com)
+        </label>
+        <input
+          name="url"
+          placeholder="https://cdn.yeongga.com/ebooks/….pdf"
+          className="notion-input text-sm h-9 px-3 w-full"
+        />
+        <p className="mt-1 text-[11px] text-[var(--admin-mute)]">
+          파일이 커서 올리기 어려우면, 이북에 등록된 수첩 PDF 주소를 넣으면
+          서버가 직접 받아 읽습니다.
+        </p>
       </div>
 
       <button
