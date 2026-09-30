@@ -15,16 +15,19 @@ export type DirectoryEntry = {
   pageNo: number;
 };
 
-// 김두현(金斗鉉)(1939년 生) — 생년은 읽어서 버린다
-const NAME_LINE =
-  /^([가-힣]{2,5})\(([一-鿿]{1,5})\)(?:\((\d{4})년\s*生\))?\s*$/;
+// 김두현(金斗鉉)(1939년 生) — 뒤의 생년은 읽어서 버린다.
+// 줄 끝이 잘려도 이름으로 알아보도록 앞부분만 본다.
+const NAME_LINE = /^([가-힣]{2,5})\(([一-鿿]{1,5})\)/;
 const PHONE = /^[\d(]?[\d\-*()\s]{6,}$/;
-const LABEL = /^(현직|경력|자택|직장|사무실|본적|학력|비고)\s*/;
-/** 공개하지 않는 항목 */
-const DROP = new Set(["자택", "본적"]);
+const LABEL = /^(현직|경력|자택|직장|사무실|회사|본적|주소|학력|비고)\s*/;
+/** 공개하지 않는 항목 — 집·회사 주소는 저장하지 않는다 */
+const DROP = new Set(["자택", "본적", "주소", "회사", "직장", "사무실"]);
+/** 주소로 보이는 줄은 이어지는 줄이라도 버린다 */
+const ADDRESS = /\(우:\s*\d{5}\)|[시도]\s?[가-힣]+[시군구]\s|[가-힣]+(로|길)\s?\d|\d+동\s*\d+호/;
 
 function pushLine(bag: Map<string, string[]>, label: string, text: string) {
   if (!text.trim() || DROP.has(label)) return;
+  if (ADDRESS.test(text)) return;
   const arr = bag.get(label) ?? [];
   arr.push(text.trim());
   bag.set(label, arr);
@@ -43,6 +46,9 @@ export function parseDirectoryPage(
     if (!line) continue;
     const nameMatch = NAME_LINE.exec(line);
     if (nameMatch) {
+      // 한 사람 몫을 넘어서면 앞사람 것이 섞인 것이므로 버린다
+      const overflow = [...bag.values()].reduce((n, v) => n + v.length, 0) > 12;
+      if (overflow) bag = new Map();
       out.push({
         name: nameMatch[1],
         hanja: nameMatch[2],
