@@ -3635,6 +3635,40 @@ async function init(client: Client) {
     await markMigration(client, "geul-hyang-audit-v2");
   }
 
+  // 기고 검수 3 — 회원 기고문 원문 복원 (2026-09-30)
+  // 40년사 327~344·399~414쪽을 고해상도로 다시 읽어, 회원 이름을 달고
+  // 나갔지만 원문과 겹치지 않던 글들을 지면 그대로 다시 썼다.
+  //  - 김희곤 〈안동독립운동의 특성〉 — 첫째~여덟째 항목이 통째로 빠져 있었다
+  //  - 김휘동 〈한국정신문화의 수도 안동의 브랜드 가치는?〉 — 3대 수도론,
+  //    930년 고창전투, 2010년 국가브랜드 1위 등 구체 내용이 모두 빠져 있었다
+  //  - 강민창 〈남기고 싶은 말〉 — 1972년 모임 이름은 '永嘉회담'이 아니라
+  //    永嘉常綠會. 초창기 10명 명단과 건강 십계명을 되살렸다
+  //  - 장원석 〈孕胎·出産·幼兒期〉 — 준비 모임 참석자와 결의 내용,
+  //    1998년 류목기 인계 경위를 329~334쪽 그대로 옮겼다
+  //  - 김만연 2008년 산동성 탐방기 — 쪽수를 341~344에서 339~344로 바로잡고
+  //    날짜별 원문으로 다시 썼다
+  //  - 김우석·임낙윤의 시는 두 단 편집을 잘못 읽어 뜻이 달라져 있었다
+  //  - 재경 안동 9개교 동창회 참여 학교 명단을 539쪽 원문으로 교체
+  if (!(await hasMigration(client, "geul-gigo-restore-v1"))) {
+    const touched: [string, string][] = [
+      ["geul", "geul-2008-haeoe-tambang"],
+      ["geul", "geul-andong-brand"],
+      ["geul", "geul-bam-gongbang"],
+      ["geul", "geul-dongnipundong"],
+      ["geul", "geul-geunariomyeon"],
+      ["geul", "geul-ingtae-yangchanseok"],
+      ["geul", "geul-nameun-mal-gangminchang"],
+      ["geul", "myungsa-kang-minchang"],
+      ["jachui", "jachui-ipsoe-gyujong"],
+      ["jachui", "jachui-jaegyeong-chinseon-cheugyuk"],
+      ["yeongi", "1977-changrip-namgang"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({ sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?", args: [chapter, slug] });
+    }
+    await markMigration(client, "geul-gigo-restore-v1");
+  }
+
 
 
 
@@ -4031,7 +4065,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v71";
+  const seedKey = "content-seed-v72";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
