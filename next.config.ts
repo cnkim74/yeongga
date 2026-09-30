@@ -25,6 +25,12 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       { source: "/archive/saram", destination: "/archive/geul", permanent: true },
+      // 같은 기고문(40년사 404~407쪽)이 향 장에 중복돼 있어 기고 장으로 모았다
+      {
+        source: "/archive/hyang/andong-im-nak-yun-sison",
+        destination: "/archive/geul/geul-andong-hyanggi",
+        permanent: true,
+      },
       // 2024년이 아니라 2021.9.30 서면 임시총회의 회칙 전면개정이었다
       {
         source: "/archive/yeongi/hoechik-gaejeong-2024",

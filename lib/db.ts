@@ -3600,6 +3600,41 @@ async function init(client: Client) {
     await markMigration(client, "geul-hyang-jachui-audit-v1");
   }
 
+  // 기고·향 검수 — 지어낸 기고문과 잘못된 쪽수 (2026-09-30)
+  //  - 〈역사를 바꾼, 안동의 향기〉(임낙윤)는 404~407쪽 원문과 한 구절도
+  //    겹치지 않는 창작이었다. 원문을 다시 읽어 그대로 옮겼다.
+  //  - 같은 글이 향 장에도 중복돼 있어 기고 장으로 모으고 옛 주소는 넘긴다.
+  //  - 하회마을·독립운동·음식 글의 '40년사 246/254/262쪽'은 그 쪽에 없는
+  //    내용이다. 편집실 개관임을 밝히고 실제 쪽수를 안내로 바꿨다.
+  //  - 고창전투는 936년이 아니라 고려 태조 13년(930년)이다(423~424쪽).
+  //  - 영가문화상 첫 수상은 안동문화지킴이(2006), 하회별신굿탈놀이보존회는
+  //    제2회(2008).
+  //  - 안동시 상징물과 영가(永嘉) 이름 유래를 432~433·424쪽 원문으로 다시 씀.
+  if (!(await hasMigration(client, "geul-hyang-audit-v2"))) {
+    const purge: [string, string][] = [
+      ["hyang", "andong-im-nak-yun-sison"],
+    ];
+    for (const [chapter, slug] of purge) {
+      await client.execute({ sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?", args: [chapter, slug] });
+      await client.execute({ sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)", args: [chapter, slug] });
+    }
+    const touched: [string, string][] = [
+      ["geul", "geul-andong-hyanggi"],
+      ["geul", "myungsa-jeong-burak"],
+      ["hyang", "andong-dongnip-undong"],
+      ["hyang", "andong-eumsik-munhwa"],
+      ["hyang", "andong-iran"],
+      ["hyang", "andong-sangjingmul"],
+      ["hyang", "andong-taesamyo-hyanggyo"],
+      ["hyang", "hahoe-maeul-yusan"],
+      ["hyang", "yeongga-hyang-uimi"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({ sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?", args: [chapter, slug] });
+    }
+    await markMigration(client, "geul-hyang-audit-v2");
+  }
+
 
 
 
@@ -3996,7 +4031,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v70";
+  const seedKey = "content-seed-v71";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
