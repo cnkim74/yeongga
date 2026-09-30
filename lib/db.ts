@@ -3572,6 +3572,34 @@ async function init(client: Client) {
     await markMigration(client, "sourceless-audit-v3");
   }
 
+  // 기고·향·자취 검수 — 창립 기록 재대조 (2026-09-30)
+  // 40년사 27~32쪽·325쪽·329~331쪽을 고해상도로 다시 읽어 바로잡았다.
+  //  - 1대 김해길 글의 '1977.10.26 정립총회', '1968년 10월 류복기 추천',
+  //    깨진 창립회원 이름(학기홍/김명선/김지락/권홍열/윤정근/이은승 등)과
+  //    읽을 수 없는 한자 명단을 원문대로 고치거나 뺐다.
+  //  - 30~32쪽 기록의 필자는 김명년이 아니라 장원석이다. 같은 사람이
+  //    29~32쪽과 329~331쪽에 날짜가 다른 두 기록을 남겼다.
+  //  - 회 이름 '영가회'를 제안한 사람은 이상두 회원(331쪽).
+  //  - 원로 참석 기억의 '1977년 8월 26일 창립총회'는 3월 26일.
+  if (!(await hasMigration(client, "geul-hyang-jachui-audit-v1"))) {
+    const touched: [string, string][] = [
+      ["geul", "1dae-kim-haegil"],
+      ["geul", "hoejang-yeonbo"],
+      ["geul", "myungsa-lee-yongtae"],
+      ["geul", "wonro-chamsuk-gieok"],
+      ["moim", "1977-1980-namgang-gieok"],
+      ["moim", "1977-changrip-chongdae"],
+      ["yeongi", "1977-changrip-namgang"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "geul-hyang-jachui-audit-v1");
+  }
+
 
 
 
@@ -3968,7 +3996,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v69";
+  const seedKey = "content-seed-v70";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
