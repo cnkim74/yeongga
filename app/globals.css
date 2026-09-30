@@ -290,8 +290,9 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   vertical-align: top;
 }
 .prose-body tbody tr:last-child td { border-bottom: none; }
-/* 날짜·구분처럼 짧은 첫 칸은 줄바꿈하지 않는다 */
-.prose-body tbody td:first-child { white-space: nowrap; }
+/* 날짜·구분처럼 짧은 첫 칸은 줄바꿈하지 않되, 칸을 넓게 차지하지 않는다.
+   width:1% 는 '내용에 필요한 만큼만' 이라는 뜻으로, 나머지 폭을 둘째 칸에 넘긴다. */
+.prose-body tbody td:first-child { white-space: nowrap; width: 1%; }
 .prose-body tbody tr:hover { background: var(--color-bg-soft); }
 
 .prose-body hr {

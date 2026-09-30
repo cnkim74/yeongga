@@ -54,15 +54,31 @@ export function unwrapMarkdown(html: string): string {
     .replace(/<\/?(strong|b)>/gi, "**")
     .replace(/<\/?(em|i)>/gi, "*")
     .replace(/<[^>]+>/g, "");
-  // 표 칸 안에서 줄을 나누던 <br> 은 가운뎃점으로 이어 붙인다
-  return decodeEntities(text)
+
+  const lines = decodeEntities(text)
     .split("\n")
     .map((line) =>
+      // 표 칸 안에서 줄을 나누던 <br> 은 가운뎃점으로 이어 붙인다
       line.trim().startsWith("|")
-        ? line.replace(/\s*<br\s*\/?>\s*/gi, " · ")
-        : line,
+        ? line.replace(/\s*<br\s*\/?>\s*/gi, " · ").trim()
+        : line.trim(),
     )
+    .filter((line) => line.length > 0);
+
+  // 편집기는 문단마다 <p> 로 감싸므로 줄 사이의 빈 줄이 사라진다.
+  // 표는 줄을 붙여야 표로 읽히고, 그 밖의 블록은 빈 줄로 띄어야 한다.
+  // 그대로 이어 붙이면 표 바로 뒤의 '출처:' 같은 문단이 표의 한 행으로 들어간다.
+  const isRow = (l: string) => l.startsWith("|");
+  const out: string[] = [];
+  lines.forEach((line, i) => {
+    out.push(line);
+    const next = lines[i + 1];
+    if (!next) return;
+    out.push(isRow(line) && isRow(next) ? "" : "\u0000");
+  });
+  return out
     .join("\n")
-    .replace(/\n{3,}/g, "\n\n")
+    .replace(/\n\n/g, "\n")
+    .replace(/\u0000/g, "\n")
     .trim();
 }
