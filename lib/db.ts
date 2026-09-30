@@ -3118,6 +3118,76 @@ async function init(client: Client) {
     await markMigration(client, "moim-muisan-merge-v1");
   }
 
+  // 행사 장 2차 정리 (2026-09-30) — 데이터 중심·개조식 재정리
+  //   · 탐방 글에 백과사전·여행 기사에서 옮겨온 설명이 본문 대부분이던 9편을
+  //     영가회 기록(일시·참가·일정·후원·출처)만 남기고 개조식으로 축약
+  //   · "다녀갔을 가능성이 큰 일정" 같은 추측 문장, 평가·해석 문장 삭제
+  //   · 제목·부제의 '자리/모습' 남용 정리
+  if (!(await hasMigration(client, "moim-data-only-v1"))) {
+    const touched: [string, string][] = [
+      ["moim", "2000-gaeul-jeonggimoim"],
+      ["moim", "2024-imsi-chonghoe"],
+      ["moim", "2dae-1999-3jang-chukha"],
+      ["moim", "2dae-1999-hyangwoo-jeonggi"],
+      ["moim", "2dae-1999-imsi-chongdae"],
+      ["moim", "2dae-2000-jeongi-isihyeong"],
+      ["moim", "2dae-2001-sinnyeon"],
+      ["moim", "3dae-2004-kwon-oeul-chukha"],
+      ["moim", "3dae-2004-tambang-yeongwol"],
+      ["moim", "3dae-2005-sinnyeon-kimhuigon"],
+      ["moim", "3dae-2005-tambang-pungki"],
+      ["moim", "3dae-2006-munhwasang-1"],
+      ["moim", "3dae-2006-tambang-hadong"],
+      ["moim", "4dae-2007-tambang-bundan"],
+      ["moim", "4dae-2008-5myeong-uiwon-chukha"],
+      ["moim", "4dae-2008-haeoe-tambang"],
+      ["moim", "4dae-2008-sinnyeon"],
+      ["moim", "4dae-2010-sinnyeon"],
+      ["moim", "5dae-2011-sinnyeon"],
+      ["moim", "5dae-2011-tukgang-bak-seok-mu"],
+      ["moim", "5dae-2012-haeoe-seosan"],
+      ["moim", "5dae-2012-sinnyeon-munhwasang-4"],
+      ["moim", "5dae-2013-haeoe-jeongju"],
+      ["moim", "5dae-2014-gwon-yeongjin-chukha"],
+      ["moim", "5dae-2014-haeoe-jiangnan"],
+      ["moim", "5dae-2014-yeoncheon-tambang"],
+      ["moim", "5dae-ryu-jongmuk-jongryo"],
+      ["moim", "6dae-2015-haeoe-jungkyung"],
+      ["moim", "6dae-2015-sinnyeon"],
+      ["moim", "6dae-2015-tambang-cheongryeongpo"],
+      ["moim", "6dae-2015-tukgang-jeong-bu-rak"],
+      ["moim", "6dae-2016-gwaesan-tambang"],
+      ["moim", "6dae-2016-haeoe-laos"],
+      ["moim", "6dae-2017-tukgang-dokdo-kim-byeongryeol"],
+      ["moim", "6dae-kim-bonggu-jongryo"],
+      ["moim", "7dae-2017-haeoe-danang"],
+      ["moim", "7dae-2017-jeongseon-tambang"],
+      ["moim", "7dae-2017-tukgang-kwon-wono"],
+      ["moim", "7dae-2018-ganghwa-tambang"],
+      ["moim", "7dae-2018-kim-hwidong-sajinjeonsihoe"],
+      ["moim", "7dae-2018-sinnyeon"],
+      ["moim", "9dae-2025-forum-1"],
+      ["moim", "9dae-2025-forum-3-wonro-6cha"],
+      ["moim", "9dae-2026-forum-5"],
+      ["moim", "9dae-2026-hoemu"],
+      ["moim", "9dae-2026-sangsaeng-wiwonhoe"],
+      ["moim", "9dae-2026-sinnyeon-chonghoe-49"],
+      ["moim", "hoebo-8-11-jaegyeong-andong-cheyuk"],
+      ["moim", "hoebo-8-12-andong-yugyo-23-danche"],
+      ["moim", "hoebo-8-13-jeonggi-chonghoe-yego"],
+      ["moim", "hoebo-9-4-girayeon-yangroyeon"],
+      ["moim", "hoebo-9-4-jeonggi-chonghoe-imomo"],
+      ["moim", "sinnyeon-haerye"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "moim-data-only-v1");
+  }
+
 
 
 
@@ -3514,7 +3584,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v58";
+  const seedKey = "content-seed-v59";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

@@ -14,4 +14,4 @@ visibility: private
 
 **재경안동시향우회** 정기총회 및 체육행사가 성황리 개최됐다.
 
-8-9호 〈[1000여명 송년회](/archive/moim/hoebo-8-9-jaegyeong-hyangwoo-1000)〉 · 8-7호 〈[정재석 회장 글](/archive/geul/hoebo-8-7-jeong-jaeseok-jeongsin-munhwa)〉에 이어 더 단단한 후속.
+8-9호 〈[1000여명 송년회](/archive/moim/hoebo-8-9-jaegyeong-hyangwoo-1000)〉 · 8-7호 〈[정재석 회장 글](/archive/geul/hoebo-8-7-jeong-jaeseok-jeongsin-munhwa)〉의 후속 행사.
