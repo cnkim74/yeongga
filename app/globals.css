@@ -290,9 +290,14 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   vertical-align: top;
 }
 .prose-body tbody tr:last-child td { border-bottom: none; }
-/* 날짜·구분처럼 짧은 첫 칸은 줄바꿈하지 않되, 칸을 넓게 차지하지 않는다.
-   width:1% 는 '내용에 필요한 만큼만' 이라는 뜻으로, 나머지 폭을 둘째 칸에 넘긴다. */
-.prose-body tbody td:first-child { white-space: nowrap; width: 1%; }
+/* 첫 칸(날짜·구분)은 되도록 좁게 — 나머지 폭을 둘째 칸에 넘긴다.
+   keep-all 로 낱말은 쪼개지지 않고, '경제부처/국토/세관' 처럼 긴 구분은
+   슬래시 뒤에서만 줄이 바뀐다. width:1% 는 '필요한 만큼만' 이라는 뜻. */
+.prose-body tbody td:first-child {
+  width: 1%;
+  word-break: keep-all;
+  line-break: strict;
+}
 .prose-body tbody tr:hover { background: var(--color-bg-soft); }
 
 .prose-body hr {
