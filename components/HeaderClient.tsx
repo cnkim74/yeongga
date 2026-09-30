@@ -69,6 +69,20 @@ function applyHtmlTheme(theme: Theme) {
 }
 
 export function HeaderClient({ user }: { user: SessionUser | null }) {
+  // 상생지원위원회는 회원 전용이라 로그인한 회원에게만 메뉴에 보인다
+  const nav: NavItem[] = user
+    ? NAV.map((n) =>
+        n.href === "/about" && n.items
+          ? {
+              ...n,
+              items: [
+                ...n.items,
+                { href: "/about/sangsaeng", label: "상생지원위원회" },
+              ],
+            }
+          : n,
+      )
+    : NAV;
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sizeOpen, setSizeOpen] = useState(false);
@@ -140,7 +154,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
         {/* 가운데 메뉴 — 왼쪽 로고 락업(로고 | 부제 | 슬로건)이 길어 정중앙에 두면
             좁은 데스크톱(1280px 안팎)에서 겹친다. 64px 오른쪽으로 밀어 자리를 만든다. */}
         <ul className="hidden xl:flex items-center gap-1 absolute left-1/2 translate-x-[calc(-50%+64px)]">
-          {NAV.map((n) => {
+          {nav.map((n) => {
             const active =
               n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
             if (n.dropdown === "chapters") {
@@ -379,7 +393,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
       {open && (
         <div className="fixed inset-0 z-40 bg-[var(--color-bg)] pt-24 overflow-auto" role="dialog" aria-label="모바일 메뉴">
           <ul>
-            {NAV.map((n) => {
+            {nav.map((n) => {
               const active =
                 n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
               return (

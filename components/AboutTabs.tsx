@@ -1,4 +1,4 @@
-// 소개 전환 탭 — 영가회 소개 · 회장 인사말 · 역대회장 · 회칙
+// 소개 전환 탭 — 영가회 소개 · 회장 인사말 · 역대회장 · 회칙 · 상생지원위원회
 import Link from "next/link";
 
 const TABS = [
@@ -8,18 +8,27 @@ const TABS = [
   { key: "hoechik", href: "/about/hoechik", label: "회칙" },
 ] as const;
 
+// 회원 전용 탭 — 해당 페이지에서만 노출한다
+const SANGSAENG_TAB = {
+  key: "sangsaeng",
+  href: "/about/sangsaeng",
+  label: "상생지원위원회",
+} as const;
+
 export function AboutTabs({
   current,
 }: {
-  current: "about" | "greeting" | "presidents" | "hoechik";
+  current: "about" | "greeting" | "presidents" | "hoechik" | "sangsaeng";
 }) {
+  const tabs =
+    current === "sangsaeng" ? [...TABS, SANGSAENG_TAB] : [...TABS];
   return (
     <nav
       aria-label="소개 분류"
       className="border-y border-[var(--color-rule)] bg-[var(--color-bg-soft)]"
     >
       <div className="mx-auto max-w-4xl px-6 flex gap-2 overflow-x-auto no-scrollbar">
-        {TABS.map((t) => {
+        {tabs.map((t) => {
           const active = t.key === current;
           return (
             <Link

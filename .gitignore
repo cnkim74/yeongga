@@ -38,3 +38,7 @@ next-env.d.ts
 .claude/worktrees/
 .vercel
 .env*.local
+
+# 회원 명부 등 비공개 자료 (웹/저장소에 올리지 않음)
+/자료/
+/상생지원위원회.pdf
