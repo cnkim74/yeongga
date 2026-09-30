@@ -8,6 +8,9 @@ tags: "영가회, 永嘉會, 모임, 정기행사, 3대, 2003, 2000년대, 금�
 visibility: public
 ---
 
+![금창태 회장](https://cdn.yeongga.com/articles/munwv0am-afcbc4aedd9b.png)
+*영가회 제3대 회장 금창태*
+
 ## 개요
 
 - **일시**: 2003년 1월 15일 오후 6시 30분

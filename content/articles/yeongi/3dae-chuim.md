@@ -8,6 +8,9 @@ tags: "영가회, 永嘉會, 연혁, 회장취임, 3대, 금창태, 2003, 역대
 visibility: public
 ---
 
+![금창태 회장](https://cdn.yeongga.com/articles/munwvvci-b6870f9ffb31.png)
+*영가회 제3대 회장 금창태*
+
 ## 취임
 
 | 항목 | 내용 |

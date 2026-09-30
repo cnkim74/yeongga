@@ -3720,6 +3720,25 @@ async function init(client: Client) {
     await markMigration(client, "jachui-audit-v1");
   }
 
+  // 편집기를 거치며 본문 구조가 사라진 글 되살리기 (2026-09-30)
+  // 편집 화면이 마크다운 본문을 그대로 TipTap 에 넣던 때, 그 글을 열어
+  // 저장하면 줄바꿈이 모두 사라진 채 <p> 하나로 눌려 저장됐다. 그 글들을
+  // 지워 파일에서 다시 시드되게 한다. 그때 올린 사진은 파일에 옮겨 담았다.
+  if (!(await hasMigration(client, "flattened-body-restore-v1"))) {
+    const touched: [string, string][] = [
+      ["yeongi", "3dae-chuim"],
+      ["moim", "3dae-geum-changtae-chuim"],
+      ["geul", "myungsa-lee-yutaek"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "flattened-body-restore-v1");
+  }
+
 
 
 
@@ -4116,7 +4135,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v74";
+  const seedKey = "content-seed-v75";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
