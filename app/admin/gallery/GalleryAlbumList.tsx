@@ -45,6 +45,11 @@ export function GalleryAlbumList({ albums }: { albums: Album[] }) {
                 </div>
               </Link>
               <div className="p-3">
+                {/* 갤러리는 연도로 묶인다 — 어느 해 어느 날 행사인지 함께 보인다 */}
+                <div className="text-xs text-[var(--color-notion-mute)] mb-0.5">
+                  {al.year ? `${al.year}년` : "연도 미정"}
+                  {al.event_date ? ` · ${al.event_date.replace(/-/g, ".")}` : ""}
+                </div>
                 <div className="font-medium truncate">{al.name}</div>
                 {al.description && (
                   <p className="text-sm text-[var(--color-notion-mute)] line-clamp-2 mt-0.5">

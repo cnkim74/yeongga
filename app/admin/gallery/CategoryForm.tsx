@@ -114,6 +114,41 @@ export function CategoryForm({ category, onDone }: CategoryFormProps) {
         </p>
       </div>
 
+      {/* 갤러리는 맨 위를 연도로 나눈다. 행사일을 넣으면 연도는 저절로 채워진다. */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-sm font-medium text-[var(--color-notion-ink)] mb-1.5">
+            행사일
+          </label>
+          <input
+            type="date"
+            name="event_date"
+            defaultValue={category?.event_date ?? ""}
+            className="notion-input w-full"
+          />
+          <p className="mt-1 text-xs text-[var(--color-notion-mute)]">
+            한 해 안에서 앨범을 늘어놓는 기준입니다.
+          </p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--color-notion-ink)] mb-1.5">
+            연도
+          </label>
+          <input
+            type="number"
+            name="year"
+            min={1977}
+            max={2100}
+            defaultValue={category?.year ?? ""}
+            className="notion-input w-full"
+            placeholder="비우면 행사일에서"
+          />
+          <p className="mt-1 text-xs text-[var(--color-notion-mute)]">
+            갤러리 맨 위 묶음입니다.
+          </p>
+        </div>
+      </div>
+
       <div>
         <label className="block text-sm font-medium text-[var(--color-notion-ink)] mb-1.5">
           설명

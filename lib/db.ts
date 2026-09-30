@@ -318,6 +318,21 @@ async function init(client: Client) {
     await client.execute(`ALTER TABLE submissions ADD COLUMN others_consent INTEGER DEFAULT 0`);
   }
 
+  // ─── 마이그레이션: 사진 앨범을 연도 · 행사로 묶는다 ──
+  // 갤러리는 맨 위를 연도로 나누고 그 아래에 행사별 앨범을 둔다.
+  // year 는 묶는 기준, event_date 는 한 해 안에서 앨범을 늘어놓는 기준.
+  const pcCols = await client.execute("PRAGMA table_info(photo_categories)");
+  const pcColNames = pcCols.rows.map((r) => String(r.name));
+  if (!pcColNames.includes("year")) {
+    await client.execute(`ALTER TABLE photo_categories ADD COLUMN year INTEGER`);
+  }
+  if (!pcColNames.includes("event_date")) {
+    await client.execute(`ALTER TABLE photo_categories ADD COLUMN event_date TEXT`);
+  }
+  await client.execute(
+    `CREATE INDEX IF NOT EXISTS idx_photo_categories_year ON photo_categories(year)`
+  );
+
   // email + provider_id 에 인덱스 (OAuth 로 빠르게 매칭)
   await client.execute(
     `CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`
@@ -3737,6 +3752,154 @@ async function init(client: Client) {
       });
     }
     await markMigration(client, "flattened-body-restore-v1");
+  }
+
+  // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
+  // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
+  // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
+  if (!(await hasMigration(client, "gallery-by-year-v1"))) {
+    /** 앨범을 만들고 id 를 돌려준다. 이미 있으면 연도·행사일만 채운다. */
+    const ensureAlbum = async (
+      slug: string,
+      name: string,
+      description: string | null,
+      eventDate: string | null,
+      position: number,
+    ): Promise<number> => {
+      const year = eventDate ? Number(eventDate.slice(0, 4)) : null;
+      await client.execute({
+        sql: `INSERT OR IGNORE INTO photo_categories
+                (name, slug, description, position, year, event_date)
+              VALUES (?, ?, ?, ?, ?, ?)`,
+        args: [name, slug, description, position, year, eventDate],
+      });
+      await client.execute({
+        sql: `UPDATE photo_categories
+                 SET name = ?, description = COALESCE(?, description),
+                     year = ?, event_date = ?, position = ?
+               WHERE slug = ?`,
+        args: [name, description, year, eventDate, position, slug],
+      });
+      const r = await client.execute({
+        sql: "SELECT id FROM photo_categories WHERE slug = ?",
+        args: [slug],
+      });
+      return Number(r.rows[0].id);
+    };
+
+    // 1) 《영가회보》 지면 사진 — 호별 앨범으로.
+    //    사진의 taken_at 은 대부분 그 호의 발행일이라 가장 늦은 날짜를 발행일로 본다.
+    const issues = await client.execute(`
+      SELECT substr(image_url, 23, instr(substr(image_url, 23), '/') - 1) AS issue,
+             MAX(taken_at) AS pub,
+             COUNT(*) AS n
+        FROM photos
+       WHERE image_url LIKE '/archive-photos/hoebo/%'
+       GROUP BY issue
+    `);
+    for (const row of issues.rows) {
+      const r = row as unknown as Record<string, unknown>;
+      const issue = String(r.issue);
+      const pub = r.pub != null ? String(r.pub).slice(0, 10) : null;
+      if (!issue) continue;
+      const id = await ensureAlbum(
+        `hoebo-${issue}-jimyeon`,
+        `영가회보 ${issue}호 지면`,
+        `《영가회보》 ${issue}호 지면에 실린 사진`,
+        pub,
+        900,
+      );
+      await client.execute({
+        sql: `UPDATE photos SET category_id = ?
+               WHERE image_url LIKE ?`,
+        args: [id, `/archive-photos/hoebo/${issue}/%`],
+      });
+    }
+
+    // 2) 나머지 사진 — 찍은 날짜별로 묶는다. 같은 날 찍힌 사진은 한 행사로 본다.
+    //    아래 표에 있는 날짜는 그 행사 이름을 쓰고, 없으면 날짜만 적는다.
+    const EVENT_NAMES: Record<string, string> = {
+      "2021-09-30": "서면 임시총회 — 회칙 전면개정",
+      "2021-11-30": "제1차 영가희망포럼",
+      "2022-10-25": "문화유적 탐방",
+      "2023-02-03": "정기총회 및 신년회",
+      "2024-01-19": "정기총회 · 신년하례",
+      "2024-02-29": "영가회 모임",
+      "2024-04-23": "예천지역 문화탐방",
+      "2025-02-07": "정기총회 — 회장 이·취임과 영가문화상 시상",
+      "2025-02-15": "1차 운영협의회",
+      "2025-03-07": "사단법인 설립 창립총회 · 이사회",
+      "2025-04-23": "원로회원 간담회",
+      "2025-06-18": "제1회 영가포럼 · 신입회원 환영",
+      "2025-09-01": "이사회 및 운영위원회",
+      "2025-09-10": "제2회 영가포럼 — 국회의원회관",
+      "2025-10-15": "제3회 영가포럼 · 6차 원로회원 간담회",
+      "2025-11-04": "4차 운영위원회",
+      "2025-11-22": "1차 역대회장 간담회",
+      "2026-01-07": "신년회 및 제49차 정기총회",
+      "2026-03-04": "상생지원위원회 출범",
+      "2026-03-19": "중국 무이산 해외문화탐방",
+      "2026-04-15": "제4회 영가포럼 · 7차 원로회원 간담회",
+      "2026-05-27": "운영협의회",
+      "2026-06-24": "제5회 영가포럼 · 신입회원 환영회",
+      "2026-06-30": "2차 역대회장 간담회",
+      "2026-09-10": "제6회 영가포럼 — 안동의 고려문화",
+    };
+
+    const days = await client.execute(`
+      SELECT date(taken_at) AS d, COUNT(*) AS n
+        FROM photos
+       WHERE taken_at IS NOT NULL AND taken_at <> ''
+         AND image_url NOT LIKE '/archive-photos/hoebo/%'
+       GROUP BY d
+       ORDER BY d
+    `);
+    for (const row of days.rows) {
+      const r = row as unknown as Record<string, unknown>;
+      const d = r.d != null ? String(r.d) : "";
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) continue;
+      const [y, m, dd] = d.split("-");
+      const label = EVENT_NAMES[d] ?? "사진";
+      const id = await ensureAlbum(
+        `day-${d}`,
+        `${Number(m)}월 ${Number(dd)}일 ${label}`,
+        null,
+        d,
+        100,
+      );
+      await client.execute({
+        sql: `UPDATE photos SET category_id = ?
+               WHERE date(taken_at) = ?
+                 AND image_url NOT LIKE '/archive-photos/hoebo/%'`,
+        args: [id, d],
+      });
+      void y;
+    }
+
+    // 3) 아직 안 올린 사진을 받을 자리 — 폴더에 있는 행사만큼 앨범을 미리 만들어 둔다.
+    const PLANNED: [string, string][] = [
+      ["2024-01-19", "정기총회 · 신년하례"],
+      ["2024-02-29", "영가회 모임"],
+      ["2025-02-07", "신년회 · 이취임식"],
+      ["2025-02-15", "1차 운영협의회"],
+      ["2025-03-07", "사단법인 설립 창립총회 · 이사회"],
+      ["2025-04-23", "원로회원 간담회"],
+      ["2025-06-18", "신입회원 환영"],
+      ["2025-09-01", "이사회 및 운영위원회"],
+      ["2025-09-10", "제2회 영가포럼 — 국회의원회관"],
+      ["2025-10-15", "원로 간담회"],
+      ["2025-11-04", "4차 운영위원회"],
+      ["2026-01-07", "신년인사회 · 제49차 정기총회"],
+      ["2026-03-19", "중국 무이산 문화탐방"],
+      ["2026-05-27", "운영협의회"],
+      ["2026-06-24", "신입회원 환영회"],
+    ];
+    for (const [d, label] of PLANNED) {
+      const [, m, dd] = d.split("-");
+      await ensureAlbum(`day-${d}`, `${Number(m)}월 ${Number(dd)}일 ${label}`, null, d, 100);
+    }
+
+    await markMigration(client, "gallery-by-year-v1");
   }
 
 

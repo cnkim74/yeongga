@@ -4,6 +4,7 @@ import {
   listCategories,
   listAlbums,
   listPhotosByCategory,
+  groupAlbumsByYear,
 } from "@/lib/gallery-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { PhotoGrid } from "@/components/PhotoGrid";
@@ -38,6 +39,9 @@ export default async function GalleryPage({
   }
 
   const activeCategory = category ? categories.find((c) => c.slug === category) : null;
+  // 사진이 아직 없는 앨범은 갤러리에 내보이지 않는다.
+  // (관리자 화면에는 그대로 보여, 사진을 올릴 자리로 쓴다)
+  const yearGroups = groupAlbumsByYear(albums.filter((a) => a.photo_count > 0));
 
   return (
     <>
@@ -69,34 +73,18 @@ export default async function GalleryPage({
       {/* 카테고리 탭 + 사진 그리드 */}
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-6xl px-6">
-          {/* 탭 */}
-          {categories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-8 pb-6 border-b border-[var(--color-rule)]">
-              <Link
-                href="/gallery"
-                className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition ${
-                  !category
-                    ? "bg-[var(--color-ink)] text-[var(--color-paper)]"
-                    : "text-[var(--color-ink-soft)] hover:bg-[var(--color-bg-soft)]"
-                }`}
-              >
-                전체
-              </Link>
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/gallery?category=${cat.slug}`}
-                  className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition ${
-                    category === cat.slug
-                      ? "bg-[var(--color-ink)] text-[var(--color-paper)]"
-                      : "text-[var(--color-ink-soft)] hover:bg-[var(--color-bg-soft)]"
-                  }`}
+          {/* 연도 탭 — 맨 위 묶음 */}
+          {!category && yearGroups.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-10 pb-6 border-b border-[var(--color-rule)]">
+              {yearGroups.map((g) => (
+                <a
+                  key={g.year ?? "etc"}
+                  href={`#year-${g.year ?? "etc"}`}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium text-[var(--color-ink-soft)] hover:bg-[var(--color-bg-soft)] transition"
                 >
-                  {cat.name}
-                  {cat.photo_count !== undefined && cat.photo_count > 0 && (
-                    <span className="opacity-60 text-xs">{cat.photo_count}</span>
-                  )}
-                </Link>
+                  {g.year ? `${g.year}년` : "연도 미정"}
+                  <span className="opacity-60 text-xs">{g.photo_count}</span>
+                </a>
               ))}
             </div>
           )}
@@ -123,49 +111,68 @@ export default async function GalleryPage({
               <PhotoGrid photos={photos} initialCategory={category} />
             </>
           ) : (
-            /* 첫 화면 — 앨범 카드 (썸네일 + 제목 + 설명) */
+            /* 첫 화면 — 연도로 묶고, 그 아래 행사별 앨범 카드 */
             <>
               {albums.length === 0 ? (
                 <div className="border border-dashed border-[var(--color-rule)] rounded-2xl p-16 text-center text-[var(--color-ink-mute)]">
                   아직 등록된 앨범이 없습니다.
                 </div>
               ) : (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {albums.map((al) => (
-                    <Link
-                      key={al.id}
-                      href={`/gallery?category=${al.slug}`}
-                      className="group flex flex-col rounded-2xl border border-[var(--color-rule)] overflow-hidden bg-white hover:shadow-lg transition-shadow"
-                    >
-                      <div className="relative aspect-[4/3] bg-[var(--color-bg-soft)] overflow-hidden">
-                        {al.cover ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={al.cover}
-                            alt={al.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-4xl text-[var(--color-ink-mute)]">
-                            🖼️
-                          </div>
-                        )}
-                        <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/55 text-white text-xs">
-                          사진 {al.photo_count}
+                <div className="space-y-14">
+                  {yearGroups.map((g) => (
+                    <section key={g.year ?? "etc"} id={`year-${g.year ?? "etc"}`} className="scroll-mt-28">
+                      <div className="flex items-baseline gap-3 mb-5 pb-3 border-b border-[var(--color-rule)]">
+                        <h2 className="display-md text-2xl sm:text-3xl">
+                          {g.year ? `${g.year}년` : "연도 미정"}
+                        </h2>
+                        <span className="text-sm text-[var(--color-ink-mute)]">
+                          앨범 {g.albums.length} · 사진 {g.photo_count}
                         </span>
                       </div>
-                      <div className="flex flex-col flex-1 p-4">
-                        <h2 className="display-md text-lg mb-1 group-hover:text-[var(--color-accent)] transition-colors">
-                          {al.name}
-                        </h2>
-                        {al.description && (
-                          <p className="text-sm text-[var(--color-ink-soft)] line-clamp-2">
-                            {al.description}
-                          </p>
-                        )}
+                      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {g.albums.map((al) => (
+                          <Link
+                            key={al.id}
+                            href={`/gallery?category=${al.slug}`}
+                            className="group flex flex-col rounded-2xl border border-[var(--color-rule)] overflow-hidden bg-white hover:shadow-lg transition-shadow"
+                          >
+                            <div className="relative aspect-[4/3] bg-[var(--color-bg-soft)] overflow-hidden">
+                              {al.cover ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={al.cover}
+                                  alt={al.name}
+                                  loading="lazy"
+                                  className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-4xl text-[var(--color-ink-mute)]">
+                                  🖼️
+                                </div>
+                              )}
+                              <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/55 text-white text-xs">
+                                사진 {al.photo_count}
+                              </span>
+                            </div>
+                            <div className="flex flex-col flex-1 p-4">
+                              {al.event_date && (
+                                <div className="text-xs text-[var(--color-ink-mute)] mb-1">
+                                  {al.event_date.replace(/-/g, ".")}
+                                </div>
+                              )}
+                              <h3 className="display-md text-lg mb-1 group-hover:text-[var(--color-accent)] transition-colors">
+                                {al.name}
+                              </h3>
+                              {al.description && (
+                                <p className="text-sm text-[var(--color-ink-soft)] line-clamp-2">
+                                  {al.description}
+                                </p>
+                              )}
+                            </div>
+                          </Link>
+                        ))}
                       </div>
-                    </Link>
+                    </section>
                   ))}
                 </div>
               )}

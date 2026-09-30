@@ -12,6 +12,8 @@ export type PhotoCategory = {
   description: string | null;
   cover_url: string | null;
   position: number;
+  year?: number | null;
+  event_date?: string | null;
   photo_count?: number;
 };
 
@@ -36,6 +38,8 @@ function rowToCategory(row: Record<string, unknown>): PhotoCategory {
     description: row.description != null ? String(row.description) : null,
     cover_url: row.cover_url != null ? String(row.cover_url) : null,
     position: Number(row.position),
+    year: row.year != null ? Number(row.year) : null,
+    event_date: row.event_date != null ? String(row.event_date) : null,
     photo_count: row.photo_count != null ? Number(row.photo_count) : undefined,
   };
 }
@@ -61,12 +65,12 @@ export const listCategories = unstable_cache(
   async (): Promise<PhotoCategory[]> => {
     const db = await getDb();
     const res = await db.execute(`
-      SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position,
+      SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position, c.year, c.event_date,
              COUNT(p.id) AS photo_count
       FROM photo_categories c
       LEFT JOIN photos p ON p.category_id = c.id
       GROUP BY c.id
-      ORDER BY c.position ASC, c.id ASC
+      ORDER BY c.year DESC, c.event_date DESC, c.position ASC, c.id ASC
     `);
     return res.rows.map((r) => rowToCategory(r as Record<string, unknown>));
   },
@@ -82,6 +86,10 @@ export type Album = {
   position: number;
   cover: string | null;
   photo_count: number;
+  /** 갤러리 맨 위 묶음 — 연도. 아직 정해지지 않은 앨범은 null */
+  year: number | null;
+  /** 한 해 안에서 앨범을 늘어놓는 기준 — 행사가 열린 날 */
+  event_date: string | null;
 };
 
 /** 앨범 카드용 — 카테고리 + 대표 이미지(커버 없으면 첫 사진) + 사진 수.
@@ -92,7 +100,7 @@ export const listAlbums = unstable_cache(
     const visFilter = publicOnly ? "AND pp.visibility = 'public'" : "";
     const visFilter2 = publicOnly ? "AND pc.visibility = 'public'" : "";
     const res = await db.execute(`
-      SELECT c.id, c.name, c.slug, c.description, c.position,
+      SELECT c.id, c.name, c.slug, c.description, c.position, c.year, c.event_date,
              COALESCE(
                c.cover_url,
                (SELECT pp.image_url FROM photos pp
@@ -102,7 +110,7 @@ export const listAlbums = unstable_cache(
              (SELECT COUNT(*) FROM photos pc
                 WHERE pc.category_id = c.id ${visFilter2}) AS photo_count
       FROM photo_categories c
-      ORDER BY c.position ASC, c.id ASC
+      ORDER BY c.year DESC, c.event_date DESC, c.position ASC, c.id ASC
     `);
     return res.rows.map((r) => {
       const row = r as Record<string, unknown>;
@@ -114,6 +122,8 @@ export const listAlbums = unstable_cache(
         position: Number(row.position),
         cover: row.cover != null ? String(row.cover) : null,
         photo_count: Number(row.photo_count ?? 0),
+        year: row.year != null ? Number(row.year) : null,
+        event_date: row.event_date != null ? String(row.event_date) : null,
       };
     });
   },
@@ -124,7 +134,7 @@ export const listAlbums = unstable_cache(
 export async function getCategoryById(id: number): Promise<PhotoCategory | null> {
   const db = await getDb();
   const res = await db.execute({
-    sql: `SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position,
+    sql: `SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position, c.year, c.event_date,
                  COUNT(p.id) AS photo_count
           FROM photo_categories c
           LEFT JOIN photos p ON p.category_id = c.id
@@ -140,7 +150,7 @@ export async function getCategoryById(id: number): Promise<PhotoCategory | null>
 export async function getCategoryBySlug(slug: string): Promise<PhotoCategory | null> {
   const db = await getDb();
   const res = await db.execute({
-    sql: `SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position,
+    sql: `SELECT c.id, c.name, c.slug, c.description, c.cover_url, c.position, c.year, c.event_date,
                  COUNT(p.id) AS photo_count
           FROM photo_categories c
           LEFT JOIN photos p ON p.category_id = c.id
@@ -159,17 +169,24 @@ export async function createCategory(data: {
   description?: string | null;
   cover_url?: string | null;
   position?: number;
+  year?: number | null;
+  event_date?: string | null;
 }): Promise<number> {
   const db = await getDb();
+  // 연도를 따로 적지 않았으면 행사일에서 가져온다
+  const year =
+    data.year ?? (data.event_date ? Number(data.event_date.slice(0, 4)) : null);
   const res = await db.execute({
-    sql: `INSERT INTO photo_categories (name, slug, description, cover_url, position)
-          VALUES (?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO photo_categories (name, slug, description, cover_url, position, year, event_date)
+          VALUES (?, ?, ?, ?, ?, ?, ?)`,
     args: [
       data.name,
       data.slug,
       data.description ?? null,
       data.cover_url ?? null,
       data.position ?? 0,
+      Number.isFinite(year as number) ? (year as number) : null,
+      data.event_date ?? null,
     ],
   });
   return Number(res.lastInsertRowid);
@@ -183,6 +200,8 @@ export async function updateCategory(
     description: string | null;
     cover_url: string | null;
     position: number;
+    year: number | null;
+    event_date: string | null;
   }>
 ): Promise<void> {
   const db = await getDb();
@@ -194,6 +213,15 @@ export async function updateCategory(
   if (data.description !== undefined) { sets.push("description = ?"); args.push(data.description); }
   if (data.cover_url !== undefined) { sets.push("cover_url = ?"); args.push(data.cover_url); }
   if (data.position !== undefined) { sets.push("position = ?"); args.push(data.position); }
+  if (data.event_date !== undefined) { sets.push("event_date = ?"); args.push(data.event_date); }
+  if (data.year !== undefined) {
+    sets.push("year = ?");
+    args.push(data.year);
+  } else if (data.event_date) {
+    // 연도를 비워 두면 행사일에서 채운다
+    const y = Number(data.event_date.slice(0, 4));
+    if (Number.isFinite(y)) { sets.push("year = ?"); args.push(y); }
+  }
 
   if (sets.length === 0) return;
   args.push(id);
@@ -349,3 +377,28 @@ export const listPhotosByCategory = unstable_cache(
   ["gallery:photosByCategory"],
   { tags: ["gallery"], revalidate: CACHE_TTL }
 );
+
+/** 앨범을 연도로 묶는다. 연도가 없는 앨범은 맨 뒤에 따로 모은다. */
+export type AlbumYear = { year: number | null; albums: Album[]; photo_count: number };
+
+export function groupAlbumsByYear(albums: Album[]): AlbumYear[] {
+  const byYear = new Map<number | null, Album[]>();
+  for (const a of albums) {
+    const key = a.year ?? null;
+    const arr = byYear.get(key);
+    if (arr) arr.push(a);
+    else byYear.set(key, [a]);
+  }
+  const groups: AlbumYear[] = [...byYear.entries()].map(([year, list]) => ({
+    year,
+    albums: list,
+    photo_count: list.reduce((n, a) => n + a.photo_count, 0),
+  }));
+  // 연도는 최근 순, 연도가 없는 묶음은 맨 뒤
+  groups.sort((a, b) => {
+    if (a.year === null) return 1;
+    if (b.year === null) return -1;
+    return b.year - a.year;
+  });
+  return groups;
+}

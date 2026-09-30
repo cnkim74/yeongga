@@ -61,6 +61,18 @@ async function uniqueSlug(base: string, excludeId?: number): Promise<string> {
   return candidate;
 }
 
+/** 폼에서 행사일·연도를 읽는다. 연도를 비워 두면 행사일에서 가져온다. */
+function readYearFields(fd: FormData): { year: number | null; event_date: string | null } {
+  const eventDate = String(fd.get("event_date") ?? "").trim() || null;
+  const yearRaw = String(fd.get("year") ?? "").trim();
+  const year = yearRaw
+    ? Number(yearRaw)
+    : eventDate
+      ? Number(eventDate.slice(0, 4))
+      : null;
+  return { year: Number.isFinite(year as number) ? (year as number) : null, event_date: eventDate };
+}
+
 export async function createAlbumAction(fd: FormData) {
   await requireAdmin();
 
@@ -77,7 +89,8 @@ export async function createAlbumAction(fd: FormData) {
   const slug = await uniqueSlug(base);
   const cover_url = images[0]?.image_url ?? null;
 
-  const categoryId = await createCategory({ name, slug, description, cover_url });
+  const { year, event_date } = readYearFields(fd);
+  const categoryId = await createCategory({ name, slug, description, cover_url, year, event_date });
   for (let i = 0; i < images.length; i++) {
     await createPhoto({
       category_id: categoryId,
@@ -114,7 +127,8 @@ export async function updateAlbumAction(fd: FormData) {
       : album.slug;
   const cover_url = images[0]?.image_url ?? null;
 
-  await updateCategory(id, { name, slug, description, cover_url });
+  const { year, event_date } = readYearFields(fd);
+  await updateCategory(id, { name, slug, description, cover_url, year, event_date });
 
   // 사진 동기화 — image_url 기준
   const existing = await listPhotos({ categoryId: id });
@@ -175,7 +189,8 @@ export async function createCategoryAction(fd: FormData) {
   if (!name) return { error: "이름을 입력해 주세요." };
   if (!slug) return { error: "슬러그를 입력해 주세요." };
 
-  await createCategory({ name, slug, description, cover_url, position });
+  const yc = readYearFields(fd);
+  await createCategory({ name, slug, description, cover_url, position, ...yc });
   refreshPaths();
   return { ok: true };
 }
@@ -195,7 +210,8 @@ export async function updateCategoryAction(fd: FormData) {
   if (!name) return { error: "이름을 입력해 주세요." };
   if (!slug) return { error: "슬러그를 입력해 주세요." };
 
-  await updateCategory(id, { name, slug, description, cover_url, position });
+  const yu = readYearFields(fd);
+  await updateCategory(id, { name, slug, description, cover_url, position, ...yu });
   refreshPaths();
   return { ok: true };
 }

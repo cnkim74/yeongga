@@ -10,7 +10,14 @@ export function AlbumForm({
   existingImages = [],
   defaultVisibility = "public",
 }: {
-  album?: { id: number; name: string; slug: string; description: string | null };
+  album?: {
+    id: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    year?: number | null;
+    event_date?: string | null;
+  };
   existingImages?: Img[];
   defaultVisibility?: "public" | "members-only";
 }) {
@@ -108,6 +115,35 @@ export function AlbumForm({
           className="notion-input w-full"
           placeholder="예: 2025 정기총회"
         />
+      </div>
+
+      {/* 갤러리는 맨 위를 연도로 나눈다. 행사일을 넣으면 연도는 저절로 채워진다. */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-sm font-medium text-[var(--color-notion-ink)] mb-1.5">
+            행사일
+          </label>
+          <input
+            type="date"
+            name="event_date"
+            defaultValue={album?.event_date ?? ""}
+            className="notion-input w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-[var(--color-notion-ink)] mb-1.5">
+            연도
+          </label>
+          <input
+            type="number"
+            name="year"
+            min={1977}
+            max={2100}
+            defaultValue={album?.year ?? ""}
+            className="notion-input w-full"
+            placeholder="비우면 행사일에서"
+          />
+        </div>
       </div>
 
       <div>

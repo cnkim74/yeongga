@@ -44,6 +44,8 @@ export default async function EditAlbumPage({
             name: album.name,
             slug: album.slug,
             description: album.description,
+            year: album.year ?? null,
+            event_date: album.event_date ?? null,
           }}
           existingImages={existingImages}
           defaultVisibility={defaultVisibility}
