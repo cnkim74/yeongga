@@ -18,6 +18,7 @@ import { countUsers, listRecentUsers } from "@/lib/users-db";
 import { getCurrentUser } from "@/lib/auth";
 import { countAllArticles } from "@/lib/articles-db";
 import { listAllTags } from "@/lib/tags-db";
+import { countDirectory } from "@/lib/directory-db";
 import { listPageBackgrounds } from "@/lib/backgrounds-db";
 import { listCategories, countPhotos } from "@/lib/gallery-db";
 import { countEbooks } from "@/lib/ebooks-db";
@@ -45,6 +46,7 @@ export default async function AdminHome() {
     bannerStats,
     visitStats,
     newSubmissions,
+    directoryCount,
   ] = await Promise.all([
     listSlides(),
     countVideos(),       // 풀스캔 대신 COUNT(*)
@@ -60,6 +62,7 @@ export default async function AdminHome() {
     countBanners(),
     getVisitStats(),
     countNewSubmissions(),
+    countDirectory(),
   ]);
 
   const activeSlides = slides.filter((s) => s.active).length;
@@ -129,6 +132,9 @@ export default async function AdminHome() {
                   sub={ebookStats.membersOnly > 0 ? `회원전용 ${ebookStats.membersOnly}권` : "PDF 자료"} />
           <DbCard href="/admin/members"     Icon={IconMembers}    title="회원 명부"
                   stat={`${userStats.total}명`} sub={`관리자 ${userStats.admins}명`} />
+          <DbCard href="/admin/directory"   Icon={IconMembers}    title="회원 명단(수첩)"
+                  stat={directoryCount > 0 ? `${directoryCount}명` : "—"}
+                  sub="수첩 PDF 올리기" />
           <DbCard href="/admin/submissions" Icon={IconArticle}    title="자료 접수"
                   stat={newSubmissions > 0 ? `${newSubmissions}건` : "—"}
                   sub={newSubmissions > 0 ? "신규 확인 필요" : "공개 폼 접수"} />

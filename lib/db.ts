@@ -186,6 +186,24 @@ async function init(client: Client) {
     );
     CREATE INDEX IF NOT EXISTS idx_photos_category ON photos(category_id);
 
+    -- 회원 명단 — 회원수첩에서 공개 항목만 옮겨 둔다.
+    -- 자택 주소·생년·전화번호는 저장하지 않는다 (lib/directory-parse.ts 에서 버림).
+    CREATE TABLE IF NOT EXISTS directory_members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      hanja TEXT,
+      position TEXT,
+      career TEXT,
+      page_no INTEGER,
+      sort_key TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS directory_meta (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS chapter_meta (
       chapter_slug TEXT PRIMARY KEY,
       cover_image TEXT,
@@ -195,6 +213,9 @@ async function init(client: Client) {
       position INTEGER NOT NULL DEFAULT 0,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE INDEX IF NOT EXISTS idx_directory_sort
+      ON directory_members(sort_key);
 
     CREATE TABLE IF NOT EXISTS member_banners (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
