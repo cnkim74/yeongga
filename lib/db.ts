@@ -3697,6 +3697,29 @@ async function init(client: Client) {
     await markMigration(client, "hyang-audit-v1");
   }
 
+  // 자취 검수 — 부록 규정을 원문으로 (2026-09-30)
+  //  - 입회 안내의 주소가 '명도빌라 아이비 타워'로 잘못 적혀 있었다.
+  //    원문은 반도보라 아이비 타워(523쪽).
+  //  - 탈퇴 규정 6개 항과 경조사 규정 3개 항을 526쪽 원문으로 실었다.
+  //  - 영가문화상 운영 규정은 7조가 아니라 18조다(529~530쪽).
+  //  - 제1회 수상 단체 대표는 김재태가 아니라 김재해(533쪽).
+  //  - 한국예술문화단체'총연맹' → 총연합회(535쪽).
+  //  - 임청각을 세운 이는 이증의 셋째 아들 형조좌랑 이명(443~444쪽).
+  if (!(await hasMigration(client, "jachui-audit-v1"))) {
+    const touched: [string, string][] = [
+      ["hyang", "andong-imcheonggak-haksang"],
+      ["jachui", "jachui-ipsoe-gyujong"],
+      ["jachui", "jachui-munhwasang-gyujong"],
+      ["jachui", "jachui-munhwasang-jachui"],
+      ["jachui", "sajin-munhwasang-mum"],
+      ["yeongi", "yeongga-munhwasang-sijak"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({ sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?", args: [chapter, slug] });
+    }
+    await markMigration(client, "jachui-audit-v1");
+  }
+
 
 
 
@@ -4093,7 +4116,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v73";
+  const seedKey = "content-seed-v74";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
