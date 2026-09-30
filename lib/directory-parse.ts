@@ -20,10 +20,10 @@ export type DirectoryEntry = {
 // 한자 범위에 호환 한자(U+F900~U+FAFF)를 포함한다. 李(U+F9E1)처럼
 // 한국어 독음용 호환 한자로 들어간 성씨가 적지 않다.
 const HANJA = "\\u4e00-\\u9fff\\uf900-\\ufaff\\u3400-\\u4dbf";
-const NAME_LINE = new RegExp(`^([가-힣]{2,5})\\(([${HANJA}]{1,5})\\)`);
+const NAME_LINE = new RegExp(`^([가-힣]{2,5})\\(([${HANJA}\\s]{1,6})\\)`);
 /** 생년까지 붙은 이름 — 줄 중간에 있어도 찾는다 */
 const NAME_WITH_YEAR = new RegExp(
-  `([가-힣]{2,5})\\(([${HANJA}]{1,5})\\)\\s*\\(\\s*\\d{4}\\s*년\\s*生\\s*\\)`,
+  `([가-힣]{2,5})\\(([${HANJA}\\s]{1,6})\\)\\s*\\(\\s*\\d{4}\\s*년\\s*生\\s*\\)`,
 );
 const PHONE = /^[\d(]?[\d\-*()\s]{6,}$/;
 const LABEL = /^(현직|경력|자택|직장|사무실|회사|본적|주소|학력|비고)\s*/;
@@ -51,7 +51,7 @@ export function parseDirectoryPage(
   const flush = (name: string, hanja: string) => {
     out.push({
       name,
-      hanja,
+      hanja: hanja.replace(/\s+/g, ""),
       position: (bag.get("현직") ?? []).join(" · "),
       career: (bag.get("경력") ?? []).join(" · "),
       pageNo,
@@ -136,5 +136,25 @@ export async function parseDirectoryPdf(
     }
     all.push(...parseDirectoryPage(lines.join("\n"), i));
   }
-  return all;
+
+  // 수첩에는 임원 명단 등으로 같은 사람이 두 번 나오는 자리가 있다.
+  // 이름과 한자가 같으면 한 사람으로 보고 항목을 합친다.
+  const merged = new Map<string, DirectoryEntry>();
+  for (const e of all) {
+    const key = `${e.name}|${e.hanja}`;
+    const prev = merged.get(key);
+    if (!prev) {
+      merged.set(key, { ...e });
+      continue;
+    }
+    const join = (a: string, b: string) => {
+      const parts = [...a.split(" · "), ...b.split(" · ")]
+        .map((x) => x.trim())
+        .filter(Boolean);
+      return [...new Set(parts)].join(" · ");
+    };
+    prev.position = join(prev.position, e.position);
+    prev.career = join(prev.career, e.career);
+  }
+  return [...merged.values()];
 }
