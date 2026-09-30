@@ -73,9 +73,12 @@ export async function parseDirectoryPdf(
   buf: ArrayBuffer,
 ): Promise<DirectoryEntry[]> {
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  // 서버에서는 워커 없이 읽는다. 글자만 뽑아 쓰므로 글꼴은 필요 없다.
   const doc = await pdfjs.getDocument({
     data: new Uint8Array(buf),
-    useSystemFonts: true,
+    useSystemFonts: false,
+    disableFontFace: true,
+    isEvalSupported: false,
   }).promise;
 
   const all: DirectoryEntry[] = [];
