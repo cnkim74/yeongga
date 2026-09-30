@@ -25,6 +25,12 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       { source: "/archive/saram", destination: "/archive/geul", permanent: true },
+      // 40년사 346쪽 원문은 '김영길'(한동대 총장) — 잘못 적힌 이름으로 만든 옛 주소
+      {
+        source: "/archive/geul/myungsa-kim-hogil-myeongil",
+        destination: "/archive/geul/myungsa-kim-hogil-yeonggil",
+        permanent: true,
+      },
     ];
   },
   images: {

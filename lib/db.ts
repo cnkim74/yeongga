@@ -3409,6 +3409,43 @@ async function init(client: Client) {
     await markMigration(client, "changrip-record-v1");
   }
 
+  // 출처 없는 글 전수 점검 — 1차 (2026-09-30)
+  // 인물 평전 3편과 영가문화상 연혁에서 40년사 원문과 어긋나는 사실을 고쳤다.
+  //  - 김해길 1대 회장의 아우는 '김명일'이 아니라 '김영길' 한동대 총장(346쪽).
+  //    슬러그를 바꾸고 옛 주소는 next.config.ts 에서 넘긴다.
+  //  - 권상철: '안동진흥대학교 이사장' → 안양공업전문대 설립·이사장(348쪽),
+  //    안동향우회 초대 회장은 1968/1969년이 아니라 1989년(364쪽).
+  //  - 이용태: 지어낸 서술을 빼고 62~64·323쪽 기록으로 다시 썼다.
+  //  - 영가문화상: 제정 취지문은 2005.11.15(109쪽), 첫 시상은 2006.1.9.
+  //    2004년 제1회·11회 연속 시상은 근거가 없다(533~536쪽).
+  //  - 지어낸 인용문(금창태 회장·수상자 발언)을 걷어냈다.
+  if (!(await hasMigration(client, "sourceless-audit-v1"))) {
+    await client.execute({
+      sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+      args: ["geul", "myungsa-kim-hogil-myeongil"],
+    });
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+      args: ["geul", "myungsa-kim-hogil-myeongil"],
+    });
+    const touched: [string, string][] = [
+      ["geul", "myungsa-kwon-sangchol"],
+      ["geul", "myungsa-lee-yongtae"],
+      ["geul", "3dae-geum-changtae"],
+      ["geul", "9dae-bak-daeseop"],
+      ["jachui", "sajin-munhwasang-mum"],
+      ["jachui", "hoebo-9-1-bak-daeseop-9dae"],
+      ["yeongi", "yeongga-munhwasang-sijak"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "sourceless-audit-v1");
+  }
+
 
 
 
@@ -3805,7 +3842,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v66";
+  const seedKey = "content-seed-v67";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
