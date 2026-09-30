@@ -40,7 +40,7 @@ export const listPageBackgrounds = unstable_cache(
   { tags: ["backgrounds"], revalidate: CACHE_TTL }
 );
 
-export const getPageBackground = unstable_cache(
+const getPageBackgroundDb = unstable_cache(
   async (page: string): Promise<PageBackground | null> => {
     const db = await getDb();
     const r = await db.execute({
@@ -54,6 +54,16 @@ export const getPageBackground = unstable_cache(
   ["backgrounds:byPage"],
   { tags: ["backgrounds"], revalidate: CACHE_TTL }
 );
+
+/** 배경 그림은 장식이다. 데이터베이스가 안 되면 없이 그린다. */
+export async function getPageBackground(page: string): Promise<PageBackground | null> {
+  try {
+    return await getPageBackgroundDb(page);
+  } catch (e) {
+    console.error("[backgrounds] 배경을 읽지 못했습니다 — 없이 그립니다.", e);
+    return null;
+  }
+}
 
 export async function upsertPageBackground(
   page: string,

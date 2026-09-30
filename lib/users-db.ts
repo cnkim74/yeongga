@@ -9,7 +9,7 @@ import { hashPassword, verifyPassword } from "./passwords";
  * 공개 글/아카이브 페이지가 저자 아바타를 찾을 때 쓰는 캐시 조회.
  * 예전엔 페이지마다 listUsers()로 전체 회원을 스캔해 Turso 읽기 폭증의 한 원인이었음.
  */
-export const listAuthorAvatars = unstable_cache(
+const listAuthorAvatarsDb = unstable_cache(
   async (): Promise<Record<string, string>> => {
     const db = await getDb();
     const r = await db.execute(
@@ -27,6 +27,16 @@ export const listAuthorAvatars = unstable_cache(
   ["users:authorAvatars"],
   { tags: ["members"], revalidate: 1800 }
 );
+
+/** 글쓴이 사진은 장식이다. 데이터베이스가 안 되면 없이 그린다. */
+export async function listAuthorAvatars(): Promise<Record<string, string>> {
+  try {
+    return await listAuthorAvatarsDb();
+  } catch (e) {
+    console.error("[users] 글쓴이 사진을 읽지 못했습니다 — 없이 그립니다.", e);
+    return {};
+  }
+}
 
 export type User = {
   id: number;

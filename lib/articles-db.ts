@@ -1,6 +1,7 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
+import { listArticlesFromFiles, getArticleFromFiles } from "./articles-files";
 import {
   looksLikeHTML,
   looksLikeWrappedMarkdown,
@@ -64,7 +65,7 @@ async function bodyToHTML(body: string): Promise<string> {
   return looksLikeHTML(body) ? body : await renderMarkdown(body);
 }
 
-export const listAllArticles = unstable_cache(
+const listAllArticlesDb = unstable_cache(
   async (): Promise<ArticleMeta[]> => {
     const db = await getDb();
     const r = await db.execute(
@@ -76,7 +77,7 @@ export const listAllArticles = unstable_cache(
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
-export const listChapterArticles = unstable_cache(
+const listChapterArticlesDb = unstable_cache(
   async (chapter: string): Promise<ArticleMeta[]> => {
     const db = await getDb();
     const r = await db.execute({
@@ -89,7 +90,7 @@ export const listChapterArticles = unstable_cache(
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
-export const countAllArticles = unstable_cache(
+const countAllArticlesDb = unstable_cache(
   async (): Promise<number> => {
     const db = await getDb();
     const r = await db.execute(`SELECT COUNT(*) as n FROM articles`);
@@ -213,7 +214,7 @@ export const getLatestPerChapter = unstable_cache(
   { tags: ["articles"], revalidate: CACHE_TTL }
 );
 
-export const getArticleBySlug = unstable_cache(
+const getArticleBySlugDb = unstable_cache(
   async (chapter: string, slug: string): Promise<Article | null> => {
     const db = await getDb();
     const r = await db.execute({
@@ -342,4 +343,51 @@ export async function deleteArticle(id: number) {
     });
   }
   await db.execute({ sql: "DELETE FROM articles WHERE id = ?", args: [id] });
+}
+
+// ─── 데이터베이스가 잠시 응답하지 않을 때 ──────────────────
+// 글 본문은 저장소 파일에도 그대로 있다. 데이터베이스를 못 읽으면
+// 오류 화면 대신 파일에서 읽어 보여 준다. 사이트가 깜깜해지지 않게 하는 안전망.
+
+function noteFallback(where: string, e: unknown) {
+  console.error(`[articles] ${where} — 데이터베이스를 읽지 못해 파일에서 읽습니다.`, e);
+}
+
+export async function listAllArticles(): Promise<ArticleMeta[]> {
+  try {
+    return await listAllArticlesDb();
+  } catch (e) {
+    noteFallback("listAllArticles", e);
+    return listArticlesFromFiles();
+  }
+}
+
+export async function listChapterArticles(chapter: string): Promise<ArticleMeta[]> {
+  try {
+    return await listChapterArticlesDb(chapter);
+  } catch (e) {
+    noteFallback("listChapterArticles", e);
+    return listArticlesFromFiles(chapter);
+  }
+}
+
+export async function countAllArticles(): Promise<number> {
+  try {
+    return await countAllArticlesDb();
+  } catch (e) {
+    noteFallback("countAllArticles", e);
+    return listArticlesFromFiles().length;
+  }
+}
+
+export async function getArticleBySlug(
+  chapter: string,
+  slug: string
+): Promise<Article | null> {
+  try {
+    return await getArticleBySlugDb(chapter, slug);
+  } catch (e) {
+    noteFallback("getArticleBySlug", e);
+    return await getArticleFromFiles(chapter, slug);
+  }
 }

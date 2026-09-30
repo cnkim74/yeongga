@@ -61,10 +61,11 @@ export default async function ArticlePage({
     isLocked = !user;
   }
 
+  // 태그는 곁들이는 정보다. 못 읽어도 글은 보여 준다.
   const [all, avatars, tags] = await Promise.all([
     listChapterArticles(chapter),
     listAuthorAvatars(),
-    getTagsForArticle(article.id),
+    getTagsForArticle(article.id).catch(() => [] as string[]),
   ]);
   const idx = all.findIndex((a) => a.slug === slug);
   const prev = idx >= 0 ? all[idx + 1] : undefined;

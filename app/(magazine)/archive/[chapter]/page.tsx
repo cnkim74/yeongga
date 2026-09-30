@@ -37,10 +37,12 @@ export default async function ChapterPage({
   const { chapter } = await params;
   const meta = getChapter(chapter);
   if (!meta) notFound();
+  // 글 목록은 데이터베이스가 안 되면 저장소 파일에서 읽어 온다(articles-db).
+  // 곁들이는 아바타·장 메타는 못 읽어도 목록은 보여 준다.
   const [articles, avatars, chapterMeta] = await Promise.all([
     listChapterArticles(chapter),
-    listAuthorAvatars(),
-    getChapterMeta(chapter),
+    listAuthorAvatars().catch(() => ({}) as Record<string, string>),
+    getChapterMeta(chapter).catch(() => null),
   ]);
 
   const ordered = articles;

@@ -9,12 +9,50 @@ import { looksLikeHTML, renderMarkdown } from "./markdown";
 let _client: Client | null = null;
 let _initPromise: Promise<void> | null = null;
 
+/** 잠깐 끊긴 연결인지 — 이런 오류는 한 번 더 해 보면 대개 된다 */
+function isTransient(e: unknown): boolean {
+  const s = String((e as { cause?: unknown })?.cause ?? e ?? "");
+  return (
+    s.includes("UND_ERR_SOCKET") ||
+    s.includes("ETIMEDOUT") ||
+    s.includes("ECONNRESET") ||
+    s.includes("other side closed") ||
+    s.includes("fetch failed")
+  );
+}
+
+/** execute/batch 가 잠깐 끊겨 실패하면 조금 쉬었다 두 번까지 다시 해 본다. */
+function withRetry(client: Client): Client {
+  const wrap = <A extends unknown[], R>(fn: (...a: A) => Promise<R>) =>
+    async (...a: A): Promise<R> => {
+      let last: unknown;
+      for (let i = 0; i < 3; i++) {
+        try {
+          return await fn(...a);
+        } catch (e) {
+          if (!isTransient(e)) throw e;
+          last = e;
+          await new Promise((r) => setTimeout(r, 150 * (i + 1)));
+        }
+      }
+      throw last;
+    };
+  const c = client as unknown as Record<string, unknown>;
+  const execute = client.execute.bind(client);
+  const batch = client.batch.bind(client);
+  const executeMultiple = client.executeMultiple.bind(client);
+  c.execute = wrap(execute as (...a: unknown[]) => Promise<unknown>);
+  c.batch = wrap(batch as (...a: unknown[]) => Promise<unknown>);
+  c.executeMultiple = wrap(executeMultiple as (...a: unknown[]) => Promise<unknown>);
+  return client;
+}
+
 function makeClient(): Client {
   const url = process.env.TURSO_DATABASE_URL;
   const authToken = process.env.TURSO_AUTH_TOKEN;
 
   if (url && url.startsWith("libsql://")) {
-    return createClient({ url, authToken });
+    return withRetry(createClient({ url, authToken }));
   }
 
   // 로컬 개발 — 파일 SQLite (file URI는 // 두 개 + 절대 경로)

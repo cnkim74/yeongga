@@ -18,7 +18,7 @@ export default async function ArchiveIndex() {
   // 8 챕터 × 별도 쿼리 → 단일 쿼리 + 메모리 그룹핑 (9쿼리 → 2쿼리)
   const [allArticles, avatars] = await Promise.all([
     listAllArticles(),
-    listAuthorAvatars(),
+    listAuthorAvatars().catch(() => ({}) as Record<string, string>),
   ]);
   const byChapter = new Map<string, ArticleMeta[]>();
   for (const a of allArticles) {

@@ -14,12 +14,23 @@ import { PageHeroBg } from "@/components/PageHeroBg";
 // /archive/[chapter] 와 동일한 방식으로 요청 시점에 동적 렌더링.
 export const dynamic = "force-dynamic";
 
+/** 데이터베이스가 잠시 응답하지 않아도 표지는 열려야 한다.
+ *  못 읽은 자리는 비워 두고 나머지를 보여 준다. */
+async function orEmpty<T>(p: Promise<T>, fallback: T, what: string): Promise<T> {
+  try {
+    return await p;
+  } catch (e) {
+    console.error(`[home] ${what} 를 읽지 못했습니다.`, e);
+    return fallback;
+  }
+}
+
 export default async function HomePage() {
   const [dbSlides, featuredVideo, chapterDisplays, banners] = await Promise.all([
-    listActiveSlides(),
-    getFeaturedVideo(),
-    listHomeChapterDisplays(),
-    listActiveBanners(),
+    orEmpty(listActiveSlides(), [], "슬라이드"),
+    orEmpty(getFeaturedVideo(), null, "대표 영상"),
+    orEmpty(listHomeChapterDisplays(), [], "장 소개"),
+    orEmpty(listActiveBanners(), [], "배너"),
   ]);
 
   const slides: HeroSlide[] = dbSlides.map((s) => ({
