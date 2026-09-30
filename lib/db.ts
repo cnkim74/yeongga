@@ -3337,6 +3337,40 @@ async function init(client: Client) {
     await markMigration(client, "geul-40nyeonsa-fact-v1");
   }
 
+  // 창작 기고문 5편 영구 삭제 (2026-09-30)
+  // 40년사 545쪽 전체를 OCR 해 대조한 결과, 아래 글들은 첫 문장부터 책 어디에도
+  // 없고 밝혀 둔 쪽수에는 전혀 다른 내용이 실려 있다. 실존 회원(작고한 초대회장
+  // 김해길 포함)의 이름을 붙인 창작 수필이라 내린다.
+  if (!(await hasMigration(client, "geul-purge-fabricated-v1"))) {
+    const purge = [
+      "geul-andong-gil-leeyangsuk",
+      "geul-cheot-chamsuk-kimhaegilh",
+      "geul-hoebi-ryuheok-in",
+      "geul-yeongssi-sohwa-choiminsik",
+      "geul-sonju-giong-parkjunghee",
+    ];
+    for (const slug of purge) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["geul", slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["geul", slug],
+      });
+    }
+    const touched: [string, string][] = [
+      ["geul", "geul-nameun-mal-gangminchang"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "geul-purge-fabricated-v1");
+  }
+
 
 
 
@@ -3733,7 +3767,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v63";
+  const seedKey = "content-seed-v64";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
