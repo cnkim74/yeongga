@@ -3083,6 +3083,20 @@ async function init(client: Client) {
     await markMigration(client, "moim-plain-v1");
   }
 
+  // 회보 전재 글 제목 교정 — 9-4호 정기총회 이모저모 제목, 9-1호 머리기사 오타
+  if (!(await hasMigration(client, "moim-title-fix-v1"))) {
+    for (const slug of [
+      "hoebo-9-4-jeonggi-chonghoe-imomo",
+      "hoebo-9-1-jeonggi-chonghoe-200",
+    ]) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["moim", slug],
+      });
+    }
+    await markMigration(client, "moim-title-fix-v1");
+  }
+
 
 
 
@@ -3479,7 +3493,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v56";
+  const seedKey = "content-seed-v57";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
