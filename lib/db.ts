@@ -2873,6 +2873,17 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-hoejang-v1");
   }
 
+  // 초창기 내용인데 작성일로 최신에 올라와 있던 글들 — 실제 시기로 바로잡아 다시 시드.
+  if (!(await hasMigration(client, "yeongi-dates-v1"))) {
+    for (const slug of ["1st-hgkim-01", "hoechik-jeongsin", "andong-jeongcheseong", "1977-changrip-namgang"]) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["yeongi", slug],
+      });
+    }
+    await markMigration(client, "yeongi-dates-v1");
+  }
+
 
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
@@ -3267,7 +3278,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v52";
+  const seedKey = "content-seed-v53";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
