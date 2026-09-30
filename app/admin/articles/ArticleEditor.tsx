@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Youtube from "@tiptap/extension-youtube";
+import { TableKit } from "@tiptap/extension-table";
 import { FigureImage } from "./extensions/FigureImage";
 import { ImageGallery, type GalleryImage } from "./extensions/ImageGallery";
 import { Ornament, type OrnamentStyle } from "./extensions/Ornament";
@@ -46,12 +46,14 @@ export function ArticleEditor({
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
+      // StarterKit 3 은 Link 를 이미 품고 있다. 따로 더하면 확장 이름이
+      // 겹쳐 경고가 나므로 여기서 함께 설정한다.
       StarterKit.configure({
         heading: { levels: [2, 3] },
-      }),
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
+        link: {
+          openOnClick: false,
+          HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
+        },
       }),
       Placeholder.configure({
         placeholder: "본문을 시작하세요…",
@@ -59,6 +61,9 @@ export function ArticleEditor({
       FigureImage.configure({ inline: false }),
       ImageGallery,
       Ornament,
+      // 표는 40년사·회보를 옮긴 글에 자주 쓰인다.
+      // 확장을 넣지 않으면 편집기가 표를 통째로 버린다.
+      TableKit.configure({ table: { resizable: true } }),
       Youtube.configure({
         nocookie: true,
         controls: true,

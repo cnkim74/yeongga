@@ -276,13 +276,28 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   font-size: 0.95em;
   line-height: 1.65;
 }
-.prose-body thead th {
+/* 편집기(TipTap)로 만든 표는 thead 없이 tbody 안에 th 가 오고,
+   칸 안에 <p> 가 한 겹 더 들어간다. 마크다운 표와 같게 보이도록 맞춘다. */
+.prose-body thead th,
+.prose-body tbody th {
   text-align: left;
   font-weight: 600;
   white-space: nowrap;
   padding: 0.7em 1em;
   border-bottom: 2px solid var(--color-rule);
   color: var(--color-ink);
+}
+.prose-body th > p,
+.prose-body td > p {
+  margin: 0;
+}
+.prose-body th > p + p,
+.prose-body td > p + p {
+  margin-top: 0.4em;
+}
+/* 편집기가 붙이는 min-width(50px·25px)는 본문 폭보다 훨씬 좁다 */
+.prose-body table[style] {
+  min-width: 100%;
 }
 .prose-body tbody td {
   padding: 0.7em 1em;

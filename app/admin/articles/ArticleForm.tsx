@@ -17,7 +17,9 @@ export function ArticleForm({
     saveArticleAction,
     {}
   );
-  const [bodyHTML, setBodyHTML] = useState(article?.body ?? "");
+  // 파일에서 시드된 글은 body 가 마크다운이다. 편집기(TipTap)는 HTML 만
+  // 이해하므로, 읽을 때 만들어 둔 html 을 넣어 준다. 저장하면 HTML 로 바뀐다.
+  const [bodyHTML, setBodyHTML] = useState(article?.html ?? article?.body ?? "");
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tagInput, setTagInput] = useState("");
   const tagRef = useRef<HTMLInputElement>(null);
