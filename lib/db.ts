@@ -3902,6 +3902,53 @@ async function init(client: Client) {
     await markMigration(client, "gallery-by-year-v1");
   }
 
+  // 옛 행사 사진 가운데 현수막에 날짜가 적힌 것 (2026-09-30)
+  // 스캔한 옛 사진이라 촬영일이 비어 있었다. 사진 속 현수막을 읽어 채운다.
+  // 여기 없는 사진은 날짜를 알 수 없어 그대로 둔다 — 집무실에서 채울 수 있다.
+  if (!(await hasMigration(client, "old-photo-dates-v1"))) {
+    const DATED: [string, string, string][] = [
+      // [파일 이름, 촬영일, 현수막에 적힌 행사]
+      ["mpd3k8z1-2fb59d981956", "2002-01-09", "2002년 신년하례회"],
+      ["mpd3lng0-7c1b7df1b1a0", "2003-01-15", "2003년 신년하례회"],
+      ["mpd3n4te-b58423cdc96e", "2009-09-25", "2009년도 하반기 문화유적 탐방 (주왕산)"],
+      ["mpd3n5q6-14e2ae43bca5", "2010-01-13", "2010년 신년하례회 및 정기총회"],
+      ["mpd3n73o-87f08d2b55bb", "2011-01-07", "2011년 신년하례회 및 정기총회"],
+    ];
+    const EVENT_NAMES2: Record<string, string> = {
+      "2002-01-09": "신년하례회",
+      "2003-01-15": "신년하례회 · 3대 금창태 회장 취임",
+      "2009-09-25": "하반기 문화유적 탐방 — 주왕산",
+      "2010-01-13": "신년하례회 · 정기총회 — 영가문화상 제3회",
+      "2011-01-07": "신년하례회 · 정기총회 — 5대 류종묵 회장 취임",
+    };
+    for (const [file, day, caption] of DATED) {
+      const url = `https://cdn.yeongga.com/gallery/${file}.jpg`;
+      const [, m, dd] = day.split("-");
+      const year = Number(day.slice(0, 4));
+      const slug = `day-${day}`;
+      const name = `${Number(m)}월 ${Number(dd)}일 ${EVENT_NAMES2[day] ?? "사진"}`;
+      await client.execute({
+        sql: `INSERT OR IGNORE INTO photo_categories
+                (name, slug, description, position, year, event_date)
+              VALUES (?, ?, ?, ?, ?, ?)`,
+        args: [name, slug, null, 100, year, day],
+      });
+      const r = await client.execute({
+        sql: "SELECT id FROM photo_categories WHERE slug = ?",
+        args: [slug],
+      });
+      const catId = Number(r.rows[0].id);
+      await client.execute({
+        sql: `UPDATE photos
+                 SET taken_at = ?, category_id = ?,
+                     title = COALESCE(NULLIF(title, ''), ?)
+               WHERE image_url = ?`,
+        args: [day, catId, caption, url],
+      });
+    }
+    await markMigration(client, "old-photo-dates-v1");
+  }
+
 
 
 
