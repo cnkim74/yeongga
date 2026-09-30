@@ -3528,6 +3528,50 @@ async function init(client: Client) {
     await markMigration(client, "sourceless-audit-v2");
   }
 
+  // 출처 없는 글 전수 점검 — 3차 (2026-09-30)
+  // 인용부호를 달았지만 40년사·회보 어디에도 없는 '인용문' 9건을 걷어냈다.
+  // 회원 서화 5편은 415~419쪽을 다시 읽어 약력과 작품 이름을 바로잡았다.
+  //  - 신경선: '군대청 부이사관' → 관세청, '김홍신미술축전' → 통일미술축전
+  //  - 김대원: 미술대학 → 예술대학, 〈만흥정〉 → 〈만휴정〉
+  //  - 권헌식: 〈사람을 展〉 → 〈사람꽃〉, 〈서울 오늘을 짝다〉 → 〈서울 오늘을 찍다〉
+  //  - 김휘동 글에 걸려 있던 김희곤(다른 사람) 링크 제거
+  if (!(await hasMigration(client, "sourceless-audit-v3"))) {
+    const touched: [string, string][] = [
+      ["geul", "2dae-ryu-mokgi"],
+      ["geul", "4dae-heo-dongjin"],
+      ["geul", "geul-yangtaek-eumtaek"],
+      ["geul", "hoebo-8-8-kim-yeongsik-kwon-yeongsik-interview"],
+      ["geul", "myungsa-hwang-hyeontak"],
+      ["geul", "myungsa-kwon-ryeonggeon"],
+      ["geul", "myungsa-kwon-yeongbok"],
+      ["hyang", "yeongga-hyang-uimi"],
+      ["jachui", "sajin-1970s"],
+      ["jachui", "sajin-1980s"],
+      ["jachui", "sajin-1990s"],
+      ["jachui", "sajin-2000-2003"],
+      ["jachui", "sajin-2004-2009"],
+      ["jachui", "sajin-2010-2014"],
+      ["jachui", "sajin-2015-2017"],
+      ["jachui", "sajin-2018-"],
+      ["jachui", "sajin-jeongi-mum"],
+      ["jachui", "sajin-sinnyeon-mum"],
+      ["jachui", "sajin-tambang-mum"],
+      ["jachui", "seohwa-kim-daewon"],
+      ["jachui", "seohwa-kim-hwidong"],
+      ["jachui", "seohwa-kwon-hyeonsik"],
+      ["jachui", "seohwa-lee-dongik"],
+      ["jachui", "seohwa-shin-gyeongseon"],
+      ["moim", "2024-jeonggi-chonghoe"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "sourceless-audit-v3");
+  }
+
 
 
 
@@ -3924,7 +3968,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v68";
+  const seedKey = "content-seed-v69";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
