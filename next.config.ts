@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
   // pdfjs-dist 는 서버에서 번들하지 않고 그대로 둔다.
   // 번들하면 워커 파일 경로가 깨져 "Setting up fake worker failed" 가 난다.
   serverExternalPackages: ["pdfjs-dist"],
+  // 배포 때 pdfjs 워커 파일이 잘려 나가지 않도록 포함시킨다
+  outputFileTracingIncludes: {
+    "/admin/directory": ["./node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs"],
+  },
   // 인물(四) 장을 기고(三) 로 합쳤다 — 옛 주소는 새 주소로 넘긴다
   async redirects() {
     return [
