@@ -63,16 +63,30 @@ function makeClient(): Client {
 }
 
 /** 마이그레이션 가드 — 한 번 실행된 작업은 키로 기록해 두 번 실행 안 함 */
-async function hasMigration(client: Client, key: string): Promise<boolean> {
+/** 이미 끝낸 작업 키를 한 번에 읽어 담아 둔다.
+ *  예전에는 작업마다 한 번씩(예순 번 넘게) 데이터베이스를 물어보느라
+ *  서버가 처음 깨어날 때 몇 초씩 걸렸다. 이제 한 번만 읽는다. */
+let _doneKeys: Set<string> | null = null;
+
+async function loadMigrationKeys(client: Client): Promise<void> {
   try {
-    const r = await client.execute({
-      sql: "SELECT 1 FROM migrations_log WHERE key = ? LIMIT 1",
-      args: [key],
-    });
-    return r.rows.length > 0;
-  } catch {
-    return false; // migrations_log 가 아직 없으면 false
+    const r = await client.execute("SELECT key FROM migrations_log");
+    _doneKeys = new Set(r.rows.map((row) => String((row as unknown as { key: unknown }).key)));
+  } catch (e) {
+    // 표가 아직 없는 새 데이터베이스만 빈 것으로 본다.
+    // 그 밖의 오류는 그대로 올려, 끝난 작업을 다시 돌리는 일이 없게 한다.
+    if (String(e).includes("no such table")) {
+      _doneKeys = new Set();
+      return;
+    }
+    throw e;
   }
+}
+
+async function hasMigration(client: Client, key: string): Promise<boolean> {
+  if (_doneKeys) return _doneKeys.has(key);
+  await loadMigrationKeys(client);
+  return _doneKeys!.has(key);
 }
 
 async function markMigration(client: Client, key: string): Promise<void> {
@@ -80,6 +94,7 @@ async function markMigration(client: Client, key: string): Promise<void> {
     sql: "INSERT OR IGNORE INTO migrations_log (key, run_at) VALUES (?, CURRENT_TIMESTAMP)",
     args: [key],
   });
+  _doneKeys?.add(key);
 }
 
 async function init(client: Client) {
@@ -309,6 +324,11 @@ async function init(client: Client) {
       copied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
   `);
+
+  // 이미 끝낸 작업 키를 한 번에 읽어 둔다.
+  // 여기서 실패하면 그대로 오류를 낸다 — 빈 것으로 잘못 보면
+  // 끝난 작업을 처음부터 다시 돌리게 되기 때문이다.
+  await loadMigrationKeys(client);
 
   // ─── 마이그레이션: users 테이블에 추가 칼럼 (이미 있으면 skip) ──
   const userCols = await client.execute("PRAGMA table_info(users)");
