@@ -45,3 +45,5 @@ visibility: public
 
 - [디지털 50년사 — 2026.6.30](/archive/yeongi/digital-50nyeonsa-2026)
 - [영가문화상 제정 — 2003.1.15](/archive/yeongi/yeongga-munhwasang-sijak)
+
+> 출처: 《영가회보》 9-1호~9-5호, 2026년 정기총회 사업계획

@@ -56,3 +56,5 @@ visibility: public
 - 엄마의커리어, 〈찬란한 안동의 고려 문화, 세계에 널리 알려야…'제6회 영가포럼' 개최〉(김보미 기자, 2026.9.10) — https://www.momscareer.co.kr/news/articleView.html?idxno=6419
 - 국제뉴스, 〈영가회, 안동 고려문화 재조명 포럼…200여 명 참석 미래전략 논의〉(박종진 기자, 2026.9.10) — https://www.gukjenews.com/news/articleView.html?idxno=3691527
 - 한국생활체육뉴스, 〈대한생활체육회 김균식 총재, 제6회 영가포럼서 국제대회 안동 유치 의지 밝혀〉(김문상 기자, 2026.9.10) — http://www.kstnews.co.kr/news/articleView.html?idxno=42059
+
+> 출처: 2026년 제6회 영가포럼 안내

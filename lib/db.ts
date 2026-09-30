@@ -3446,6 +3446,88 @@ async function init(client: Client) {
     await markMigration(client, "sourceless-audit-v1");
   }
 
+  // 출처 없는 글 전수 점검 — 2차 (2026-09-30)
+  //  - '1977.3.25 인사동 남강 다실에 일곱 사람' 은 40년사 어디에도 없다.
+  //    창립총회는 1977.3.26 종로 견지동 덕수빌딩 지하 1층 연회장, 61명(27~29쪽).
+  //  - 2024년 회칙 개정 글은 실은 2021.9.30 서면 임시총회의 전면개정(회보 8-1호).
+  //    슬러그를 2021-imsi-chonghoe 로 옮기고 연혁 쪽 중복 글은 내린다.
+  //  - 45주년 인사말은 출처가 없고 사실 오류가 있어 내린다.
+  //  - 아카이브 인사말은 회장 명의로 지어낸 글이라 편집실 안내로 바꾼다.
+  //  - 사진 모음 12편은 실린 사진이 없는데 지어낸 묘사와 틀린 문화상 회차가
+  //    들어 있어, 확인된 사실만 남긴 안내문으로 다시 썼다.
+  //  - 영가문화 제1집의 제호 《그단새 다섯 해》는 40년사에 없어 뺐고,
+  //    제2집 제호는 《그 단새 스무해가》가 맞다(43쪽).
+  if (!(await hasMigration(client, "sourceless-audit-v2"))) {
+    const purge: [string, string][] = [
+      ["moim", "2024-imsi-chonghoe"],
+      ["yeongi", "45junyeon-insamal"],
+      ["yeongi", "hoechik-gaejeong-2024"],
+    ];
+    for (const [chapter, slug] of purge) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: [chapter, slug],
+      });
+    }
+    const touched: [string, string][] = [
+      ["geul", "geul-ingtae-yangchanseok"],
+      ["geul", "geul-nameun-mal-gangminchang"],
+      ["geul", "hoejang-yeonbo"],
+      ["jachui", "2025-chu-saejin"],
+      ["jachui", "sajin-1970s"],
+      ["jachui", "sajin-1980s"],
+      ["jachui", "sajin-1990s"],
+      ["jachui", "sajin-2000-2003"],
+      ["jachui", "sajin-2004-2009"],
+      ["jachui", "sajin-2010-2014"],
+      ["jachui", "sajin-2015-2017"],
+      ["jachui", "sajin-2018-"],
+      ["jachui", "sajin-jeongi-mum"],
+      ["jachui", "sajin-sinnyeon-mum"],
+      ["jachui", "sajin-tambang-mum"],
+      ["moim", "1982-yeongga-munhwa-1-balgan"],
+      ["moim", "1998-kim-haegil-jongryo"],
+      ["moim", "1998-yeongga-munhwa-2-balgan"],
+      ["moim", "2021-imsi-chonghoe"],
+      ["moim", "9dae-2025-forum-3-wonro-6cha"],
+      ["moim", "9dae-2025-sanbul-seonggeum"],
+      ["moim", "9dae-2026-forum-4-wonro-7cha"],
+      ["moim", "9dae-2026-forum-5"],
+      ["moim", "9dae-2026-forum-6"],
+      ["yeongi", "1977-changrip-namgang"],
+      ["yeongi", "1st-hgkim-01"],
+      ["yeongi", "3dae-chuim"],
+      ["yeongi", "4dae-chuim"],
+      ["yeongi", "5dae-chuim"],
+      ["yeongi", "6dae-chuim"],
+      ["yeongi", "9dae-chuim"],
+      ["yeongi", "andong-jeongcheseong"],
+      ["yeongi", "chang-rip-20junyeon"],
+      ["yeongi", "chang-rip-40junyeon"],
+      ["yeongi", "hoechik-jeongsin"],
+      ["yeongi", "hoejang-insa"],
+      ["yeongi", "je49cha-chonghoe-2026"],
+      ["yeongi", "next-50nyeon-bijeon"],
+      ["yeongi", "sadan-beobin-2025"],
+      ["yeongi", "wonro-hoeui-2025"],
+      ["yeongi", "yeongga-cheongnyeon-2026"],
+      ["yeongi", "yeongga-forum-chulbeom-2025"],
+      ["yeongi", "yeongga-munhwa-1jip"],
+      ["yeongi", "yeongga-munhwa-2jip"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "sourceless-audit-v2");
+  }
+
 
 
 
@@ -3842,7 +3924,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v67";
+  const seedKey = "content-seed-v68";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

@@ -14,7 +14,7 @@ visibility: public
 |---|---|
 | 회장 | 허동진 (제4대) |
 | 취임 | 2007.1.10 |
-| 임기 | 2007~2010 |
+| 임기 | 2007.1.10 ~ 2010.12.31 |
 
 - 프레지던트호텔, 신년하례회를 겸한 취임식
 - 회장기에 창립 30주년 기념행사(2007)와 첫 해외문화유적탐방
@@ -24,3 +24,5 @@ visibility: public
 - [취임식 기록](/archive/moim/4dae-heo-dongjin-chuim)
 - [허동진 회장 이야기](/archive/geul/4dae-heo-dongjin)
 - [역대 회장 연보](/archive/geul/hoejang-yeonbo)
+
+> 출처: 《영가회 40년사》 131~132쪽

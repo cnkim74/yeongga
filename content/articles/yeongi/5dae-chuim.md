@@ -14,7 +14,7 @@ visibility: public
 |---|---|
 | 회장 | 류종묵 (제5대) |
 | 취임 | 2011.1.7 |
-| 임기 | 2011~2014 |
+| 임기 | 2011.1.7 ~ 2014.12.31 |
 
 - 신년하례회에서 취임
 - 이희범·권오을 등이 축하
@@ -25,3 +25,5 @@ visibility: public
 - [취임식 기록](/archive/moim/5dae-ryu-jongmuk-chuim)
 - [류종묵 회장 이야기](/archive/geul/5dae-ryu-jongmuk)
 - [역대 회장 연보](/archive/geul/hoejang-yeonbo)
+
+> 출처: 《영가회 40년사》 179~180쪽

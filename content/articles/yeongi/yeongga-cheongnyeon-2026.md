@@ -32,3 +32,5 @@ visibility: public
 
 - 오래된 회가 **늙지 않기 위해** 마련한 자리
 - 〈[원로회의](/archive/yeongi/wonro-hoeui-2025)〉와 함께, 회의 세대 구조가 갖춰진 시점
+
+> 출처: 《영가회보》 9-5호

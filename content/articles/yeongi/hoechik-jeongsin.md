@@ -43,3 +43,5 @@ visibility: public
 
 - [회칙 전문과 현행 개정 이력](/about/hoechik)
 - [창립총회 — 1977.3.26](/archive/yeongi/1977-changrip-namgang)
+
+> 출처: 《영가회 40년사》 56~60쪽(회칙 전문·부칙), 영가회 회칙 개정 이력

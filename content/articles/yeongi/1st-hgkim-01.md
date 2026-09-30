@@ -39,3 +39,5 @@ visibility: public
 - [창립총회 — 1977.3.26](/archive/yeongi/1977-changrip-namgang)
 - [2대 류목기 회장 취임 — 1998.10.24](/archive/yeongi/2dae-hoejang-sidae)
 - [역대 회장 연보](/archive/geul/hoejang-yeonbo)
+
+> 출처: 《영가회 40년사》 27~29쪽

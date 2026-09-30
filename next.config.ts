@@ -25,6 +25,17 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       { source: "/archive/saram", destination: "/archive/geul", permanent: true },
+      // 2024년이 아니라 2021.9.30 서면 임시총회의 회칙 전면개정이었다
+      {
+        source: "/archive/yeongi/hoechik-gaejeong-2024",
+        destination: "/archive/moim/2021-imsi-chonghoe",
+        permanent: true,
+      },
+      {
+        source: "/archive/moim/2024-imsi-chonghoe",
+        destination: "/archive/moim/2021-imsi-chonghoe",
+        permanent: true,
+      },
       // 40년사 346쪽 원문은 '김영길'(한동대 총장) — 잘못 적힌 이름으로 만든 옛 주소
       {
         source: "/archive/geul/myungsa-kim-hogil-myeongil",
