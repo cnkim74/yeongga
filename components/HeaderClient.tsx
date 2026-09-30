@@ -151,9 +151,9 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           </span>
         </Link>
 
-        {/* 가운데 메뉴 — 왼쪽 로고 락업(로고 | 부제 | 슬로건)이 길어 정중앙에 두면
-            좁은 데스크톱(1280px 안팎)에서 겹친다. 64px 오른쪽으로 밀어 자리를 만든다. */}
-        <ul className="hidden xl:flex items-center gap-1 absolute left-1/2 translate-x-[calc(-50%+64px)]">
+        {/* 가운데 메뉴 — 절대 좌표로 정중앙에 두면 좁은 화면에서 로고와 겹친다.
+            로고와 오른쪽 아이콘 사이의 남는 자리를 차지해 그 안에서 가운데로 놓는다. */}
+        <ul className="hidden lg:flex flex-1 items-center justify-center gap-0.5 xl:gap-1">
           {nav.map((n) => {
             const active =
               n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
@@ -315,7 +315,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           <UserMenu user={user} />
           <button
             type="button"
-            className="pill-nav-icon xl:hidden"
+            className="pill-nav-icon lg:hidden"
             aria-label={open ? "메뉴 닫기" : "메뉴 열기"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}

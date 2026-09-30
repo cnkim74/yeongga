@@ -33,7 +33,8 @@ const SIZES: Record<
 };
 
 const SUB_TITLE = "영가회 디지털 50년사";
-const SLOGAN = "친목도모 상부상조 후진양성 고향발전";
+const SLOGAN_LINES = ["친목도모 상부상조", "후진양성 고향발전"];
+const SLOGAN = SLOGAN_LINES.join(" ");
 
 const SERIF = "'Noto Serif KR','Nanum Myeongjo',var(--font-serif),serif";
 
@@ -164,7 +165,11 @@ export function Logo({
         {showAnniversary && (
           <div className="mt-2 text-center">
             <div style={subTitleStyle}>{SUB_TITLE}</div>
-            <div style={{ ...sloganStyle, marginTop: 2 }}>{SLOGAN}</div>
+            {SLOGAN_LINES.map((line, i) => (
+              <div key={line} style={{ ...sloganStyle, marginTop: i === 0 ? 2 : 0 }}>
+                {line}
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -204,10 +209,21 @@ export function Logo({
           </span>
         )}
       </span>
+      {/* 슬로건 — 1280px 미만에서는 감춘다. 가운데 메뉴가 잘리지 않게 자리를 내준다. */}
       {showAnniversary && (
         <>
-          {divider("d1")}
-          <span style={sloganStyle}>{SLOGAN}</span>
+          {divider("d1", "hidden xl:inline-block")}
+          <span
+            aria-label={SLOGAN}
+            className="hidden xl:inline-flex flex-col"
+            style={{ gap: 1 }}
+          >
+            {SLOGAN_LINES.map((line) => (
+              <span key={line} aria-hidden="true" style={sloganStyle}>
+                {line}
+              </span>
+            ))}
+          </span>
         </>
       )}
     </div>

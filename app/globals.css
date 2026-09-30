@@ -441,6 +441,17 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   color: rgba(255, 255, 255, 0.85);
   transition: background 0.15s ease, color 0.15s ease;
 }
+/* 좁은 데스크톱(1024~1279px) — 메뉴가 잘리지 않게 여백과 글자를 조금 줄인다 */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .pill-nav {
+    padding-left: 14px;
+  }
+  .pill-nav-link {
+    padding: 9px 11px;
+    font-size: 15px;
+  }
+}
+
 .pill-nav-link:hover {
   background: rgba(255, 255, 255, 0.12);
   color: #fff;
@@ -562,7 +573,18 @@ html[data-theme="dark"] .form-input {
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
 }
 .pill-nav.theme-light .pill-nav-link { color: rgba(10, 10, 10, 0.78); }
-.pill-nav.theme-light .pill-nav-link:hover {
+.pill-nav.theme-light /* 좁은 데스크톱(1024~1279px) — 메뉴가 잘리지 않게 여백과 글자를 조금 줄인다 */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .pill-nav {
+    padding-left: 14px;
+  }
+  .pill-nav-link {
+    padding: 9px 11px;
+    font-size: 15px;
+  }
+}
+
+.pill-nav-link:hover {
   background: rgba(0, 0, 0, 0.06);
   color: #0a0a0a;
 }
