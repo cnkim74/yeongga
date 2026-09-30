@@ -295,6 +295,7 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
    슬래시 뒤에서만 줄이 바뀐다. width:1% 는 '필요한 만큼만' 이라는 뜻. */
 .prose-body tbody td:first-child {
   width: 1%;
+  min-width: 8.5em;
   word-break: keep-all;
   line-break: strict;
 }
