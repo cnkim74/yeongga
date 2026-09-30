@@ -2927,6 +2927,24 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-plain-v1");
   }
 
+  // 합쳐서 더 쓰지 않는 글 — 목록에 자물쇠로 남지 않도록 내린다.
+  if (!(await hasMigration(client, "yeongi-2jip-takedown-v1"))) {
+    await client.execute({
+      sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+      args: ["yeongi", "yeongga-munhwa-2jip"],
+    });
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+      args: ["yeongi", "yeongga-munhwa-2jip"],
+    });
+    await client.execute({
+      sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+      args: ["saram", "myungsa-kwon-sangchol"],
+    });
+    await markMigration(client, "yeongi-2jip-takedown-v1");
+  }
+
+
 
 
   // 일회성: 32~48번 사람 챕터 글의 대표 이미지(cover) 일괄 제거
