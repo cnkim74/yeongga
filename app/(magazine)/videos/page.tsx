@@ -11,7 +11,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function VideosPage() {
-  const videos = await listVideos();
+  const videos = await listVideos().catch(() => []);
   const featured = videos.find((v) => v.featured);
   const others = videos.filter((v) => v.id !== featured?.id);
 

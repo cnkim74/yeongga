@@ -16,9 +16,10 @@ export const metadata = {
 };
 
 export default async function MembersPage() {
+  // 데이터베이스가 잠시 안 되면 빈 목록으로라도 페이지는 열어 준다
   const [members, meta] = await Promise.all([
-    listDirectory(),
-    getDirectoryMeta(),
+    listDirectory().catch(() => []),
+    getDirectoryMeta().catch(() => ({}) as Record<string, string>),
   ]);
   const withInitial = members.map((m) => ({ ...m, initial: initialOf(m.name) }));
   const used = INITIALS.filter((i) => withInitial.some((m) => m.initial === i));

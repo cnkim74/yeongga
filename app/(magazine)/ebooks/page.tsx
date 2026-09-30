@@ -14,7 +14,10 @@ export const metadata = {
 };
 
 export default async function EbooksPage() {
-  const [user, ebooks] = await Promise.all([getCurrentUser(), listEbooks()]);
+  const [user, ebooks] = await Promise.all([
+    getCurrentUser(),
+    listEbooks().catch(() => []),
+  ]);
 
   const visible = ebooks.filter(
     (e) => !isHoebo(e.title) && (e.visibility === "public" || user)

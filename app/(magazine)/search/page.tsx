@@ -36,7 +36,12 @@ export default async function SearchPage({
   const { tag, year, president } = await searchParams;
 
   // 둘러보기 메뉴 데이터
-  const [allTags, years] = await Promise.all([listAllTags(), listYears()]);
+  // 검색은 데이터베이스가 있어야 제 몫을 한다. 잠시 안 될 때는
+  // 오류 화면 대신 빈 목록으로 열어 두고, 독자가 아카이브로 돌아갈 수 있게 한다.
+  const [allTags, years] = await Promise.all([
+    listAllTags().catch(() => [] as Awaited<ReturnType<typeof listAllTags>>),
+    listYears().catch(() => [] as Awaited<ReturnType<typeof listYears>>),
+  ]);
   const decades = allTags
     .filter((t) => /^\d{4}년대$/.test(t.tag))
     .sort((a, b) => b.tag.localeCompare(a.tag));
@@ -52,14 +57,14 @@ export default async function SearchPage({
   let browseLabel = "";
   if (president) {
     const p = getPresident(president);
-    if (p?.slugPrefix) browseArticles = await listArticlesBySlugPrefix(p.slugPrefix);
-    else if (p?.keyword) browseArticles = await searchArticles(p.keyword);
+    if (p?.slugPrefix) browseArticles = await listArticlesBySlugPrefix(p.slugPrefix).catch(() => []);
+    else if (p?.keyword) browseArticles = await searchArticles(p.keyword).catch(() => []);
     browseLabel = p ? `${p.dae}대 ${p.name} 회장 시기 기록` : "회장별";
   } else if (year) {
-    browseArticles = await listArticlesByYear(year);
+    browseArticles = await listArticlesByYear(year).catch(() => []);
     browseLabel = `${year}년 회보`;
   } else if (tag) {
-    browseArticles = await listArticlesByTag(tag);
+    browseArticles = await listArticlesByTag(tag).catch(() => []);
     browseLabel = `# ${tag}`;
   }
   const hasBrowse = Boolean(president || year || tag);
