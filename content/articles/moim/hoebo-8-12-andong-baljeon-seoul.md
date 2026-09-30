@@ -14,16 +14,16 @@ visibility: public
 
 안동시가 — **서울에서 〈발전전략 설명회〉**를 개최했다.
 
-## 두 결의 한 마디
+## 두 사람의 발언
 
 **'안동 발전에 출향인사 모두가 함께 협력해나가자'**
 **'안동은 기회의 땅, 앞장서 투자해 주세요'**
 
 권기창 안동시장의 자리. 호소.
 
-## 큰 자취
+## 주요 내용
 
-- **8-3호 권기창 시장 취임** (관련: 〈[취임](/archive/moim/hoebo-8-3-kwon-gichang-anndong-chuim)〉) 의 가장 큰 자취
+- **8-3호 권기창 시장 취임** (관련: 〈[취임](/archive/moim/hoebo-8-3-kwon-gichang-anndong-chuim)〉)
 - **8-8호 투자유치자문위원회 24명** (관련: 〈[투자유치자문위원회](/archive/moim/hoebo-8-8-tuja-yuchi-jamun-uiwonhoe)〉) 의 후속
 - **8-12호 '기업하기 좋은 도시 안동'** (관련: 〈[8-12호 머리기사](/archive/jachui/hoebo-8-12-gieophagi-andong)〉) 의 결과
 - **'함께 손을 잡고 새로운 안동으로'** 의 후속

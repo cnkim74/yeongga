@@ -21,9 +21,9 @@ visibility: private
 
 **'안동소주 등 전통주 · 가양주 규제 완화 절실.'**
 
-- **안동소주** (관련: 〈[8-1호 국담 권태연](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) · **가양주(家釀酒)** — 안동 양반가의 자취
-- **한일정상 만찬 테이블에 올랐던 안동소주 · 찜닭** (관련: 〈[안동소주 찜닭 한일정상](/archive/jachui/hoebo-9-3-soju-jjimdak-hanil)〉) 의 가장 큰 자취 위
+- **안동소주** (관련: 〈[8-1호 국담 권태연](/archive/saram/hoebo-8-1-yeongga-saramdeul-1-gwon-taeyeon)〉) · **가양주(家釀酒)** — 안동 양반가의 전통
+- **한일정상 만찬 테이블에 올랐던 안동소주 · 찜닭** (관련: 〈[안동소주 찜닭 한일정상](/archive/jachui/hoebo-9-3-soju-jjimdak-hanil)〉) 위
 
-## 자취 — 11개 가양주 + 30여 종가 종손 · 종부
+## 규모 — 가양주 11종, 종가 종손·종부 30여 명
 
 - 9-3호 6면 〈[2025 제2회 영가포럼 특집](/archive/moim/9dae-2025-forum-2)〉 — 안동 종가 종손 · 종부 30여 명 · 11개 가양주가 국회 의원회관 빠곡 메워

@@ -2958,6 +2958,131 @@ async function init(client: Client) {
     await markMigration(client, "saram-8-9dae-v1");
   }
 
+  // 행사(모임) 장 전면 정리 (2026-09-30) — 생성기 말투('결·자취·단정' 등) 제거,
+  // 근거 없는 인용문·조문 삭제, 시기 요약 5편은 확인된 행사만 표로 재작성.
+  //   · 1998.10.24 회칙 2차 개정은 같은 날 임시총회 글로 병합 → 영구 삭제
+  //   · 5dae-*-munhwasang-8~11 4편은 restore-missing-2026-09-v1 이 되살린
+  //     창작 글이므로 다시 영구 삭제 (영가문화상은 격년 시상: 1회 2006.1.9 ·
+  //     3회 2010.1.13 · 4회 2012.1.9 · 5회 2014.1.10)
+  if (!(await hasMigration(client, "moim-plain-v1"))) {
+    const purge = [
+      "1998-hoechik-2cha",
+      "5dae-2011-munhwasang-8",
+      "5dae-2012-munhwasang-9",
+      "5dae-2013-munhwasang-10",
+      "5dae-2014-munhwasang-11",
+    ];
+    for (const slug of purge) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["moim", slug],
+      });
+      await client.execute({
+        sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES (?, ?)",
+        args: ["moim", slug],
+      });
+    }
+    // 다시 심을 글 — seeded_deletions 에 남은 항목을 먼저 지워야 재시딩된다
+    const rewritten: [string, string][] = [
+      ["jachui", "sajin-2010-2014"],
+      ["jachui", "sajin-munhwasang-mum"],
+      ["moim", "1977-1980-namgang-gieok"],
+      ["moim", "1977-changrip-chongdae"],
+      ["moim", "1977-hoechik-jejeong"],
+      ["moim", "1978-jeongi-chongdae"],
+      ["moim", "1980-jeongi-sinnyeon"],
+      ["moim", "1980s-deoksu-sigi"],
+      ["moim", "1982-yeongga-munhwa-1-balgan"],
+      ["moim", "1983-hoechik-1cha"],
+      ["moim", "1998-imsi-chongdae"],
+      ["moim", "1998-kim-haegil-jongryo"],
+      ["moim", "1998-yeongga-munhwa-2-balgan"],
+      ["moim", "1dae-jeonggi-haengsa-mum"],
+      ["moim", "2024-jeonggi-chonghoe"],
+      ["moim", "2dae-2000-jeongi-isihyeong"],
+      ["moim", "2dae-hoebo-balgan"],
+      ["moim", "2dae-jeonggi-haengsa-mum"],
+      ["moim", "2dae-ryu-mokgi-chuim"],
+      ["moim", "2dae-ryu-mokgi-jongryo"],
+      ["moim", "3dae-2003-chukha-4myeong"],
+      ["moim", "3dae-2004-kwon-oeul-chukha"],
+      ["moim", "3dae-2004-tambang-yeongwol"],
+      ["moim", "3dae-2005-sinnyeon-kimhuigon"],
+      ["moim", "3dae-2005-tambang-pungki"],
+      ["moim", "3dae-2006-munhwasang-1"],
+      ["moim", "3dae-2006-tambang-hadong"],
+      ["moim", "3dae-geum-changtae-chuim"],
+      ["moim", "3dae-geum-changtae-jongryo"],
+      ["moim", "3dae-jeonggi-haengsa-mum"],
+      ["moim", "4dae-2007-engineer-3myeong-chukha"],
+      ["moim", "4dae-2007-tambang-bundan"],
+      ["moim", "4dae-2008-5myeong-uiwon-chukha"],
+      ["moim", "4dae-2008-haeoe-tambang"],
+      ["moim", "4dae-2008-sinnyeon"],
+      ["moim", "4dae-2009-hoechik-3cha"],
+      ["moim", "4dae-2010-sinnyeon"],
+      ["moim", "4dae-heo-dongjin-chuim"],
+      ["moim", "4dae-heo-dongjin-jongryo"],
+      ["moim", "4dae-jeonggi-haengsa-mum"],
+      ["moim", "5dae-2011-hoechik-4cha"],
+      ["moim", "5dae-2011-hoechik-5cha"],
+      ["moim", "5dae-2011-sinnyeon"],
+      ["moim", "5dae-2011-tukgang-bak-seil"],
+      ["moim", "5dae-2011-tukgang-bak-seok-mu"],
+      ["moim", "5dae-2012-gukhoe-uiwon-chukha"],
+      ["moim", "5dae-2012-haeoe-seosan"],
+      ["moim", "5dae-2013-haeoe-jeongju"],
+      ["moim", "5dae-2014-haeoe-jiangnan"],
+      ["moim", "5dae-2014-sinnyeon-munhwasang-5"],
+      ["moim", "5dae-2014-yeoncheon-tambang"],
+      ["moim", "5dae-jeonggi-haengsa-mum"],
+      ["moim", "5dae-ryu-jongmuk-chuim"],
+      ["moim", "5dae-ryu-jongmuk-jongryo"],
+      ["moim", "6dae-2015-haeoe-jungkyung"],
+      ["moim", "6dae-2015-tambang-cheongryeongpo"],
+      ["moim", "6dae-2015-tukgang-jeong-bu-rak"],
+      ["moim", "6dae-2016-gwaesan-tambang"],
+      ["moim", "6dae-2016-haeoe-laos"],
+      ["moim", "6dae-kim-bonggu-jongryo"],
+      ["moim", "7dae-2017-haeoe-danang"],
+      ["moim", "7dae-2017-jeongseon-tambang"],
+      ["moim", "7dae-2017-sinnyeon-chuim"],
+      ["moim", "7dae-2018-ganghwa-tambang"],
+      ["moim", "7dae-2018-kim-hwidong-sajinjeonsihoe"],
+      ["moim", "7dae-2018-sinnyeon"],
+      ["moim", "7dae-2018-tukgang-kim-donggi"],
+      ["moim", "9dae-2025-hoemu"],
+      ["moim", "hoebo-8-11-jaegyeong-andong-cheyuk"],
+      ["moim", "hoebo-8-11-yecheon-tambang-300"],
+      ["moim", "hoebo-8-12-andong-baljeon-seoul"],
+      ["moim", "hoebo-8-12-andong-yugyo-23-danche"],
+      ["moim", "hoebo-8-13-2024-wonro-gandam"],
+      ["moim", "hoebo-8-13-jeonggi-chonghoe-yego"],
+      ["moim", "hoebo-9-1-jeonggi-chonghoe-200"],
+      ["moim", "hoebo-9-2-andong-jeontong-watni"],
+      ["moim", "hoebo-9-2-yeongga-forum-1cha"],
+      ["moim", "hoebo-9-2-yeongga-forum-2cha-9wol"],
+      ["moim", "hoebo-9-3-yeongga-forum-2cha-soju"],
+      ["moim", "hoebo-9-3-yeongga-forum-teukjip"],
+      ["moim", "hoebo-9-4-jeonggi-chonghoe-imomo"],
+      ["moim", "hoebo-9-4-mui-san-tambang"],
+      ["moim", "hoebo-9-5-mui-san-tambang-ki-sang"],
+      ["moim", "hoebo-9-5-yeongga-cheongnyeon-chulbeom"],
+      ["saram", "5dae-ryu-jongmuk"],
+    ];
+    for (const [chapter, slug] of rewritten) {
+      await client.execute({
+        sql: "DELETE FROM seeded_deletions WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "moim-plain-v1");
+  }
+
 
 
 
@@ -3354,7 +3479,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v55";
+  const seedKey = "content-seed-v56";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";

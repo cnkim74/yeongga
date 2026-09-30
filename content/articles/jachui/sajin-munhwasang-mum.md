@@ -21,16 +21,16 @@ visibility: public
 ## 갈무리 중인 11년 시상식
 
 ### 3대 금창태 회장기 (3회)
-- **2003 시행식** — `/archive/moim/yeongga-munhwasang-1hoe-sihaengshik`
-- **2004 제1회** — 안동 하회별신굿탈놀이 보존회 등
+영가문화상은 격년 시상입니다. 《영가회 40년사》로 확인된 시상은 다음과 같습니다.
 
-### 4대 허동진 회장기 (4회)
+| 회차 | 시상일 | 수상 |
+| --- | --- | --- |
+| 제1회 | 2006.1.9 | 안동문화지킴이 ([기록](/archive/moim/3dae-2006-munhwasang-1)) |
+| 제3회 | 2010.1.13 | 안동문화원 ([기록](/archive/moim/4dae-2010-sinnyeon)) |
+| 제4회 | 2012.1.9 | 한국예총 안동시 지부 ([기록](/archive/moim/5dae-2012-sinnyeon-munhwasang-4)) |
+| 제5회 | 2014.1.10 | 김희곤 안동대 교수 ([기록](/archive/moim/5dae-2014-sinnyeon-munhwasang-5)) |
 
-### 5대 류종묵 회장기 (4회)
-- **2011 제8회** — `/archive/moim/5dae-2011-munhwasang-8`
-- **2012 제9회** — `/archive/moim/5dae-2012-munhwasang-9`
-- **2013 제10회** — 첫 십 년의 매듭 (`/archive/moim/5dae-2013-munhwasang-10`)
-- **2014 제11회** — `/archive/moim/5dae-2014-munhwasang-11`
+제2회 시상 기록은 확보되지 않았습니다.
 
 ## 한 수상자의 한 말씀
 

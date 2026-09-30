@@ -53,14 +53,14 @@ visibility: public
 
 ## 4년의 자취 — 영가회의 가장 풍성한 시기
 
-5대 회장기는 영가회가 차근차근 가장 단단하게 자리 잡힌 시기였다.
+5대 회장기는 정기 행사와 명사 초청 특강이 자리를 잡은 시기다.
 
-- **2011년** — 취임식 + 영가문화상 제8회 + 회칙 4 · 5차 개정 (`/archive/moim/5dae-2011-hoechik-4cha`, `/archive/moim/5dae-2011-hoechik-5cha`)
-- **2012년** — 영가문화상 제9회 + 국내 · 해외 정기 탐방 두 자리 + 매출외형 900억원의 결
-- **2013년** — 영가문화상 제10회 (첫 십 년의 매듭) (`/archive/moim/5dae-2013-munhwasang-10`)
-- **2014년** — 영가문화상 제11회 + 국내 · 해외 정기 탐방 두 자리 + 5대 회장기 종료 (`/archive/moim/5dae-ryu-jongmuk-jongryo`)
+- **2011년** — 취임식, 회칙 4·5차 개정 ([4차](/archive/moim/5dae-2011-hoechik-4cha) · [5차](/archive/moim/5dae-2011-hoechik-5cha))
+- **2012년** — [영가문화상 제4회](/archive/moim/5dae-2012-sinnyeon-munhwasang-4), 국내·해외 탐방
+- **2013년** — [중국 중원 해외탐방](/archive/moim/5dae-2013-haeoe-jeongju), 명사 초청 특강
+- **2014년** — [영가문화상 제5회](/archive/moim/5dae-2014-sinnyeon-munhwasang-5), 국내·해외 탐방, [회장기 종료](/archive/moim/5dae-ryu-jongmuk-jongryo)
 
-이 결이 — 모임 챕터의 5대 회장기 묶음 글(`/archive/moim/5dae-jeonggi-haengsa-mum`) 에 단정하게 자리.
+회장기 전체 행사는 〈[2011~2014 5대 회장기 주요 행사](/archive/moim/5dae-jeonggi-haengsa-mum)〉에 정리돼 있다.
 
 ## 류 회장의 직접 회고문
 
