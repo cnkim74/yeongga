@@ -3371,6 +3371,22 @@ async function init(client: Client) {
     await markMigration(client, "geul-purge-fabricated-v1");
   }
 
+  // 40년사 제3편 목차(325쪽) 대조 마무리 (2026-09-30)
+  // 회원 기고문 23편·회원 서화 5편이 목차와 쪽수까지 모두 맞는 것을 확인했다.
+  // 김희곤 교수 직함의 "(추정)" 표시를 223~224쪽 약력으로 확정했다.
+  if (!(await hasMigration(client, "geul-toc-check-v1"))) {
+    const touched: [string, string][] = [
+      ["geul", "myungsa-kim-huigon"],
+    ];
+    for (const [chapter, slug] of touched) {
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: [chapter, slug],
+      });
+    }
+    await markMigration(client, "geul-toc-check-v1");
+  }
+
 
 
 
@@ -3767,7 +3783,7 @@ async function init(client: Client) {
   //      한 호 큰 그림: 9대 박대섭 회장기 + 안동·예천 통합 의지 +
   //      영가청년 출범 + 무이산 해외문화탐방 + 한일정상회담 안동
   //      가시화 + 6.3 안동시장 선거.
-  const seedKey = "content-seed-v64";
+  const seedKey = "content-seed-v65";
   const shouldSeed =
     !(await hasMigration(client, seedKey)) ||
     process.env.SEED_FROM_FILES === "1";
