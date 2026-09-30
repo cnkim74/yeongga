@@ -18,7 +18,6 @@ export default function robots(): MetadataRoute.Robots {
           "/signup",
           "/board",
           "/documents",
-          "/about/sangsaeng",
         ],
       },
     ],

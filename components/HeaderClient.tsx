@@ -32,6 +32,7 @@ const NAV: NavItem[] = [
       { href: "/about/greeting", label: "회장 인사말" },
       { href: "/about/presidents", label: "역대회장" },
       { href: "/about/hoechik", label: "회칙" },
+      { href: "/about/sangsaeng", label: "상생지원위원회" },
     ],
   },
   { href: "/archive", label: "아카이브", dropdown: "chapters" },
@@ -69,20 +70,6 @@ function applyHtmlTheme(theme: Theme) {
 }
 
 export function HeaderClient({ user }: { user: SessionUser | null }) {
-  // 상생지원위원회는 회원 전용이라 로그인한 회원에게만 메뉴에 보인다
-  const nav: NavItem[] = user
-    ? NAV.map((n) =>
-        n.href === "/about" && n.items
-          ? {
-              ...n,
-              items: [
-                ...n.items,
-                { href: "/about/sangsaeng", label: "상생지원위원회" },
-              ],
-            }
-          : n,
-      )
-    : NAV;
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [sizeOpen, setSizeOpen] = useState(false);
@@ -154,7 +141,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
         {/* 가운데 메뉴 — 절대 좌표로 정중앙에 두면 좁은 화면에서 로고와 겹친다.
             로고와 오른쪽 아이콘 사이의 남는 자리를 차지해 그 안에서 가운데로 놓는다. */}
         <ul className="hidden lg:flex flex-1 items-center justify-center gap-0.5 xl:gap-1">
-          {nav.map((n) => {
+          {NAV.map((n) => {
             const active =
               n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
             if (n.dropdown === "chapters") {
@@ -393,7 +380,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
       {open && (
         <div className="fixed inset-0 z-40 bg-[var(--color-bg)] pt-24 overflow-auto" role="dialog" aria-label="모바일 메뉴">
           <ul>
-            {nav.map((n) => {
+            {NAV.map((n) => {
               const active =
                 n.href === "/" ? pathname === "/" : pathname.startsWith(n.href);
               return (

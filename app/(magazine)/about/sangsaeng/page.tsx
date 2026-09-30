@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { AboutTabs } from "@/components/AboutTabs";
-import { requireMember } from "@/lib/auth";
 import { getArticleBySlug } from "@/lib/articles-db";
 import {
   SANGSAENG_BASE_DATE,
@@ -14,18 +13,15 @@ import {
   SANGSAENG_TOTAL,
 } from "@/lib/sangsaeng";
 
-/** 회원 전용 — 쿠키를 읽으므로 정적 생성하지 않는다 */
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata = {
   title: "상생지원위원회 — 영가회",
   description:
-    "회원과 회원 기업의 애로사항을 돕기 위해 둔 상생지원위원회입니다. 회원 전용입니다.",
-  robots: { index: false, follow: false },
+    "회원과 회원 기업의 애로사항을 돕기 위해 둔 상생지원위원회입니다. 분야별 위원 편성을 담았습니다.",
 };
 
 export default async function SangsaengPage() {
-  await requireMember("/about/sangsaeng");
   const roster = await getArticleBySlug(
     SANGSAENG_ROSTER.chapter,
     SANGSAENG_ROSTER.slug,
@@ -43,10 +39,6 @@ export default async function SangsaengPage() {
           <p className="text-xl sm:text-2xl text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
             회원과 회원 기업이 겪는 어려움을 회 차원에서 돕기 위해 둔
             기구입니다. 2026년 3월 4일 1차 정기 이사회에서 구성을 의결했습니다.
-          </p>
-          <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-rule)] bg-[var(--color-paper)] px-4 py-2 text-sm text-[var(--color-ink-soft)]">
-            <span aria-hidden="true">🔒</span> 회원 전용 — 위원 명단은 회원
-            명부에 해당해 외부에 공개하지 않습니다
           </p>
         </div>
       </section>
@@ -161,30 +153,32 @@ export default async function SangsaengPage() {
             </div>
           ))}
 
-          {/* 위원 명단 */}
+          {/* 위원 편성표 — 자취 장의 글에서 읽어 와 그대로 이어 붙인다 */}
           <h2 className="display-md text-2xl sm:text-3xl mb-6">위원 편성표</h2>
           {roster ? (
-            <p className="mb-12 text-lg leading-relaxed text-[var(--color-ink-soft)]">
-              분야별 위원 명단은{" "}
-              <Link
-                href={`/archive/${SANGSAENG_ROSTER.chapter}/${SANGSAENG_ROSTER.slug}`}
-                className="underline hover:text-[var(--color-ink)]"
-              >
-                위원 편성표
-              </Link>{" "}
-              에서 볼 수 있습니다.
-            </p>
+            <>
+              <div
+                className="prose-body mb-6"
+                dangerouslySetInnerHTML={{ __html: roster.html }}
+              />
+              <p className="mb-12 text-sm text-[var(--color-ink-mute)]">
+                <Link
+                  href={`/archive/${SANGSAENG_ROSTER.chapter}/${SANGSAENG_ROSTER.slug}`}
+                  className="underline hover:text-[var(--color-ink)]"
+                >
+                  편성표만 따로 보기
+                </Link>
+              </p>
+            </>
           ) : (
             <p className="mb-12 rounded-lg border border-[var(--color-rule)] bg-[var(--color-bg-soft)] px-5 py-4 text-base leading-relaxed text-[var(--color-ink-soft)]">
-              분야별 위원 명단은 회원수첩과 영가회보로 제공합니다. 온라인 열람은
-              준비 중입니다.
+              위원 편성표는 등록 준비 중입니다.
             </p>
           )}
 
           <p className="text-sm leading-relaxed text-[var(--color-ink-mute)]">
             편집 메모 — 편성표 원문의 &lsquo;화혜&rsquo;는 화훼로,
-            &lsquo;개스&rsquo;는 가스로 읽었습니다. 위원의 성명·직장·직위는 회원
-            명부에 해당해 공개 페이지에 싣지 않습니다.
+            &lsquo;개스&rsquo;는 가스로 읽었습니다.
           </p>
         </div>
       </section>
