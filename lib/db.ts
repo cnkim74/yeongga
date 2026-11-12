@@ -3812,6 +3812,38 @@ async function init(client: Client) {
     await markMigration(client, "flattened-body-restore-v1");
   }
 
+  // 영가문화상 연도 바로잡기와 류목기 회장 임기 마무리 글 (2026-11-13)
+  // 세 편이 영가문화상을 '2003년 제정, 2004~2014년 11회'로 적고 있었다.
+  // 40년사 108~110쪽·533~536쪽은 2005.11.15 취지문, 2006~2016년 격년 6회다.
+  // 〈임기 마무리〉 글의 '재임 기간의 주요 기록' 네 줄은 출처 쪽(54~57쪽)에
+  // 없는 내용이라 원문대로 다시 썼다. 시더를 다시 돌리지 않고 세 편만 덮어쓴다.
+  if (!(await hasMigration(client, "munhwasang-year-fix-v1"))) {
+    const touched: [string, string][] = [
+      ["yeongi", "andong-jeongcheseong"],
+      ["yeongi", "next-50nyeon-bijeon"],
+      ["moim", "2dae-ryu-mokgi-jongryo"],
+    ];
+    for (const [chapter, slug] of touched) {
+      const filePath = path.join(process.cwd(), "content", "articles", chapter, `${slug}.md`);
+      if (!fs.existsSync(filePath)) continue;
+      const { data, content } = matter(fs.readFileSync(filePath, "utf8"));
+      await client.execute({
+        sql: `UPDATE articles SET title = ?, subtitle = ?, excerpt = ?, body = ?,
+                updated_at = CURRENT_TIMESTAMP
+              WHERE chapter = ? AND slug = ?`,
+        args: [
+          String(data.title ?? slug),
+          data.subtitle ? String(data.subtitle) : null,
+          data.excerpt ? String(data.excerpt) : null,
+          await renderMarkdown(content),
+          chapter,
+          slug,
+        ],
+      });
+    }
+    await markMigration(client, "munhwasang-year-fix-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
