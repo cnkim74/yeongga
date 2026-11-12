@@ -46,7 +46,7 @@ export default async function ArchiveIndex() {
             장(章)으로 읽는<br />영가회
           </h1>
           <p className="text-base sm:text-lg text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
-            글들은 여덟 개의 장으로 나누어 갈무리해 두었습니다. 장을
+            글들은 아홉 개의 장으로 나누어 갈무리해 두었습니다. 장을
             골라 들어가시면 해당 장에 모인 글들을 한눈에 보실 수 있습니다.
           </p>
         </div>

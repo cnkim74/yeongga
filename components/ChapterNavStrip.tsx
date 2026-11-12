@@ -20,7 +20,7 @@ export function ChapterNavStrip({ current }: { current: string }) {
             const content = (
               <div
                 className={[
-                  "flex flex-col items-center justify-center min-w-[112px] sm:min-w-[140px] px-5 py-4 transition relative",
+                  "flex flex-col items-center justify-center min-w-[112px] lg:min-w-0 px-5 lg:px-2 py-4 transition relative",
                   active
                     ? "text-[var(--color-ink)] bg-white"
                     : disabled
@@ -31,7 +31,7 @@ export function ChapterNavStrip({ current }: { current: string }) {
                 <span className="font-serif text-base sm:text-lg leading-none mb-1.5 opacity-80">
                   {c.number}
                 </span>
-                <span className="text-sm font-medium leading-none">
+                <span className="text-sm font-medium leading-none whitespace-nowrap">
                   {c.title}
                 </span>
                 {disabled && (
@@ -46,7 +46,7 @@ export function ChapterNavStrip({ current }: { current: string }) {
               </div>
             );
             return (
-              <li key={c.slug} className="shrink-0">
+              <li key={c.slug} className="shrink-0 lg:shrink lg:flex-1">
                 {disabled ? (
                   <span aria-disabled="true">{content}</span>
                 ) : (

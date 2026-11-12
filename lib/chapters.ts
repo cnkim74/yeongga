@@ -78,6 +78,16 @@ export const chapters: Chapter[] = [
     href: "/members",
     linkLabel: "회원 명단 보러 가기",
   },
+  {
+    slug: "munhwasang",
+    number: "九",
+    title: "영가문화상",
+    subtitle: "문화상 · 선행상 · 공로패",
+    description:
+      "영가회가 고장의 문화와 이웃을 위해 애쓴 이들에게 드린 상의 기록입니다. 영가문화상과 영가선행상, 창립회원 공로패를 모았습니다.",
+    href: "/awards",
+    linkLabel: "수상 기록 보러 가기",
+  },
 ];
 
 export function getChapter(slug: string): Chapter | undefined {

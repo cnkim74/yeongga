@@ -19,7 +19,7 @@ import { groupByEra } from "@/lib/president-era";
 export const revalidate = 600;
 export const dynamicParams = true;
 
-// 장은 여덟 개로 정해져 있다. 미리 만들어 두면 CDN 이 곧바로 내준다.
+// 글이 담긴 장은 정해져 있다(사진·영상·회원·영가문화상은 따로 된 페이지). 미리 만들어 두면 CDN 이 곧바로 내준다.
 export function generateStaticParams() {
   return chapters.filter((c) => !c.href).map((c) => ({ chapter: c.slug }));
 }
