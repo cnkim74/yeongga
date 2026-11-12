@@ -97,6 +97,34 @@ async function markMigration(client: Client, key: string): Promise<void> {
   _doneKeys?.add(key);
 }
 
+/**
+ * 고친 글 몇 편만 파일에서 다시 읽어 DB 행을 덮어쓴다.
+ * 시더(seedKey)는 640여 편을 모두 훑으므로, 몇 편 고칠 때는 이쪽을 쓴다.
+ */
+async function refreshArticlesFromFiles(
+  client: Client,
+  touched: [chapter: string, slug: string][]
+): Promise<void> {
+  for (const [chapter, slug] of touched) {
+    const filePath = path.join(process.cwd(), "content", "articles", chapter, `${slug}.md`);
+    if (!fs.existsSync(filePath)) continue;
+    const { data, content } = matter(fs.readFileSync(filePath, "utf8"));
+    await client.execute({
+      sql: `UPDATE articles SET title = ?, subtitle = ?, excerpt = ?, body = ?,
+              updated_at = CURRENT_TIMESTAMP
+            WHERE chapter = ? AND slug = ?`,
+      args: [
+        String(data.title ?? slug),
+        data.subtitle ? String(data.subtitle) : null,
+        data.excerpt ? String(data.excerpt) : null,
+        await renderMarkdown(content),
+        chapter,
+        slug,
+      ],
+    });
+  }
+}
+
 async function init(client: Client) {
   await client.executeMultiple(`
     CREATE TABLE IF NOT EXISTS migrations_log (
@@ -3818,30 +3846,29 @@ async function init(client: Client) {
   // 〈임기 마무리〉 글의 '재임 기간의 주요 기록' 네 줄은 출처 쪽(54~57쪽)에
   // 없는 내용이라 원문대로 다시 썼다. 시더를 다시 돌리지 않고 세 편만 덮어쓴다.
   if (!(await hasMigration(client, "munhwasang-year-fix-v1"))) {
-    const touched: [string, string][] = [
+    await refreshArticlesFromFiles(client, [
       ["yeongi", "andong-jeongcheseong"],
       ["yeongi", "next-50nyeon-bijeon"],
       ["moim", "2dae-ryu-mokgi-jongryo"],
-    ];
-    for (const [chapter, slug] of touched) {
-      const filePath = path.join(process.cwd(), "content", "articles", chapter, `${slug}.md`);
-      if (!fs.existsSync(filePath)) continue;
-      const { data, content } = matter(fs.readFileSync(filePath, "utf8"));
-      await client.execute({
-        sql: `UPDATE articles SET title = ?, subtitle = ?, excerpt = ?, body = ?,
-                updated_at = CURRENT_TIMESTAMP
-              WHERE chapter = ? AND slug = ?`,
-        args: [
-          String(data.title ?? slug),
-          data.subtitle ? String(data.subtitle) : null,
-          data.excerpt ? String(data.excerpt) : null,
-          await renderMarkdown(content),
-          chapter,
-          slug,
-        ],
-      });
-    }
+    ]);
     await markMigration(client, "munhwasang-year-fix-v1");
+  }
+
+  // 九 영가문화상 장을 더하고, 2대 회장기 글의 지어낸 대목을 걷어 낸다 (2026-11-13)
+  // - 〈아카이브를 열며〉〈디지털 50년사〉: '여덟 개 장' → '아홉 개 장'
+  // - 〈2대 회장기 주요 행사〉: '회비 결산 공개', '1999년 봄 가족 동반 모임'은
+  //   40년사 27~99쪽 어디에도 없다. 회보 발행은 61·62·74·83쪽에 있어 근거를 달았다.
+  // - 〈2대 회장기 회보 발간〉: '실린 내용'과 '보관본은 사무국에' 를 빼고 회의 기록으로.
+  // - 〈1983 회칙 1차 개정〉: '손질한 내용' 세 줄은 근거가 없다. 60쪽 부칙만 남긴다.
+  if (!(await hasMigration(client, "awards-chapter-2dae-fix-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "hoejang-insa"],
+      ["yeongi", "digital-50nyeonsa-2026"],
+      ["moim", "2dae-jeonggi-haengsa-mum"],
+      ["moim", "2dae-hoebo-balgan"],
+      ["moim", "1983-hoechik-1cha"],
+    ]);
+    await markMigration(client, "awards-chapter-2dae-fix-v1");
   }
 
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
