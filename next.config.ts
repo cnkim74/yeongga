@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  turbopack: {},
+  // 위쪽 폴더(홈 등)에 package-lock.json 이 생기면 Turbopack 이 그곳을 루트로 잡아
+  // tailwindcss 를 못 찾는다. 이 저장소를 루트로 못 박는다.
+  turbopack: { root: __dirname },
   experimental: {
     // 고해상도 갤러리 사진(20~50MB) 업로드 여유.
     // 이미지 파일은 /api/upload/photo 라우트 — 별도 body 제한 없음.
