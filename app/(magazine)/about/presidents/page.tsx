@@ -30,53 +30,57 @@ export default async function PresidentsPage() {
       <AboutTabs current="presidents" />
 
       <section className="bg-[var(--color-paper)] py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-6">
-          <ul className="divide-y divide-[var(--color-rule)] border-t border-b border-[var(--color-rule)]">
+        <div className="mx-auto max-w-5xl px-6">
+          <ul className="grid grid-cols-2 gap-x-5 gap-y-12 sm:grid-cols-3 sm:gap-x-10 sm:gap-y-16">
             {presidents.map((p) => (
               <li key={p.id}>
                 <Link
                   href={`/search?president=${p.id}`}
-                  className="group flex items-center justify-between gap-6 px-2 py-6 transition hover:bg-[var(--color-bg-soft)]"
+                  className="group block focus-visible:outline-none"
                 >
-                  <div className="flex items-center gap-5">
-                    {p.photo ? (
-                      <Image
-                        src={p.photo}
-                        alt={`제${p.dae}대 회장 ${p.name}`}
-                        width={88}
-                        height={88}
-                        className="h-[72px] w-[72px] shrink-0 rounded-full border border-[var(--color-rule)] object-cover object-top sm:h-[88px] sm:w-[88px]"
-                      />
-                    ) : (
-                      // 확인된 사진이 없는 회장은 이름 한 글자로 대신한다.
-                      <span
-                        aria-hidden="true"
-                        className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full border border-dashed border-[var(--color-rule)] bg-[var(--color-bg-soft)] text-xl text-[var(--color-ink-mute)] sm:h-[88px] sm:w-[88px]"
-                      >
-                        {p.hanja ? p.hanja.slice(0, 1) : p.name.slice(0, 1)}
-                      </span>
-                    )}
-                    <div>
-                      <div className="mb-1 text-sm text-[var(--color-ink-mute)]">
-                        제{p.dae}대
-                        {p.current && (
-                          <span className="ml-2 rounded-full bg-[var(--color-accent)] px-2 py-0.5 text-[11px] font-semibold text-white">
-                            현 회장
+                  {/* 액자 — 짙은 나무 틀 + 미색 매트 + 사진 */}
+                  <div className="rounded-[3px] bg-[linear-gradient(145deg,#4a3a24_0%,#7a6238_38%,#3b2d1a_70%,#5c4729_100%)] p-[7px] shadow-[0_22px_34px_-20px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.18)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_30px_40px_-20px_rgba(0,0,0,0.6),0_2px_4px_rgba(0,0,0,0.18)] group-focus-visible:ring-2 group-focus-visible:ring-[var(--color-accent)] sm:p-[10px]">
+                    <div className="bg-[#F6F1E6] p-3 shadow-[inset_0_1px_4px_rgba(0,0,0,0.28)] sm:p-5">
+                      <div className="relative aspect-[3/4] overflow-hidden bg-[#E9E3D6] shadow-[0_0_0_1px_rgba(120,100,60,0.35)]">
+                        {p.photo ? (
+                          <Image
+                            src={p.photo}
+                            alt={`제${p.dae}대 회장 ${p.name}`}
+                            fill
+                            sizes="(min-width: 1024px) 280px, (min-width: 640px) 30vw, 45vw"
+                            className="object-cover object-top"
+                          />
+                        ) : (
+                          // 사진이 없는 회장은 이름 한 글자로 대신한다.
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-0 flex items-center justify-center text-5xl text-[#9A8E78]"
+                          >
+                            {p.hanja ? p.hanja.slice(0, 1) : p.name.slice(0, 1)}
                           </span>
                         )}
                       </div>
-                      <h2 className="display-md text-2xl sm:text-3xl transition group-hover:text-[var(--color-accent)]">
-                        {p.name}
-                        {p.hanja && (
-                          <span className="ml-2 text-lg text-[var(--color-ink-mute)]">
-                            {p.hanja}
-                          </span>
-                        )}
-                      </h2>
                     </div>
                   </div>
-                  <div className="shrink-0 text-right">
-                    <div className="font-mono text-sm text-[var(--color-ink-mute)] tabular-nums">
+
+                  <div className="mt-5 text-center">
+                    <div className="mb-1.5 text-sm text-[var(--color-ink-mute)]">
+                      제{p.dae}대 회장
+                      {p.current && (
+                        <span className="ml-2 rounded-full bg-[var(--color-accent)] px-2 py-0.5 text-[11px] font-semibold text-white">
+                          현 회장
+                        </span>
+                      )}
+                    </div>
+                    <h2 className="display-md text-2xl transition group-hover:text-[var(--color-accent)] sm:text-[1.75rem]">
+                      {p.name}
+                      {p.hanja && (
+                        <span className="ml-2 align-middle text-base text-[var(--color-ink-mute)]">
+                          {p.hanja}
+                        </span>
+                      )}
+                    </h2>
+                    <div className="mt-1.5 font-mono text-sm tabular-nums text-[var(--color-ink-mute)]">
                       {p.term}
                     </div>
                     <div className="mt-1 text-xs text-[var(--color-ink-mute)] opacity-0 transition group-hover:opacity-100">
@@ -88,11 +92,10 @@ export default async function PresidentsPage() {
             ))}
           </ul>
 
-          <p className="mt-8 text-sm text-[var(--color-ink-mute)]">
-            사진은 《영가회보》 지면에서 본인으로 확인된 것만 실었고, 아직 찾지
-            못한 회장은 성함의 한 글자로 대신했습니다. 회장 이름을 누르시면 그
-            시기의 기록을 모아 보실 수 있습니다. 역대
-            회장 약사(略史)는{" "}
+          <p className="mt-16 text-sm text-[var(--color-ink-mute)]">
+            1~8대 회장 사진은 《영가회 회원수첩》 역대회장 면에서 옮겼습니다.
+            사진이나 이름을 누르시면 그 시기의 기록을 모아 보실 수 있습니다.
+            역대 회장 약사(略史)는{" "}
             <Link href="/ebooks" className="underline hover:text-[var(--color-ink)]">
               40년사 책자
             </Link>
