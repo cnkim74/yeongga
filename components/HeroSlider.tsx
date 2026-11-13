@@ -89,7 +89,7 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
             <div className="hero-slide-overlay" />
             <div className="hero-slide-text">
               <div className="kicker mb-5 text-white/90">{s.kicker}</div>
-              <h2 className="display text-[clamp(36px,6vw,84px)] mb-6">
+              <h2 className="display text-[clamp(34px,6vw,84px)] mb-6 whitespace-pre-line">
                 {s.title}
               </h2>
               <p

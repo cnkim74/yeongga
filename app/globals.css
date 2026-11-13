@@ -408,7 +408,7 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   flex-direction: column;
   justify-content: center;
   padding: 0 max(6vw, 32px) 0 4vw;
-  max-width: 720px;
+  max-width: 880px;
   /* 사진 위에 떠 있는 텍스트라 라이트/다크 무관하게 항상 흰색 */
   color: #ffffff;
 }

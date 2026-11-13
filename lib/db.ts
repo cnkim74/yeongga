@@ -3971,6 +3971,18 @@ async function init(client: Client) {
     await markMigration(client, "restore-4-moim-articles-v1");
   }
 
+  // 표지 권두언 슬라이드 제목을 두 줄로 (2026-11-14)
+  // 집무실에서 '친목도모 상부상조 후진양성 고향발전' 한 줄로 넣은 제목이 큰 글자에 밀려
+  // 네 줄로 꺾였다. 표어 두 개씩 끊어 두 줄로 둔다. 같은 제목일 때만 바꾼다.
+  if (!(await hasMigration(client, "slide-title-two-lines-v1"))) {
+    await client.execute({
+      sql: `UPDATE slides SET title = ?
+            WHERE TRIM(REPLACE(REPLACE(REPLACE(title, char(13), ''), char(10), ' '), '  ', ' ')) = ?`,
+      args: ["친목도모 상부상조\n후진양성 고향발전", "친목도모 상부상조 후진양성 고향발전"],
+    });
+    await markMigration(client, "slide-title-two-lines-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
