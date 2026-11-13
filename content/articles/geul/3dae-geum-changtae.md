@@ -58,7 +58,7 @@ visibility: public
 - **2003년 1월 15일** — 취임식 (소피텔앰배서더 호텔, 85명 참석) (`/archive/moim/3dae-geum-changtae-chuim`)
 - **2003년 4월 15일** — 회원 4명 취임 축하연 (소피텔앰배서더, 김광림 · 김원중 · 이재범 · 권영건) (`/archive/moim/3dae-2003-chukha-4myeong`)
 - **2005년 11월 15일** — 영가문화상 제정 취지문
-- **2006년 1월 9일** — 제1회 영가문화상 시상 (안동문화지킴이, 대표 김재해)
+- **2006년 1월 9일** — 제1회 영가문화상 시상 (안동문화지킴이, 대표 임재해)
 - **2006년** — 3대 회장기 종료, 4대 회장기 이사회로 넘김 (`/archive/moim/3dae-geum-changtae-jongryo`)
 
 이 결이 — 모임 챕터의 3대 회장기 묶음 글(`/archive/moim/3dae-jeonggi-haengsa-mum`) 에 단정하게 자리.

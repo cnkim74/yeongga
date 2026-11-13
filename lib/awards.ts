@@ -27,7 +27,7 @@ export type AwardRow = {
 export const AWARD_ROWS: AwardRow[] = [
   {
     date: "2006.1.9",
-    culture: "안동문화지킴이 (대표 김재해)",
+    culture: "안동문화지킴이 (대표 임재해)",
     president: "금창태",
     href: "/archive/moim/3dae-2006-munhwasang-1",
   },

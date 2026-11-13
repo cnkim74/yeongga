@@ -14,7 +14,7 @@ visibility: public
 
 | 회차 | 시상일 | 수상 | 시상한 회장 |
 | --- | --- | --- | --- |
-| 제1회 | 2006.1.9 | 안동문화지킴이 (대표 김재해) — [기록](/archive/moim/3dae-2006-munhwasang-1) | 금창태 |
+| 제1회 | 2006.1.9 | 안동문화지킴이 (대표 임재해) — [기록](/archive/moim/3dae-2006-munhwasang-1) | 금창태 |
 | 제2회 | 2008.1.9 | 하회별신굿탈놀이보존회 — [기록](/archive/moim/4dae-2008-sinnyeon) | 허동진 |
 | 제3회 | 2010.1.13 | 안동문화원 (원장 김준식) — [기록](/archive/moim/4dae-2010-sinnyeon) | 허동진 |
 | 제4회 | 2012.1.9 | (사)한국예술문화단체총연합회 안동지회 (대표 류윤형) — [기록](/archive/moim/5dae-2012-sinnyeon-munhwasang-4) | 류종묵 |

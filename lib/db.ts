@@ -3859,7 +3859,7 @@ async function init(client: Client) {
   //    원문은 반도보라 아이비 타워(523쪽).
   //  - 탈퇴 규정 6개 항과 경조사 규정 3개 항을 526쪽 원문으로 실었다.
   //  - 영가문화상 운영 규정은 7조가 아니라 18조다(529~530쪽).
-  //  - 제1회 수상 단체 대표는 김재태가 아니라 김재해(533쪽).
+  //  - 제1회 수상 단체 대표는 김재태가 아니라 김재해(533쪽). → 2026-11-14 임재해로 바로잡음: 533쪽이 오기, 125쪽·66쪽은 임재해.
   //  - 한국예술문화단체'총연맹' → 총연합회(535쪽).
   //  - 임청각을 세운 이는 이증의 셋째 아들 형조좌랑 이명(443~444쪽).
   if (!(await hasMigration(client, "jachui-audit-v1"))) {
@@ -3981,6 +3981,20 @@ async function init(client: Client) {
       args: ["친목도모 상부상조\n후진양성 고향발전", "친목도모 상부상조 후진양성 고향발전"],
     });
     await markMigration(client, "slide-title-two-lines-v1");
+  }
+
+  // 영가문화상 제1회 수상 단체 대표 이름 — 김재해 → 임재해 (2026-11-14)
+  // 40년사 533쪽 부록 표가 '김재해'로 잘못 찍혀 있었고 그대로 옮겨 적었다.
+  // 125쪽 기사 '안동문화지킴이(대표 임재해)', 66쪽 '임재해 안동대학 교수'.
+  if (!(await hasMigration(client, "munhwasang-1-name-fix-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["geul", "3dae-geum-changtae"],
+      ["jachui", "sajin-munhwasang-mum"],
+      ["jachui", "jachui-munhwasang-jachui"],
+      ["jachui", "hoebo-8-3-yeongga-munhwasang-chuchun"],
+      ["yeongi", "yeongga-munhwasang-sijak"],
+    ]);
+    await markMigration(client, "munhwasang-1-name-fix-v1");
   }
 
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
