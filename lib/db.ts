@@ -98,6 +98,46 @@ async function markMigration(client: Client, key: string): Promise<void> {
 }
 
 /**
+ * 운영 DB 에서 빠진 글을 파일에서 되살린다. 대상은 반드시 명시 목록으로 한정한다 —
+ * seeded_deletions 를 넓게 지우면 일부러 내린 글까지 되살아난다(2026-09 사례).
+ * 이미 있으면 건드리지 않고, 넣은 뒤 본문·태그는 refreshArticlesFromFiles 로 맞춘다.
+ */
+async function restoreArticlesFromFiles(
+  client: Client,
+  slugs: [chapter: string, slug: string][]
+): Promise<void> {
+  for (const [chapter, slug] of slugs) {
+    const filePath = path.join(process.cwd(), "content", "articles", chapter, `${slug}.md`);
+    if (!fs.existsSync(filePath)) continue;
+    const { data } = matter(fs.readFileSync(filePath, "utf8"));
+    const v = String(data.visibility ?? "public").toLowerCase();
+    const visibility =
+      v === "members-only" || v === "members" || v === "private" ? "members-only" : "public";
+    await client.execute({
+      sql: "DELETE FROM seeded_deletions WHERE chapter = ? AND slug = ?",
+      args: [chapter, slug],
+    });
+    await client.execute({
+      sql: `INSERT OR IGNORE INTO articles
+              (chapter, slug, title, subtitle, author, excerpt, cover, date, visibility, body)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '')`,
+      args: [
+        chapter,
+        slug,
+        String(data.title ?? slug),
+        data.subtitle ? String(data.subtitle) : null,
+        data.author ? String(data.author) : null,
+        data.excerpt ? String(data.excerpt) : null,
+        data.cover ? String(data.cover) : null,
+        String(data.date ?? "1970-01-01"),
+        visibility,
+      ],
+    });
+  }
+  await refreshArticlesFromFiles(client, slugs);
+}
+
+/**
  * 고친 글 몇 편만 파일에서 다시 읽어 DB 행을 덮어쓴다.
  * 시더(seedKey)는 640여 편을 모두 훑으므로, 몇 편 고칠 때는 이쪽을 쓴다.
  */
@@ -3915,6 +3955,20 @@ async function init(client: Client) {
       ["yeongi", "next-50nyeon-bijeon"],
     ]);
     await markMigration(client, "placeholder-articles-audit-v1");
+  }
+
+  // 운영에서 빠져 있던 행사 장 4편 되살리기 (2026-11-13)
+  // moim-plain-v1(2026-09-30)의 '다시 넣기' 목록에 있던 글인데 운영 DB 에 다시 들어오지
+  // 않아 404 였고, 다른 글 10곳의 링크가 깨져 있었다. 영구 삭제(purge) 목록에는 없다.
+  // 오늘 원문대로 고친 내용으로 넣는다. 사용자 확인을 받고 되살림.
+  if (!(await hasMigration(client, "restore-4-moim-articles-v1"))) {
+    await restoreArticlesFromFiles(client, [
+      ["moim", "4dae-2009-hoechik-3cha"],
+      ["moim", "5dae-2011-hoechik-4cha"],
+      ["moim", "5dae-2011-hoechik-5cha"],
+      ["moim", "5dae-ryu-jongmuk-jongryo"],
+    ]);
+    await markMigration(client, "restore-4-moim-articles-v1");
   }
 
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
