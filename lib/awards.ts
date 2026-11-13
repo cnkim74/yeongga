@@ -116,7 +116,7 @@ export const AWARD_HISTORY: { when: string; what: string; href?: string }[] = [
 ];
 
 export const FOUNDER_PLAQUE = {
-  date: "2007.9",
+  date: "2007.9.7",
   occasion: "창립 30주년 기념행사",
   names: [
     "김해길", "장원석", "권원기", "권태원", "권화섭", "김명년",

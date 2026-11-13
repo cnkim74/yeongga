@@ -122,6 +122,22 @@ async function refreshArticlesFromFiles(
         slug,
       ],
     });
+    // 태그도 파일을 따른다 — 고친 글에서 뺀 태그가 검색에 남지 않도록.
+    if (data.tags) {
+      const tags = String(data.tags).split(",").map((t) => t.trim()).filter(Boolean);
+      await client.execute({
+        sql: `DELETE FROM article_tags
+              WHERE article_id = (SELECT id FROM articles WHERE chapter = ? AND slug = ?)`,
+        args: [chapter, slug],
+      });
+      for (const tag of tags) {
+        await client.execute({
+          sql: `INSERT OR IGNORE INTO article_tags (article_id, tag)
+                SELECT id, ? FROM articles WHERE chapter = ? AND slug = ?`,
+          args: [tag, chapter, slug],
+        });
+      }
+    }
   }
 }
 
@@ -3869,6 +3885,36 @@ async function init(client: Client) {
       ["moim", "1983-hoechik-1cha"],
     ]);
     await markMigration(client, "awards-chapter-2dae-fix-v1");
+  }
+
+  // 자리표시 글 10편과 거기서 이어진 글 원문 대조 (2026-11-13)
+  // '보관본을 확인해 보완합니다' 류 문장이 든 행사 장 글을 40년사 27~310쪽 OCR 과
+  // 현행 회칙(2025.7.1) 머리의 개정 이력에 대조했다. 지어낸 대목을 빼고, 비워 두었던
+  // 날짜·인원·개정 내용을 책에서 채웠다.
+  // - 회칙 제정·3·4·5차: 4차는 회비 조항 이사회 위임(188쪽), 5차는 원로 연령 75세(184쪽)
+  // - '4대 회장기 안동 답방 정례화', '5대부터 박약회 인성교육 후원' 은 근거 없음.
+  //   박약회 기여는 류종묵 회장 개인의 일(181쪽). 40년사의 안동 방문은 1999.6 한 번(66쪽).
+  // - 〈5대 회장 임기 마무리〉의 인용문은 출처 쪽에 없는 창작이라 뺐다.
+  // 태그도 파일대로 맞춘다(refreshArticlesFromFiles).
+  if (!(await hasMigration(client, "placeholder-articles-audit-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["moim", "1977-hoechik-jejeong"],
+      ["moim", "1998-imsi-chongdae"],
+      ["moim", "1998-kim-haegil-jongryo"],
+      ["moim", "1998-yeongga-munhwa-2-balgan"],
+      ["moim", "4dae-2009-hoechik-3cha"],
+      ["moim", "4dae-jeonggi-haengsa-mum"],
+      ["moim", "5dae-2011-hoechik-4cha"],
+      ["moim", "5dae-2011-hoechik-5cha"],
+      ["moim", "5dae-2014-yeoncheon-tambang"],
+      ["moim", "5dae-jeonggi-haengsa-mum"],
+      ["moim", "5dae-ryu-jongmuk-jongryo"],
+      ["moim", "7dae-2017-haeoe-danang"],
+      ["yeongi", "andong-jeongcheseong"],
+      ["yeongi", "hoechik-jeongsin"],
+      ["yeongi", "next-50nyeon-bijeon"],
+    ]);
+    await markMigration(client, "placeholder-articles-audit-v1");
   }
 
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
