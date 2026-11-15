@@ -15,7 +15,7 @@ visibility: public
 ## 이 시기의 기록
 
 - [1998.10.24 임시총회 — 류목기 2대 회장 선임, 회칙 2차 개정](/archive/moim/1998-imsi-chongdae)
-- [제2대 류목기(柳穆基) 회장 — 1999~2002](/archive/geul/2dae-ryu-mokgi)
+- [제2대 류목기(柳穆基) 회장 — 1998~2002](/archive/geul/2dae-ryu-mokgi)
 
 ## 사진을 보내 주실 분께
 

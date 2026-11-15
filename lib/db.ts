@@ -4067,6 +4067,24 @@ async function init(client: Client) {
     await markMigration(client, "yeonhyeok-2026-11-verbatim-v2");
   }
 
+  // 연혁 3차 (2026-11-15) — 역대 회장 연보·인물 글 제목의 재임 기간을 연혁 수정 요청대로 맞춘다.
+  // (2대 1998~2002, 6대 2014~2017, 7대 2017~2020, 8대 2020~2025)
+  if (!(await hasMigration(client, "yeonhyeok-2026-11-terms-v3"))) {
+    await refreshArticlesFromFiles(client, [
+      ["geul", "hoejang-yeonbo"],
+      ["geul", "2dae-ryu-mokgi"],
+      ["geul", "6dae-kim-bonggu"],
+      ["geul", "8dae-mun-sangbu"],
+      ["geul", "7dae-kim-gyedong"],
+      ["geul", "hoebo-8-7-kim-huigu-yeoseong-gasanjeom"],
+      ["jachui", "sajin-2015-2017"],
+      ["jachui", "sajin-1990s"],
+      ["jachui", "hoebo-8-8-ryu-mokki-pungsan-interview"],
+      ["yeongi", "2010-saedae-gyoryu"],
+    ]);
+    await markMigration(client, "yeonhyeok-2026-11-terms-v3");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.

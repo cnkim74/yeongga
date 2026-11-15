@@ -76,6 +76,6 @@ visibility: public
 - **3대 금창태 회장기(2003~2006)** — **총무간사** (`/archive/geul/3dae-geum-changtae`)
 - **4대 허동진 회장기(2007~2010)** — **사무국장** (`/archive/geul/4dae-heo-dongjin`)
 - **5대 류종묵 회장기(2011~2014)** — 사무국장 → 상임부회장 (`/archive/geul/5dae-ryu-jongmuk`)
-- **6대 김봉구 회장기(2015~2016)** — **상임부회장** (`/archive/geul/6dae-kim-bonggu`)
+- **6대 김봉구 회장기(2014~2017)** — **상임부회장** (`/archive/geul/6dae-kim-bonggu`)
 
 — **다섯 회장기 약 15년 동안 회를 한 결도 거르지 않고 받쳐 주신 결**.
