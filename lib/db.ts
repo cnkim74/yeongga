@@ -3997,6 +3997,45 @@ async function init(client: Client) {
     await markMigration(client, "munhwasang-1-name-fix-v1");
   }
 
+  // 연혁 장을 영가회 연혁(2026년 11월 정리본)대로 (2026-11-15)
+  //  - 태동 Ⅰ·Ⅱ 두 편을 새로 넣고, 창립총회·1~9대 회장·회보 발간 재개 글을 정리본 13항목대로 다시 썼다.
+  //  - 회장 임기: 6대 2015.1.1~2017.5.26, 7대 2017.5.27~2020.6, 8대 2020.6~2025.2.5, 9대 2025.2.6~.
+  //    (회보 8-1호·9-1호는 7대 2017~2021, 8대 2021~2024 로 적었다 — 연보에 엇갈림을 남김)
+  //  - 8대 글 날짜는 자리표시(2021-01-01)에서 공식 취임한 2021.9.30 임시총회로.
+  if (!(await hasMigration(client, "yeonhyeok-2026-11-v1"))) {
+    await restoreArticlesFromFiles(client, [
+      ["yeongi", "taedong-1-1976"],
+      ["yeongi", "taedong-2-1976"],
+    ]);
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "ireum-byeoncheon"],
+      ["yeongi", "1977-changrip-namgang"],
+      ["yeongi", "1st-hgkim-01"],
+      ["yeongi", "2dae-hoejang-sidae"],
+      ["yeongi", "3dae-chuim"],
+      ["yeongi", "4dae-chuim"],
+      ["yeongi", "5dae-chuim"],
+      ["yeongi", "6dae-chuim"],
+      ["yeongi", "7dae-chuim"],
+      ["yeongi", "8dae-chuim"],
+      ["yeongi", "9dae-chuim"],
+      ["yeongi", "hoebo-buhwal-2022"],
+      ["yeongi", "yeongga-munhwa-1jip"],
+      ["yeongi", "2010-saedae-gyoryu"],
+      ["geul", "hoejang-yeonbo"],
+      ["geul", "6dae-kim-bonggu"],
+      ["geul", "7dae-kim-gyedong"],
+      ["geul", "8dae-mun-sangbu"],
+      ["geul", "hoebo-8-7-kim-huigu-yeoseong-gasanjeom"],
+      ["jachui", "sajin-2015-2017"],
+    ]);
+    await client.execute({
+      sql: "UPDATE articles SET date = ? WHERE chapter = ? AND slug = ?",
+      args: ["2021-09-30", "yeongi", "8dae-chuim"],
+    });
+    await markMigration(client, "yeonhyeok-2026-11-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
