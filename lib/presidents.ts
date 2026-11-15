@@ -9,8 +9,6 @@
 //   5대 류종묵 p180 / 6대 김봉구 p239·249 / 7대 김계동 p285.
 // 8·9대는 40년사 이후라 《영가회보》 근거 —
 //   8-1호 5면 〈영가회 40년〉(7대 2017~2021, 8대 문상부 2021~), 9-1호 박대섭 9대 취임.
-// 2026-11-15 영가회 연혁(정리본)대로 임기를 고침 — 2대 1998.10.24~, 6대 ~2017.5.26,
-//   7대 2017.5.27~2020.6, 8대 2020.6~2025.2.5.
 
 export type President = {
   id: string; // URL 파라미터용 식별자 (?president=<id>)
@@ -29,13 +27,13 @@ export type President = {
 
 export const presidents: President[] = [
   { id: "1dae", dae: 1, name: "김해길", hanja: "金海吉", term: "1977~1998", slugPrefix: "1dae-", photo: "/presidents/01.jpg" },
-  { id: "2dae", dae: 2, name: "류목기", hanja: "柳穆基", term: "1998~2002", slugPrefix: "2dae-", photo: "/presidents/02.jpg" },
+  { id: "2dae", dae: 2, name: "류목기", hanja: "柳穆基", term: "1999~2002", slugPrefix: "2dae-", photo: "/presidents/02.jpg" },
   { id: "3dae", dae: 3, name: "금창태", hanja: "琴昌泰", term: "2003~2006", slugPrefix: "3dae-", photo: "/presidents/03.jpg" },
   { id: "4dae", dae: 4, name: "허동진", hanja: "許東珍", term: "2007~2010", slugPrefix: "4dae-", photo: "/presidents/04.jpg" },
   { id: "5dae", dae: 5, name: "류종묵", hanja: "柳鍾默", term: "2011~2014", slugPrefix: "5dae-", photo: "/presidents/05.jpg" },
-  { id: "6dae", dae: 6, name: "김봉구", hanja: "金鳳求", term: "2015~2017", slugPrefix: "6dae-", photo: "/presidents/06.jpg" },
-  { id: "7dae", dae: 7, name: "김계동", hanja: "金啓東", term: "2017~2020", slugPrefix: "7dae-", photo: "/presidents/07.jpg" },
-  { id: "8dae", dae: 8, name: "문상부", term: "2020~2025", keyword: "문상부", photo: "/presidents/08.jpg" },
+  { id: "6dae", dae: 6, name: "김봉구", hanja: "金鳳求", term: "2015~2016", slugPrefix: "6dae-", photo: "/presidents/06.jpg" },
+  { id: "7dae", dae: 7, name: "김계동", hanja: "金啓東", term: "2017~2021", slugPrefix: "7dae-", photo: "/presidents/07.jpg" },
+  { id: "8dae", dae: 8, name: "문상부", term: "2021~2024", keyword: "문상부", photo: "/presidents/08.jpg" },
   { id: "9dae", dae: 9, name: "박대섭", term: "2025~현재", keyword: "박대섭", current: true, photo: "/presidents/09.jpg" },
 ];
 

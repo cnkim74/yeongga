@@ -4036,6 +4036,37 @@ async function init(client: Client) {
     await markMigration(client, "yeonhyeok-2026-11-v1");
   }
 
+  // 연혁 장 2차 (2026-11-15) — v1 은 정리본을 편집실이 다듬고 날짜 몇 곳을 고쳐 실었다.
+  // 사용자 요청: 판단 없이 정리본 그대로. 13편 본문을 정리본 원문 그대로 다시 싣고,
+  // v1 에서 함께 고쳤던 연혁 밖의 글(연보·인물 글 등)은 v1 이전으로 되돌린다.
+  if (!(await hasMigration(client, "yeonhyeok-2026-11-verbatim-v2"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "taedong-1-1976"],
+      ["yeongi", "taedong-2-1976"],
+      ["yeongi", "1977-changrip-namgang"],
+      ["yeongi", "1st-hgkim-01"],
+      ["yeongi", "2dae-hoejang-sidae"],
+      ["yeongi", "3dae-chuim"],
+      ["yeongi", "4dae-chuim"],
+      ["yeongi", "5dae-chuim"],
+      ["yeongi", "6dae-chuim"],
+      ["yeongi", "7dae-chuim"],
+      ["yeongi", "8dae-chuim"],
+      ["yeongi", "hoebo-buhwal-2022"],
+      ["yeongi", "9dae-chuim"],
+      ["yeongi", "ireum-byeoncheon"],
+      ["yeongi", "yeongga-munhwa-1jip"],
+      ["yeongi", "2010-saedae-gyoryu"],
+      ["geul", "hoejang-yeonbo"],
+      ["geul", "6dae-kim-bonggu"],
+      ["geul", "7dae-kim-gyedong"],
+      ["geul", "8dae-mun-sangbu"],
+      ["geul", "hoebo-8-7-kim-huigu-yeoseong-gasanjeom"],
+      ["jachui", "sajin-2015-2017"],
+    ]);
+    await markMigration(client, "yeonhyeok-2026-11-verbatim-v2");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
