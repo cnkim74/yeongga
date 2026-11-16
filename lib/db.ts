@@ -4483,7 +4483,7 @@ async function init(client: Client) {
   // 뽑은 사진 중 확실한 행사 사진만, 연도 안에 행사별 앨범으로 만든다.
   // 데이터: content/gallery/events.json, 사진: public/archive-photos/gallery/.
   // 2025·2026년 앨범은 그대로 두고, 그 이전(연도 미정 포함)의 옛 앨범은 숨긴다.
-  if (!(await hasMigration(client, "gallery-events-2024-v2"))) {
+  if (!(await hasMigration(client, "gallery-events-2024-v3"))) {
     const file = path.join(process.cwd(), "content", "gallery", "events.json");
     if (fs.existsSync(file)) {
       type Ev = {
@@ -4492,33 +4492,45 @@ async function init(client: Client) {
         photos: { url: string; title: string; source: string }[];
       };
       const events: Ev[] = JSON.parse(fs.readFileSync(file, "utf8"));
-      // 다시 돌려도 겹치지 않게 이 가져오기로 만든 앨범(ev-)을 먼저 비운다
-      await client.execute(
-        "DELETE FROM photos WHERE category_id IN (SELECT id FROM photo_categories WHERE slug LIKE 'ev-%')"
-      );
-      await client.execute("DELETE FROM photo_categories WHERE slug LIKE 'ev-%'");
+      // 없는 앨범·사진만 채운다 (지우지 않는다). 여러 곳에서 동시에 돌아도 겹치거나
+      // 서로 지우지 않도록 슬러그 유일 제약(INSERT OR IGNORE)에 맡긴다 — v2 에서는
+      // 지웠다 다시 넣는 방식이라 겹쳐 돌 때 앨범 9개가 빠졌다.
       for (const e of events) {
         const desc = [e.description, e.source].filter(Boolean).join(" · ");
-        const r = await client.execute({
-          sql: `INSERT INTO photo_categories (name, slug, description, cover_url, position, year, event_date, hidden)
+        await client.execute({
+          sql: `INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position, year, event_date, hidden)
                 VALUES (?, ?, ?, ?, 0, ?, ?, 0)`,
           args: [e.name, e.slug, desc, e.photos[0]?.url ?? null, e.year, e.event_date],
         });
-        const cid = Number(r.lastInsertRowid);
-        let pos = 0;
-        for (const ph of e.photos) {
-          await client.execute({
-            sql: `INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility)
-                  VALUES (?, ?, ?, ?, ?, ?, 'public')`,
-            args: [cid, ph.title, ph.source, ph.url, e.event_date ?? String(e.year), pos++],
-          });
-        }
+        const found = await client.execute({
+          sql: "SELECT id FROM photo_categories WHERE slug = ?",
+          args: [e.slug],
+        });
+        const cid = Number((found.rows[0] as unknown as { id: number }).id);
+        // 사진 수가 맞는 앨범은 건드리지 않는다
+        const have = await client.execute({
+          sql: "SELECT COUNT(*) AS n FROM photos WHERE category_id = ?",
+          args: [cid],
+        });
+        if (Number((have.rows[0] as unknown as { n: number }).n) === e.photos.length) continue;
+        // 모자라거나 비었으면 그 앨범의 사진만 한 번에(하나의 쓰기로) 다시 넣는다
+        await client.batch(
+          [
+            { sql: "DELETE FROM photos WHERE category_id = ?", args: [cid] },
+            ...e.photos.map((ph, pos) => ({
+              sql: `INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility)
+                    VALUES (?, ?, ?, ?, ?, ?, 'public')`,
+              args: [cid, ph.title, ph.source, ph.url, e.event_date ?? String(e.year), pos] as (string | number | null)[],
+            })),
+          ],
+          "write"
+        );
       }
       await client.execute(
         "UPDATE photo_categories SET hidden = 1 WHERE slug NOT LIKE 'ev-%' AND (year IS NULL OR year <= 2024)"
       );
     }
-    await markMigration(client, "gallery-events-2024-v2");
+    await markMigration(client, "gallery-events-2024-v3");
   }
 
   // 작고하신 이종훈 원로회원 — 수첩의 '李'가 호환 한자(U+F9E1)라 v1 에서 지워지지
