@@ -4108,6 +4108,12 @@ async function init(client: Client) {
     await markMigration(client, "yecheon-tambang-8-11-v1");
   }
 
+  // 회장 인사말 끝의 편집실 출처 주를 지운다 (2026-11-16 요청).
+  if (!(await hasMigration(client, "greeting-2026-11-v2-no-note"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "hoejang-insa"]]);
+    await markMigration(client, "greeting-2026-11-v2-no-note");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
