@@ -36,13 +36,14 @@ function rowToVideo(row: Record<string, unknown>): Video {
 
 export async function listVideos(): Promise<Video[]> {
   const db = await getDb();
-  // 행사 순 — 최근 행사가 위로, 같은 행사 안에서는 1부·2부(position) 순.
+  // 최근 영상이 위로 — 행사 날짜가 최근인 것부터, 같은 행사 안에서도 뒤의 순서
+  // (3부 → 2부 → 1부, position 이 큰 것)가 위로 온다 (2026-11-16 요청).
   // 행사 날짜가 없으면 올린 날로 친다. 추천(⭐) 한 편은 페이지에서 따로 맨 위에 보인다.
   const r = await db.execute(
     `SELECT * FROM videos
      ORDER BY featured DESC,
               COALESCE(NULLIF(event_date, ''), substr(created_at, 1, 10)) DESC,
-              position ASC, id DESC`
+              position DESC, id DESC`
   );
   return r.rows.map((row) => rowToVideo(row as unknown as Record<string, unknown>));
 }
