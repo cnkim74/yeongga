@@ -43,7 +43,7 @@ function parseDocDate(v: FormDataEntryValue | null): string | null {
 export async function createPostAction(formData: FormData) {
   const user = await requireMember("/board/new");
 
-  const title = String(formData.get("title") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim().normalize("NFC");
   const body = String(formData.get("body") ?? "").trim();
   const attachments = parseAttachments(formData.get("attachments"));
   // 공지사항은 없앴다 — 모든 글은 자료실. 자료 날짜로 정렬한다.
@@ -81,7 +81,7 @@ export async function updatePostAction(formData: FormData) {
     return { error: "수정 권한이 없습니다." };
   }
 
-  const title = String(formData.get("title") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim().normalize("NFC");
   const body = String(formData.get("body") ?? "").trim();
   const attachments = parseAttachments(formData.get("attachments"));
   const kind = "material" as const;

@@ -36,7 +36,8 @@ function rowToPost(row: Record<string, unknown>): Post {
   return {
     id: Number(row.id),
     kind: row.kind === "notice" ? "notice" : "material",
-    title: String(row.title),
+    // 맥에서 올린 자료는 제목이 자모로 풀린 NFD 로 들어와 "년"·"차"·"회"를 못 읽는다
+    title: String(row.title).normalize("NFC"),
     body: String(row.body ?? ""),
     author_id: row.author_id != null ? Number(row.author_id) : null,
     author_name: String(row.author_name),
@@ -111,8 +112,6 @@ export async function listPosts(kind?: PostKind): Promise<PostWithMeta[]> {
     const row = r as Record<string, unknown>;
     return { ...rowToPost(row), attachment_count: Number(row.attachment_count ?? 0) };
   });
-  // TEMP 2026-11-16 정렬 점검 — 확인 후 지운다
-  console.log("BOARD_SORT_DEBUG", JSON.stringify(rows.map((p) => [p.id, p.title, p.doc_date, p.created_at, docDateOf(p)])));
   return sortByDocDate(rows);
 }
 

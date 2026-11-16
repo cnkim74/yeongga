@@ -4165,6 +4165,49 @@ async function init(client: Client) {
     await markMigration(client, "kim-gyeonghan-minister-v1");
   }
 
+  // 자료실 자료 날짜 2차 (2026-11-16) — 1차는 제목을 그대로 비교했는데, 맥에서 올린
+  // 자료는 제목이 자모로 풀린(NFD) 채 저장돼 절반이 맞지 않았다. 제목을 NFC 로
+  // 맞춰 비교하고, 제목 자체도 NFC 로 고쳐 저장한다.
+  if (!(await hasMigration(client, "board-doc-date-v2-nfc"))) {
+    const DOC_DATES: Record<number, [string, string]> = {
+      1: ["역대회장 간담회 자료", "2026-06-30"],
+      2: ["2026년 영가회 수첩 자료", "2026-01-01"],
+      3: ["25년 산불성금", "2025-04"],
+      4: ["류종묵의장 26년 정기총회 축사", "2026-01-07"],
+      5: ["제5회 영가포럼 책자", "2026-06-24"],
+      6: ["26년 정기총회 자료집", "2026-01-07"],
+      7: ["24년도(1217) 이사회 자료", "2024-12-17"],
+      8: ["2025 1차운영회의", "2025-02-07"],
+      11: ["2025년 영가회 정기총회", "2025-02-07"],
+      16: ["2024년 정기총회", "2024-01-19"],
+      17: ["2025년 영가회 정기총회", "2025-02-07"],
+      19: ["2026년 신년인사", "2026-01-07"],
+      20: ["2026년 정기총회 자료집", "2026-01-07"],
+      22: ["2026년 1차 이사회", "2026-03-04"],
+      26: ["제1회 영가포럼", "2025-06-18"],
+      27: ["제2회 영가안동발전포럼", "2025-09-10"],
+      28: ["제3회 6차 영가원로회원간담회", "2025-10-15"],
+      29: ["제4회 7차 원로회원 간담회", "2026-04-15"],
+      30: ["제5회 영가포럼(신입회원환영)", "2026-06-24"],
+      32: ["영가회 비영리법인 설립허가증 등", "2025-08"],
+    };
+    const res = await client.execute("SELECT id, title, doc_date FROM posts");
+    for (const r of res.rows) {
+      const id = Number(r.id);
+      const raw = String(r.title);
+      const nfc = raw.normalize("NFC");
+      const want = DOC_DATES[id];
+      const setDate = want && want[0] === nfc && r.doc_date == null ? want[1] : null;
+      if (nfc !== raw || setDate) {
+        await client.execute({
+          sql: "UPDATE posts SET title = ?, doc_date = COALESCE(?, doc_date) WHERE id = ?",
+          args: [nfc, setDate, id],
+        });
+      }
+    }
+    await markMigration(client, "board-doc-date-v2-nfc");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
