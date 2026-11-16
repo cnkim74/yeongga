@@ -256,7 +256,8 @@ export default async function ChapterPage({
               {/* 회장기 바로가기 */}
               <nav aria-label="회장기 바로가기" className="-mt-4">
                 <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 md:grid-cols-9">
-                  {eraGroups.map((g) => {
+                  {/* 사진 줄은 1대 → 9대 순 (아래 회장기 목록은 최근 회장기가 위) */}
+                  {[...eraGroups].reverse().map((g) => {
                     const p = PRESIDENT_BY_DAE.get(g.era.dae);
                     return (
                       <li key={`nav-${g.era.dae}`}>
