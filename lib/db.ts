@@ -4097,6 +4097,17 @@ async function init(client: Client) {
     await markMigration(client, "greeting-2026-11-v1");
   }
 
+  // 예천 문화탐방 (2026-11-16) — 집무실에서 제목에 적어 둔 수정 요청대로 제목을 바꾸고,
+  // 《영가회보》 8-11호 6면 원문과 사진 7장으로 다시 옮긴다. ("300여명"은 지면상 "30여명")
+  if (!(await hasMigration(client, "yecheon-tambang-8-11-v1"))) {
+    await refreshArticlesFromFiles(client, [["moim", "hoebo-8-11-yecheon-tambang-300"]]);
+    await client.execute({
+      sql: "UPDATE articles SET cover = ? WHERE chapter = ? AND slug = ?",
+      args: ["/archive-photos/hoebo/8-11/p06-1.webp", "moim", "hoebo-8-11-yecheon-tambang-300"],
+    });
+    await markMigration(client, "yecheon-tambang-8-11-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.

@@ -10,6 +10,10 @@ import { listChapterArticles } from "@/lib/articles-db";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
 import { groupByEra } from "@/lib/president-era";
+import { presidents } from "@/lib/presidents";
+
+// 행사 장 회장기 머리에 쓰는 액자 사진 — 역대회장 페이지와 같은 사진
+const PRESIDENT_BY_DAE = new Map(presidents.map((p) => [p.dae, p]));
 
 // 빌드 타임 정적 생성 비활성화 (모임 챕터 100+편으로 60초 timeout 회피)
 // 매 요청 SSR + Next.js fetch 캐시 활용
@@ -216,35 +220,69 @@ export default async function ChapterPage({
             <div className="space-y-20">
               {/* 회장기 바로가기 */}
               <nav aria-label="회장기 바로가기" className="-mt-4">
-                <ul className="flex flex-wrap gap-2">
-                  {eraGroups.map((g) => (
-                    <li key={`nav-${g.era.dae}`}>
-                      <a
-                        href={`#${g.era.id}`}
-                        className="inline-flex items-baseline gap-1.5 rounded-full border border-[var(--color-rule)] px-4 py-2 text-base text-[var(--color-ink-soft)] transition hover:border-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
-                      >
-                        <span className="font-semibold">{g.era.dae}대</span>
-                        <span>{g.era.name}</span>
-                        <span className="text-sm text-[var(--color-ink-mute)]">
-                          {g.items.length}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
+                <ul className="grid grid-cols-3 gap-3 sm:grid-cols-5 md:grid-cols-9">
+                  {eraGroups.map((g) => {
+                    const p = PRESIDENT_BY_DAE.get(g.era.dae);
+                    return (
+                      <li key={`nav-${g.era.dae}`}>
+                        <a
+                          href={`#${g.era.id}`}
+                          className="group block text-center"
+                        >
+                          <span className="relative mx-auto block aspect-[3/4] w-full max-w-[96px] overflow-hidden rounded-md border border-[var(--color-rule)] bg-[var(--color-bg-soft)] shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md">
+                            {p?.photo && (
+                              <Image
+                                src={p.photo}
+                                alt={`제${g.era.dae}대 ${g.era.name} 회장`}
+                                fill
+                                sizes="96px"
+                                className="object-cover object-top grayscale-[35%] transition group-hover:grayscale-0"
+                              />
+                            )}
+                          </span>
+                          <span className="mt-2 block text-sm leading-tight text-[var(--color-ink-soft)] group-hover:text-[var(--color-ink)]">
+                            <span className="font-semibold">{g.era.dae}대</span>{" "}
+                            {g.era.name}
+                          </span>
+                          <span className="block text-xs text-[var(--color-ink-mute)]">
+                            {g.items.length}편
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </nav>
               {eraGroups.map((g) => (
                 <section key={g.era.dae} id={g.era.id} className="scroll-mt-28">
-                  <div className="mb-8 flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b-2 border-[var(--color-ink)] pb-3">
-                    <h2 className="display-md text-2xl sm:text-3xl">
-                      제{g.era.dae}대 {g.era.name}
-                    </h2>
-                    <span className="text-[var(--color-ink-mute)]">
-                      {g.era.term}
-                    </span>
-                    <span className="ml-auto text-sm text-[var(--color-ink-mute)]">
-                      {g.items.length}편
-                    </span>
+                  <div className="mb-8 flex items-end gap-5 border-b-2 border-[var(--color-ink)] pb-4">
+                    {PRESIDENT_BY_DAE.get(g.era.dae)?.photo && (
+                      <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-md border border-[var(--color-rule)] bg-[var(--color-bg-soft)] shadow-sm sm:w-24">
+                        <Image
+                          src={PRESIDENT_BY_DAE.get(g.era.dae)!.photo!}
+                          alt={`제${g.era.dae}대 ${g.era.name} 회장`}
+                          fill
+                          sizes="96px"
+                          className="object-cover object-top"
+                        />
+                      </div>
+                    )}
+                    <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-4 gap-y-1">
+                      <h2 className="display-md text-2xl sm:text-3xl">
+                        제{g.era.dae}대 {g.era.name}
+                        {PRESIDENT_BY_DAE.get(g.era.dae)?.hanja && (
+                          <span className="ml-2 text-lg font-normal text-[var(--color-ink-mute)] sm:text-xl">
+                            {PRESIDENT_BY_DAE.get(g.era.dae)!.hanja}
+                          </span>
+                        )}
+                      </h2>
+                      <span className="text-[var(--color-ink-mute)]">
+                        {g.era.term}
+                      </span>
+                      <span className="ml-auto text-sm text-[var(--color-ink-mute)]">
+                        {g.items.length}편
+                      </span>
+                    </div>
                   </div>
                   {renderList(g.items)}
                 </section>
