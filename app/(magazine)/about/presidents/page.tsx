@@ -38,29 +38,25 @@ export default async function PresidentsPage() {
                   href={`/search?president=${p.id}`}
                   className="group block focus-visible:outline-none"
                 >
-                  {/* 액자 — 짙은 나무 틀 + 미색 매트 + 사진 */}
-                  <div className="rounded-[3px] bg-[linear-gradient(145deg,#4a3a24_0%,#7a6238_38%,#3b2d1a_70%,#5c4729_100%)] p-[7px] shadow-[0_22px_34px_-20px_rgba(0,0,0,0.55),0_2px_4px_rgba(0,0,0,0.18)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_30px_40px_-20px_rgba(0,0,0,0.6),0_2px_4px_rgba(0,0,0,0.18)] group-focus-visible:ring-2 group-focus-visible:ring-[var(--color-accent)] sm:p-[10px]">
-                    <div className="bg-[#F6F1E6] p-3 shadow-[inset_0_1px_4px_rgba(0,0,0,0.28)] sm:p-5">
-                      <div className="relative aspect-[3/4] overflow-hidden bg-[#E9E3D6] shadow-[0_0_0_1px_rgba(120,100,60,0.35)]">
-                        {p.photo ? (
-                          <Image
-                            src={p.photo}
-                            alt={`제${p.dae}대 회장 ${p.name}`}
-                            fill
-                            sizes="(min-width: 1024px) 280px, (min-width: 640px) 30vw, 45vw"
-                            className="object-cover object-top"
-                          />
-                        ) : (
-                          // 사진이 없는 회장은 이름 한 글자로 대신한다.
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0 flex items-center justify-center text-5xl text-[#9A8E78]"
-                          >
-                            {p.hanja ? p.hanja.slice(0, 1) : p.name.slice(0, 1)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                  {/* 사진 — 액자 없이 큰 사진만 (2026-11-16 요청) */}
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-[#E9E3D6] shadow-[0_14px_28px_-18px_rgba(0,0,0,0.45)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_22px_34px_-18px_rgba(0,0,0,0.5)] group-focus-visible:ring-2 group-focus-visible:ring-[var(--color-accent)]">
+                    {p.photo ? (
+                      <Image
+                        src={p.photo}
+                        alt={`제${p.dae}대 회장 ${p.name}`}
+                        fill
+                        sizes="(min-width: 1024px) 280px, (min-width: 640px) 30vw, 45vw"
+                        className="object-cover object-top"
+                      />
+                    ) : (
+                      // 사진이 없는 회장은 이름 한 글자로 대신한다.
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 flex items-center justify-center text-5xl text-[#9A8E78]"
+                      >
+                        {p.hanja ? p.hanja.slice(0, 1) : p.name.slice(0, 1)}
+                      </span>
+                    )}
                   </div>
 
                   <div className="mt-5 text-center">
