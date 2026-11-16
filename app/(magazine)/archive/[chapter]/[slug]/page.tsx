@@ -14,6 +14,7 @@ import { getTagsForArticle } from "@/lib/tags-db";
 import { ShareBar } from "@/components/ShareBar";
 import { AdminEditLink } from "@/components/AdminEditLink";
 import { GAEventOnMount } from "@/components/GAEventOnMount";
+import { parseByline } from "@/lib/byline";
 
 /**
  * 캐시 전략:
@@ -122,10 +123,32 @@ export default async function ArticlePage({
           <h1 className="display text-4xl sm:text-6xl mb-5">
             {article.title}
           </h1>
-          {article.subtitle && (
-            <p className={`text-xl sm:text-2xl mb-6 ${article.cover ? "text-white/80" : "text-[var(--color-ink-soft)]"}`}>
-              {article.subtitle}
-            </p>
+          {chapter === "geul" ? (
+            // 기고 — 회원 이름 · 직함 / 소제목 / 갈래 · 출처
+            (() => {
+              const by = parseByline(article.subtitle, article.author);
+              const meta = [by.label, by.source].filter(Boolean).join(" · ");
+              return (
+                <div className={`mb-6 space-y-1.5 ${article.cover ? "text-white/80" : "text-[var(--color-ink-soft)]"}`}>
+                  {by.name && (
+                    <p className="text-xl sm:text-2xl">
+                      <span className={`font-semibold ${article.cover ? "text-white" : "text-[var(--color-ink)]"}`}>{by.name}</span>
+                      {by.role && <span className="ml-2">{by.role}</span>}
+                    </p>
+                  )}
+                  {by.sub && <p className="text-lg sm:text-xl">{by.sub}</p>}
+                  {meta && (
+                    <p className={`text-sm ${article.cover ? "text-white/70" : "text-[var(--color-ink-mute)]"}`}>{meta}</p>
+                  )}
+                </div>
+              );
+            })()
+          ) : (
+            article.subtitle && (
+              <p className={`text-xl sm:text-2xl mb-6 ${article.cover ? "text-white/80" : "text-[var(--color-ink-soft)]"}`}>
+                {article.subtitle}
+              </p>
+            )
           )}
           <div className={`flex flex-wrap items-center gap-x-5 gap-y-2 text-sm ${article.cover ? "text-white/70" : "text-[var(--color-ink-mute)]"}`}>
             {!isUndated(chapter, slug) && (

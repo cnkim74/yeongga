@@ -31,18 +31,25 @@ function parseAttachments(raw: FormDataEntryValue | null): AttachmentInput[] {
   }
 }
 
+/** 자료 날짜 — YYYY, YYYY-MM, YYYY-MM-DD 만 받는다. 비우면 제목의 연도로 정렬. */
+function parseDocDate(v: FormDataEntryValue | null): string | null {
+  const t = String(v ?? "").trim().replace(/[./]/g, "-");
+  const m = t.match(/^(\d{4})(?:-(\d{1,2}))?(?:-(\d{1,2}))?$/);
+  if (!m) return null;
+  const [, y, mo, d] = m;
+  return [y, mo?.padStart(2, "0"), d?.padStart(2, "0")].filter(Boolean).join("-");
+}
+
 export async function createPostAction(formData: FormData) {
   const user = await requireMember("/board/new");
 
   const title = String(formData.get("title") ?? "").trim();
   const body = String(formData.get("body") ?? "").trim();
   const attachments = parseAttachments(formData.get("attachments"));
-  // 공지 지정·게시판 선택은 관리자만
-  const pinned = user.role === "admin" && formData.get("pinned") === "on";
-  const kind =
-    user.role === "admin" && formData.get("kind") === "notice"
-      ? ("notice" as const)
-      : ("material" as const);
+  // 공지사항은 없앴다 — 모든 글은 자료실. 자료 날짜로 정렬한다.
+  const kind = "material" as const;
+  const pinned = false;
+  const doc_date = parseDocDate(formData.get("doc_date"));
 
   if (!title) return { error: "제목을 입력해 주세요." };
 
@@ -53,11 +60,11 @@ export async function createPostAction(formData: FormData) {
     author_name: user.name || user.username,
     kind,
     pinned,
+    doc_date,
     attachments,
   });
 
   revalidatePath("/board");
-  revalidatePath("/board/notice");
   redirect(`/board/${id}`);
 }
 
@@ -77,14 +84,9 @@ export async function updatePostAction(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const body = String(formData.get("body") ?? "").trim();
   const attachments = parseAttachments(formData.get("attachments"));
-  const pinned =
-    user.role === "admin" ? formData.get("pinned") === "on" : post.pinned;
-  const kind =
-    user.role === "admin"
-      ? formData.get("kind") === "notice"
-        ? ("notice" as const)
-        : ("material" as const)
-      : post.kind;
+  const kind = "material" as const;
+  const pinned = false;
+  const doc_date = parseDocDate(formData.get("doc_date"));
 
   if (!title) return { error: "제목을 입력해 주세요." };
 
@@ -94,10 +96,9 @@ export async function updatePostAction(formData: FormData) {
     if (!newUrls.has(old.file_url)) await deleteUploadIfLocal(old.file_url);
   }
 
-  await updatePost(id, { kind, title, body, pinned, attachments });
+  await updatePost(id, { kind, title, body, pinned, doc_date, attachments });
 
   revalidatePath("/board");
-  revalidatePath("/board/notice");
   revalidatePath(`/board/${id}`);
   redirect(`/board/${id}`);
 }
@@ -116,7 +117,6 @@ export async function deletePostAction(formData: FormData) {
   for (const url of urls) await deleteUploadIfLocal(url);
 
   revalidatePath("/board");
-  revalidatePath("/board/notice");
   redirect("/board");
 }
 

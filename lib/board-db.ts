@@ -23,6 +23,8 @@ export type Post = {
   author_name: string;
   pinned: boolean;
   views: number;
+  /** 자료 날짜 — YYYY, YYYY-MM, YYYY-MM-DD. 비면 제목에서 연도를 읽는다 */
+  doc_date: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -40,6 +42,7 @@ function rowToPost(row: Record<string, unknown>): Post {
     author_name: String(row.author_name),
     pinned: Number(row.pinned) === 1,
     views: Number(row.views ?? 0),
+    doc_date: row.doc_date != null && String(row.doc_date).trim() ? String(row.doc_date).trim() : null,
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
   };
@@ -57,7 +60,43 @@ function rowToAttachment(row: Record<string, unknown>): PostAttachment {
   };
 }
 
-/** 목록 — 공지(pinned) 먼저, 그다음 최신순. 첨부 개수 포함. */
+/**
+ * 자료실 정렬 기준 — 자료 날짜(doc_date)가 있으면 그것, 없으면 제목의 연도
+ * ("2026년", "26년", "2025 ", "24년도")를 읽는다. 둘 다 없으면 올린 날의 연도.
+ */
+export function docDateOf(p: Pick<Post, "title" | "doc_date" | "created_at">): string {
+  if (p.doc_date) return p.doc_date;
+  const y4 = p.title.match(/(20\d{2})/);
+  if (y4) return y4[1];
+  const y2 = p.title.match(/(?:^|[^\d])(\d{2})\s*년/);
+  if (y2) return `20${y2[1]}`;
+  return p.created_at.slice(0, 4);
+}
+
+/** 제목 속 차수·회차 ("3차", "제5회") — 같은 날짜 기준 안에서 뒤 차수를 위로 */
+function ordinalOf(title: string): number {
+  const m = title.match(/(\d+)\s*차/) ?? title.match(/제\s*(\d+)\s*회/);
+  return m ? Number(m[1]) : 0;
+}
+
+/**
+ * 자료 날짜가 최근인 것부터. 연도만 아는 자료는 그해 맨 위에 두고(날짜를 모르므로),
+ * 같은 자리끼리는 차수가 큰 것, 그다음 나중에 올린 것.
+ */
+export function sortByDocDate<T extends Post>(posts: T[]): T[] {
+  const key = (d: string) => (d.length === 4 ? `${d}-99` : d);
+  return [...posts].sort((a, b) => {
+    const da = key(docDateOf(a));
+    const db = key(docDateOf(b));
+    if (da !== db) return da < db ? 1 : -1;
+    const oa = ordinalOf(a.title);
+    const ob = ordinalOf(b.title);
+    if (oa !== ob) return ob - oa;
+    return b.id - a.id;
+  });
+}
+
+/** 목록 — 자료 날짜순(제목 기준). 첨부 개수 포함. */
 export async function listPosts(kind?: PostKind): Promise<PostWithMeta[]> {
   const db = await getDb();
   const res = await db.execute({
@@ -68,10 +107,12 @@ export async function listPosts(kind?: PostKind): Promise<PostWithMeta[]> {
      ORDER BY p.pinned DESC, p.id DESC`,
     args: kind ? [kind] : [],
   });
-  return res.rows.map((r) => {
-    const row = r as Record<string, unknown>;
-    return { ...rowToPost(row), attachment_count: Number(row.attachment_count ?? 0) };
-  });
+  return sortByDocDate(
+    res.rows.map((r) => {
+      const row = r as Record<string, unknown>;
+      return { ...rowToPost(row), attachment_count: Number(row.attachment_count ?? 0) };
+    })
+  );
 }
 
 export async function getPost(id: number): Promise<PostDetail | null> {
@@ -124,12 +165,13 @@ export async function createPost(data: {
   author_id: number | null;
   author_name: string;
   pinned?: boolean;
+  doc_date?: string | null;
   attachments?: AttachmentInput[];
 }): Promise<number> {
   const db = await getDb();
   const res = await db.execute({
-    sql: `INSERT INTO posts (kind, title, body, author_id, author_name, pinned)
-          VALUES (?, ?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO posts (kind, title, body, author_id, author_name, pinned, doc_date)
+          VALUES (?, ?, ?, ?, ?, ?, ?)`,
     args: [
       data.kind ?? "material",
       data.title,
@@ -137,6 +179,7 @@ export async function createPost(data: {
       data.author_id,
       data.author_name,
       data.pinned ? 1 : 0,
+      data.doc_date ?? null,
     ],
   });
   const postId = Number(res.lastInsertRowid);
@@ -151,6 +194,7 @@ export async function updatePost(
     title: string;
     body: string;
     pinned?: boolean;
+    doc_date?: string | null;
     attachments?: AttachmentInput[];
   }
 ): Promise<void> {
@@ -160,6 +204,10 @@ export async function updatePost(
   if (data.pinned !== undefined) {
     sets.push("pinned = ?");
     args.push(data.pinned ? 1 : 0);
+  }
+  if (data.doc_date !== undefined) {
+    sets.push("doc_date = ?");
+    args.push(data.doc_date);
   }
   if (data.kind !== undefined) {
     sets.push("kind = ?");

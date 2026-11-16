@@ -11,6 +11,7 @@ import { listAuthorAvatars } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
 import { groupByEra } from "@/lib/president-era";
 import { presidents } from "@/lib/presidents";
+import { parseByline } from "@/lib/byline";
 
 // 행사 장 회장기 머리에 쓰는 액자 사진 — 역대회장 페이지와 같은 사진
 const PRESIDENT_BY_DAE = new Map(presidents.map((p) => [p.dae, p]));
@@ -93,10 +94,36 @@ export default async function ChapterPage({
                         )}
                         {a.title}
                       </h2>
-                      {a.subtitle && (
-                        <div className="text-[var(--color-ink-mute)] mb-3">
-                          {a.subtitle}
-                        </div>
+                      {chapter === "geul" ? (
+                        // 기고 — 기고글 제목 / 회원 이름 · 직함 / 소제목 / 갈래 · 출처
+                        (() => {
+                          const by = parseByline(a.subtitle, a.author);
+                          const meta = [by.label, by.source].filter(Boolean).join(" · ");
+                          return (
+                            <div className="mb-3 space-y-1">
+                              {by.name && (
+                                <div className="text-lg">
+                                  <span className="font-semibold text-[var(--color-ink)]">{by.name}</span>
+                                  {by.role && (
+                                    <span className="ml-2 text-[var(--color-ink-soft)]">{by.role}</span>
+                                  )}
+                                </div>
+                              )}
+                              {by.sub && (
+                                <div className="text-[var(--color-ink-soft)]">{by.sub}</div>
+                              )}
+                              {meta && (
+                                <div className="text-sm text-[var(--color-ink-mute)]">{meta}</div>
+                              )}
+                            </div>
+                          );
+                        })()
+                      ) : (
+                        a.subtitle && (
+                          <div className="text-[var(--color-ink-mute)] mb-3">
+                            {a.subtitle}
+                          </div>
+                        )
                       )}
                       {a.excerpt && (
                         <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed">
@@ -105,7 +132,7 @@ export default async function ChapterPage({
                       )}
                       <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-[var(--color-ink-mute)]">
                         {!isUndated(chapter, a.slug) && <span>{formatDate(a.date)}</span>}
-                        {a.author && (
+                        {a.author && chapter !== "geul" && (
                           <span className="inline-flex items-center gap-2">
                             <span aria-hidden="true">·</span>
                             <AuthorAvatar

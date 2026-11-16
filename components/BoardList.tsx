@@ -1,10 +1,7 @@
-// 소식 목록 표 — 공지사항 / 자료실 두 페이지가 함께 쓴다.
+// 자료실 목록 표 — 제목(자료 날짜) 기준으로 놓인 순서 그대로 번호를 붙인다.
+// 쓴 날짜와 조회수는 보이지 않는다 (2026-11-16 요청).
 import Link from "next/link";
 import type { PostWithMeta } from "@/lib/board-db";
-
-function fmtDate(s: string): string {
-  return s.slice(0, 10);
-}
 
 export function BoardList({
   posts,
@@ -21,47 +18,26 @@ export function BoardList({
     );
   }
 
-  // 최신글이 큰 번호. 공지는 번호 대신 📌.
-  const nonPinnedTotal = posts.filter((p) => !p.pinned).length;
-  let seen = 0;
-  const displayNo = posts.map((p) => {
-    if (p.pinned) return null;
-    seen += 1;
-    return nonPinnedTotal - seen + 1;
-  });
-
   return (
     <div className="border-t-2 border-[var(--color-ink)]">
       <div className="hidden sm:flex items-center gap-4 px-3 py-2.5 text-xs font-semibold text-[var(--color-ink-mute)] border-b border-[var(--color-rule)]">
         <span className="w-12 text-center shrink-0">번호</span>
         <span className="flex-1">제목</span>
         <span className="w-24 text-center shrink-0">작성자</span>
-        <span className="w-24 text-center shrink-0">날짜</span>
-        <span className="w-14 text-center shrink-0">조회</span>
       </div>
 
       <ul>
         {posts.map((p, idx) => (
-          <li
-            key={p.id}
-            className={`border-b border-[var(--color-rule)] ${
-              p.pinned ? "bg-[var(--color-bg-soft)]" : ""
-            }`}
-          >
+          <li key={p.id} className="border-b border-[var(--color-rule)]">
             <Link
               href={`/board/${p.id}`}
               className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-3 py-3 hover:bg-[var(--color-bg-soft)] transition"
             >
               <span className="hidden sm:block w-12 text-center shrink-0 text-sm text-[var(--color-ink-mute)]">
-                {p.pinned ? "📌" : displayNo[idx]}
+                {posts.length - idx}
               </span>
               <span className="flex-1 min-w-0">
                 <span className="flex items-center gap-2">
-                  {p.pinned && (
-                    <span className="text-[11px] font-semibold text-[var(--color-accent)] shrink-0">
-                      공지
-                    </span>
-                  )}
                   <span className="font-medium text-[var(--color-ink)] truncate">
                     {p.title}
                   </span>
@@ -72,17 +48,11 @@ export function BoardList({
                   )}
                 </span>
                 <span className="sm:hidden block text-xs text-[var(--color-ink-mute)] mt-1">
-                  {p.author_name} · {fmtDate(p.created_at)} · 조회 {p.views}
+                  {p.author_name}
                 </span>
               </span>
               <span className="hidden sm:block w-24 text-center shrink-0 text-sm text-[var(--color-ink-soft)] truncate">
                 {p.author_name}
-              </span>
-              <span className="hidden sm:block w-24 text-center shrink-0 text-sm text-[var(--color-ink-mute)]">
-                {fmtDate(p.created_at)}
-              </span>
-              <span className="hidden sm:block w-14 text-center shrink-0 text-sm text-[var(--color-ink-mute)]">
-                {p.views}
               </span>
             </Link>
           </li>

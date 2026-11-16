@@ -56,16 +56,11 @@ export default async function PostDetailPage({
         <header className="border-b border-[var(--color-rule)] pb-5 mb-6">
           <div className="flex items-start justify-between gap-4 mb-3">
             <h1 className="display-md text-2xl sm:text-3xl leading-snug">
-              {post.pinned && (
-                <span className="text-[var(--color-accent)] mr-2">📌</span>
-              )}
               {post.title}
             </h1>
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--color-ink-mute)]">
             <span>{post.author_name}</span>
-            <span>{post.created_at.slice(0, 16)}</span>
-            <span>조회 {post.views + 1}</span>
           </div>
         </header>
 
@@ -134,7 +129,6 @@ export default async function PostDetailPage({
         <div className="mt-8 flex items-center justify-end">
           <PostActions
             postId={post.id}
-            pinned={post.pinned}
             canEdit={canEdit}
             isAdmin={isAdmin}
           />

@@ -45,14 +45,7 @@ const NAV: NavItem[] = [
       { href: "/ebooks/hoebo", label: "영가회보" },
     ],
   },
-  {
-    href: "/board",
-    label: "소식",
-    items: [
-      { href: "/board/notice", label: "공지사항" },
-      { href: "/board", label: "자료실" },
-    ],
-  },
+  { href: "/board", label: "자료실" },
 ];
 
 type Theme = "dark" | "light";

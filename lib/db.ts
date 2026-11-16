@@ -440,6 +440,12 @@ async function init(client: Client) {
     );
   }
 
+  // ─── 마이그레이션: posts 에 doc_date(자료 날짜) 컬럼 추가 ──
+  // 자료실은 쓴 날이 아니라 제목이 가리키는 날짜 순으로 놓는다 (2026-11-16).
+  if (!postColNames.includes("doc_date")) {
+    await client.execute(`ALTER TABLE posts ADD COLUMN doc_date TEXT`);
+  }
+
   // ─── 마이그레이션: chapter_meta 에 hero_image 컬럼 추가 ──
   const cmCols = await client.execute("PRAGMA table_info(chapter_meta)");
   const cmColNames = cmCols.rows.map((r) => String(r.name));
@@ -4112,6 +4118,51 @@ async function init(client: Client) {
   if (!(await hasMigration(client, "greeting-2026-11-v2-no-note"))) {
     await refreshArticlesFromFiles(client, [["yeongi", "hoejang-insa"]]);
     await markMigration(client, "greeting-2026-11-v2-no-note");
+  }
+
+  // 자료실 자료 날짜 (2026-11-16) — 제목에 연도만 있거나 날짜가 없는 자료에
+  // 확인된 날짜를 넣는다. 근거: 첨부 파일 이름, 아카이브 행사 기록, 영가회보 9-1·9-4호.
+  // 운영 DB 의 글 번호와 제목이 둘 다 맞을 때만 고친다.
+  if (!(await hasMigration(client, "board-doc-date-v1"))) {
+    const DOC_DATES: [number, string, string][] = [
+      [1, "역대회장 간담회 자료", "2026-06-30"], // 1차 25.11.22 · 2차 26.6.30 자료
+      [2, "2026년 영가회 수첩 자료", "2026-01-01"], // 수첩 판권 2026.1.1
+      [3, "25년 산불성금", "2025-04"], // 9-4호 7면: 지난해 4월 안동시에 전달
+      [4, "류종묵의장 26년 정기총회 축사", "2026-01-07"],
+      [5, "제5회 영가포럼 책자", "2026-06-24"],
+      [6, "26년 정기총회 자료집", "2026-01-07"],
+      [7, "24년도(1217) 이사회 자료", "2024-12-17"],
+      [8, "2025 1차운영회의", "2025-02-07"], // 9-1호 2면: 2월7일 운영협의회
+      [11, "2025년 영가회 정기총회", "2025-02-07"],
+      [16, "2024년 정기총회", "2024-01-19"],
+      [17, "2025년 영가회 정기총회", "2025-02-07"],
+      [19, "2026년 신년인사", "2026-01-07"],
+      [20, "2026년 정기총회 자료집", "2026-01-07"],
+      [22, "2026년 1차 이사회", "2026-03-04"],
+      [26, "제1회 영가포럼", "2025-06-18"],
+      [27, "제2회 영가안동발전포럼", "2025-09-10"],
+      [28, "제3회 6차 영가원로회원간담회", "2025-10-15"],
+      [29, "제4회 7차 원로회원 간담회", "2026-04-15"],
+      [30, "제5회 영가포럼(신입회원환영)", "2026-06-24"],
+      [32, "영가회 비영리법인 설립허가증 등", "2025-08"], // 9-4호 신년사: 작년 8월 설립 신고
+    ];
+    for (const [id, title, date] of DOC_DATES) {
+      await client.execute({
+        sql: "UPDATE posts SET doc_date = ? WHERE id = ? AND title = ? AND doc_date IS NULL",
+        args: [date, id, title],
+      });
+    }
+    await markMigration(client, "board-doc-date-v1");
+  }
+
+  // 김경한 회원 (2026-11-16) — '전 법무부차장'은 잘못. 회원수첩·회보 8-5호대로
+  // 법무부 장관으로 다시 쓰고, 2008 축하회 글의 1999년 노사정위원장 서술(김호진의 일)을 뺀다.
+  if (!(await hasMigration(client, "kim-gyeonghan-minister-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["geul", "myungsa-kim-gyeonghan"],
+      ["moim", "4dae-2008-5myeong-uiwon-chukha"],
+    ]);
+    await markMigration(client, "kim-gyeonghan-minister-v1");
   }
 
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──

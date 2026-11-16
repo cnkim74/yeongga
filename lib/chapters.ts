@@ -81,10 +81,10 @@ export const chapters: Chapter[] = [
   {
     slug: "munhwasang",
     number: "九",
-    title: "영가문화상",
-    subtitle: "문화상 · 선행상 · 공로패",
+    title: "영가상",
+    subtitle: "영가문화상 · 선행상 · 공로상",
     description:
-      "영가회가 고장의 문화와 이웃을 위해 애쓴 이들에게 드린 상의 기록입니다. 영가문화상과 영가선행상, 창립회원 공로패를 모았습니다.",
+      "영가회가 드린 상의 기록입니다. 영가문화상, 영가선행상, 그리고 회에 공을 세운 분께 드린 공로패·감사패를 모았습니다.",
     href: "/awards",
     linkLabel: "수상 기록 보러 가기",
   },

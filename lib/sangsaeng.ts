@@ -24,7 +24,7 @@ export const SANGSAENG_OFFICERS = [
     title: "수석부회장",
     note: "변호사 · 법무법인 율우 대표 · 전 대전고검장",
   },
-  { role: "간사", name: "금장수", title: "사무총장", note: "전 국정원 처장" },
+  { role: "간사", name: "금장수", title: "사무총장", note: "전 국정원" },
   { role: "행정", name: "강원옥", title: "사무국장", note: "" },
 ];
 

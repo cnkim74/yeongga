@@ -230,35 +230,22 @@ export function PostForm({
         </p>
       </div>
 
-      {/* 게시판 구분 (관리자만) — 공지사항 / 자료실 */}
-      {isAdmin && (
-        <div>
-          <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
-            게시판
-          </label>
-          <select
-            name="kind"
-            defaultValue={post?.kind ?? "material"}
-            className="form-input w-full sm:w-56"
-          >
-            <option value="material">자료실</option>
-            <option value="notice">공지사항</option>
-          </select>
-        </div>
-      )}
-
-      {/* 공지 등록 — 해당 게시판 안에서 상단 고정 (관리자만) */}
-      {isAdmin && (
-        <label className="flex items-center gap-2 text-sm text-[var(--color-ink)]">
-          <input
-            type="checkbox"
-            name="pinned"
-            defaultChecked={post?.pinned}
-            className="w-4 h-4"
-          />
-          📌 공지로 등록 (이 게시판 목록 맨 위에 고정)
+      {/* 자료 날짜 — 자료실은 이 날짜(없으면 제목의 연도) 순으로 놓인다 */}
+      <div>
+        <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5">
+          자료 날짜
         </label>
-      )}
+        <input
+          name="doc_date"
+          defaultValue={post?.doc_date ?? ""}
+          maxLength={10}
+          className="notion-input w-full sm:w-56"
+          placeholder="예: 2026-03-04 또는 2026"
+        />
+        <p className="mt-1 text-xs text-[var(--color-ink-mute)]">
+          회의·행사가 열린 날. 비워 두면 제목의 연도(예: 2026년)로 정렬합니다.
+        </p>
+      </div>
 
       <div className="flex gap-2 pt-2">
         <button

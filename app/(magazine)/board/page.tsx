@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { listPosts } from "@/lib/board-db";
 import { BoardList } from "@/components/BoardList";
-import { NewsTabs } from "@/components/NewsTabs";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +12,7 @@ export const metadata = {
 
 export default async function BoardPage() {
   // 자료실은 로그인 없이 열람 가능 — 글쓰기만 회원 전용.
-  // 공지 등록(📌)된 글도 자료실 안에서 상단 고정으로 함께 보인다.
+  // 제목(자료 날짜) 기준 최근 것부터. 쓴 날짜·조회수는 보이지 않는다.
   const [user, posts] = await Promise.all([
     getCurrentUser(),
     listPosts("material"),
@@ -23,15 +22,13 @@ export default async function BoardPage() {
     <>
       <section className="relative pt-40 pb-16 overflow-hidden bg-[var(--color-bg-soft)]">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="kicker text-[var(--color-ink-mute)] mb-4">소식 · 資料室</div>
+          <div className="kicker text-[var(--color-ink-mute)] mb-4">資料室</div>
           <h1 className="display text-5xl sm:text-7xl mb-4">자료실</h1>
           <p className="text-base text-[var(--color-ink-soft)]">
             총회·이사회·행사 자료를 모아 둔 자리입니다.
           </p>
         </div>
       </section>
-
-      <NewsTabs current="board" />
 
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-5xl px-6">
