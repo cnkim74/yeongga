@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { deleteAlbumAction } from "./actions";
+import { deleteAlbumAction, toggleAlbumHiddenAction } from "./actions";
 import type { Album } from "@/lib/gallery-db";
 
 export function GalleryAlbumList({ albums }: { albums: Album[] }) {
@@ -27,7 +27,9 @@ export function GalleryAlbumList({ albums }: { albums: Album[] }) {
           {albums.map((al) => (
             <div
               key={al.id}
-              className="rounded-xl border border-[var(--color-notion-rule)] overflow-hidden"
+              className={`rounded-xl border border-[var(--color-notion-rule)] overflow-hidden ${
+                al.hidden ? "bg-[var(--color-notion-hover)]" : ""
+              }`}
             >
               <Link href={`/admin/gallery/album/${al.id}/edit`} className="block">
                 <div className="relative aspect-[4/3] bg-[var(--color-notion-hover)] overflow-hidden">
@@ -38,6 +40,14 @@ export function GalleryAlbumList({ albums }: { albums: Album[] }) {
                     <div className="w-full h-full flex items-center justify-center text-4xl text-[var(--color-notion-mute)]">
                       🖼️
                     </div>
+                  )}
+                  {al.hidden && (
+                    <span className="absolute inset-0 bg-white/55" aria-hidden="true" />
+                  )}
+                  {al.hidden && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-[#c4554d] text-white text-xs font-medium">
+                      사이트에 안 보임
+                    </span>
                   )}
                   <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/55 text-white text-xs">
                     {al.photo_count}장
@@ -63,13 +73,22 @@ export function GalleryAlbumList({ albums }: { albums: Album[] }) {
                   >
                     편집
                   </Link>
-                  <Link
-                    href={`/gallery?category=${al.slug}`}
-                    target="_blank"
-                    className="notion-icon-btn text-xs"
-                  >
-                    보기 ↗
-                  </Link>
+                  {!al.hidden && (
+                    <Link
+                      href={`/gallery?category=${al.slug}`}
+                      target="_blank"
+                      className="notion-icon-btn text-xs"
+                    >
+                      보기 ↗
+                    </Link>
+                  )}
+                  <form action={toggleAlbumHiddenAction}>
+                    <input type="hidden" name="id" value={al.id} />
+                    <input type="hidden" name="hidden" value={al.hidden ? "0" : "1"} />
+                    <button type="submit" className="notion-icon-btn text-xs">
+                      {al.hidden ? "다시 보이기" : "숨기기"}
+                    </button>
+                  </form>
                   <form
                     action={deleteAlbumAction}
                     onSubmit={(e) => {

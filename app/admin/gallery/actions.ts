@@ -4,6 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import {
+  setCategoryHidden,
   createCategory,
   updateCategory,
   deleteCategory,
@@ -159,6 +160,14 @@ export async function updateAlbumAction(fd: FormData) {
 
   refreshPaths();
   redirect("/admin/gallery");
+}
+
+export async function toggleAlbumHiddenAction(fd: FormData) {
+  await requireAdmin();
+  const id = Number(fd.get("id"));
+  if (!id) return;
+  await setCategoryHidden(id, fd.get("hidden") === "1");
+  refreshPaths();
 }
 
 export async function deleteAlbumAction(fd: FormData) {

@@ -31,6 +31,12 @@ export default async function AdminGalleryPage() {
             <span className="text-[var(--color-notion-mute)]">앨범</span>
             <span className="font-medium">{albums.length}개</span>
           </div>
+          {albums.some((a) => a.hidden) && (
+            <div className="flex items-center gap-2">
+              <span className="text-[var(--color-notion-mute)]">사이트에 안 보이는 앨범</span>
+              <span className="font-medium">{albums.filter((a) => a.hidden).length}개</span>
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <span className="text-[var(--color-notion-mute)]">전체 사진</span>
             <span className="font-medium">{totalPhotos}장</span>

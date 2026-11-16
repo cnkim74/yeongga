@@ -90,6 +90,8 @@ export type Album = {
   year: number | null;
   /** 한 해 안에서 앨범을 늘어놓는 기준 — 행사가 열린 날 */
   event_date: string | null;
+  /** 숨김 — 사이트 갤러리에는 보이지 않고 집무실에서만 보인다 */
+  hidden: boolean;
 };
 
 /** 앨범 카드용 — 카테고리 + 대표 이미지(커버 없으면 첫 사진) + 사진 수.
@@ -100,7 +102,7 @@ export const listAlbums = unstable_cache(
     const visFilter = publicOnly ? "AND pp.visibility = 'public'" : "";
     const visFilter2 = publicOnly ? "AND pc.visibility = 'public'" : "";
     const res = await db.execute(`
-      SELECT c.id, c.name, c.slug, c.description, c.position, c.year, c.event_date,
+      SELECT c.id, c.name, c.slug, c.description, c.position, c.year, c.event_date, c.hidden,
              COALESCE(
                c.cover_url,
                (SELECT pp.image_url FROM photos pp
@@ -125,12 +127,22 @@ export const listAlbums = unstable_cache(
         photo_count: Number(row.photo_count ?? 0),
         year: row.year != null ? Number(row.year) : null,
         event_date: row.event_date != null ? String(row.event_date) : null,
+        hidden: Number(row.hidden ?? 0) === 1,
       };
     });
   },
   ["gallery:albums"],
   { tags: ["gallery"], revalidate: CACHE_TTL }
 );
+
+/** 앨범을 사이트에서 숨기거나 다시 보이게 한다 */
+export async function setCategoryHidden(id: number, hidden: boolean): Promise<void> {
+  const db = await getDb();
+  await db.execute({
+    sql: "UPDATE photo_categories SET hidden = ? WHERE id = ?",
+    args: [hidden ? 1 : 0, id],
+  });
+}
 
 export async function getCategoryById(id: number): Promise<PhotoCategory | null> {
   const db = await getDb();
