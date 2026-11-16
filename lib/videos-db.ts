@@ -12,6 +12,8 @@ export type Video = {
   thumbnail_url: string | null;
   featured: number;
   position: number;
+  /** 행사 날짜 YYYY-MM-DD — 목록은 이 날짜의 최근 행사부터 */
+  event_date: string | null;
   created_at: string;
 };
 
@@ -27,15 +29,20 @@ function rowToVideo(row: Record<string, unknown>): Video {
     thumbnail_url: row.thumbnail_url == null ? null : String(row.thumbnail_url),
     featured: Number(row.featured),
     position: Number(row.position),
+    event_date: row.event_date == null || String(row.event_date).trim() === "" ? null : String(row.event_date),
     created_at: String(row.created_at),
   };
 }
 
 export async function listVideos(): Promise<Video[]> {
   const db = await getDb();
-  // 게시판처럼 업로드 최신순. 추천(⭐) 한 편만 맨 위 고정.
+  // 행사 순 — 최근 행사가 위로, 같은 행사 안에서는 1부·2부(position) 순.
+  // 행사 날짜가 없으면 올린 날로 친다. 추천(⭐) 한 편은 페이지에서 따로 맨 위에 보인다.
   const r = await db.execute(
-    `SELECT * FROM videos ORDER BY featured DESC, id DESC`
+    `SELECT * FROM videos
+     ORDER BY featured DESC,
+              COALESCE(NULLIF(event_date, ''), substr(created_at, 1, 10)) DESC,
+              position ASC, id DESC`
   );
   return r.rows.map((row) => rowToVideo(row as unknown as Record<string, unknown>));
 }
@@ -82,6 +89,7 @@ export async function createVideo(input: {
   inputUrl: string;
   featured: boolean;
   thumbnailUrl?: string | null;
+  eventDate?: string | null;
 }): Promise<{ ok: true; id: number } | { ok: false; error: string }> {
   const parsed = parseEmbed(input.inputUrl);
   // 직접 올린 썸네일 우선, 없으면 유튜브 자동 썸네일
@@ -95,8 +103,8 @@ export async function createVideo(input: {
   const max = maxRow && maxRow.m != null ? Number(maxRow.m) : 0;
   const r = await db.execute({
     sql: `INSERT INTO videos
-          (kicker, title, description, embed_url, provider, video_id, thumbnail_url, featured, position)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          (kicker, title, description, embed_url, provider, video_id, thumbnail_url, featured, position, event_date)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
       input.kicker ?? null,
       input.title,
@@ -107,6 +115,7 @@ export async function createVideo(input: {
       thumbnail,
       input.featured ? 1 : 0,
       max + 1,
+      input.eventDate ?? null,
     ],
   });
   return { ok: true, id: Number(r.lastInsertRowid) };
@@ -121,6 +130,7 @@ export async function updateVideo(
     inputUrl: string;
     featured: boolean;
     thumbnailUrl?: string | null;
+    eventDate?: string | null;
   }
 ) {
   const parsed = parseEmbed(input.inputUrl);
@@ -134,7 +144,7 @@ export async function updateVideo(
   }
   await db.execute({
     sql: `UPDATE videos
-          SET kicker=?, title=?, description=?, embed_url=?, provider=?, video_id=?, thumbnail_url=?, featured=?
+          SET kicker=?, title=?, description=?, embed_url=?, provider=?, video_id=?, thumbnail_url=?, featured=?, event_date=?
           WHERE id=?`,
     args: [
       input.kicker ?? null,
@@ -145,6 +155,7 @@ export async function updateVideo(
       parsed.videoId,
       thumbnail,
       input.featured ? 1 : 0,
+      input.eventDate ?? null,
       id,
     ],
   });

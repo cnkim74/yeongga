@@ -74,10 +74,17 @@ export function VideoForm({ video }: { video?: Video }) {
       </div>
 
       <Field
+        name="eventDate"
+        label="행사 날짜"
+        defaultValue={video?.event_date ?? ""}
+        placeholder="예: 2026-10-16 — 영상 목록은 이 날짜의 최근 행사부터 놓입니다"
+      />
+
+      <Field
         name="kicker"
         label="라벨"
         defaultValue={video?.kicker ?? ""}
-        placeholder="예: 이번 호 영상"
+        placeholder="예: 2026.10.16 · 국방컨벤션"
       />
 
       <div>

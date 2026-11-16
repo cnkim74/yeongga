@@ -31,15 +31,19 @@ export async function saveVideoAction(
   const description = String(formData.get("description") ?? "").trim() || null;
   const featured = formData.get("featured") === "on";
   const thumbnailUrl = String(formData.get("thumbnailUrl") ?? "").trim() || null;
+  // 행사 날짜 — 2026.10.16 / 2026-10-16 모두 받는다
+  const rawDate = String(formData.get("eventDate") ?? "").trim().replace(/[./]/g, "-");
+  const dm = rawDate.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  const eventDate = dm ? `${dm[1]}-${dm[2].padStart(2, "0")}-${dm[3].padStart(2, "0")}` : null;
 
   if (!title) return { error: "제목은 비워둘 수 없습니다." };
   if (!inputUrl)
     return { error: "유튜브/비메오 URL을 붙여 넣어 주세요." };
 
   if (id) {
-    await updateVideo(id, { kicker, title, description, inputUrl, featured, thumbnailUrl });
+    await updateVideo(id, { kicker, title, description, inputUrl, featured, thumbnailUrl, eventDate });
   } else {
-    const r = await createVideo({ kicker, title, description, inputUrl, featured, thumbnailUrl });
+    const r = await createVideo({ kicker, title, description, inputUrl, featured, thumbnailUrl, eventDate });
     if (!r.ok) return { error: r.error };
   }
 
