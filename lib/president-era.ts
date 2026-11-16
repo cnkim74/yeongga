@@ -49,6 +49,15 @@ export function eraOf(slug: string, date: string): Era | undefined {
   return found;
 }
 
+/** 날짜(YYYY-MM-DD)만으로 회장기를 찾는다 — 갤러리 앨범처럼 슬러그가 없는 것용 */
+export function eraOfDate(date: string): Era | undefined {
+  let found: Era | undefined = ERAS[0];
+  for (const e of ERAS) {
+    if (e.from && date >= e.from) found = e;
+  }
+  return found;
+}
+
 export type EraGroup<T> = { era: Era; items: { item: T; index: number }[] };
 
 /** 최신 회장기부터 묶는다. 목록의 원래 순서(번호)는 그대로 유지한다. */
