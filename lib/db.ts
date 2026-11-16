@@ -4483,7 +4483,7 @@ async function init(client: Client) {
   // 뽑은 사진 중 확실한 행사 사진만, 연도 안에 행사별 앨범으로 만든다.
   // 데이터: content/gallery/events.json, 사진: public/archive-photos/gallery/.
   // 2025·2026년 앨범은 그대로 두고, 그 이전(연도 미정 포함)의 옛 앨범은 숨긴다.
-  if (!(await hasMigration(client, "gallery-events-2024-v1"))) {
+  if (!(await hasMigration(client, "gallery-events-2024-v2"))) {
     const file = path.join(process.cwd(), "content", "gallery", "events.json");
     if (fs.existsSync(file)) {
       type Ev = {
@@ -4518,7 +4518,7 @@ async function init(client: Client) {
         "UPDATE photo_categories SET hidden = 1 WHERE slug NOT LIKE 'ev-%' AND (year IS NULL OR year <= 2024)"
       );
     }
-    await markMigration(client, "gallery-events-2024-v1");
+    await markMigration(client, "gallery-events-2024-v2");
   }
 
   // 작고하신 이종훈 원로회원 — 수첩의 '李'가 호환 한자(U+F9E1)라 v1 에서 지워지지
