@@ -81,14 +81,19 @@ function ordinalOf(title: string): number {
 }
 
 /**
- * 자료 날짜가 최근인 것부터. 연도만 아는 자료는 그해 맨 위에 두고(날짜를 모르므로),
- * 같은 자리끼리는 차수가 큰 것, 그다음 나중에 올린 것.
+ * 자료 날짜가 최근인 것부터. 연도만 아는 자료는 올린 날을 기준 삼아 같은 해 안에 놓고
+ * (올린 해가 다르면 그해 맨 아래), 같은 자리끼리는 차수가 큰 것, 그다음 나중에 올린 것.
+ * — 연도만 아는 자료를 그해 맨 위에 두면, 오늘 날짜가 정확한 새 자료가 그 아래로 밀린다.
  */
 export function sortByDocDate<T extends Post>(posts: T[]): T[] {
-  const key = (d: string) => (d.length === 4 ? `${d}-99` : d);
+  const keyOf = (p: T) => {
+    const d = docDateOf(p);
+    if (d.length !== 4) return d;
+    return p.created_at.startsWith(d) ? p.created_at.slice(0, 10) : `${d}-00-00`;
+  };
   return [...posts].sort((a, b) => {
-    const da = key(docDateOf(a));
-    const db = key(docDateOf(b));
+    const da = keyOf(a);
+    const db = keyOf(b);
     if (da !== db) return da < db ? 1 : -1;
     const oa = ordinalOf(a.title);
     const ob = ordinalOf(b.title);
