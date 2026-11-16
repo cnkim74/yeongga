@@ -249,6 +249,60 @@ export async function deleteCategory(id: number): Promise<void> {
   await db.execute({ sql: "DELETE FROM photo_categories WHERE id = ?", args: [id] });
 }
 
+/**
+ * 앨범 합치기 — sourceIds 앨범의 사진을 모두 targetId 앨범으로 옮기고(차례는 이어서),
+ * 옮긴 앨범은 지운다. 사진은 하나도 지우지 않는다. 하나의 쓰기(트랜잭션)로 처리한다.
+ * 합친 뒤 앨범 이름·행사일·설명은 targetId 앨범의 것이 그대로 남고, newName 이 있으면 이름만 바꾼다.
+ */
+export async function mergeCategories(
+  targetId: number,
+  sourceIds: number[],
+  newName?: string | null
+): Promise<{ moved: number; removed: number }> {
+  const db = await getDb();
+  const ids = [...new Set(sourceIds)].filter((id) => id !== targetId);
+  if (ids.length === 0) return { moved: 0, removed: 0 };
+  const tgt = await db.execute({
+    sql: "SELECT id FROM photo_categories WHERE id = ?",
+    args: [targetId],
+  });
+  if (tgt.rows.length === 0) throw new Error("합칠 앨범을 찾을 수 없습니다.");
+  const maxR = await db.execute({
+    sql: "SELECT COALESCE(MAX(position), -1) AS m FROM photos WHERE category_id = ?",
+    args: [targetId],
+  });
+  let offset = Number((maxR.rows[0] as unknown as { m: number }).m) + 1;
+  const stmts: { sql: string; args: (string | number | null)[] }[] = [];
+  let moved = 0;
+  let removed = 0;
+  for (const id of ids) {
+    const exists = await db.execute({
+      sql: "SELECT id FROM photo_categories WHERE id = ?",
+      args: [id],
+    });
+    if (exists.rows.length === 0) continue;
+    const info = await db.execute({
+      sql: "SELECT COUNT(*) AS n, COALESCE(MAX(position), -1) AS m FROM photos WHERE category_id = ?",
+      args: [id],
+    });
+    const row = info.rows[0] as unknown as { n: number; m: number };
+    stmts.push({
+      sql: "UPDATE photos SET category_id = ?, position = position + ? WHERE category_id = ?",
+      args: [targetId, offset, id],
+    });
+    stmts.push({ sql: "DELETE FROM photo_categories WHERE id = ?", args: [id] });
+    offset += Number(row.m) + 1;
+    moved += Number(row.n);
+    removed += 1;
+  }
+  const name = newName?.trim();
+  if (name) {
+    stmts.push({ sql: "UPDATE photo_categories SET name = ? WHERE id = ?", args: [name, targetId] });
+  }
+  if (stmts.length) await db.batch(stmts, "write");
+  return { moved, removed };
+}
+
 // ─── 사진 CRUD ──────────────────────────────────────────────
 
 /** 어드민 카드용 — 카운트만 */

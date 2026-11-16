@@ -4,6 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import {
+  mergeCategories,
   setCategoryHidden,
   createCategory,
   updateCategory,
@@ -168,6 +169,18 @@ export async function toggleAlbumHiddenAction(fd: FormData) {
   if (!id) return;
   await setCategoryHidden(id, fd.get("hidden") === "1");
   refreshPaths();
+}
+
+export async function mergeAlbumsAction(fd: FormData) {
+  await requireAdmin();
+  const ids = fd.getAll("ids").map((v) => Number(v)).filter((n) => Number.isFinite(n) && n > 0);
+  const target = Number(fd.get("target"));
+  const name = String(fd.get("name") ?? "").trim() || null;
+  // 합칠 앨범이 둘 이상이고, 남길 앨범이 그 안에 있을 때만
+  if (ids.length < 2 || !ids.includes(target)) redirect("/admin/gallery");
+  await mergeCategories(target, ids, name);
+  refreshPaths();
+  redirect("/admin/gallery");
 }
 
 export async function deleteAlbumAction(fd: FormData) {
