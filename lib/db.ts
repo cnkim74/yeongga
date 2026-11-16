@@ -4400,6 +4400,78 @@ async function init(client: Client) {
     await markMigration(client, "videos-add-ryujiwon-v1");
   }
 
+  // 회원 명단 갱신 (2026-11-16) — 〈26년 신입회원〉 1~4차 자료대로.
+  // 신입·명예 26명을 더하고, 탈퇴·제명·작고 회원을 뺀다. 생년·연락처는 싣지 않는다.
+  // 뺄 때는 이름과 한자가 모두 맞는 행만, 더할 때는 같은 이름이 없을 때만.
+  if (!(await hasMigration(client, "directory-2026-new-members-v1"))) {
+    const ADD: [string, string, string][] = [
+      ["김왕구", "UAE 정보학교 고문", "국군정보사령관(육군소장)"],
+      ["남연호", "남연호내과의원 원장", "경희대의대 외래교수"],
+      ["정문황", "합참 정책발전연구위원", "국군통신사령관(육군준장)"],
+      ["황현대", "황현대법률사무소 대표변호사", "법무법인 천지인 변호사"],
+      ["김창현", "하나은행 상무", "하나은행홍보본부장"],
+      ["황인수", "네비웍스 상무", "육본 인사행정처장(병과장, 육군준장)"],
+      ["김동진", "제이엠로보틱스대표", "중국유비테크로보틱스 한국브랜치대표"],
+      ["이정권", "대화감정평가법인 북부지사장", "대화감정평가법인 총무이사, 감정평가사"],
+      ["서명교", "한국에셋솔루션 대표", "서울국토관리청장"],
+      ["윤흥식", "대성에너지 고문", "대성에너지 대표"],
+      ["김해천", "웨스턴돔타워관리단 대표", "사우디항공시스탬관리총괄단장"],
+      ["강감창", "SH공사 ESG위원장", "서울시 시의원 3선"],
+      ["권정섭", "국방과학연구소 연구위원", "해군본부 감사실장(해군준장)"],
+      ["권혁수", "㈜영윈 대표", "풍산중, 안동고"],
+      ["박형배", "인쇄톡 대표", "안동리더스포럼 사무총장"],
+      ["이정환", "국방대학교 초빙교수(육군 준장)", "창원대초빙교수"],
+      ["조영두", "㈜이강물산 이사", "육군협회 지상군연구소 기획실장"],
+      ["정의원", "법무법인 김엔장 고문", "국정원 사이버센터장(경안고)"],
+      ["장성욱", "법무법인해법 대표변호사", "법무법인 천지인 변호사(중앙고)"],
+      ["권기원", "다경에스엔디 대표", "실내건축업(풍산고)"],
+      ["이원석", "면세점협회 이사장", "인천세관 수출입통관국장"],
+      ["권영명", "세무법인올림대표세무사", "전 경기광주,하남세무서장(경안고)"],
+      ["이재갑", "안동시의회 의장", "안동시의원(10선)"],
+      ["권태형", "안동농업협동조합장", ""],
+      ["임섬근", "한일시멘트영업본부 상무", "한일시멘트부산영업본부장(안동고)"],
+      ["권영하", "재경 경안고 동창회장", "장보고로지스 대표(경안고)"],
+    ];
+    const REMOVE: [string, string][] = [
+      ["김성환", "金成煥"],
+      ["신승관", "辛承官"],
+      ["김종승", "金鍾承"],
+      ["권재혁", "權在爀"],
+      ["이종훈", "李宗勳"],
+      ["한춘득", "韓春得"],
+      ["강주모", "康周模"],
+      ["권호욱", "權鎬郁"],
+      ["김경식", "金景植"],
+    ];
+    for (const [name, hanja] of REMOVE) {
+      await client.execute({
+        sql: "DELETE FROM directory_members WHERE name = ? AND hanja = ?",
+        args: [name, hanja],
+      });
+    }
+    for (const [name, position, career] of ADD) {
+      await client.execute({
+        sql: `INSERT INTO directory_members (name, hanja, position, career, page_no, sort_key)
+              SELECT ?, NULL, ?, ?, NULL, ?
+              WHERE NOT EXISTS (SELECT 1 FROM directory_members WHERE name = ?)`,
+        args: [name, position, career, name, name],
+      });
+    }
+    const cnt = await client.execute("SELECT COUNT(*) AS n FROM directory_members");
+    const n = Number((cnt.rows[0] as unknown as { n: number }).n);
+    if (n > 0) {
+      await client.execute({
+        sql: "INSERT OR REPLACE INTO directory_meta (key, value) VALUES ('count', ?)",
+        args: [String(n)],
+      });
+      await client.execute({
+        sql: "INSERT OR REPLACE INTO directory_meta (key, value) VALUES ('label', ?)",
+        args: ["2026년 1월 1일 회원수첩과 2026년 신입회원(1~4차)"],
+      });
+    }
+    await markMigration(client, "directory-2026-new-members-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
