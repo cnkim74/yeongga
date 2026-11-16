@@ -28,7 +28,7 @@ export const listDirectory = unstable_cache(
       };
     });
   },
-  ["directory:list", "v2"],
+  ["directory:list", "v3"],
   { tags: [TAG], revalidate: TTL },
 );
 
@@ -43,7 +43,7 @@ export const getDirectoryMeta = unstable_cache(
     }
     return out;
   },
-  ["directory:meta", "v2"],
+  ["directory:meta", "v3"],
   { tags: [TAG], revalidate: TTL },
 );
 
@@ -101,6 +101,6 @@ export const countDirectory = unstable_cache(
     const o = r.rows[0] as unknown as Record<string, unknown>;
     return Number(o?.n ?? 0);
   },
-  ["directory:count", "v2"],
+  ["directory:count", "v3"],
   { tags: [TAG], revalidate: TTL },
 );

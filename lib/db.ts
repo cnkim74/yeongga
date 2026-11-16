@@ -4472,6 +4472,24 @@ async function init(client: Client) {
     await markMigration(client, "directory-2026-new-members-v1");
   }
 
+  // 작고하신 이종훈 원로회원 — 수첩의 '李'가 호환 한자(U+F9E1)라 v1 에서 지워지지
+  // 않았다. 이름과 수첩 쪽(15쪽)·경력으로 맞춰 지우고 인원수를 다시 센다.
+  if (!(await hasMigration(client, "directory-2026-new-members-v2"))) {
+    await client.execute({
+      sql: "DELETE FROM directory_members WHERE name = '이종훈' AND page_no = 15 AND career = '한국전력공사 사장'",
+      args: [],
+    });
+    const cnt = await client.execute("SELECT COUNT(*) AS n FROM directory_members");
+    const n = Number((cnt.rows[0] as unknown as { n: number }).n);
+    if (n > 0) {
+      await client.execute({
+        sql: "INSERT OR REPLACE INTO directory_meta (key, value) VALUES ('count', ?)",
+        args: [String(n)],
+      });
+    }
+    await markMigration(client, "directory-2026-new-members-v2");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
