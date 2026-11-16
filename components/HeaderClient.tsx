@@ -157,9 +157,11 @@ export function HeaderClient() {
                   >
                     {n.label}
                   </Link>
-                  {/* 호버 간격을 잇기 위한 투명 패딩 영역 (pt-2) + 드롭다운 */}
+                  {/* 호버 간격을 잇기 위한 투명 패딩 영역 (pt-2) + 드롭다운.
+                      focus-within 으로 열면 메뉴를 클릭한 뒤 링크에 포커스가 남아
+                      마우스가 빠져도 닫히지 않는다 — 키보드 포커스(:focus-visible)일 때만 연다. */}
                   <div
-                    className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-opacity duration-150"
+                    className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-has-[:focus-visible]:opacity-100 group-has-[:focus-visible]:visible transition-opacity duration-150"
                     role="menu"
                   >
                     <div className="archive-dropdown-panel min-w-[220px] rounded-2xl shadow-2xl py-2">
@@ -208,7 +210,7 @@ export function HeaderClient() {
                     {n.label}
                   </Link>
                   <div
-                    className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-opacity duration-150"
+                    className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-has-[:focus-visible]:opacity-100 group-has-[:focus-visible]:visible transition-opacity duration-150"
                     role="menu"
                   >
                     <div className="archive-dropdown-panel min-w-[220px] rounded-2xl shadow-2xl py-2">
