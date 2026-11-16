@@ -4288,6 +4288,20 @@ async function init(client: Client) {
     await markMigration(client, "lee-yutaek-gigo-v1");
   }
 
+  // 〈영가회 40주년에 부쳐〉 중복본 내림 (2026-11-16 사용자 요청) — 같은 글을 스캔
+  // 오독("다항상 이의 외요들을" 등)째 옮긴 5월판. 원문판은 geul/myungsa-lee-yutaek.
+  if (!(await hasMigration(client, "takedown-40junyeon-dup-v1"))) {
+    await client.execute({
+      sql: "DELETE FROM articles WHERE chapter = 'geul' AND slug = 'geul-40junyeon-bucheo'",
+      args: [],
+    });
+    await client.execute({
+      sql: "INSERT OR IGNORE INTO seeded_deletions (chapter, slug) VALUES ('geul', 'geul-40junyeon-bucheo')",
+      args: [],
+    });
+    await markMigration(client, "takedown-40junyeon-dup-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.

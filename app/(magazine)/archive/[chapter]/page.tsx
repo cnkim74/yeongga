@@ -62,12 +62,20 @@ export default async function ChapterPage({
   const ordered = articles;
   // 행사 장은 연도 대신 회장기로 묶어 보여 준다
   const eraGroups = chapter === "moim" ? groupByEra(ordered) : null;
+  // 기고 장은 기고글을 앞에, 인물 소개(명사·역대 회장)는 뒤에 따로 모은다
+  const isProfile = (slug: string) =>
+    /^myungsa-|^\d+dae-|^hoejang-yeonbo$|^wonro-chamsuk-gieok$/.test(slug);
+  const geulMain = chapter === "geul" ? ordered.filter((a) => !isProfile(a.slug)) : null;
+  const geulPeople = chapter === "geul" ? ordered.filter((a) => isProfile(a.slug)) : null;
   const avatarByName = new Map(Object.entries(avatars));
 
   // 우선순위: 챕터 hero_image (전용) > 메인 쇼케이스 cover_image (호환) > placeholder
   const heroImage = chapterMeta?.hero_image ?? chapterMeta?.cover_image ?? null;
 
-  const renderList = (list: { item: (typeof ordered)[number]; index: number }[]) => (
+  const renderList = (
+    list: { item: (typeof ordered)[number]; index: number }[],
+    total: number = articles.length
+  ) => (
     <ol className="space-y-12 sm:space-y-16">
               {list.map(({ item: a, index: i }) => (
                 <li
@@ -75,7 +83,7 @@ export default async function ChapterPage({
                   className="grid gap-3 sm:gap-6 sm:grid-cols-12 items-start"
                 >
                   <div className="sm:col-span-2 text-3xl sm:text-4xl text-[var(--color-ink-mute)] font-mono tabular-nums">
-                    {String(articles.length - i).padStart(2, "0")}
+                    {String(total - i).padStart(2, "0")}
                   </div>
                   <div className={a.cover ? "sm:col-span-7" : "sm:col-span-10"}>
                     <Link
@@ -314,6 +322,21 @@ export default async function ChapterPage({
                   {renderList(g.items)}
                 </section>
               ))}
+            </div>
+          ) : geulMain && geulPeople ? (
+            <div className="space-y-20">
+              {renderList(geulMain.map((item, index) => ({ item, index })), geulMain.length)}
+              {geulPeople.length > 0 && (
+                <section id="inmul" className="scroll-mt-28">
+                  <div className="mb-8 border-b-2 border-[var(--color-ink)] pb-3">
+                    <h2 className="display-md text-2xl sm:text-3xl">인물 · 역대 회장</h2>
+                    <p className="mt-2 text-sm text-[var(--color-ink-mute)]">
+                      기고글이 아닌 인물 소개와 역대 회장의 기록입니다.
+                    </p>
+                  </div>
+                  {renderList(geulPeople.map((item, index) => ({ item, index })), geulPeople.length)}
+                </section>
+              )}
             </div>
           ) : (
             renderList(ordered.map((item, index) => ({ item, index })))
