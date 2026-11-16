@@ -6,6 +6,23 @@ import matter from "gray-matter";
 import { hashPassword } from "./passwords";
 import { looksLikeHTML, renderMarkdown } from "./markdown";
 
+/**
+ * 글 날짜를 "YYYY-MM-DD" 로. 머리말에 따옴표 없이 date: 2025-10-21 로 적으면
+ * gray-matter 가 Date 로 읽어 String() 이 "Tue Oct 21 2025 …" 가 되고,
+ * 목록 정렬(date DESC)에서 맨 위로 올라간다 (2026-11-16 자취 장).
+ */
+function toIsoDate(v: unknown): string {
+  if (v instanceof Date && !isNaN(v.getTime())) return v.toISOString().slice(0, 10);
+  const s = String(v ?? "1970-01-01").trim();
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s;
+  const d = new Date(s);
+  if (!isNaN(d.getTime())) {
+    // "Tue Oct 21 2025 09:00:00 GMT+0900" — 한국 시각의 날짜를 쓴다
+    return new Date(d.getTime() + 9 * 3600_000).toISOString().slice(0, 10);
+  }
+  return s;
+}
+
 let _client: Client | null = null;
 let _initPromise: Promise<void> | null = null;
 
@@ -129,7 +146,7 @@ async function restoreArticlesFromFiles(
         data.author ? String(data.author) : null,
         data.excerpt ? String(data.excerpt) : null,
         data.cover ? String(data.cover) : null,
-        String(data.date ?? "1970-01-01"),
+        toIsoDate(data.date),
         visibility,
       ],
     });
@@ -4208,6 +4225,69 @@ async function init(client: Client) {
     await markMigration(client, "board-doc-date-v2-nfc");
   }
 
+  // 날짜 형식 바로잡기 (2026-11-16) — 따옴표 없는 날짜가 "Tue Oct 21 2025 …" 로
+  // 들어가 목록 맨 위로 올라가던 글(자취 2편·인사말)을 YYYY-MM-DD 로 고친다.
+  if (!(await hasMigration(client, "article-dates-iso-v1"))) {
+    const bad = await client.execute(
+      "SELECT id, date FROM articles WHERE date NOT GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*'"
+    );
+    for (const r of bad.rows) {
+      const iso = toIsoDate(String(r.date));
+      if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+        await client.execute({ sql: "UPDATE articles SET date = ? WHERE id = ?", args: [iso, Number(r.id)] });
+      }
+    }
+    await markMigration(client, "article-dates-iso-v1");
+  }
+
+  // 행사 장 회장기 순서 (2026-11-16) — 회장기 〈주요 행사〉 묶음 글이 취임 글과 같은
+  // 날짜(회장기 첫날)라 회장기 맨 아래에 놓였다. 최근 글이 위로 오도록 회장기
+  // 마지막 날로 옮기고(목록에 날짜는 숨김), 집무실 제목에 적어 둔 위치 요청 문구를 걷는다.
+  if (!(await hasMigration(client, "era-summary-order-v1"))) {
+    const ERA_END: [string, string][] = [
+      ["1dae-jeonggi-haengsa-mum", "1998-10-23"],
+      ["2dae-jeonggi-haengsa-mum", "2002-12-31"],
+      ["3dae-jeonggi-haengsa-mum", "2006-12-31"],
+      ["4dae-jeonggi-haengsa-mum", "2010-12-31"],
+      ["5dae-jeonggi-haengsa-mum", "2014-12-31"],
+    ];
+    for (const [slug, date] of ERA_END) {
+      await client.execute({
+        sql: "UPDATE articles SET date = ? WHERE chapter = 'moim' AND slug = ?",
+        args: [date, slug],
+      });
+    }
+    const CLEAN: [string, string][] = [
+      ["3dae-geum-changtae-chuim", "금창태 3대 회장 취임(2003.1.15)"],
+      ["3dae-jeonggi-haengsa-mum", "3대 금창태 회장 마무리(2003~2006)"],
+    ];
+    for (const [slug, title] of CLEAN) {
+      const cur = await client.execute({
+        sql: "SELECT title FROM articles WHERE chapter = 'moim' AND slug = ?",
+        args: [slug],
+      });
+      const t = cur.rows[0] ? String(cur.rows[0].title).normalize("NFC") : "";
+      if (t.includes("주시길")) {
+        await client.execute({
+          sql: "UPDATE articles SET title = ? WHERE chapter = 'moim' AND slug = ?",
+          args: [title, slug],
+        });
+      }
+    }
+    await markMigration(client, "era-summary-order-v1");
+  }
+
+  // 이유택 〈영가회 40주년에 부쳐〉 (2026-11-16) — 2026-09-30 에 파일을 40년사
+  // 353~355쪽 원문으로 바꿨으나 운영 DB 에 반영되지 않아 옛 인물 소개 제목이 남아 있었다.
+  if (!(await hasMigration(client, "lee-yutaek-gigo-v1"))) {
+    await refreshArticlesFromFiles(client, [["geul", "myungsa-lee-yutaek"]]);
+    await client.execute({
+      sql: "UPDATE articles SET date = '2018-03-01', author = '이유택' WHERE chapter = 'geul' AND slug = 'myungsa-lee-yutaek'",
+      args: [],
+    });
+    await markMigration(client, "lee-yutaek-gigo-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
@@ -4487,7 +4567,7 @@ async function init(client: Client) {
                 data.author ? String(data.author) : null,
                 data.excerpt ? String(data.excerpt) : null,
                 data.cover ? String(data.cover) : null,
-                String(data.date ?? "1970-01-01"),
+                toIsoDate(data.date),
                 visibility,
                 html,
                 chapterSlug,
@@ -4535,7 +4615,7 @@ async function init(client: Client) {
                 data.author ? String(data.author) : null,
                 data.excerpt ? String(data.excerpt) : null,
                 data.cover ? String(data.cover) : null,
-                String(data.date ?? "1970-01-01"),
+                toIsoDate(data.date),
                 visibility,
                 html,
                 chapterSlug,
@@ -4865,7 +4945,7 @@ async function init(client: Client) {
             data.author ? String(data.author) : null,
             data.excerpt ? String(data.excerpt) : null,
             data.cover ? String(data.cover) : null,
-            String(data.date ?? "1970-01-01"),
+            toIsoDate(data.date),
             visibility,
             content,
           ],

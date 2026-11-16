@@ -59,9 +59,6 @@ export default async function PostDetailPage({
               {post.title}
             </h1>
           </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--color-ink-mute)]">
-            <span>{post.author_name}</span>
-          </div>
         </header>
 
         {/* 본문 */}
