@@ -4479,6 +4479,32 @@ async function init(client: Client) {
     await markMigration(client, "directory-2026-new-members-v1");
   }
 
+  // 2026년 4차 운영협의회 (2026-11-16) — 아카이브 행사 글과 자료실 글.
+  // 자료실 첨부는 연락처·통장사본·후원자별 금액 등을 가린 사본(public/board-files/)이다.
+  if (!(await hasMigration(client, "unyeong-4cha-2026-v1"))) {
+    await restoreArticlesFromFiles(client, [["moim", "9dae-2026-unyeong-4cha"]]);
+    const title = "2026년 4차 운영협의회";
+    const dup = await client.execute({ sql: "SELECT id FROM posts WHERE title = ? LIMIT 1", args: [title] });
+    if (dup.rows.length === 0) {
+      const file = path.join(process.cwd(), "public", "board-files", "2026-4-unyeong-hyeopuihoe.pdf");
+      const size = fs.existsSync(file) ? fs.statSync(file).size : 0;
+      const r = await client.execute({
+        sql: `INSERT INTO posts (kind, title, body, author_id, author_name, pinned, doc_date)
+              VALUES ('material', ?, ?, NULL, '관리자', 0, '2026-11-16')`,
+        args: [
+          title,
+          "2026년 11월 16일(월) 4차 운영협의회 자료입니다. 통장사본, 후원자별 금액, 연락처, 회원 출생 연도 등은 가려서 올렸습니다.",
+        ],
+      });
+      await client.execute({
+        sql: `INSERT INTO post_attachments (post_id, file_url, file_name, file_size, mime, position)
+              VALUES (?, ?, ?, ?, 'application/pdf', 0)`,
+        args: [Number(r.lastInsertRowid), "/board-files/2026-4-unyeong-hyeopuihoe.pdf", "26-4차 운영협의회.pdf", size],
+      });
+    }
+    await markMigration(client, "unyeong-4cha-2026-v1");
+  }
+
   // 갤러리 행사 앨범 (2026-11-16) — 영가회보 8-1~8-13호·《영가회 40년사》를 스캔해
   // 뽑은 사진 중 확실한 행사 사진만, 연도 안에 행사별 앨범으로 만든다.
   // 데이터: content/gallery/events.json, 사진: public/archive-photos/gallery/.

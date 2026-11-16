@@ -41,7 +41,11 @@ export async function GET(
 
   // 로컬 업로드 (/uploads/...) — 디스크에서 직접 읽기
   if (att.file_url.startsWith("/")) {
-    if (!att.file_url.startsWith("/uploads/")) {
+    // 업로드 폴더(/uploads/) 또는 저장소에 함께 배포하는 첨부(/board-files/)만 — 상위 폴더 이동 금지
+    if (
+      !(att.file_url.startsWith("/uploads/") || att.file_url.startsWith("/board-files/")) ||
+      att.file_url.includes("..")
+    ) {
       return NextResponse.json({ error: "허용되지 않는 경로입니다." }, { status: 400 });
     }
     try {
