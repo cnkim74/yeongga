@@ -4085,6 +4085,18 @@ async function init(client: Client) {
     await markMigration(client, "yeonhyeok-2026-11-terms-v3");
   }
 
+  // 회장 인사말 (2026-11-16) — 편집실 안내문이 실려 있던 자리를 박대섭 회장의
+  // 《영가회보》 9-1호 위임인사·9-4호 신년사를 바탕으로 엮은 인사말로 바꾼다.
+  // refreshArticlesFromFiles 는 author 를 건드리지 않으므로 따로 맞춘다.
+  if (!(await hasMigration(client, "greeting-2026-11-v1"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "hoejang-insa"]]);
+    await client.execute({
+      sql: "UPDATE articles SET author = ? WHERE chapter = ? AND slug = ?",
+      args: ["회장 박대섭", "yeongi", "hoejang-insa"],
+    });
+    await markMigration(client, "greeting-2026-11-v1");
+  }
+
   // ─── 갤러리를 연도 ▸ 행사로 다시 묶는다 (2026-09-30) ──
   // 그동안 갤러리는 인물·자료·정경·행사·영가회보 다섯 묶음이었다.
   // 맨 위를 연도로 나누고, 그 아래에 행사별 앨범을 두도록 옮긴다.
