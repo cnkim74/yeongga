@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listVideos } from "@/lib/videos-db";
+import { VideoGallery } from "@/components/VideoGallery";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
 import { PageHeroBg } from "@/components/PageHeroBg";
 
@@ -68,45 +69,8 @@ export default async function VideosPage() {
                 <h2 className="display-md text-2xl sm:text-3xl mb-8">
                   전체 영상
                 </h2>
-                <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                  {others.map((v) => (
-                    <li key={v.id}>
-                      <a
-                        href={v.embed_url.replace("/embed/", "/watch?v=")}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="group block"
-                      >
-                        <div className="aspect-video rounded-xl overflow-hidden bg-[var(--color-bg-deep)] mb-3 relative">
-                          {v.thumbnail_url ? (
-                            <img
-                              src={v.thumbnail_url}
-                              alt=""
-                              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                            />
-                          ) : (
-                            <div className="w-full h-full grid place-items-center text-[var(--color-ink-mute)] text-4xl">
-                              ▶
-                            </div>
-                          )}
-                          <div className="absolute inset-0 grid place-items-center bg-black/0 group-hover:bg-black/30 transition">
-                            <div className="h-14 w-14 rounded-full bg-white/0 group-hover:bg-white grid place-items-center text-[var(--color-ink)] opacity-0 group-hover:opacity-100 transition">
-                              <span className="text-xl ml-0.5">▶</span>
-                            </div>
-                          </div>
-                        </div>
-                        {v.kicker && (
-                          <div className="kicker text-[var(--color-ink-mute)] mb-1">
-                            {v.kicker}
-                          </div>
-                        )}
-                        <div className="display-md text-lg group-hover:text-[var(--color-accent)] transition">
-                          {v.title}
-                        </div>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                {/* 누르면 이 페이지에서 재생 */}
+                <VideoGallery videos={others} />
               </div>
             </section>
           )}
