@@ -107,12 +107,13 @@ export async function listPosts(kind?: PostKind): Promise<PostWithMeta[]> {
      ORDER BY p.pinned DESC, p.id DESC`,
     args: kind ? [kind] : [],
   });
-  return sortByDocDate(
-    res.rows.map((r) => {
-      const row = r as Record<string, unknown>;
-      return { ...rowToPost(row), attachment_count: Number(row.attachment_count ?? 0) };
-    })
-  );
+  const rows = res.rows.map((r) => {
+    const row = r as Record<string, unknown>;
+    return { ...rowToPost(row), attachment_count: Number(row.attachment_count ?? 0) };
+  });
+  // TEMP 2026-11-16 정렬 점검 — 확인 후 지운다
+  console.log("BOARD_SORT_DEBUG", JSON.stringify(rows.map((p) => [p.id, p.title, p.doc_date, p.created_at, docDateOf(p)])));
+  return sortByDocDate(rows);
 }
 
 export async function getPost(id: number): Promise<PostDetail | null> {
