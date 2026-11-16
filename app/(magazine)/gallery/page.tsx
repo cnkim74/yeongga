@@ -30,15 +30,18 @@ export default async function GalleryPage({
 
   // 특정 앨범을 열었을 때만 사진 로드
   let photos: Awaited<ReturnType<typeof listPhotosByCategory>> = [];
+  // 숨긴 앨범(옛 회보 지면 앨범 등)은 주소로도 열리지 않는다
+  const visibleSlugs = new Set(albums.map((a) => a.slug));
   if (category) {
-    const cat = categories.find((c) => c.slug === category);
+    const cat = visibleSlugs.has(category) ? categories.find((c) => c.slug === category) : undefined;
     if (cat) {
       const allInCat = await listPhotosByCategory(category);
       photos = user ? allInCat : allInCat.filter((p) => p.visibility === "public");
     }
   }
 
-  const activeCategory = category ? categories.find((c) => c.slug === category) : null;
+  const activeCategory =
+    category && visibleSlugs.has(category) ? categories.find((c) => c.slug === category) : null;
   // 사진이 아직 없는 앨범은 갤러리에 내보이지 않는다.
   // (관리자 화면에는 그대로 보여, 사진을 올릴 자리로 쓴다)
   const yearGroups = groupAlbumsByYear(albums.filter((a) => a.photo_count > 0));
@@ -108,7 +111,7 @@ export default async function GalleryPage({
                   )}
                 </div>
               )}
-              <PhotoGrid photos={photos} initialCategory={category} />
+              <PhotoGrid photos={photos} initialCategory={category} showCaptions />
             </>
           ) : (
             /* 첫 화면 — 연도로 묶고, 그 아래 행사별 앨범 카드 */

@@ -6,6 +6,8 @@ import type { Photo } from "@/lib/gallery-db";
 interface PhotoGridProps {
   photos: Photo[];
   initialCategory?: string;
+  /** 사진 아래에 설명(제목·출처)을 글자로 늘 보여 준다 */
+  showCaptions?: boolean;
 }
 
 /**
@@ -19,7 +21,7 @@ interface PhotoGridProps {
  * - 스와이프 제스처(50px 임계값)로 다음/이전 사진.
  * - prefers-reduced-motion 사용자에겐 페이드인을 끄기.
  */
-export function PhotoGrid({ photos, initialCategory }: PhotoGridProps) {
+export function PhotoGrid({ photos, initialCategory, showCaptions = false }: PhotoGridProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const openPhoto = (index: number) => {
@@ -77,41 +79,63 @@ export function PhotoGrid({ photos, initialCategory }: PhotoGridProps) {
   return (
     <>
       {/* 사진 그리드 — CSS columns masonry */}
-      <div className="gallery-masonry">
+      <div className={showCaptions ? "gallery-captioned" : "gallery-masonry"}>
         {photos.map((photo, index) => (
-          <button
+          <figure
             key={photo.id}
-            type="button"
-            onClick={() => openPhoto(index)}
-            className="gallery-item group relative block w-full overflow-hidden rounded-lg bg-[var(--color-bg-soft)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            className="gallery-item"
             style={{ animationDelay: `${Math.min(index, 12) * 30}ms` }}
-            aria-label={photo.title ?? `사진 ${index + 1}`}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={photo.image_url}
-              alt={photo.title ?? ""}
-              className="w-full h-auto block transition duration-500 group-hover:scale-[1.03]"
-              loading="lazy"
-              decoding="async"
-              draggable={false}
-            />
-            {/* 캡션 오버레이 — 데스크탑은 호버, 모바일은 항상 살짝 보임 */}
-            {(photo.title || photo.category_name) && (
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent p-3 pt-10 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition duration-300">
+            <button
+              type="button"
+              onClick={() => openPhoto(index)}
+              className="group relative block w-full overflow-hidden rounded-lg bg-[var(--color-bg-soft)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+              aria-label={photo.title ?? `사진 ${index + 1}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={photo.image_url}
+                alt={photo.title ?? ""}
+                className={
+                  showCaptions
+                    ? "w-full aspect-[4/3] object-cover block transition duration-500 group-hover:scale-[1.03]"
+                    : "w-full h-auto block transition duration-500 group-hover:scale-[1.03]"
+                }
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+              />
+              {/* 캡션 오버레이 — 글자 설명을 따로 보여 줄 때는 쓰지 않는다 */}
+              {!showCaptions && (photo.title || photo.category_name) && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/35 to-transparent p-3 pt-10 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition duration-300">
+                  {photo.title && (
+                    <p className="text-white text-xs sm:text-sm font-medium leading-snug line-clamp-2 drop-shadow">
+                      {photo.title}
+                    </p>
+                  )}
+                  {photo.category_name && (
+                    <p className="text-white/70 text-[11px] sm:text-xs mt-0.5">
+                      {photo.category_name}
+                    </p>
+                  )}
+                </div>
+              )}
+            </button>
+            {showCaptions && (photo.title || photo.description) && (
+              <figcaption className="px-1 pt-2">
                 {photo.title && (
-                  <p className="text-white text-xs sm:text-sm font-medium leading-snug line-clamp-2 drop-shadow">
+                  <p className="text-[15px] sm:text-base font-medium leading-snug text-[var(--color-ink)]">
                     {photo.title}
                   </p>
                 )}
-                {photo.category_name && (
-                  <p className="text-white/70 text-[11px] sm:text-xs mt-0.5">
-                    {photo.category_name}
+                {photo.description && (
+                  <p className="mt-0.5 text-xs sm:text-sm text-[var(--color-ink-mute)]">
+                    {photo.description}
                   </p>
                 )}
-              </div>
+              </figcaption>
             )}
-          </button>
+          </figure>
         ))}
       </div>
 
@@ -139,6 +163,18 @@ export function PhotoGrid({ photos, initialCategory }: PhotoGridProps) {
         @media (min-width: 1024px) {
           .gallery-masonry { column-count: 4; column-gap: 0.75rem; }
         }
+        .gallery-captioned {
+          display: grid;
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+          gap: 1.25rem 0.75rem;
+        }
+        @media (min-width: 640px) {
+          .gallery-captioned { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (min-width: 1024px) {
+          .gallery-captioned { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        .gallery-captioned .gallery-item { margin: 0; }
         .gallery-item {
           break-inside: avoid;
           margin-bottom: 0.5rem;

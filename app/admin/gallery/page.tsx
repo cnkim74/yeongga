@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminGalleryPage() {
   await requireAdmin();
-  const albums = await listAlbums(false);
+  const albums = await listAlbums(false, true);
   const totalPhotos = albums.reduce((sum, a) => sum + a.photo_count, 0);
 
   return (

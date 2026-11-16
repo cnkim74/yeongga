@@ -95,7 +95,7 @@ export type Album = {
 /** 앨범 카드용 — 카테고리 + 대표 이미지(커버 없으면 첫 사진) + 사진 수.
  *  publicOnly 면 공개 사진만으로 커버·개수 산정. */
 export const listAlbums = unstable_cache(
-  async (publicOnly = false): Promise<Album[]> => {
+  async (publicOnly = false, includeHidden = false): Promise<Album[]> => {
     const db = await getDb();
     const visFilter = publicOnly ? "AND pp.visibility = 'public'" : "";
     const visFilter2 = publicOnly ? "AND pc.visibility = 'public'" : "";
@@ -110,6 +110,7 @@ export const listAlbums = unstable_cache(
              (SELECT COUNT(*) FROM photos pc
                 WHERE pc.category_id = c.id ${visFilter2}) AS photo_count
       FROM photo_categories c
+      ${includeHidden ? "" : "WHERE c.hidden = 0"}
       ORDER BY c.year DESC, c.event_date DESC, c.position ASC, c.id ASC
     `);
     return res.rows.map((r) => {

@@ -449,6 +449,13 @@ async function init(client: Client) {
   // ─── 마이그레이션: posts 에 kind 컬럼 추가 ──
   // 소식은 두 게시판으로 나뉜다 — 공지사항(notice) / 자료실(material).
   // pinned 는 게시판 안에서 글을 위로 고정하는 별개 기능.
+  // ─── 마이그레이션: photo_categories 에 hidden(숨김) 컬럼 추가 (2026-11-16) ──
+  // 갤러리를 행사 중심으로 다시 짜면서, 옛 앨범은 지우지 않고 숨긴다(되돌릴 수 있게).
+  const catCols = await client.execute("PRAGMA table_info(photo_categories)");
+  if (!catCols.rows.some((r) => String(r.name) === "hidden")) {
+    await client.execute(`ALTER TABLE photo_categories ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0`);
+  }
+
   // ─── 마이그레이션: videos 에 event_date(행사 날짜) 컬럼 추가 (2026-11-16) ──
   // 영상은 올린 순서가 아니라 행사 순으로, 최근 행사가 위로 온다.
   const vidCols = await client.execute("PRAGMA table_info(videos)");
@@ -4470,6 +4477,48 @@ async function init(client: Client) {
       });
     }
     await markMigration(client, "directory-2026-new-members-v1");
+  }
+
+  // 갤러리 행사 앨범 (2026-11-16) — 영가회보 8-1~8-13호·《영가회 40년사》를 스캔해
+  // 뽑은 사진 중 확실한 행사 사진만, 연도 안에 행사별 앨범으로 만든다.
+  // 데이터: content/gallery/events.json, 사진: public/archive-photos/gallery/.
+  // 2025·2026년 앨범은 그대로 두고, 그 이전(연도 미정 포함)의 옛 앨범은 숨긴다.
+  if (!(await hasMigration(client, "gallery-events-2024-v1"))) {
+    const file = path.join(process.cwd(), "content", "gallery", "events.json");
+    if (fs.existsSync(file)) {
+      type Ev = {
+        slug: string; year: number; event_date: string | null; name: string;
+        description: string; source: string;
+        photos: { url: string; title: string; source: string }[];
+      };
+      const events: Ev[] = JSON.parse(fs.readFileSync(file, "utf8"));
+      // 다시 돌려도 겹치지 않게 이 가져오기로 만든 앨범(ev-)을 먼저 비운다
+      await client.execute(
+        "DELETE FROM photos WHERE category_id IN (SELECT id FROM photo_categories WHERE slug LIKE 'ev-%')"
+      );
+      await client.execute("DELETE FROM photo_categories WHERE slug LIKE 'ev-%'");
+      for (const e of events) {
+        const desc = [e.description, e.source].filter(Boolean).join(" · ");
+        const r = await client.execute({
+          sql: `INSERT INTO photo_categories (name, slug, description, cover_url, position, year, event_date, hidden)
+                VALUES (?, ?, ?, ?, 0, ?, ?, 0)`,
+          args: [e.name, e.slug, desc, e.photos[0]?.url ?? null, e.year, e.event_date],
+        });
+        const cid = Number(r.lastInsertRowid);
+        let pos = 0;
+        for (const ph of e.photos) {
+          await client.execute({
+            sql: `INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility)
+                  VALUES (?, ?, ?, ?, ?, ?, 'public')`,
+            args: [cid, ph.title, ph.source, ph.url, e.event_date ?? String(e.year), pos++],
+          });
+        }
+      }
+      await client.execute(
+        "UPDATE photo_categories SET hidden = 1 WHERE slug NOT LIKE 'ev-%' AND (year IS NULL OR year <= 2024)"
+      );
+    }
+    await markMigration(client, "gallery-events-2024-v1");
   }
 
   // 작고하신 이종훈 원로회원 — 수첩의 '李'가 호환 한자(U+F9E1)라 v1 에서 지워지지
