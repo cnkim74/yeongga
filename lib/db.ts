@@ -4505,6 +4505,58 @@ async function init(client: Client) {
     await markMigration(client, "unyeong-4cha-2026-v1");
   }
 
+  // 영가회보 9-6호 (2026-11-17) — 행사 5건·기고 7건을 지면 원문으로 올리고,
+  // 갤러리 2026년에 아직 없는 행사(6.30 역대회장 오찬 간담회) 앨범을 더한다.
+  // 5.27 운영협의회·6.24 포럼은 이미 앨범이 있어 더하지 않는다.
+  if (!(await hasMigration(client, "hoebo-9-6-restore-v1"))) {
+    await restoreArticlesFromFiles(client, [
+      ["moim", "hoebo-9-6-forum4-ai-gaechoe"],
+      ["moim", "hoebo-9-6-jaegyeong-andong-hyangwoohoe-chonghoe"],
+      ["moim", "hoebo-9-6-unyeong-hyeopuihoe-2cha"],
+      ["moim", "hoebo-9-6-yeokdae-hoejang-ochan"],
+      ["moim", "hoebo-9-6-yeongga-forum-5-kwon-inso"],
+      ["geul", "hoebo-9-6-andong-jeongsin-gwonwono"],
+      ["geul", "hoebo-9-6-gorye-apmadang-andong"],
+      ["geul", "hoebo-9-6-gyeongbukseon-dosihwa"],
+      ["geul", "hoebo-9-6-jeontong-honrye-chammeut"],
+      ["geul", "hoebo-9-6-nongji-soyu-iyong-ha"],
+      ["geul", "hoebo-9-6-sangsok-1gagu2jutaek"],
+      ["geul", "hoebo-9-6-yean-yissi-chunghyo"],
+    ]);
+    const gfile = path.join(process.cwd(), "content", "gallery", "events-2026.json");
+    if (fs.existsSync(gfile)) {
+      type Ev = {
+        slug: string; year: number; event_date: string | null; name: string;
+        description: string; source: string;
+        photos: { url: string; title: string; source: string }[];
+      };
+      for (const e of JSON.parse(fs.readFileSync(gfile, "utf8")) as Ev[]) {
+        const desc = [e.description, e.source].filter(Boolean).join(" · ");
+        await client.execute({
+          sql: `INSERT OR IGNORE INTO photo_categories (name, slug, description, cover_url, position, year, event_date, hidden)
+                VALUES (?, ?, ?, ?, 0, ?, ?, 0)`,
+          args: [e.name, e.slug, desc, e.photos[0]?.url ?? null, e.year, e.event_date],
+        });
+        const found = await client.execute({ sql: "SELECT id FROM photo_categories WHERE slug = ?", args: [e.slug] });
+        const cid = Number((found.rows[0] as unknown as { id: number }).id);
+        const have = await client.execute({ sql: "SELECT COUNT(*) AS n FROM photos WHERE category_id = ?", args: [cid] });
+        if (Number((have.rows[0] as unknown as { n: number }).n) === e.photos.length) continue;
+        await client.batch(
+          [
+            { sql: "DELETE FROM photos WHERE category_id = ?", args: [cid] },
+            ...e.photos.map((ph, pos) => ({
+              sql: `INSERT INTO photos (category_id, title, description, image_url, taken_at, position, visibility)
+                    VALUES (?, ?, ?, ?, ?, ?, 'public')`,
+              args: [cid, ph.title, ph.source, ph.url, e.event_date ?? String(e.year), pos] as (string | number | null)[],
+            })),
+          ],
+          "write"
+        );
+      }
+    }
+    await markMigration(client, "hoebo-9-6-restore-v1");
+  }
+
   // 갤러리 행사 앨범 (2026-11-16) — 영가회보 8-1~8-13호·《영가회 40년사》를 스캔해
   // 뽑은 사진 중 확실한 행사 사진만, 연도 안에 행사별 앨범으로 만든다.
   // 데이터: content/gallery/events.json, 사진: public/archive-photos/gallery/.
