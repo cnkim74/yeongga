@@ -180,7 +180,7 @@ export async function listHomeChapterDisplays(): Promise<ChapterDisplay[]> {
 
   // 3) 각 챕터의 글을 결정 — 모든 글을 한 번에 가져온 뒤 매핑 (N+1 회피)
   const allRows = await db.execute(
-    `SELECT ${META_COLS} FROM articles ORDER BY chapter, date DESC, id DESC`
+    `SELECT ${META_COLS} FROM articles WHERE hidden = 0 ORDER BY chapter, date DESC, id DESC`
   );
   const articlesByChapter = new Map<string, ArticleMeta[]>();
   for (const row of allRows.rows) {

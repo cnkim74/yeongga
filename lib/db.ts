@@ -456,6 +456,16 @@ async function init(client: Client) {
     await client.execute(`ALTER TABLE photo_categories ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0`);
   }
 
+  // ─── 마이그레이션: articles 에 hidden(비공개) 컬럼 추가 (2026-11-20) ──
+  // 글 관리의 '비공개' 버튼용. visibility(공개/회원 전용)와 따로 둔다 —
+  // 그 열에는 CHECK 제약이 있어 값을 늘리려면 운영 표를 다시 만들어야 하기 때문.
+  // hidden=1 이면 사이트 어디에도(목록·검색·태그·사이트맵·주소 직접 입력) 나오지 않고,
+  // 집무실에서만 보인다. 되돌리면 원래 공개/회원 전용 상태 그대로 돌아온다.
+  const artCols = await client.execute("PRAGMA table_info(articles)");
+  if (!artCols.rows.some((r) => String(r.name) === "hidden")) {
+    await client.execute(`ALTER TABLE articles ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0`);
+  }
+
   // ─── 마이그레이션: videos 에 event_date(행사 날짜) 컬럼 추가 (2026-11-16) ──
   // 영상은 올린 순서가 아니라 행사 순으로, 최근 행사가 위로 온다.
   const vidCols = await client.execute("PRAGMA table_info(videos)");

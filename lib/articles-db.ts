@@ -28,6 +28,8 @@ export type ArticleMeta = {
   cover: string | null;
   date: string;
   visibility: Visibility;
+  /** 비공개(집무실에서만 보임). 파일 대체 경로에서는 없을 수 있다 → 없으면 공개로 본다. */
+  hidden?: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -38,7 +40,7 @@ export type Article = ArticleMeta & {
 };
 
 const META_COLS =
-  "id, chapter, slug, title, subtitle, author, excerpt, cover, date, visibility, created_at, updated_at";
+  "id, chapter, slug, title, subtitle, author, excerpt, cover, date, visibility, hidden, created_at, updated_at";
 
 function rowToMeta(row: Record<string, unknown>): ArticleMeta {
   return {
@@ -52,6 +54,7 @@ function rowToMeta(row: Record<string, unknown>): ArticleMeta {
     cover: row.cover == null ? null : String(row.cover),
     date: String(row.date),
     visibility: row.visibility === "members-only" ? "members-only" : "public",
+    hidden: Number(row.hidden ?? 0) === 1,
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
   };
@@ -65,11 +68,12 @@ async function bodyToHTML(body: string): Promise<string> {
   return looksLikeHTML(body) ? body : await renderMarkdown(body);
 }
 
+// includeHidden=true 는 집무실(글 관리) 전용. 공개 사이트는 비공개 글을 빼고 받는다.
 const listAllArticlesDb = unstable_cache(
-  async (): Promise<ArticleMeta[]> => {
+  async (includeHidden: boolean): Promise<ArticleMeta[]> => {
     const db = await getDb();
     const r = await db.execute(
-      `SELECT ${META_COLS} FROM articles ORDER BY date DESC, id DESC`
+      `SELECT ${META_COLS} FROM articles ${includeHidden ? "" : "WHERE hidden = 0"} ORDER BY date DESC, id DESC`
     );
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
   },
@@ -81,7 +85,7 @@ const listChapterArticlesDb = unstable_cache(
   async (chapter: string): Promise<ArticleMeta[]> => {
     const db = await getDb();
     const r = await db.execute({
-      sql: `SELECT ${META_COLS} FROM articles WHERE chapter = ? ORDER BY date DESC, id DESC`,
+      sql: `SELECT ${META_COLS} FROM articles WHERE chapter = ? AND hidden = 0 ORDER BY date DESC, id DESC`,
       args: [chapter],
     });
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
@@ -107,7 +111,7 @@ export const listYears = unstable_cache(
     const r = await db.execute(
       `SELECT substr(date,1,4) AS yr, COUNT(*) AS n
        FROM articles
-       WHERE substr(date,1,4) GLOB '[0-9][0-9][0-9][0-9]'
+       WHERE hidden = 0 AND substr(date,1,4) GLOB '[0-9][0-9][0-9][0-9]'
        GROUP BY yr ORDER BY yr DESC`
     );
     return r.rows.map((row) => {
@@ -126,7 +130,7 @@ export const listArticlesByYear = unstable_cache(
     if (!/^\d{4}$/.test(y)) return [];
     const db = await getDb();
     const r = await db.execute({
-      sql: `SELECT ${META_COLS} FROM articles WHERE substr(date,1,4) = ? ORDER BY date DESC, id DESC`,
+      sql: `SELECT ${META_COLS} FROM articles WHERE hidden = 0 AND substr(date,1,4) = ? ORDER BY date DESC, id DESC`,
       args: [y],
     });
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
@@ -142,7 +146,7 @@ export const listArticlesBySlugPrefix = unstable_cache(
     if (!p) return [];
     const db = await getDb();
     const r = await db.execute({
-      sql: `SELECT ${META_COLS} FROM articles WHERE slug LIKE ? ORDER BY date ASC, id ASC`,
+      sql: `SELECT ${META_COLS} FROM articles WHERE hidden = 0 AND slug LIKE ? ORDER BY date ASC, id ASC`,
       args: [`${p}%`],
     });
     return r.rows.map((row) => rowToMeta(row as unknown as Record<string, unknown>));
@@ -205,6 +209,7 @@ export const getLatestPerChapter = unstable_cache(
         SELECT ${META_COLS},
           ROW_NUMBER() OVER (PARTITION BY chapter ORDER BY date DESC, id DESC) AS rn
         FROM articles
+        WHERE hidden = 0
       )
       WHERE rn = 1
     `);
@@ -353,13 +358,33 @@ function noteFallback(where: string, e: unknown) {
   console.error(`[articles] ${where} — 데이터베이스를 읽지 못해 파일에서 읽습니다.`, e);
 }
 
+/** 공개 사이트용 — 비공개 글은 빠진다. */
 export async function listAllArticles(): Promise<ArticleMeta[]> {
   try {
-    return await listAllArticlesDb();
+    return await listAllArticlesDb(false);
   } catch (e) {
     noteFallback("listAllArticles", e);
     return listArticlesFromFiles();
   }
+}
+
+/** 집무실(글 관리)용 — 비공개 글도 모두 보인다. */
+export async function listAllArticlesAdmin(): Promise<ArticleMeta[]> {
+  try {
+    return await listAllArticlesDb(true);
+  } catch (e) {
+    noteFallback("listAllArticlesAdmin", e);
+    return listArticlesFromFiles();
+  }
+}
+
+/** 비공개 켜기/끄기. 원래 공개·회원 전용 상태(visibility)는 그대로 둔다. */
+export async function setArticleHidden(id: number, hidden: boolean): Promise<void> {
+  const db = await getDb();
+  await db.execute({
+    sql: "UPDATE articles SET hidden = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+    args: [hidden ? 1 : 0, id],
+  });
 }
 
 export async function listChapterArticles(chapter: string): Promise<ArticleMeta[]> {
@@ -385,7 +410,8 @@ export async function getArticleBySlug(
   slug: string
 ): Promise<Article | null> {
   try {
-    return await getArticleBySlugDb(chapter, slug);
+    const a = await getArticleBySlugDb(chapter, slug);
+    return a && a.hidden ? null : a; // 비공개 글은 주소를 알아도 열리지 않는다(404)
   } catch (e) {
     noteFallback("getArticleBySlug", e);
     return await getArticleFromFiles(chapter, slug);

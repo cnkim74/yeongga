@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
-import { listAllArticles } from "@/lib/articles-db";
+import { listAllArticlesAdmin } from "@/lib/articles-db";
 import { chapters, getChapter } from "@/lib/chapters";
-import { deleteArticleAction } from "./actions";
+import { deleteArticleAction, setArticleHiddenAction } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminArticles() {
-  const articles = await listAllArticles();
+  const articles = await listAllArticlesAdmin();
   const byChapter = chapters.map((c) => ({
     chapter: c,
     items: articles.filter((a) => a.chapter === c.slug),
@@ -42,13 +42,17 @@ export default async function AdminArticles() {
           <Prop k="총" v={`${articles.length}편`} />
           <Prop
             k="공개"
-            v={`${articles.filter((a) => a.visibility === "public").length}편`}
+            v={`${articles.filter((a) => a.visibility === "public" && !a.hidden).length}편`}
           />
           <Prop
             k="🔒 회원 전용"
             v={`${
-              articles.filter((a) => a.visibility === "members-only").length
+              articles.filter((a) => a.visibility === "members-only" && !a.hidden).length
             }편`}
+          />
+          <Prop
+            k="🚫 비공개"
+            v={`${articles.filter((a) => a.hidden).length}편`}
           />
         </div>
 
@@ -115,10 +119,20 @@ export default async function AdminArticles() {
                     {items.map((a) => (
                       <li
                         key={a.id}
-                        className="flex items-center gap-4 px-4 py-3 hover:bg-[var(--color-notion-hover)] transition"
+                        className={`flex items-center gap-4 px-4 py-3 hover:bg-[var(--color-notion-hover)] transition ${
+                          a.hidden ? "bg-[var(--color-notion-surface)]" : ""
+                        }`}
                       >
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
+                          <div className={`flex items-center gap-2 mb-1 ${a.hidden ? "opacity-60" : ""}`}>
+                            {a.hidden && (
+                              <span
+                                className="text-[11px] rounded px-1.5 py-0.5 border border-[var(--color-notion-rule)] bg-white text-[var(--color-notion-mute)] shrink-0"
+                                title="사이트에 보이지 않습니다. 집무실에서만 볼 수 있습니다."
+                              >
+                                🚫 비공개
+                              </span>
+                            )}
                             {a.visibility === "members-only" && (
                               <span
                                 className="text-xs"
@@ -146,20 +160,34 @@ export default async function AdminArticles() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                          <Link
-                            href={`/archive/${a.chapter}/${a.slug}`}
-                            target="_blank"
-                            className="notion-icon-btn text-xs"
-                            title="공개 페이지 미리보기"
-                          >
-                            보기 ↗
-                          </Link>
+                          {!a.hidden && (
+                            <Link
+                              href={`/archive/${a.chapter}/${a.slug}`}
+                              target="_blank"
+                              className="notion-icon-btn text-xs"
+                              title="공개 페이지 미리보기"
+                            >
+                              보기 ↗
+                            </Link>
+                          )}
                           <Link
                             href={`/admin/articles/${a.id}/edit`}
                             className="notion-icon-btn text-xs"
                           >
                             편집
                           </Link>
+                          <ConfirmDelete
+                            action={setArticleHiddenAction}
+                            hidden={{ id: a.id, chapter: a.chapter, slug: a.slug, hide: a.hidden ? 0 : 1 }}
+                            message={
+                              a.hidden
+                                ? `"${a.title}" 글을 다시 공개할까요? (원래 공개 범위로 돌아갑니다)`
+                                : `"${a.title}" 글을 비공개로 돌릴까요?\n사이트 목록·검색·태그·주소 모두에서 사라지고, 집무실에서만 보입니다. 언제든 다시 공개할 수 있습니다.`
+                            }
+                            className="notion-icon-btn text-xs"
+                          >
+                            {a.hidden ? "다시 공개" : "비공개"}
+                          </ConfirmDelete>
                           <ConfirmDelete
                             action={deleteArticleAction}
                             hidden={{ id: a.id, chapter: a.chapter }}

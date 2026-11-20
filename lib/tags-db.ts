@@ -120,7 +120,7 @@ export const listArticlesByTag = unstable_cache(
                    a.created_at, a.updated_at
             FROM articles a
             JOIN article_tags t ON t.article_id = a.id
-            WHERE t.tag = ?
+            WHERE t.tag = ? AND a.hidden = 0
             ORDER BY a.date DESC, a.id DESC`,
       args: [t0],
     });
@@ -147,10 +147,11 @@ export const searchArticles = unstable_cache(
                    a.created_at, a.updated_at
             FROM articles a
             LEFT JOIN article_tags t ON t.article_id = a.id
-            WHERE a.title LIKE ?
-               OR a.excerpt LIKE ?
-               OR a.author LIKE ?
-               OR t.tag LIKE ?
+            WHERE a.hidden = 0
+              AND (a.title LIKE ?
+                OR a.excerpt LIKE ?
+                OR a.author LIKE ?
+                OR t.tag LIKE ?)
             ORDER BY a.date DESC, a.id DESC`,
       args: [q, q, q, q],
     });

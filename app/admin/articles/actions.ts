@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/auth";
 import {
   createArticle,
   deleteArticle,
+  setArticleHidden,
   updateArticle,
   type ArticleInput,
   type Visibility,
@@ -115,4 +116,18 @@ export async function deleteArticleAction(formData: FormData) {
   const chapter = String(formData.get("chapter") ?? "");
   await deleteArticle(id);
   refresh(chapter);
+}
+
+/** 글 관리 — 비공개 켜기/끄기. 삭제와 달리 언제든 되돌릴 수 있다(seeded_deletions 에 기록하지 않음). */
+export async function setArticleHiddenAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  const chapter = String(formData.get("chapter") ?? "");
+  const slug = String(formData.get("slug") ?? "");
+  const hide = String(formData.get("hide") ?? "") === "1";
+  if (!Number.isInteger(id) || id <= 0) return;
+  await setArticleHidden(id, hide);
+  refresh(chapter, slug);
+  revalidatePath("/search");
+  revalidatePath("/sitemap.xml");
 }
