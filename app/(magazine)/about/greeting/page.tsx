@@ -19,9 +19,10 @@ export const metadata = {
 
 export default async function GreetingPage() {
   // 아카이브에 실린 〈회장의 인사〉 글을 그대로 보여 준다.
-  const greeting = await getArticleBySlug("yeongi", "hoejang-insa").catch(
-    () => null
-  );
+  // 연혁 목록에서는 비공개로 두어도 이 페이지에는 보이도록 includeHidden.
+  const greeting = await getArticleBySlug("yeongi", "hoejang-insa", {
+    includeHidden: true,
+  }).catch(() => null);
 
   const hasPortrait = fs.existsSync(
     path.join(process.cwd(), "public", "brand", PORTRAIT_FILE)

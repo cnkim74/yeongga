@@ -9,6 +9,7 @@ import { getFeaturedVideo } from "@/lib/videos-db";
 import { listHomeChapterDisplays } from "@/lib/chapter-meta-db";
 import { listActiveBanners } from "@/lib/banners-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
+import { HIDDEN_ARTICLE_PAGES } from "@/lib/hidden-article-pages";
 
 // 미리 만들어 두고 CDN 이 내주게 한다 (10분마다 새로 만듦).
 // 집무실에서 글을 고치면 revalidatePath 로 곧바로 새로 만들어지므로
@@ -162,6 +163,11 @@ export default async function HomePage() {
         const bg = i % 2 === 0 ? "bg-[var(--color-bg-soft)]" : "bg-white";
         // cover 우선순위: chapter_meta.cover_image > article.cover > 챕터 아이콘 placeholder
         const coverSrc = meta.cover_image || latest.cover || null;
+        // 비공개 글은 글 주소가 열리지 않으므로 전용 페이지(회장 인사말 등)로 보낸다
+        const articleHref = latest.hidden
+          ? HIDDEN_ARTICLE_PAGES[`${chapter.slug}/${latest.slug}`] ??
+            `/archive/${chapter.slug}`
+          : `/archive/${chapter.slug}/${latest.slug}`;
         return (
           <section key={chapter.slug} className={`${bg} py-24 sm:py-32`}>
             <div
@@ -201,7 +207,7 @@ export default async function HomePage() {
                   {chapter.number}. {chapter.title}
                 </div>
                 <Link
-                  href={`/archive/${chapter.slug}/${latest.slug}`}
+                  href={articleHref}
                   className="group block"
                 >
                   <h3 className="display-md text-3xl sm:text-5xl mb-5 group-hover:text-[var(--color-accent)] transition">
@@ -219,7 +225,7 @@ export default async function HomePage() {
                 </div>
                 <div className="flex gap-3 flex-wrap">
                   <Link
-                    href={`/archive/${chapter.slug}/${latest.slug}`}
+                    href={articleHref}
                     className="btn-pill"
                   >
                     글 읽기 <span aria-hidden="true">→</span>

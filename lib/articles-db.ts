@@ -407,11 +407,14 @@ export async function countAllArticles(): Promise<number> {
 
 export async function getArticleBySlug(
   chapter: string,
-  slug: string
+  slug: string,
+  opts?: { includeHidden?: boolean }
 ): Promise<Article | null> {
   try {
     const a = await getArticleBySlugDb(chapter, slug);
-    return a && a.hidden ? null : a; // 비공개 글은 주소를 알아도 열리지 않는다(404)
+    // 비공개 글은 주소를 알아도 열리지 않는다(404).
+    // 단, 소개의 회장 인사말처럼 사이트가 정해 둔 자리에 쓰는 글은 includeHidden 으로 읽는다.
+    return a && a.hidden && !opts?.includeHidden ? null : a;
   } catch (e) {
     noteFallback("getArticleBySlug", e);
     return await getArticleFromFiles(chapter, slug);

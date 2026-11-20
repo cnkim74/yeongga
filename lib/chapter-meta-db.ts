@@ -151,6 +151,7 @@ function rowToArticleMeta(row: Record<string, unknown>): ArticleMeta {
     visibility: row.visibility === "members-only" ? "members-only" : "public",
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
+    hidden: Number(row.hidden ?? 0) === 1,
   };
 }
 
@@ -179,12 +180,17 @@ export async function listHomeChapterDisplays(): Promise<ChapterDisplay[]> {
     .filter((x) => x.meta.visible);
 
   // 3) 각 챕터의 글을 결정 — 모든 글을 한 번에 가져온 뒤 매핑 (N+1 회피)
+  // 비공개 글은 '최신·무작위' 후보에서만 뺀다. 관리자가 대표 글로 지정해 둔 글은
+  // 비공개여도 메인에 그대로 보인다(예: 연혁에서는 숨기고 메인·소개에만 두는 회장 인사말).
   const allRows = await db.execute(
-    `SELECT ${META_COLS} FROM articles WHERE hidden = 0 ORDER BY chapter, date DESC, id DESC`
+    `SELECT ${META_COLS}, hidden FROM articles ORDER BY chapter, date DESC, id DESC`
   );
   const articlesByChapter = new Map<string, ArticleMeta[]>();
+  const featuredById = new Map<number, ArticleMeta>();
   for (const row of allRows.rows) {
     const m = rowToArticleMeta(row as unknown as Record<string, unknown>);
+    featuredById.set(m.id, m);
+    if (m.hidden) continue;
     const arr = articlesByChapter.get(m.chapter) ?? [];
     arr.push(m);
     articlesByChapter.set(m.chapter, arr);
@@ -195,8 +201,9 @@ export async function listHomeChapterDisplays(): Promise<ChapterDisplay[]> {
     let article: ArticleMeta | null = null;
 
     if (meta.display_mode === "featured" && meta.featured_article_id != null) {
+      const picked = featuredById.get(meta.featured_article_id);
       article =
-        list.find((a) => a.id === meta.featured_article_id) ?? list[0] ?? null;
+        picked && picked.chapter === chapter.slug ? picked : list[0] ?? null;
     } else if (meta.display_mode === "random" && list.length > 0) {
       article = list[Math.floor(Math.random() * list.length)];
     } else {

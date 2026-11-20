@@ -1,7 +1,7 @@
 import { isUndated } from "@/lib/undated";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { getChapter } from "@/lib/chapters";
 import {
@@ -16,6 +16,7 @@ import { AdminEditLink } from "@/components/AdminEditLink";
 import { GAEventOnMount } from "@/components/GAEventOnMount";
 import { parseByline } from "@/lib/byline";
 import { getRelatedAlbums } from "@/lib/yeongi-albums";
+import { HIDDEN_ARTICLE_PAGES } from "@/lib/hidden-article-pages";
 
 /**
  * 캐시 전략:
@@ -51,6 +52,13 @@ export default async function ArticlePage({
   const { chapter, slug } = await params;
   const meta = getChapter(chapter);
   const article = await getArticleBySlug(chapter, slug);
+  if (meta && !article) {
+    // 비공개로 돌렸지만 전용 페이지가 있는 글(회장 인사말 등)은 그쪽으로 넘긴다
+    const page = HIDDEN_ARTICLE_PAGES[`${chapter}/${slug}`];
+    if (page && (await getArticleBySlug(chapter, slug, { includeHidden: true }))) {
+      redirect(page);
+    }
+  }
   if (!meta || !article) notFound();
 
   /**
