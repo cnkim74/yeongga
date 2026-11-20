@@ -15,6 +15,7 @@ import { ShareBar } from "@/components/ShareBar";
 import { AdminEditLink } from "@/components/AdminEditLink";
 import { GAEventOnMount } from "@/components/GAEventOnMount";
 import { parseByline } from "@/lib/byline";
+import { getRelatedAlbum } from "@/lib/yeongi-albums";
 
 /**
  * 캐시 전략:
@@ -63,10 +64,12 @@ export default async function ArticlePage({
   }
 
   // 태그는 곁들이는 정보다. 못 읽어도 글은 보여 준다.
-  const [all, avatars, tags] = await Promise.all([
+  // 연혁 글은 짝지어 둔 사진 란 앨범을 본문 뒤에 붙여 보여 준다 (본문은 그대로).
+  const [all, avatars, tags, relatedAlbum] = await Promise.all([
     listChapterArticles(chapter),
     listAuthorAvatars(),
     getTagsForArticle(article.id).catch(() => [] as string[]),
+    getRelatedAlbum(chapter, slug).catch(() => null),
   ]);
   const idx = all.findIndex((a) => a.slug === slug);
   const prev = idx >= 0 ? all[idx + 1] : undefined;
@@ -211,6 +214,46 @@ export default async function ArticlePage({
               className="prose-body"
               dangerouslySetInnerHTML={{ __html: article.html }}
             />
+          )}
+
+          {/* 관련 사진 — 사진 란 앨범 (연혁 글) */}
+          {!isLocked && relatedAlbum && (
+            <section className="mt-14 pt-10 border-t border-[var(--color-rule)]">
+              <div className="kicker text-[var(--color-ink-mute)] mb-1">
+                사진 란에서
+              </div>
+              <h2 className="display-md text-xl mb-1">{relatedAlbum.name}</h2>
+              {relatedAlbum.eventDate && (
+                <div className="text-xs text-[var(--color-ink-mute)] mb-4">
+                  {relatedAlbum.eventDate.replace(/-/g, ".")}
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                {relatedAlbum.photos.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/gallery?category=${relatedAlbum.slug}`}
+                    className="block overflow-hidden rounded-xl bg-[var(--color-bg-soft)]"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={p.url}
+                      alt={p.title ?? relatedAlbum.name}
+                      loading="lazy"
+                      className="w-full aspect-[4/3] object-cover hover:scale-[1.03] transition-transform duration-300"
+                    />
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-3 text-right">
+                <Link
+                  href={`/gallery?category=${relatedAlbum.slug}`}
+                  className="text-sm text-[var(--color-ink-soft)] hover:text-[var(--color-accent)]"
+                >
+                  사진 란에서 앨범 전체 보기 →
+                </Link>
+              </div>
+            </section>
           )}
 
           {/* 공유 */}

@@ -10,6 +10,7 @@ import { FigureImage } from "./extensions/FigureImage";
 import { ImageGallery, type GalleryImage } from "./extensions/ImageGallery";
 import { Ornament, type OrnamentStyle } from "./extensions/Ornament";
 import { EmojiPicker } from "./EmojiPicker";
+import { GalleryPhotoPicker, type PickedPhoto } from "./GalleryPhotoPicker";
 
 async function uploadOne(file: File): Promise<string | null> {
   const fd = new FormData();
@@ -42,6 +43,7 @@ export function ArticleEditor({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [ornamentMenuOpen, setOrnamentMenuOpen] = useState(false);
+  const [photoPickerOpen, setPhotoPickerOpen] = useState(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -111,29 +113,42 @@ export function ArticleEditor({
   });
 
   // 1장이면 단일 이미지, 2장 이상이면 갤러리로 삽입
-  async function insertImages(files: File[]) {
-    if (!editor || files.length === 0) return;
-    const urls = await uploadMany(files);
-    if (urls.length === 0) return;
-
-    if (urls.length === 1) {
+  function insertImageSrcs(items: { src: string; alt?: string }[]) {
+    if (!editor || items.length === 0) return;
+    if (items.length === 1) {
       editor
         .chain()
         .focus()
         .insertContent({
           type: "image",
-          attrs: { src: urls[0], align: "center", width: "medium" },
+          attrs: {
+            src: items[0].src,
+            alt: items[0].alt ?? "",
+            align: "center",
+            width: "medium",
+          },
         })
         .run();
     } else {
-      const images: GalleryImage[] = urls.map((src) => ({
-        src,
-        alt: "",
+      const images: GalleryImage[] = items.map((it) => ({
+        src: it.src,
+        alt: it.alt ?? "",
         caption: null,
       }));
-      const layout = urls.length >= 4 ? "grid-2" : urls.length === 3 ? "row-3" : "row-2";
+      const layout = items.length >= 4 ? "grid-2" : items.length === 3 ? "row-3" : "row-2";
       editor.chain().focus().insertImageGallery({ images, layout }).run();
     }
+  }
+
+  async function insertImages(files: File[]) {
+    if (!editor || files.length === 0) return;
+    const urls = await uploadMany(files);
+    insertImageSrcs(urls.map((src) => ({ src })));
+  }
+
+  // 사진 란(갤러리)에서 고른 사진 — 새로 올리지 않고 올라간 주소를 그대로 쓴다
+  function insertGalleryPhotos(photos: PickedPhoto[]) {
+    insertImageSrcs(photos);
   }
 
   useEffect(() => {
@@ -305,6 +320,12 @@ export function ArticleEditor({
           🖼️
         </ToolBtn>
         <ToolBtn
+          onClick={() => setPhotoPickerOpen(true)}
+          title="사진 란(갤러리)에서 가져오기"
+        >
+          📷
+        </ToolBtn>
+        <ToolBtn
           onClick={() => {
             const url = window.prompt(
               "YouTube URL을 붙여 넣으세요",
@@ -402,6 +423,12 @@ export function ArticleEditor({
       )}
 
       <EditorContent editor={editor} />
+
+      <GalleryPhotoPicker
+        open={photoPickerOpen}
+        onClose={() => setPhotoPickerOpen(false)}
+        onInsert={insertGalleryPhotos}
+      />
 
       <input
         ref={fileInputRef}

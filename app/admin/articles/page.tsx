@@ -120,7 +120,7 @@ export default async function AdminArticles() {
                       <li
                         key={a.id}
                         className={`flex items-center gap-4 px-4 py-3 hover:bg-[var(--color-notion-hover)] transition ${
-                          a.hidden ? "bg-[var(--color-notion-surface)]" : ""
+                          a.hidden ? "bg-[var(--color-notion-hover)]" : ""
                         }`}
                       >
                         <div className="flex-1 min-w-0">
