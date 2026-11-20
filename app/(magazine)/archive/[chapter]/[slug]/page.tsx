@@ -219,9 +219,6 @@ export default async function ArticlePage({
           {/* 관련 사진 — 사진 란 앨범 (연혁 글) */}
           {!isLocked && related?.main && (
             <section className="mt-14 pt-10 border-t border-[var(--color-rule)]">
-              <div className="kicker text-[var(--color-ink-mute)] mb-1">
-                사진 란에서
-              </div>
               <h2 className="display-md text-xl mb-1">{related.main.name}</h2>
               {related.main.eventDate && (
                 <div className="text-xs text-[var(--color-ink-mute)] mb-4">
@@ -258,9 +255,6 @@ export default async function ArticlePage({
 
           {!isLocked && related && related.others.length > 0 && (
             <section className="mt-14 pt-10 border-t border-[var(--color-rule)]">
-              <div className="kicker text-[var(--color-ink-mute)] mb-1">
-                사진 란에서
-              </div>
               <h2 className="display-md text-xl mb-4">이 시기의 행사 사진</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {related.others.map((al) => (
