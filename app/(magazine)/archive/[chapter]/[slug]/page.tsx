@@ -15,7 +15,7 @@ import { ShareBar } from "@/components/ShareBar";
 import { AdminEditLink } from "@/components/AdminEditLink";
 import { GAEventOnMount } from "@/components/GAEventOnMount";
 import { parseByline } from "@/lib/byline";
-import { getRelatedAlbum } from "@/lib/yeongi-albums";
+import { getRelatedAlbums } from "@/lib/yeongi-albums";
 
 /**
  * 캐시 전략:
@@ -65,11 +65,11 @@ export default async function ArticlePage({
 
   // 태그는 곁들이는 정보다. 못 읽어도 글은 보여 준다.
   // 연혁 글은 짝지어 둔 사진 란 앨범을 본문 뒤에 붙여 보여 준다 (본문은 그대로).
-  const [all, avatars, tags, relatedAlbum] = await Promise.all([
+  const [all, avatars, tags, related] = await Promise.all([
     listChapterArticles(chapter),
     listAuthorAvatars(),
     getTagsForArticle(article.id).catch(() => [] as string[]),
-    getRelatedAlbum(chapter, slug).catch(() => null),
+    getRelatedAlbums(chapter, slug).catch(() => null),
   ]);
   const idx = all.findIndex((a) => a.slug === slug);
   const prev = idx >= 0 ? all[idx + 1] : undefined;
@@ -217,28 +217,28 @@ export default async function ArticlePage({
           )}
 
           {/* 관련 사진 — 사진 란 앨범 (연혁 글) */}
-          {!isLocked && relatedAlbum && (
+          {!isLocked && related?.main && (
             <section className="mt-14 pt-10 border-t border-[var(--color-rule)]">
               <div className="kicker text-[var(--color-ink-mute)] mb-1">
                 사진 란에서
               </div>
-              <h2 className="display-md text-xl mb-1">{relatedAlbum.name}</h2>
-              {relatedAlbum.eventDate && (
+              <h2 className="display-md text-xl mb-1">{related.main.name}</h2>
+              {related.main.eventDate && (
                 <div className="text-xs text-[var(--color-ink-mute)] mb-4">
-                  {relatedAlbum.eventDate.replace(/-/g, ".")}
+                  {related.main.eventDate.replace(/-/g, ".")}
                 </div>
               )}
               <div className="grid grid-cols-2 gap-3">
-                {relatedAlbum.photos.map((p) => (
+                {related.main.photos.map((p) => (
                   <Link
                     key={p.id}
-                    href={`/gallery?category=${relatedAlbum.slug}`}
+                    href={`/gallery?category=${related.main!.slug}`}
                     className="block overflow-hidden rounded-xl bg-[var(--color-bg-soft)]"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={p.url}
-                      alt={p.title ?? relatedAlbum.name}
+                      alt={p.title ?? related.main!.name}
                       loading="lazy"
                       className="w-full aspect-[4/3] object-cover hover:scale-[1.03] transition-transform duration-300"
                     />
@@ -247,11 +247,54 @@ export default async function ArticlePage({
               </div>
               <div className="mt-3 text-right">
                 <Link
-                  href={`/gallery?category=${relatedAlbum.slug}`}
+                  href={`/gallery?category=${related.main.slug}`}
                   className="text-sm text-[var(--color-ink-soft)] hover:text-[var(--color-accent)]"
                 >
                   사진 란에서 앨범 전체 보기 →
                 </Link>
+              </div>
+            </section>
+          )}
+
+          {!isLocked && related && related.others.length > 0 && (
+            <section className="mt-14 pt-10 border-t border-[var(--color-rule)]">
+              <div className="kicker text-[var(--color-ink-mute)] mb-1">
+                사진 란에서
+              </div>
+              <h2 className="display-md text-xl mb-4">이 시기의 행사 사진</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {related.others.map((al) => (
+                  <Link
+                    key={al.slug}
+                    href={`/gallery?category=${al.slug}`}
+                    className="group flex flex-col overflow-hidden rounded-xl border border-[var(--color-rule)] bg-white hover:shadow-md transition-shadow"
+                  >
+                    <div className="relative aspect-[4/3] bg-[var(--color-bg-soft)] overflow-hidden">
+                      {al.cover && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={al.cover}
+                          alt={al.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                        />
+                      )}
+                      <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/55 text-white text-xs">
+                        사진 {al.count}
+                      </span>
+                    </div>
+                    <div className="p-3">
+                      <div className="text-xs text-[var(--color-ink-mute)] mb-0.5">
+                        {al.eventDate
+                          ? al.eventDate.replace(/-/g, ".")
+                          : al.year ?? ""}
+                      </div>
+                      <div className="text-sm leading-snug line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
+                        {al.name}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </section>
           )}
