@@ -9,11 +9,31 @@ visibility: public
 
 △ 안동발전과 고향사랑 기부 참여 확대 및 안동 발전을 위한 영가포럼 활성화
 
+<figure data-type="image" data-align="center" data-width="full" class="article-figure align-center size-full">
+  <img src="/archive-photos/events/2026-06-24-01.jpg" alt="">
+  <figcaption>2026년 6월 24일 제5회 영가포럼 및 신입회원 환영회 — 국방컨벤션센터</figcaption>
+</figure>
+
 △ 영가회 조직의 비영리사단법인 등록으로 법적 공신력 및 세제 혜택 등 편의 도모
+
+<figure data-type="image" data-align="center" data-width="full" class="article-figure align-center size-full">
+  <img src="/archive-photos/events/2026-01-07-01.jpg" alt="">
+  <figcaption>2026년 1월 7일 영가회 신년 인사 및 제49차 정기총회 — 국방컨벤션</figcaption>
+</figure>
 
 △ 신규회원 대거 영입(60세이하 2025~2026년간 60여명 영입)으로 장년회 구성
 
+<figure data-type="image" data-align="center" data-width="full" class="article-figure align-center size-full">
+  <img src="/archive-photos/events/2025-02-07-05.jpg" alt="">
+  <figcaption>2025년 2월 7일 제9대 박대섭 회장 취임식 — 호텔 리베라 서울, 회원 200여명 참석</figcaption>
+</figure>
+
 △ 부문별 전문가 회원으로 구성된 상생발전위원회 운영 및 부문별 부회장·위원회 도입으로 조직 변화와 혁신 도모
+
+<figure data-type="image" data-align="center" data-width="full" class="article-figure align-center size-full">
+  <img src="/archive-photos/events/2026-05-27-01.jpg" alt="">
+  <figcaption>상생발전위원회 회의 (2026년 5월)</figcaption>
+</figure>
 
 △ 2027년 3월 창립 50년을 앞두고 역사와 자료, 기록을 담은 디지털 아카이브 구축
 

@@ -166,8 +166,12 @@ async function refreshArticlesFromFiles(
     const filePath = path.join(process.cwd(), "content", "articles", chapter, `${slug}.md`);
     if (!fs.existsSync(filePath)) continue;
     const { data, content } = matter(fs.readFileSync(filePath, "utf8"));
+    const rawVis = String(data.visibility ?? "public").toLowerCase();
+    const visValue = rawVis === "members-only" ? "members-only" : "public";
+    const hiddenValue = rawVis === "draft" ? 1 : 0;
     await client.execute({
       sql: `UPDATE articles SET title = ?, subtitle = ?, excerpt = ?, body = ?,
+              visibility = ?, hidden = ?,
               updated_at = CURRENT_TIMESTAMP
             WHERE chapter = ? AND slug = ?`,
       args: [
@@ -175,6 +179,8 @@ async function refreshArticlesFromFiles(
         data.subtitle ? String(data.subtitle) : null,
         data.excerpt ? String(data.excerpt) : null,
         await renderMarkdown(content),
+        visValue,
+        hiddenValue,
         chapter,
         slug,
       ],
@@ -5298,6 +5304,64 @@ async function init(client: Client) {
       });
     }
     await markMigration(client, "moim-cover-v5");
+  }
+
+  // 9대 회장 연혁 사진 삽입 (2026-11-22) — 각 △ 항목 아래 fullwidth 사진 삽입
+  // v2: allowDangerousHtml 활성화 후 재실행
+  if (!(await hasMigration(client, "yeongi-9dae-chuim-photos-v2"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "9dae-chuim"]]);
+    await markMigration(client, "yeongi-9dae-chuim-photos-v2");
+  }
+
+  // v3: renderMarkdown이 allowDangerousHtml로 패치된 뒤 다시 반영
+  if (!(await hasMigration(client, "yeongi-9dae-chuim-photos-v3"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "9dae-chuim"]]);
+    await markMigration(client, "yeongi-9dae-chuim-photos-v3");
+  }
+
+  // 창립준비모임 3편 — 40년사 PDF(장원석 일기) 기반으로 날짜·내용 갱신
+  if (!(await hasMigration(client, "yeongi-taedong-changrip-pdf-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "taedong-1-1976"],
+      ["yeongi", "taedong-2-1976"],
+      ["yeongi", "1977-changrip-namgang"],
+    ]);
+    await markMigration(client, "yeongi-taedong-changrip-pdf-v1");
+  }
+
+  // 창립준비모임 타임라인 통합 — taedong-1에 전체 타임라인 HTML, 나머지 2편 draft 처리
+  if (!(await hasMigration(client, "yeongi-taedong-timeline-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "taedong-1-1976"],
+      ["yeongi", "taedong-2-1976"],
+      ["yeongi", "1977-changrip-namgang"],
+    ]);
+    await markMigration(client, "yeongi-taedong-timeline-v1");
+  }
+
+  // 위 v1의 visibility 반영 누락 보완 — refreshArticlesFromFiles가 visibility를 같이 갱신
+  if (!(await hasMigration(client, "yeongi-taedong-timeline-v2"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "taedong-1-1976"],
+      ["yeongi", "taedong-2-1976"],
+      ["yeongi", "1977-changrip-namgang"],
+    ]);
+    await markMigration(client, "yeongi-taedong-timeline-v2");
+  }
+
+  // taedong-2, changrip-namgang hidden=1(draft) 직접 설정 — v2에서 hidden 처리 누락 보완
+  if (!(await hasMigration(client, "yeongi-taedong-timeline-v3"))) {
+    await client.batch([
+      {
+        sql: `UPDATE articles SET hidden = 1 WHERE chapter = 'yeongi' AND slug = 'taedong-2-1976'`,
+        args: [],
+      },
+      {
+        sql: `UPDATE articles SET hidden = 1 WHERE chapter = 'yeongi' AND slug = '1977-changrip-namgang'`,
+        args: [],
+      },
+    ]);
+    await markMigration(client, "yeongi-taedong-timeline-v3");
   }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)

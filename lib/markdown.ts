@@ -12,9 +12,10 @@ export async function renderMarkdown(md: string): Promise<string> {
     // 물결표 하나(~)는 취소선으로 보지 않는다.
     // "119~121 · 223~224쪽" 처럼 범위 표기가 둘이면 그 사이가 취소선이 되어 버린다.
     .use(remarkGfm, { singleTilde: false })
-    .use(remarkRehype)
+    // MD 파일 안의 raw HTML(<figure>, <img> 등)을 그대로 통과시킨다.
+    .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeSlug)
-    .use(rehypeStringify)
+    .use(rehypeStringify, { allowDangerousHtml: true })
     .process(md);
   return String(processed);
 }
