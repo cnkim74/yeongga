@@ -5419,6 +5419,11 @@ async function init(client: Client) {
     await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
     await markMigration(client, "yeongi-hgkim-profile-align-v9");
   }
+  // 1st-hgkim-01 프로필 사진 — object-position center 40% (상단 여백 추가 제거)
+  if (!(await hasMigration(client, "yeongi-hgkim-profile-align-v10"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
+    await markMigration(client, "yeongi-hgkim-profile-align-v10");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

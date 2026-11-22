@@ -52,7 +52,7 @@ html[data-theme="dark"] {
   width: 100%;
   min-height: 0;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 40%;
 }
 @media (max-width: 520px) {
   .ygcl-profile-wrap { flex-direction: column; align-items: center; }
