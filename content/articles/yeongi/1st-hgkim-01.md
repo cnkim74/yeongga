@@ -64,7 +64,7 @@ visibility: public
   width: 100%;
   min-height: 0;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 20%;
 }
 @media (max-width: 520px) {
   .ygcl-profile-wrap { flex-direction: column; align-items: center; }
