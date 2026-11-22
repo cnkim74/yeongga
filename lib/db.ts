@@ -5379,10 +5379,10 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-font-enlarge-v1");
   }
 
-  // 1st-hgkim-01 프로필 카드 줄 맞춤 — 사진·카드 동일 높이
-  if (!(await hasMigration(client, "yeongi-hgkim-profile-align-v2"))) {
+  // 1st-hgkim-01 프로필 카드 줄 맞춤 — photo-frame wrapper 로 사진·카드 동일 높이
+  if (!(await hasMigration(client, "yeongi-hgkim-profile-align-v3"))) {
     await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
-    await markMigration(client, "yeongi-hgkim-profile-align-v2");
+    await markMigration(client, "yeongi-hgkim-profile-align-v3");
   }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
