@@ -49,7 +49,7 @@ visibility: public
   margin-bottom: 36px;
 }
 .ygcl-photo-frame {
-  position: relative;
+  display: grid;
   width: 150px;
   min-width: 150px;
   aspect-ratio: 3/4;
@@ -60,10 +60,9 @@ visibility: public
   flex-shrink: 0;
 }
 .ygcl-photo {
-  position: absolute;
-  inset: 0;
+  display: block;
   width: 100%;
-  height: 100%;
+  min-height: 0;
   object-fit: cover;
   object-position: center top;
 }
