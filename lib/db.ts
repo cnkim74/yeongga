@@ -5017,6 +5017,57 @@ async function init(client: Client) {
     await markMigration(client, "refresh-articles-content-v3");
   }
 
+  // 일회성 v4: MD 파일 전체 재갱신 — 복원 완료된 articles의 제목·본문이
+  //             프로덕션 DB에 아직 플레이스홀더로 남아 있는 경우를 위해
+  if (!(await hasMigration(client, "refresh-articles-content-v4"))) {
+    try {
+      const articlesDir = path.join(process.cwd(), "content", "articles");
+      if (fs.existsSync(articlesDir)) {
+        for (const chapterSlug of fs.readdirSync(articlesDir)) {
+          const chapterDir = path.join(articlesDir, chapterSlug);
+          if (!fs.statSync(chapterDir).isDirectory()) continue;
+          for (const file of fs.readdirSync(chapterDir)) {
+            if (!file.endsWith(".md") || file.startsWith("._")) continue;
+            const slug = file.replace(/\.md$/, "");
+            const raw = fs.readFileSync(path.join(chapterDir, file), "utf8");
+            const { data, content } = matter(raw);
+            const html = await renderMarkdown(content);
+            const v = String(data.visibility ?? "public").toLowerCase();
+            const mdHidden = v === "hidden" || v === "draft" ? 1 : 0;
+            const visibility =
+              v === "members-only" || v === "members" || v === "private"
+                ? "members-only"
+                : "public";
+            await client.execute({
+              sql: `UPDATE articles SET
+                      title = ?, subtitle = ?, author = ?, excerpt = ?,
+                      cover = ?, date = ?, visibility = ?, body = ?,
+                      hidden = CASE WHEN ? = 1 THEN 1 ELSE hidden END,
+                      updated_at = CURRENT_TIMESTAMP
+                    WHERE chapter = ? AND slug = ?`,
+              args: [
+                String(data.title ?? slug),
+                data.subtitle ? String(data.subtitle) : null,
+                data.author ? String(data.author) : null,
+                data.excerpt ? String(data.excerpt) : null,
+                data.cover ? String(data.cover) : null,
+                toIsoDate(data.date),
+                visibility,
+                html,
+                mdHidden,
+                chapterSlug,
+                slug,
+              ],
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[refresh-articles-content-v4] 실패:", e);
+    }
+    await markMigration(client, "refresh-articles-content-v4");
+  }
+
   // 마이그레이션: 마크다운 본문 → HTML (한 번만, 전체 스캔 부담 큼)
   if (!(await hasMigration(client, "markdown-to-html-v1"))) {
     const mdRows = await client.execute("SELECT id, body FROM articles");
