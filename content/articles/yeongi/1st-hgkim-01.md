@@ -45,16 +45,18 @@ visibility: public
 .ygcl-profile-wrap {
   display: flex;
   gap: 20px;
-  align-items: stretch;
+  align-items: flex-start;
   margin-bottom: 36px;
 }
 .ygcl-photo-frame {
   width: 150px;
   min-width: 150px;
+  aspect-ratio: 3/4;
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid var(--ygcl-line);
   box-shadow: 0 2px 10px rgba(0,0,0,.10);
+  flex-shrink: 0;
 }
 .ygcl-photo {
   display: block;
@@ -78,6 +80,9 @@ visibility: public
   line-height: 1.9;
   color: var(--ygcl-fg);
   flex: 1;
+  height: calc(150px * 4 / 3);
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .ygcl-intro strong { color: var(--ygcl-green); }
 .ygcl-intro .ygcl-byline {
