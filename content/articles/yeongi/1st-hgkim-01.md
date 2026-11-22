@@ -41,17 +41,39 @@ visibility: public
   --ygcl-bg-tint: #252320;
 }
 
+/* 프로필 카드 */
+.ygcl-profile-wrap {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 36px;
+}
+.ygcl-photo {
+  width: 150px;
+  min-width: 150px;
+  border-radius: 10px;
+  object-fit: cover;
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--ygcl-line);
+  box-shadow: 0 2px 10px rgba(0,0,0,.10);
+}
+@media (max-width: 520px) {
+  .ygcl-profile-wrap { flex-direction: column; align-items: center; }
+  .ygcl-photo { width: 100%; max-width: 200px; min-width: unset; }
+}
+
 .ygcl-intro {
   background: var(--ygcl-surface);
   border: 1px solid var(--ygcl-line);
   border-left: 4px solid var(--ygcl-green);
   border-radius: 10px;
   padding: 20px 24px;
-  margin-bottom: 36px;
   font-size: 15px;
   line-height: 1.8;
   color: var(--ygcl-fg);
+  flex: 1;
 }
+.ygcl-intro strong { color: var(--ygcl-green); }
 .ygcl-intro .ygcl-byline {
   margin-top: 10px;
   font-size: 13.5px;
@@ -59,6 +81,7 @@ visibility: public
   font-style: italic;
 }
 
+/* 타임라인 */
 .ygcl-timeline {
   position: relative;
   padding-left: 32px;
@@ -219,10 +242,13 @@ visibility: public
 .ygcl-final p:last-child { margin-bottom: 0; }
 </style>
 
-<div class="ygcl-intro">
-  <strong>초대 회장</strong> · 김해길 (안동농림 출신)<br>
-  임기 1977년 3월 26일 ~ 1998년 10월 23일 · 22년 재임
-  <div class="ygcl-byline">후임 회장 희망자가 없어 당초 2년 임기를 훨씬 넘겨 22년간 초대 회장직을 유지했다.</div>
+<div class="ygcl-profile-wrap">
+  <img src="/presidents/01.jpg" alt="초대 김해길 회장" class="ygcl-photo">
+  <div class="ygcl-intro">
+    <strong>초대 회장</strong> · 김해길 (안동농림 출신)<br>
+    임기 1977년 3월 26일 ~ 1998년 10월 23일 · 22년 재임
+    <div class="ygcl-byline">후임 회장 희망자가 없어 당초 2년 임기를 훨씬 넘겨 22년간 초대 회장직을 유지했다.</div>
+  </div>
 </div>
 
 <div class="ygcl-timeline">
