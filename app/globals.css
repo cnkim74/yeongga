@@ -329,6 +329,9 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   margin: 1.6em auto;
   display: block;
 }
+.prose-body .ygcl-photo {
+  margin: 0;
+}
 
 /* 원본 지면에서 옮긴 사진 — 이미지 바로 다음 줄의 *기울임* 을 캡션으로 */
 .prose-body p > img { margin-bottom: 0.5em; border-radius: 4px; }
