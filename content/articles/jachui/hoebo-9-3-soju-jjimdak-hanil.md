@@ -17,7 +17,7 @@ visibility: public
 
 ## ② 안동국제탈춤페스티벌 성황
 
-- 8-11호 〈[K-Festival 마케팅 대상](/archive/jachui/hoebo-8-11-andong-talchum-k-festival)〉 · 8-12호 〈[10월 6일까지](/archive/hyang/hoebo-8-12-talchum-10wol)〉 의 후속
+- 8-11호 〈[K-Festival 마케팅 대상](/archive/hyang/hoebo-8-11-andong-talchum-k-festival)〉 · 8-12호 〈[10월 6일까지](/archive/hyang/hoebo-8-12-talchum-10wol)〉 의 후속
 
 ## ③ 영가회 사단법인으로 새출발
 

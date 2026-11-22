@@ -19,6 +19,6 @@ visibility: hidden
 ## 함께 보기
 
 - [영가문화상-정광영 시인, 영가선행상-채수남씨 선정 (3면)](/archive/jachui/hoebo-8-5-munhwasang-jeong-gwangyeong-chae-sunam)
-- ['예천·안동 행정구역 통합' 논의 후끈 달아 올라](/archive/jachui/hoebo-8-5-tonghap-hukkeun-dala-olla)
+- ['예천·안동 행정구역 통합' 논의 후끈 달아 올라](/archive/hyang/hoebo-8-5-tonghap-hukkeun-dala-olla)
 
 출처: 《영가회보》 8-5호 (2023년 겨울호) 1면

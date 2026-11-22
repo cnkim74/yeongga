@@ -12,7 +12,7 @@ visibility: hidden
 
 ## 한 대목
 
-장귀환 안동향교 사무국장(관련: 〈[9-1호 안동향교 봄 석전대제](/archive/jachui/hoebo-9-1-seokjeon-marichigo)〉) 이 깊은 안동 제례 자취를 풀어 두었다.
+장귀환 안동향교 사무국장(관련: 〈[9-1호 안동향교 봄 석전대제](/archive/hyang/hoebo-9-1-seokjeon-marichigo)〉) 이 깊은 안동 제례 자취를 풀어 두었다.
 
 **'안동의 기제(忌祭)와 묘제(墓祭).'**
 

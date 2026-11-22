@@ -28,7 +28,7 @@ visibility: public
 
 ## 함께 보기
 
-- [서울시-안동시, 경제·관광·농산물 판매 등 5개 분야 협력 체결 (2면)](/archive/jachui/hoebo-8-8-seoul-andong-5-bunya)
+- [서울시-안동시, 경제·관광·농산물 판매 등 5개 분야 협력 체결 (2면)](/archive/hyang/hoebo-8-8-seoul-andong-5-bunya)
 - [회원 동정 — 8-8호: 김의승 부시장 (3면)](/archive/jachui/hoebo-8-8-hoewon-dongjeong)
 
 출처: 《영가회보》 8-8호 (2023년 가을호) 7면

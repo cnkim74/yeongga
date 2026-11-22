@@ -76,7 +76,7 @@ visibility: public
 
 ## 함께 보기
 
-- [예천·안동 행정통합 급물살 탈 듯](/archive/jachui/hoebo-8-3-tonghap-geupmulsal)
+- [예천·안동 행정통합 급물살 탈 듯](/archive/hyang/hoebo-8-3-tonghap-geupmulsal)
 - ["함께 손을 잡고 새로운 안동으로" — 권기창 안동시장 취임](/archive/moim/hoebo-8-3-kwon-gichang-anndong-chuim)
 - [영가회 원로회원 모임 오찬회](/archive/moim/hoebo-8-3-wonro-ochanhoe)
 

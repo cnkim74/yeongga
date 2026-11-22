@@ -5,6 +5,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { hashPassword } from "./passwords";
 import { looksLikeHTML, renderMarkdown } from "./markdown";
+import { JACHUI_TO_HYANG_2026_11 } from "./moved-articles";
 
 /**
  * 글 날짜를 "YYYY-MM-DD" 로. 머리말에 따옴표 없이 date: 2025-10-21 로 적으면
@@ -5578,6 +5579,22 @@ async function init(client: Client) {
       });
     }
     await markMigration(client, "geul-tidy-2026-11-v1");
+  }
+  // 자취 정리 (2026-11-23) — 영가회와 직접 관련 없는 안동·예천 지역 뉴스를 향(鄕)으로 옮긴다.
+  // 본문·공개 상태는 그대로 두고 장만 바꾼다. 옛 주소는 lib/moved-articles.ts 로 새 주소에 넘긴다.
+  if (!(await hasMigration(client, "jachui-to-hyang-2026-11-v1"))) {
+    for (const slug of JACHUI_TO_HYANG_2026_11) {
+      await client.execute({
+        sql: `UPDATE OR IGNORE articles SET chapter = 'hyang', updated_at = CURRENT_TIMESTAMP
+              WHERE chapter = 'jachui' AND slug = ?`,
+        args: [slug],
+      });
+      await client.execute({
+        sql: `UPDATE OR IGNORE seeded_deletions SET chapter = 'hyang' WHERE chapter = 'jachui' AND slug = ?`,
+        args: [slug],
+      });
+    }
+    await markMigration(client, "jachui-to-hyang-2026-11-v1");
   }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)

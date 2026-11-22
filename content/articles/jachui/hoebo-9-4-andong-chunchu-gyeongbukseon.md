@@ -15,4 +15,4 @@ visibility: hidden
 **경북선**이 **안동으로 진입**했다.
 
 - 9-3호 〈[안동 · 춘추 철도 육로](/archive/geul/hoebo-9-3-andong-chunchu-cheoldo-yukro)〉의 후속
-- 9-4호 〈[KTX 중앙선 증편](/archive/jachui/hoebo-9-4-ktx-jungang-jeungphyeon)〉의 한 자리
+- 9-4호 〈[KTX 중앙선 증편](/archive/hyang/hoebo-9-4-ktx-jungang-jeungphyeon)〉의 한 자리

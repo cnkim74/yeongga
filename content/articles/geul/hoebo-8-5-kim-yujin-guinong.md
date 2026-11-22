@@ -40,6 +40,6 @@ visibility: public
 
 ## 함께 보기
 
-- [20년뒤 안동인구 13만명선으로 줄 듯](/archive/jachui/hoebo-8-5-andong-ingu-13man)
+- [20년뒤 안동인구 13만명선으로 줄 듯](/archive/hyang/hoebo-8-5-andong-ingu-13man)
 
 출처: 《영가회보》 8-5호 (2023년 겨울호) 9면

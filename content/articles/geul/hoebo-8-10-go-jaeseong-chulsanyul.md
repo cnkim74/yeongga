@@ -32,6 +32,6 @@ visibility: public
 
 ## 함께 보기
 
-- [안동시내 농촌학교 신입생 없어 폐교 잇따라 (4면)](/archive/jachui/hoebo-8-10-pyegyo-andong-shi-nae)
+- [안동시내 농촌학교 신입생 없어 폐교 잇따라 (4면)](/archive/hyang/hoebo-8-10-pyegyo-andong-shi-nae)
 
 출처: 《영가회보》 8-10호 (2024년 봄호) 5면

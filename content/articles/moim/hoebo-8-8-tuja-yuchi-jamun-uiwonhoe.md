@@ -26,6 +26,6 @@ visibility: public
 
 ## 함께 보기
 
-- [안동시 투자유치자문위원 토론회](/archive/jachui/hoebo-9-4-andongsi-tujayuchi) (9-4호)
+- [안동시 투자유치자문위원 토론회](/archive/hyang/hoebo-9-4-andongsi-tujayuchi) (9-4호)
 
 출처: 《영가회보》 8-8호 (2023년 가을호) 5면

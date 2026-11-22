@@ -52,7 +52,7 @@ visibility: public
 ## 함께 보기
 
 - ['인구감소지역지원특별법' 추가개정안을 실효성 있게 만들자 — 강보영 (9면)](/archive/geul/hoebo-8-3-kim-daryeong-ingu-gamso-jiwon)
-- [안동인구 감소추세 여전](/archive/jachui/hoebo-8-3-andong-ingu-gamso-yeojeon)
+- [안동인구 감소추세 여전](/archive/hyang/hoebo-8-3-andong-ingu-gamso-yeojeon)
 - ["함께 손을 잡고 새로운 안동으로" — 권기창 안동시장 취임사 요약](/archive/moim/hoebo-8-3-kwon-gichang-anndong-chuim)
 
 

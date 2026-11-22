@@ -14,4 +14,4 @@ visibility: hidden
 
 **안동국제탈춤페스티벌 2024**가 — 10월 6일까지 성황리에 열렸다.
 
-8-11호 〈[K-Festival 2024 마케팅 부문 대상](/archive/jachui/hoebo-8-11-andong-talchum-k-festival)〉 · 8-4호 〈[안동 가을 축제](/archive/hyang/hoebo-8-4-gaeul-chukje)〉 자취 위에서 한결 더 단단한 후속.
+8-11호 〈[K-Festival 2024 마케팅 부문 대상](/archive/hyang/hoebo-8-11-andong-talchum-k-festival)〉 · 8-4호 〈[안동 가을 축제](/archive/hyang/hoebo-8-4-gaeul-chukje)〉 자취 위에서 한결 더 단단한 후속.

@@ -20,6 +20,6 @@ visibility: private
 
 ## 함께 보기
 
-- [재경안동향우회 체육대회 일직면 우승](/archive/jachui/hoebo-8-3-uijang-cheyukdaehoe) (8-3호)
+- [재경안동향우회 체육대회 일직면 우승](/archive/hyang/hoebo-8-3-uijang-cheyukdaehoe) (8-3호)
 
 출처: 《영가회보》 8-5호 (2023년 겨울호) 5면

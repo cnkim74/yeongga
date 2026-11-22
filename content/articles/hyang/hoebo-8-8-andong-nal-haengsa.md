@@ -39,7 +39,7 @@ visibility: public
 
 ## 함께 보기
 
-- [김영식 전 재경안동향우회장, 권영식 넷마블 대표 '명예로운 안동인상' 수상 (2면)](/archive/jachui/hoebo-8-8-myeongyero-andong-in-sang)
+- [김영식 전 재경안동향우회장, 권영식 넷마블 대표 '명예로운 안동인상' 수상 (2면)](/archive/hyang/hoebo-8-8-myeongyero-andong-in-sang)
 - [안동시 투자유치자문위원회 출범 (5면)](/archive/moim/hoebo-8-8-tuja-yuchi-jamun-uiwonhoe)
 
 출처: 《영가회보》 8-8호 (2023년 가을호) 1면·10면

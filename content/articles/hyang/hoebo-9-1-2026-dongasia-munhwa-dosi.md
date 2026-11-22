@@ -16,4 +16,4 @@ visibility: hidden
 
 - **동아시아 문화도시** — 한국 · 중국 · 일본 글로벌 문화 인정
 - **2026년 안동** — 자랑
-- 8-13호 〈[차전놀이 대통령상](/archive/jachui/hoebo-8-13-chajeonnori-daetongryeong)〉 · 8-11호 〈[탈춤페스 K-Festival 대상](/archive/jachui/hoebo-8-11-andong-talchum-k-festival)〉 의 후속
+- 8-13호 〈[차전놀이 대통령상](/archive/hyang/hoebo-8-13-chajeonnori-daetongryeong)〉 · 8-11호 〈[탈춤페스 K-Festival 대상](/archive/hyang/hoebo-8-11-andong-talchum-k-festival)〉 의 후속

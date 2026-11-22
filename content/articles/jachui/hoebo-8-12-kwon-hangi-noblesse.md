@@ -14,7 +14,7 @@ visibility: hidden
 
 **권한기 영가회 전 한진사장**이 큰 기획대담을 풀어 두었다.
 
-8-8호 〈[명예로운 안동인상 김영식 · 권영식](/archive/jachui/hoebo-8-8-myeongyero-andong-in-sang)〉 자취 위에서 — **'명예로운 안동인상' 수상**의 후속.
+8-8호 〈[명예로운 안동인상 김영식 · 권영식](/archive/hyang/hoebo-8-8-myeongyero-andong-in-sang)〉 자취 위에서 — **'명예로운 안동인상' 수상**의 후속.
 
 ## 노블레스 오블리주의 자취
 

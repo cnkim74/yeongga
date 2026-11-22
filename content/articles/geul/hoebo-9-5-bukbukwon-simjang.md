@@ -17,4 +17,4 @@ visibility: hidden
 **'안동 · 예천 후보자들에게 묻는다 — '흡수' 아닌 '양보로 북부권의 심장을 살릴 용기 있는가?''**
 
 - 9-1호 〈[권유경 안동 · 예천 통합론](/archive/geul/hoebo-9-1-kwon-yugyeong-tonghap-nonri)〉의 후속
-- 9-4호 〈[안동 · 예천 행정통합 건의서 지방시대위 제출](/archive/jachui/hoebo-9-4-tonghap-geonuiseo)〉의 후속
+- 9-4호 〈[안동 · 예천 행정통합 건의서 지방시대위 제출](/archive/hyang/hoebo-9-4-tonghap-geonuiseo)〉의 후속

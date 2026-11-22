@@ -43,6 +43,6 @@ visibility: public
 ## 함께 보기
 
 - [영가회 명예회원 위촉 — 권영진 · 정태주 · 권태형 (2면)](/archive/jachui/hoebo-8-7-myeongye-hoewon-3-bun)
-- [안동 8개, 예천 5개 농축임협 조합장 3월21일 일제히 4년 임기 시작](/archive/jachui/hoebo-8-6-nonghyup-johabjang) (8-6호)
+- [안동 8개, 예천 5개 농축임협 조합장 3월21일 일제히 4년 임기 시작](/archive/hyang/hoebo-8-6-nonghyup-johabjang) (8-6호)
 
 출처: 《영가회보》 8-7호 (2023년 여름호) 9면

@@ -46,7 +46,7 @@ visibility: public
 
 ## 함께 보기
 
-- ["안동·예천 현행 선거구 존속시켜 달라" (1면)](/archive/jachui/hoebo-8-8-seongugu-jonsok)
+- ["안동·예천 현행 선거구 존속시켜 달라" (1면)](/archive/hyang/hoebo-8-8-seongugu-jonsok)
 - [2022 영가희망포럼](/archive/moim/hoebo-8-4-yeongga-himang-forum-2022) (8-4호)
 
 출처: 《영가회보》 8-8호 (2023년 가을호) 2면

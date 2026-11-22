@@ -20,9 +20,9 @@ visibility: public
 
 ## ③ 안동 출향인 '경북지역 국립의대학 설립' 한목소리
 
-- 8-8호 · 8-13호 〈[국립의대 신설 촉구](/archive/jachui/hoebo-8-13-gukrip-uidae-toron)〉 의 후속
+- 8-8호 · 8-13호 〈[국립의대 신설 촉구](/archive/hyang/hoebo-8-13-gukrip-uidae-toron)〉 의 후속
 - 9-3호 〈[권민영 의원 특별기고 국립의대](/archive/geul/hoebo-9-3-kwon-minyeong-uidae)〉 와 호응
 
 ## ④ 안동시 올해의 '명예로운 안동인상' · 시민상 수상자 시상
 
-- 8-8호 〈[명예로운 안동인상 김영식 · 권영식](/archive/jachui/hoebo-8-8-myeongyero-andong-in-sang)〉 · 8-12호 〈[권한기 안동인상](/archive/jachui/hoebo-8-12-kwon-hangi-noblesse)〉 의 후속
+- 8-8호 〈[명예로운 안동인상 김영식 · 권영식](/archive/hyang/hoebo-8-8-myeongyero-andong-in-sang)〉 · 8-12호 〈[권한기 안동인상](/archive/jachui/hoebo-8-12-kwon-hangi-noblesse)〉 의 후속

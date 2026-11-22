@@ -25,5 +25,5 @@ visibility: hidden
 
 - **8-3호 권기창 시장 취임** (관련: 〈[취임](/archive/moim/hoebo-8-3-kwon-gichang-anndong-chuim)〉)
 - **8-8호 투자유치자문위원회 24명** (관련: 〈[투자유치자문위원회](/archive/moim/hoebo-8-8-tuja-yuchi-jamun-uiwonhoe)〉) 의 후속
-- **8-12호 '기업하기 좋은 도시 안동'** (관련: 〈[8-12호 머리기사](/archive/jachui/hoebo-8-12-gieophagi-andong)〉) 의 결과
+- **8-12호 '기업하기 좋은 도시 안동'** (관련: 〈[8-12호 머리기사](/archive/hyang/hoebo-8-12-gieophagi-andong)〉) 의 결과
 - **'함께 손을 잡고 새로운 안동으로'** 의 후속

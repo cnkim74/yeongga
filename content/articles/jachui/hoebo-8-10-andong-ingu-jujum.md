@@ -16,6 +16,6 @@ visibility: hidden
 
 ## 함께 보기
 
-- [안동인구 15만2930명으로 지속 감소세](/archive/jachui/hoebo-8-9-andong-ingu-15man) (8-9호)
+- [안동인구 15만2930명으로 지속 감소세](/archive/hyang/hoebo-8-9-andong-ingu-15man) (8-9호)
 
 출처: 《영가회보》 8-10호 (2024년 봄호) 1면

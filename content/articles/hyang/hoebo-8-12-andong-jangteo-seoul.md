@@ -17,11 +17,11 @@ visibility: hidden
 ## 자취 — 도농상생의 결과
 
 - 8-7호 〈[김지숙 도농상생 부시장 글](/archive/geul/hoebo-8-8-kim-jisook-doonong)〉
-- 8-8호 〈[서울시 · 안동시 5개 분야 협력 체결](/archive/jachui/hoebo-8-8-seoul-andong-5-bunya)〉
+- 8-8호 〈[서울시 · 안동시 5개 분야 협력 체결](/archive/hyang/hoebo-8-8-seoul-andong-5-bunya)〉
 - **8-12호 안동장터 서울시청 광장 개최** — 실현
 
 ## 자랑
 
 - **서울 시민 + 안동 농산물 · 특산품 · 먹거리** — 한 자리에서 모습으로 만나는 결
 - **출향인사 회원**이 더 가까이 안동을 만날 자리
-- **고향사랑기부 답례품**(관련: 〈[8-12호 답례상품 다양화](/archive/jachui/hoebo-8-12-gohyangsarang-dapryesangpum)〉) 과 호응
+- **고향사랑기부 답례품**(관련: 〈[8-12호 답례상품 다양화](/archive/hyang/hoebo-8-12-gohyangsarang-dapryesangpum)〉) 과 호응

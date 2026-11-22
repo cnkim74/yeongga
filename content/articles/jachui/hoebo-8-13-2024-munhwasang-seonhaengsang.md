@@ -17,7 +17,7 @@ visibility: hidden
 ### 영가문화상 — 〈안동차전놀이보존회〉
 
 - **안동차전놀이보존회** — 안동 전통 결의 자취
-- **대통령상 수상** (관련: 〈[8-13호 차전놀이보존회 대통령상](/archive/jachui/hoebo-8-13-chajeonnori-daetongryeong)〉) 의 한 결과 호응
+- **대통령상 수상** (관련: 〈[8-13호 차전놀이보존회 대통령상](/archive/hyang/hoebo-8-13-chajeonnori-daetongryeong)〉) 의 한 결과 호응
 
 ### 영가선행상 — 〈김인근 대표〉
 

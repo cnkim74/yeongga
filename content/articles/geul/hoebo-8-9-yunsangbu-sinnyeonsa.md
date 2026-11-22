@@ -49,6 +49,6 @@ visibility: public
 ## 함께 보기
 
 - [영가회 정기총회 성황 (1면)](/archive/moim/hoebo-8-9-jeonggi-chonghoe)
-- [안동시 올해 역점사업 — 권기창 안동시장 신년사 (2·3면)](/archive/jachui/hoebo-8-9-andong-yeokjeom-saeop)
+- [안동시 올해 역점사업 — 권기창 안동시장 신년사 (2·3면)](/archive/hyang/hoebo-8-9-andong-yeokjeom-saeop)
 
 출처: 《영가회보》 8-9호 (2024년 겨울호) 2면

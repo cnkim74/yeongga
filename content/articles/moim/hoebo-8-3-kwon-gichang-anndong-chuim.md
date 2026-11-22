@@ -59,7 +59,7 @@ visibility: public
 
 ## 함께 보기
 
-- [예천·안동 행정통합 급물살 탈 듯](/archive/jachui/hoebo-8-3-tonghap-geupmulsal)
+- [예천·안동 행정통합 급물살 탈 듯](/archive/hyang/hoebo-8-3-tonghap-geupmulsal)
 - [권기창 안동시장·조은희 의원 당선축하연 및 간담회](/archive/moim/hoebo-8-3-dangsun-chukhayeon)
 - [안동시장 등 영가회 명예회원 위촉](/archive/jachui/hoebo-8-3-myeongye-hoewon)
 

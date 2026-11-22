@@ -25,7 +25,7 @@ visibility: public
 
 ## 함께 보기
 
-- ['안동·예천 행정구역 통합 안되면 도청신도시는 별도로 분리될 수밖에 없어'](/archive/jachui/hoebo-8-4-tonghap-bunri-gongyeon)
+- ['안동·예천 행정구역 통합 안되면 도청신도시는 별도로 분리될 수밖에 없어'](/archive/hyang/hoebo-8-4-tonghap-bunri-gongyeon)
 - [2022 영가희망포럼 (5~7면 기획특집)](/archive/moim/hoebo-8-4-yeongga-himang-forum-2022)
 
 출처: 《영가회보》 8-4호 (2022년 가을호) 2면

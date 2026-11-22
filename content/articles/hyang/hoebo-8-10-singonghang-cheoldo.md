@@ -15,6 +15,6 @@ visibility: hidden
 ## 함께 보기
 
 - [중앙선 KTX 작년 12월말부터 서울역까지 연장 운행](/archive/hyang/hoebo-8-9-ktx-seoul-yeokjang) (8-9호)
-- [4.10 총선 안동·예천에 김형동 재선에 성공 (1면)](/archive/jachui/hoebo-8-10-kim-hyeongdong-jaesun)
+- [4.10 총선 안동·예천에 김형동 재선에 성공 (1면)](/archive/hyang/hoebo-8-10-kim-hyeongdong-jaesun)
 
 출처: 《영가회보》 8-10호 (2024년 봄호) 4면

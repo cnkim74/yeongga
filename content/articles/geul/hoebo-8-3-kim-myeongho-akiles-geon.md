@@ -28,6 +28,6 @@ visibility: public
 
 ## 함께 보기
 
-- [예천·안동 행정통합 급물살 탈 듯](/archive/jachui/hoebo-8-3-tonghap-geupmulsal)
+- [예천·안동 행정통합 급물살 탈 듯](/archive/hyang/hoebo-8-3-tonghap-geupmulsal)
 
 출처: 《영가회보》 8-3호 (2022년 여름호) 2면

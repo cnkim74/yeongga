@@ -31,6 +31,6 @@ visibility: public
 ## 함께 보기
 
 - [(가칭)영가경제포럼이 창립된다](/archive/jachui/hoebo-8-5-yeongga-gyeongje-forum-changlip)
-- ['예천·안동 행정구역 통합' 논의 후끈 달아 올라](/archive/jachui/hoebo-8-5-tonghap-hukkeun-dala-olla)
+- ['예천·안동 행정구역 통합' 논의 후끈 달아 올라](/archive/hyang/hoebo-8-5-tonghap-hukkeun-dala-olla)
 
 출처: 《영가회보》 8-5호 (2023년 겨울호) 2면

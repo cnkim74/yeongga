@@ -30,7 +30,7 @@ visibility: public
 
 ## 함께 보기
 
-- ['예천·안동 행정구역 통합' 논의 후끈 달아 올라 (1면)](/archive/jachui/hoebo-8-5-tonghap-hukkeun-dala-olla)
+- ['예천·안동 행정구역 통합' 논의 후끈 달아 올라 (1면)](/archive/hyang/hoebo-8-5-tonghap-hukkeun-dala-olla)
 - [경북도청신도시의 아킬레스건 — 김정호](/archive/geul/hoebo-8-3-kim-myeongho-akiles-geon) (8-3호)
 
 출처: 《영가회보》 8-5호 (2023년 겨울호) 2면

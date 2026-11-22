@@ -46,7 +46,7 @@ visibility: public
 
 ## 함께 보기
 
-- [4.10 총선 안동·예천에 김형동 재선에 성공 (1면)](/archive/jachui/hoebo-8-10-kim-hyeongdong-jaesun)
+- [4.10 총선 안동·예천에 김형동 재선에 성공 (1면)](/archive/hyang/hoebo-8-10-kim-hyeongdong-jaesun)
 - [22대 국회에 바란다 — 남영찬 기획칼럼 (2면)](/archive/geul/hoebo-8-10-nam-yeongchan-22dae)
 
 출처: 《영가회보》 8-10호 (2024년 봄호) 2면

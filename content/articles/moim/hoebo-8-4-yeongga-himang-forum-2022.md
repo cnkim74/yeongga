@@ -203,7 +203,7 @@ visibility: public
 
 ## 함께 보기
 
-- ['안동·예천 행정구역 통합 안되면 도청신도시는 별도로 분리될 수밖에 없어' (1면)](/archive/jachui/hoebo-8-4-tonghap-bunri-gongyeon)
+- ['안동·예천 행정구역 통합 안되면 도청신도시는 별도로 분리될 수밖에 없어' (1면)](/archive/hyang/hoebo-8-4-tonghap-bunri-gongyeon)
 - [출향기업 대표들과 안동시장 등 간담회 가져 (2면)](/archive/moim/hoebo-8-4-chulhyang-gidaep-gandamhoe)
 - [재경 예천군민회와 안동향우회가 함께한 지난 여름날의 추억! — 권세준 (11면)](/archive/moim/hoebo-8-4-yecheongun-andong-yeoreum)
 

@@ -24,6 +24,6 @@ visibility: public
 
 ## 함께 보기
 
-- ["안동대에 국립의대 신설" 촉구 한목소리](/archive/jachui/hoebo-8-8-andong-dae-gukripuidae) (8-8호)
+- ["안동대에 국립의대 신설" 촉구 한목소리](/archive/hyang/hoebo-8-8-andong-dae-gukripuidae) (8-8호)
 
 출처: 《영가회보》 8-9호 (2024년 겨울호) 8면

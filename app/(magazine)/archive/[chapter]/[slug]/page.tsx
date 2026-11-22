@@ -17,6 +17,7 @@ import { GAEventOnMount } from "@/components/GAEventOnMount";
 import { parseByline } from "@/lib/byline";
 import { getRelatedAlbums } from "@/lib/yeongi-albums";
 import { HIDDEN_ARTICLE_PAGES } from "@/lib/hidden-article-pages";
+import { MOVED_ARTICLES } from "@/lib/moved-articles";
 import { layoutArticleForChapter } from "@/lib/event-layout";
 
 /**
@@ -59,6 +60,9 @@ export default async function ArticlePage({
     if (page && (await getArticleBySlug(chapter, slug, { includeHidden: true }))) {
       redirect(page);
     }
+    // 다른 장으로 옮긴 글은 새 주소로
+    const moved = MOVED_ARTICLES[`${chapter}/${slug}`];
+    if (moved) redirect(`/archive/${moved}/${slug}`);
   }
   if (!meta || !article) notFound();
 

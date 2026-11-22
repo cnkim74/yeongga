@@ -16,4 +16,4 @@ visibility: hidden
 
 - 9-1호 〈[미식 Vault 전통주](/archive/hyang/hoebo-9-1-misik-vault-jeontongju)〉의 후속
 - 9-3호 〈[2차 영가포럼 안동소주](/archive/moim/9dae-2025-forum-2)〉의 단단한 후속
-- 9-4호 〈[월영진룡유주 브뤼셀 금상](/archive/jachui/hoebo-9-4-walyeongjinryeong-geumsang)〉의 한 자리
+- 9-4호 〈[월영진룡유주 브뤼셀 금상](/archive/hyang/hoebo-9-4-walyeongjinryeong-geumsang)〉의 한 자리

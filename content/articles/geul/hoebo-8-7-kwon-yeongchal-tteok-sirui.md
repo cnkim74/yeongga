@@ -54,6 +54,6 @@ visibility: public
 ## 함께 보기
 
 - [영가회 명예회원 위촉 — 권영진·정태주·권태형 (2면)](/archive/jachui/hoebo-8-7-myeongye-hoewon-3-bun)
-- [군위, 대구 편입에 따른 경북 지역구 조정 난항 (1면)](/archive/jachui/hoebo-8-7-gunwi-daegu-pyeoni)
+- [군위, 대구 편입에 따른 경북 지역구 조정 난항 (1면)](/archive/hyang/hoebo-8-7-gunwi-daegu-pyeoni)
 
 출처: 《영가회보》 8-7호 (2023년 여름호) 5면

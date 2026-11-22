@@ -40,7 +40,7 @@ visibility: public
 
 ## 함께 보기
 
-- [예천에서도 행정구역 통합 추진 민간단체 출범 (2면)](/archive/jachui/hoebo-8-6-yecheon-mingan-danche)
+- [예천에서도 행정구역 통합 추진 민간단체 출범 (2면)](/archive/hyang/hoebo-8-6-yecheon-mingan-danche)
 - [예천과 안동, 유연한 지혜와 용기를 발휘해야 한다 — 권세준 (8면)](/archive/geul/hoebo-8-6-jin-sejun-yuyeonhan-jihye)
 
 출처: 《영가회보》 8-6호 (2023년 봄호) 9면
