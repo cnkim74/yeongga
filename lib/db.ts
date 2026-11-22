@@ -5454,9 +5454,9 @@ async function init(client: Client) {
     await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
     await markMigration(client, "yeongi-hgkim-profile-align-v15");
   }
-  // 2~9대 회장 프로필 페이지 신규 추가
-  if (!(await hasMigration(client, "yeongi-presidents-profiles-v1"))) {
-    await refreshArticlesFromFiles(client, [
+  // 2~9대 회장 프로필 페이지 신규 추가 — v1 은 UPDATE 만 해서 행이 생기지 않았다
+  if (!(await hasMigration(client, "yeongi-presidents-profiles-v2"))) {
+    await restoreArticlesFromFiles(client, [
       ["yeongi", "2nd-mkryu-01"],
       ["yeongi", "3rd-ctgeum-01"],
       ["yeongi", "4th-djheo-01"],
@@ -5466,7 +5466,7 @@ async function init(client: Client) {
       ["yeongi", "8th-sbmoon-01"],
       ["yeongi", "9th-dspak-01"],
     ]);
-    await markMigration(client, "yeongi-presidents-profiles-v1");
+    await markMigration(client, "yeongi-presidents-profiles-v2");
   }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
