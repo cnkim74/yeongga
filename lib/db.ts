@@ -5517,6 +5517,22 @@ async function init(client: Client) {
     }
     await markMigration(client, "yeongi-presidents-profiles-v4");
   }
+  // 1~9대 회장 — 본문 <style> 을 globals.css(ygpr-*)로 옮겨 편집기 저장에도 틀이 남게 한다.
+  // 2대는 편집기 저장으로 틀이 깨진 본문을 되돌리면서 그때 넣은 2002 신년하례회 사진을 같은 자리에 둔다.
+  if (!(await hasMigration(client, "yeongi-presidents-editor-safe-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "1st-hgkim-01"],
+      ["yeongi", "2dae-hoejang-sidae"],
+      ["yeongi", "3dae-chuim"],
+      ["yeongi", "4dae-chuim"],
+      ["yeongi", "5dae-chuim"],
+      ["yeongi", "6dae-chuim"],
+      ["yeongi", "7dae-chuim"],
+      ["yeongi", "8dae-chuim"],
+      ["yeongi", "9dae-chuim"],
+    ]);
+    await markMigration(client, "yeongi-presidents-editor-safe-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

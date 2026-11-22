@@ -329,9 +329,118 @@ html[data-theme="dark"] .surface-tone .surface-soft { color: rgba(255,255,255,0.
   margin: 1.6em auto;
   display: block;
 }
-.prose-body .ygcl-photo {
-  margin: 0;
+/* ─── 역대 회장 페이지 카드 (ygpr-*) ─────────────────────────
+   본문 HTML 안의 <style> 은 편집기 저장 때 지워지므로 여기에 둔다(편집기·공개 화면 공통).
+   편집기는 틀 div 안 글을 <p> 로, 사진을 figure 로 감싸 저장하므로 그 모양도 함께 맞춘다. */
+:root {
+  --ygpr-surface: #fff;
+  --ygpr-fg: #1e1a14;
+  --ygpr-line: #e0ddd4;
+  --ygpr-muted: #6b6354;
+  --ygpr-green: #2e6b3e;
+  --ygpr-green-light: #4a9660;
+  --ygpr-green-pale: #d4ead9;
+  --ygpr-bg-tint: #f8f6f1;
 }
+html[data-theme="dark"] {
+  --ygpr-surface: #1e1c18;
+  --ygpr-fg: #e8e3d8;
+  --ygpr-line: #3a3730;
+  --ygpr-muted: #9a9080;
+  --ygpr-green: #4a9660;
+  --ygpr-green-light: #6ab87a;
+  --ygpr-green-pale: #1e3a26;
+  --ygpr-bg-tint: #252320;
+}
+
+.prose-body .ygpr-profile-wrap { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 36px; }
+.prose-body img.ygpr-photo,
+.prose-body .ygpr-profile-wrap .article-figure {
+  display: block; width: 160px; max-width: none; height: auto; flex-shrink: 0; margin: 0;
+}
+.prose-body img.ygpr-photo,
+.prose-body .ygpr-profile-wrap .article-figure img { border-radius: 8px; margin: 0; width: 100%; }
+.prose-body img.ygpr-photo { width: 160px; }
+@media (max-width: 520px) {
+  .prose-body .ygpr-profile-wrap { flex-direction: column; align-items: center; }
+  .prose-body img.ygpr-photo,
+  .prose-body .ygpr-profile-wrap .article-figure { width: 100%; max-width: 200px; }
+}
+
+.prose-body .ygpr-intro {
+  background: var(--ygpr-surface); border: 1px solid var(--ygpr-line); border-left: 4px solid var(--ygpr-green);
+  border-radius: 10px; padding: 20px 24px; font-size: 18px; line-height: 1.9; color: var(--ygpr-fg);
+  flex: 1; min-height: calc(160px * 4 / 3); box-sizing: border-box;
+}
+.prose-body .ygpr-intro strong { color: var(--ygpr-green); }
+.prose-body .ygpr-intro .ygpr-byline { margin-top: 12px; font-size: 16px; color: var(--ygpr-muted); font-style: italic; }
+
+.prose-body .ygpr-intro p,
+.prose-body .ygpr-pill p,
+.prose-body .ygpr-flabel p,
+.prose-body .ygpr-att p { margin: 0; }
+
+.prose-body .ygpr-timeline { position: relative; padding-left: 32px; margin-bottom: 36px; }
+.prose-body .ygpr-timeline::before {
+  content: ''; position: absolute; left: 10px; top: 8px; bottom: 0; width: 2px; background: var(--ygpr-line);
+}
+.prose-body .ygpr-item { position: relative; margin-bottom: 36px; }
+.prose-body .ygpr-item::before {
+  content: ''; position: absolute; left: -26px; top: 14px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--ygpr-green); border: 2.5px solid var(--ygpr-bg-tint); box-shadow: 0 0 0 2px var(--ygpr-green-light);
+}
+.prose-body .ygpr-item.ygpr-hl::before {
+  width: 16px; height: 16px; left: -28px; top: 12px;
+  box-shadow: 0 0 0 3px var(--ygpr-green-light), 0 0 0 5px var(--ygpr-green-pale);
+}
+
+.prose-body .ygpr-pill {
+  display: inline-flex; align-items: center; background: var(--ygpr-green); color: #fff; font-size: 14px;
+  font-weight: 700; letter-spacing: .04em; padding: 5px 14px; border-radius: 20px; margin-bottom: 12px;
+}
+
+.prose-body .ygpr-card {
+  background: var(--ygpr-surface); border: 1px solid var(--ygpr-line); border-radius: 10px;
+  padding: 20px 22px; box-shadow: 0 2px 10px rgba(46,107,62,.07);
+}
+.prose-body .ygpr-item.ygpr-hl .ygpr-card { border-left: 4px solid var(--ygpr-green); }
+.prose-body .ygpr-card h2 { font-size: 21px; font-weight: 700; color: var(--ygpr-fg); margin: 0 0 12px; line-height: 1.4; }
+.prose-body .ygpr-card h3 {
+  font-size: 14px; font-weight: 700; color: var(--ygpr-green-light); letter-spacing: .04em;
+  text-transform: uppercase; margin: 18px 0 8px;
+}
+.prose-body .ygpr-card p { font-size: 18px; line-height: 1.9; color: var(--ygpr-fg); margin: 0 0 10px; }
+.prose-body .ygpr-card p + p { margin-top: 1.2em; }
+.prose-body .ygpr-card p:last-child { margin-bottom: 0; }
+
+.prose-body .ygpr-att {
+  background: var(--ygpr-green-pale); border-radius: 7px; padding: 12px 16px; font-size: 17px;
+  line-height: 1.8; color: var(--ygpr-fg); margin-top: 10px;
+}
+.prose-body .ygpr-att strong { color: var(--ygpr-green); }
+
+.prose-body .ygpr-card ul { list-style: none; }
+.prose-body .ygpr-card li {
+  font-size: 17px; line-height: 1.8; color: var(--ygpr-fg); padding: 8px 0 8px 24px;
+  position: relative; border-bottom: 1px dashed var(--ygpr-line);
+}
+.prose-body .ygpr-card li:last-child { border-bottom: none; }
+.prose-body .ygpr-card li::before {
+  content: '▸'; position: absolute; left: 0; color: var(--ygpr-green-light); font-size: 14px; top: 11px;
+}
+.prose-body .ygpr-card li p { font-size: inherit; line-height: inherit; margin: 0; }
+
+.prose-body .ygpr-final { background: var(--ygpr-green); color: #fff; border-radius: 12px; padding: 28px 24px; margin-bottom: 36px; }
+.prose-body .ygpr-final .ygpr-flabel {
+  font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .75; margin-bottom: 10px;
+}
+.prose-body .ygpr-final h2 { font-size: 25px; font-weight: 700; margin: 0 0 20px; line-height: 1.4; color: #fff; }
+.prose-body .ygpr-final p { font-size: 18px; line-height: 1.9; opacity: .9; margin: 0 0 8px; color: #fff; }
+.prose-body .ygpr-final p + p { margin-top: 1.2em; }
+.prose-body .ygpr-final p:last-child { margin-bottom: 0; }
+/* 편집기가 틀 안 글을 <p> 로 감싼 경우 — 바깥 틀의 글자 모양을 그대로 따른다 */
+.prose-body .ygpr-card .ygpr-att p,
+.prose-body .ygpr-final .ygpr-flabel p { font-size: inherit; line-height: inherit; color: inherit; opacity: 1; margin: 0; }
 
 /* 원본 지면에서 옮긴 사진 — 이미지 바로 다음 줄의 *기울임* 을 캡션으로 */
 .prose-body p > img { margin-bottom: 0.5em; border-radius: 4px; }

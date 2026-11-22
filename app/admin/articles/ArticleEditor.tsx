@@ -9,6 +9,7 @@ import { TableKit } from "@tiptap/extension-table";
 import { FigureImage } from "./extensions/FigureImage";
 import { ImageGallery, type GalleryImage } from "./extensions/ImageGallery";
 import { Ornament, type OrnamentStyle } from "./extensions/Ornament";
+import { ClassBlock } from "./extensions/ClassBlock";
 import { EmojiPicker } from "./EmojiPicker";
 import { GalleryPhotoPicker, type PickedPhoto } from "./GalleryPhotoPicker";
 
@@ -63,6 +64,7 @@ export function ArticleEditor({
       FigureImage.configure({ inline: false }),
       ImageGallery,
       Ornament,
+      ClassBlock,
       // 표는 40년사·회보를 옮긴 글에 자주 쓰인다.
       // 확장을 넣지 않으면 편집기가 표를 통째로 버린다.
       TableKit.configure({ table: { resizable: true } }),
