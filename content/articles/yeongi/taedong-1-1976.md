@@ -15,13 +15,13 @@ visibility: public
   border-radius: 10px;
   padding: 20px 24px;
   margin-bottom: 36px;
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 18px;
+  line-height: 1.9;
   color: var(--fg, #1e1a14);
 }
 .ygcl-intro .ygcl-byline {
   margin-top: 12px;
-  font-size: 13.5px;
+  font-size: 16px;
   color: #6b6354;
   font-style: italic;
 }
@@ -70,12 +70,12 @@ visibility: public
   align-items: center;
   background: #2e6b3e;
   color: #fff;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: .04em;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .ygcl-card {
@@ -90,26 +90,26 @@ visibility: public
 }
 
 .ygcl-card h2 {
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 700;
   color: var(--fg, #1e1a14);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   margin-top: 0;
   line-height: 1.4;
 }
 .ygcl-card h3 {
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 700;
   color: #4a9660;
-  letter-spacing: .06em;
+  letter-spacing: .04em;
   text-transform: uppercase;
-  margin: 16px 0 6px;
+  margin: 18px 0 8px;
 }
 .ygcl-card p {
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 18px;
+  line-height: 1.9;
   color: var(--fg, #1e1a14);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .ygcl-card p:last-child { margin-bottom: 0; }
 
@@ -117,8 +117,8 @@ visibility: public
   background: #d4ead9;
   border-radius: 7px;
   padding: 12px 16px;
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.8;
   color: #1e1a14;
   margin-top: 10px;
 }
@@ -130,10 +130,10 @@ visibility: public
   padding: 0;
 }
 .ygcl-rules li {
-  font-size: 14.5px;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.8;
   color: var(--fg, #1e1a14);
-  padding: 7px 0 7px 22px;
+  padding: 8px 0 8px 24px;
   position: relative;
   border-bottom: 1px dashed #cfc9bc;
 }
@@ -143,8 +143,8 @@ visibility: public
   position: absolute;
   left: 0;
   color: #4a9660;
-  font-size: 12px;
-  top: 10px;
+  font-size: 14px;
+  top: 11px;
 }
 
 .ygcl-names {
@@ -157,22 +157,23 @@ visibility: public
   background: #d4ead9;
   color: #2e6b3e;
   border-radius: 20px;
-  padding: 3px 12px;
-  font-size: 13.5px;
+  padding: 4px 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 .ygcl-tag.ygcl-chosen {
   background: #2e6b3e;
   color: #fff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 17px;
 }
 
 .ygcl-note {
-  font-size: 13.5px;
+  font-size: 16px;
   color: #6b6354;
   font-style: italic;
-  margin-top: 6px;
+  margin-top: 8px;
+  line-height: 1.8;
 }
 
 .ygcl-final {
@@ -183,15 +184,15 @@ visibility: public
   margin-bottom: 36px;
 }
 .ygcl-final .ygcl-flabel {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: .15em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   opacity: .75;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .ygcl-final h2 {
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 700;
   margin-bottom: 20px;
   margin-top: 0;
@@ -202,16 +203,16 @@ visibility: public
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  margin-bottom: 10px;
-  font-size: 15px;
-  line-height: 1.6;
+  margin-bottom: 12px;
+  font-size: 18px;
+  line-height: 1.8;
 }
 .ygcl-info .ygcl-lbl {
   flex-shrink: 0;
   background: rgba(255,255,255,.22);
   border-radius: 4px;
-  padding: 1px 9px;
-  font-size: 12.5px;
+  padding: 2px 10px;
+  font-size: 14px;
   font-weight: 700;
   margin-top: 2px;
 }
@@ -226,10 +227,10 @@ visibility: public
   margin: 0;
 }
 .ygcl-agenda li {
-  padding: 6px 0 6px 20px;
+  padding: 8px 0 8px 22px;
   position: relative;
-  font-size: 14.5px;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.8;
   opacity: .95;
   border-bottom: 1px solid rgba(255,255,255,.12);
 }

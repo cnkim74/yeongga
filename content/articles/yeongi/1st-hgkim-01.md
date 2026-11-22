@@ -68,15 +68,15 @@ visibility: public
   border-left: 4px solid var(--ygcl-green);
   border-radius: 10px;
   padding: 20px 24px;
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 18px;
+  line-height: 1.9;
   color: var(--ygcl-fg);
   flex: 1;
 }
 .ygcl-intro strong { color: var(--ygcl-green); }
 .ygcl-intro .ygcl-byline {
-  margin-top: 10px;
-  font-size: 13.5px;
+  margin-top: 12px;
+  font-size: 16px;
   color: var(--ygcl-muted);
   font-style: italic;
 }
@@ -126,12 +126,12 @@ visibility: public
   align-items: center;
   background: var(--ygcl-green);
   color: #fff;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: .04em;
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .ygcl-card {
@@ -145,26 +145,26 @@ visibility: public
   border-left: 4px solid var(--ygcl-green);
 }
 .ygcl-card h2 {
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 700;
   color: var(--ygcl-fg);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   margin-top: 0;
   line-height: 1.4;
 }
 .ygcl-card h3 {
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--ygcl-green-light);
-  letter-spacing: .06em;
+  letter-spacing: .04em;
   text-transform: uppercase;
-  margin: 16px 0 6px;
+  margin: 18px 0 8px;
 }
 .ygcl-card p {
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 18px;
+  line-height: 1.9;
   color: var(--ygcl-fg);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .ygcl-card p:last-child { margin-bottom: 0; }
 
@@ -172,8 +172,8 @@ visibility: public
   background: var(--ygcl-green-pale);
   border-radius: 7px;
   padding: 12px 16px;
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.8;
   color: var(--ygcl-fg);
   margin-top: 10px;
 }
@@ -185,10 +185,10 @@ visibility: public
   padding: 0;
 }
 .ygcl-rules li {
-  font-size: 14.5px;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.8;
   color: var(--ygcl-fg);
-  padding: 7px 0 7px 22px;
+  padding: 8px 0 8px 24px;
   position: relative;
   border-bottom: 1px dashed var(--ygcl-line);
 }
@@ -198,16 +198,16 @@ visibility: public
   position: absolute;
   left: 0;
   color: var(--ygcl-green-light);
-  font-size: 12px;
-  top: 10px;
+  font-size: 14px;
+  top: 11px;
 }
 
 .ygcl-note {
-  font-size: 13.5px;
+  font-size: 16px;
   color: var(--ygcl-muted);
   font-style: italic;
-  margin-top: 6px;
-  line-height: 1.7;
+  margin-top: 8px;
+  line-height: 1.8;
 }
 
 .ygcl-final {
@@ -218,26 +218,26 @@ visibility: public
   margin-bottom: 36px;
 }
 .ygcl-final .ygcl-flabel {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: .15em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   opacity: .75;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .ygcl-final h2 {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   margin-top: 0;
   line-height: 1.4;
   color: #fff;
 }
 .ygcl-final p {
-  font-size: 14.5px;
-  line-height: 1.8;
+  font-size: 18px;
+  line-height: 1.9;
   opacity: .9;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .ygcl-final p:last-child { margin-bottom: 0; }
 </style>
