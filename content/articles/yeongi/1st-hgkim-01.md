@@ -63,6 +63,7 @@ visibility: public
 <div class="ygpr-card">
 <h2>회원 문집 제2집 『그단새 스무해가』 발간</h2>
 <p>영가회 창립 21주년을 기념해 永嘉文化 第2輯을 발간했다.</p>
+<figure data-type="image" data-align="center" data-width="medium" class="article-figure align-center size-medium"><img src="https://cdn.yeongga.com/articles/mwrqdx37-775b04efac3b.png" alt=""></figure>
 <ul class="ygpr-rules">
   <li>안동 관련 글과 일상생활에서 얻은 수필</li>
   <li>전문분야 시론, 시</li>

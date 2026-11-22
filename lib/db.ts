@@ -5533,6 +5533,11 @@ async function init(client: Client) {
     ]);
     await markMigration(client, "yeongi-presidents-editor-safe-v1");
   }
+  // 1대 — 배포 전 열어 둔 예전 편집기로 저장해 틀이 깨진 본문 복구, 그때 넣은 『그단새 스무해가』 표지는 같은 자리에 유지
+  if (!(await hasMigration(client, "yeongi-hgkim-editor-restore-v1"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
+    await markMigration(client, "yeongi-hgkim-editor-restore-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
