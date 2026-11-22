@@ -5391,6 +5391,12 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-hgkim-profile-align-v4");
   }
 
+  // 1st-hgkim-01 프로필 카드 — min-height로 카드가 사진보다 길면 아래로 확장
+  if (!(await hasMigration(client, "yeongi-hgkim-profile-align-v5"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
+    await markMigration(client, "yeongi-hgkim-profile-align-v5");
+  }
+
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
   // 새 콘텐츠 파일이 추가됐을 때만 SEED_FROM_FILES=1 환경변수로 재실행

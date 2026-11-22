@@ -80,9 +80,8 @@ visibility: public
   line-height: 1.9;
   color: var(--ygcl-fg);
   flex: 1;
-  height: calc(150px * 4 / 3);
+  min-height: calc(150px * 4 / 3);
   box-sizing: border-box;
-  overflow: hidden;
 }
 .ygcl-intro strong { color: var(--ygcl-green); }
 .ygcl-intro .ygcl-byline {
