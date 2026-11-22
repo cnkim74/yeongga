@@ -5454,6 +5454,20 @@ async function init(client: Client) {
     await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
     await markMigration(client, "yeongi-hgkim-profile-align-v15");
   }
+  // 2~9대 회장 프로필 페이지 신규 추가
+  if (!(await hasMigration(client, "yeongi-presidents-profiles-v1"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "2nd-mkryu-01"],
+      ["yeongi", "3rd-ctgeum-01"],
+      ["yeongi", "4th-djheo-01"],
+      ["yeongi", "5th-jmryu-01"],
+      ["yeongi", "6th-bgkim-01"],
+      ["yeongi", "7th-dgkim-01"],
+      ["yeongi", "8th-sbmoon-01"],
+      ["yeongi", "9th-dspak-01"],
+    ]);
+    await markMigration(client, "yeongi-presidents-profiles-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
