@@ -442,6 +442,81 @@ html[data-theme="dark"] {
 .prose-body .ygpr-card .ygpr-att p,
 .prose-body .ygpr-final .ygpr-flabel p { font-size: inherit; line-height: inherit; color: inherit; opacity: 1; margin: 0; }
 
+/* ─── 행사 글 카드 (ygev-*) ─────────────────────────────────
+   lib/event-layout.ts 가 공개 화면에서만 소제목 단위로 감싼다(저장 본문은 그대로).
+   색은 역대 회장 페이지(--ygpr-*)와 같은 녹색 계열. */
+.prose-body .ygev-lead { margin-bottom: 32px; }
+.prose-body .ygev-lead > blockquote,
+.prose-body .ygev-foot {
+  background: var(--ygpr-bg-tint); border: 1px solid var(--ygpr-line); border-left: 4px solid var(--ygpr-green);
+  border-radius: 10px; padding: 14px 18px; margin: 0 0 24px; font-size: 16px; line-height: 1.8; color: var(--ygpr-muted);
+}
+.prose-body .ygev-lead > blockquote p,
+.prose-body .ygev-foot p { margin: 0; }
+.prose-body .ygev-lead > blockquote p + p,
+.prose-body .ygev-foot p + p { margin-top: 0.5em; }
+.prose-body .ygev-foot { margin: 0; }
+.prose-body .ygev-foot a { color: var(--ygpr-green); }
+
+.prose-body .ygev-timeline { position: relative; padding-left: 32px; margin-bottom: 36px; }
+.prose-body .ygev-timeline::before {
+  content: ''; position: absolute; left: 10px; top: 8px; bottom: 0; width: 2px; background: var(--ygpr-line);
+}
+.prose-body .ygev-item { position: relative; margin-bottom: 28px; }
+.prose-body .ygev-item::before {
+  content: ''; position: absolute; left: -26px; top: 26px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--ygpr-green); border: 2.5px solid var(--ygpr-bg-tint); box-shadow: 0 0 0 2px var(--ygpr-green-light);
+}
+.prose-body .ygev-item.ygev-hl::before {
+  width: 16px; height: 16px; left: -28px; top: 24px;
+  box-shadow: 0 0 0 3px var(--ygpr-green-light), 0 0 0 5px var(--ygpr-green-pale);
+}
+.prose-body .ygev-card {
+  background: var(--ygpr-surface); border: 1px solid var(--ygpr-line); border-radius: 10px;
+  padding: 20px 22px; box-shadow: 0 2px 10px rgba(46,107,62,.07); color: var(--ygpr-fg);
+}
+.prose-body .ygev-item.ygev-hl .ygev-card { border-left: 4px solid var(--ygpr-green); }
+.prose-body .ygev-card h2 {
+  font-size: 21px; font-weight: 700; color: var(--ygpr-fg); margin: 0 0 14px; padding: 0 0 10px;
+  line-height: 1.4; border-bottom: 1px solid var(--ygpr-line);
+}
+.prose-body .ygev-card h3 {
+  font-size: 17px; font-weight: 700; color: var(--ygpr-green); margin: 20px 0 8px;
+}
+.prose-body .ygev-card p { font-size: 18px; line-height: 1.9; color: var(--ygpr-fg); margin: 0 0 10px; }
+.prose-body .ygev-card p + p { margin-top: 1.2em; }
+.prose-body .ygev-card > :last-child { margin-bottom: 0; }
+.prose-body .ygev-card strong { color: var(--ygpr-green); }
+.prose-body .ygev-card ul { list-style: none; padding-left: 0; margin: 0 0 10px; }
+.prose-body .ygev-card ul li {
+  font-size: 17px; line-height: 1.8; color: var(--ygpr-fg); padding: 8px 0 8px 24px; margin: 0;
+  position: relative; border-bottom: 1px dashed var(--ygpr-line);
+}
+.prose-body .ygev-card ul li:last-child { border-bottom: none; }
+.prose-body .ygev-card ul li::before {
+  content: '▸'; position: absolute; left: 0; color: var(--ygpr-green-light); font-size: 14px; top: 11px;
+}
+.prose-body .ygev-card ol li { font-size: 17px; line-height: 1.8; color: var(--ygpr-fg); }
+.prose-body .ygev-card li p { font-size: inherit; line-height: inherit; margin: 0; }
+.prose-body .ygev-card blockquote {
+  background: var(--ygpr-green-pale); border-left: 4px solid var(--ygpr-green); border-radius: 0 7px 7px 0;
+  padding: 12px 16px; margin: 14px 0; color: var(--ygpr-fg);
+}
+.prose-body .ygev-card blockquote p { font-size: 17px; line-height: 1.8; margin: 0; }
+.prose-body .ygev-card blockquote p + p { margin-top: 0.5em; }
+.prose-body .ygev-card table { margin: 10px 0; font-size: 16px; }
+.prose-body .ygev-card thead th { color: var(--ygpr-green); border-bottom-color: var(--ygpr-green-pale); }
+.prose-body .ygev-card tbody td { border-bottom-color: var(--ygpr-line); color: var(--ygpr-fg); }
+.prose-body .ygev-card tbody tr:hover { background: var(--ygpr-bg-tint); }
+.prose-body .ygev-card a { color: var(--ygpr-green); }
+@media (max-width: 520px) {
+  .prose-body .ygev-timeline { padding-left: 22px; }
+  .prose-body .ygev-timeline::before { left: 5px; }
+  .prose-body .ygev-item::before { left: -21px; }
+  .prose-body .ygev-item.ygev-hl::before { left: -23px; }
+  .prose-body .ygev-card { padding: 16px 16px; }
+}
+
 /* 원본 지면에서 옮긴 사진 — 이미지 바로 다음 줄의 *기울임* 을 캡션으로 */
 .prose-body p > img { margin-bottom: 0.5em; border-radius: 4px; }
 .prose-body p > img + em {
