@@ -234,29 +234,25 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/03.jpg" alt="3대 금창태 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>3대 회장</strong> · 금창태<br>
-    임기 2003.1.1.~2006.12.31
+    <strong>3대 금창태 회장</strong>(2003.1.1.~2006.12.31)
   </div>
 </div>
 
 <div class="ygcl-timeline">
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>영가회를 친목단체 중심에서 안동의 전통문화 발전과 시대 변화에 맞춰 애향 문화단체로 위상 정립</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>영가문화상 발굴 시상</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>각계 전문가 초청 특강 정례화, 문화유적 탐사활동 실시</p>
 </div>
@@ -277,7 +273,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">3대 회장</div>
 <h2>금창태 회장은</h2>
 <p>2003년 1월15일 소피텔엠버서더 호텔 2층 서궁에서 정기총회 및 신년하례회에서 선임</p>
 <p>전 중앙일보 사장 및 부회장을 거쳐 제8대 재경안동향우회장 역임</p>

@@ -234,29 +234,25 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/05.jpg" alt="5대 류종묵 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>5대 회장</strong> · 류종묵<br>
-    임기 2011.1.1.~2014.12.31.
+    <strong>5대 류종묵 회장</strong>(2011.1.1.~2014.12.31.)
   </div>
 </div>
 
 <div class="ygcl-timeline">
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>전문가 및 출향인사 초청 특강 수시 실시</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>국내 및 매년 해외문화유적 탐방 활동으로 조직 활성화</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>회칙 개정으로 회원의 입회비·일반회비 등을 이사회에서 조정 결의</p>
 </div>
@@ -277,7 +273,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">5대 회장</div>
 <h2>류종묵 회장은</h2>
 <p>2011년 1월7일 세종호텔 모차르트홀에서 회원 120명이 참석한 가운데 회장 취임</p>
 <p>안동고 서울대 상과대학 졸업후 1978년 ㈜흥국 대표이사 취임후 안동대 최고경영대상 등을 수상하며 경영능력 발휘</p>

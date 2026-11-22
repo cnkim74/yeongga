@@ -234,22 +234,19 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/06.jpg" alt="6대 김봉구 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>6대 회장</strong> · 김봉구<br>
-    임기 2014.1.1.~2017.5.26
+    <strong>6대 김봉구 회장</strong>(2014.1.1.~2017.5.26)
   </div>
 </div>
 
 <div class="ygcl-timeline">
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>예의와 염치로 무장됐으며 자립재정으로 운영되는 모범적인 조직으로 자긍심 고취</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>국내외 문화유적 탐방 및 전문가 초청 특강으로 회원 단합 도모와 문화활동 기회 부여</p>
 </div>
@@ -270,7 +267,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">6대 회장</div>
 <h2>김봉구 회장은</h2>
 <p>고려대 명예교수로, 2015년 1월9일 프레지던트호텔에서 회원 120명이 참석한 가운데 회장 취임</p>
 <p>연임중 2017년 5월26일 임시총회에서 일신상의 이유로 사임</p>

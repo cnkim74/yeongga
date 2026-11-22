@@ -234,43 +234,37 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/09.jpg" alt="9대 박대섭 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>9대 회장</strong> · 박대섭<br>
-    임기 2025.2.6.~2026년 11월 현재
+    <strong>제9대 박대섭 회장</strong> (2025.2.6.~2026년 11월 현재)
   </div>
 </div>
 
 <div class="ygcl-timeline">
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>안동발전과 고향사랑 기부 참여 확대 및 안동 발전을 위한 영가포럼 활성화</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>영가회 조직의 비영리사단법인 등록으로 법적 공신력 및 세제 혜택 등 편의 도모</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>신규회원 대거 영입(60세이하 2025~2026년간 60여명 영입)으로 장년회 구성</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>부문별 전문가 회원으로 구성된 상생발전위원회 운영 및 부문별 부회장·위원회 도입으로 조직 변화와 혁신 도모</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>2027년 3월 창립 50년을 앞두고 역사와 자료, 기록을 담은 디지털 아카이브 구축</p>
 </div>
@@ -291,7 +285,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">9대 회장</div>
 <h2>박대섭 회장은</h2>
 <p>2025년 리베라호텔에서 회원 200여명이 참가한 가운데 선임</p>
 <p>예비역 소장(국방부 차관보)를 거쳐 세종대 교수로 재임하면서 능력과 수완 발휘</p>

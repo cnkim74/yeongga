@@ -234,15 +234,13 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/08.jpg" alt="8대 문상부 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>8대 회장</strong> · 문상부<br>
-    임기 2020.6~2025.2.5
+    <strong>8대 문상부 회장</strong>(2020.6~2025.2.5)
   </div>
 </div>
 
 <div class="ygcl-timeline">
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>조직 재정비(2019년 코로나19 발생후 2년간 활동 공백) 및 발전을 위한 다양한 활동</p>
 <ul class="ygcl-rules">
@@ -252,21 +250,18 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>영가포럼 활성화 및 예천·안동 행정구역 통합 지원활동</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>사무실 확보 등 조직 자립기반 확보를 위한 영가경제연구원 설립 추진</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>『영가회보』 발행 재개</p>
 </div>
@@ -286,7 +281,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">8대 회장</div>
 <h2>문상부 회장은</h2>
 <p>2020년 선임된 후 코로나19 방역강화로 2021년 9월 임시총회에서 공식 취임</p>
 <p>중앙선관관리위원회 사무국장(차관급)으로 재직후 공직 경험과 인적관계를 기반으로 침체됐던 조작 활동에 활기를 도모</p>

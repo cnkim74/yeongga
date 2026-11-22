@@ -234,29 +234,25 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/02.jpg" alt="2대 류목기 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>2대 회장</strong> · 류목기<br>
-    임기 1998,10.24~2002.12.31
+    <strong>2대 류목기 회장</strong>(1998,10.24~2002.12.31)
   </div>
 </div>
 
 <div class="ygcl-timeline">
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>정기총회 등 주요 모임에 사회 저명인사 및 출향 인사 초청 특강 정례화로 회원들의 자긍심과 친목과 유대강화에 기여</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>회원 취임 축하연, 회원 조찬모임 및 화합모임 활성화</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>회원소식지 『영가회보』 (4쪽짜리 연2회) 첫 발간,  회원수첩 첫 발간</p>
 </div>
@@ -286,7 +282,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">2대 회장</div>
 <h2>류목기 회장은</h2>
 <p>1998년 10월24일 세명대 강당에서 개최된 임시총회에서 선임</p>
 <p>내무부 공무원으로 시작해 고려병원 부위원장, 한솔 상호저축은행 은행장, 학교법인 병산교육재단 이사장, ㈜풍산 총괄부회장(안동사범 출신)등 공직·사직을 망라해 역임하면서 사심없는 원칙과 소신으로 영가회에 새로운 활력과 질서를 정립</p>

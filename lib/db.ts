@@ -5468,6 +5468,20 @@ async function init(client: Client) {
     ]);
     await markMigration(client, "yeongi-presidents-profiles-v2");
   }
+  // 2~9대 회장 페이지 — 원고에 없는 꼬리표('임기 중'·'임기'·'○대 회장')를 걷어낸다
+  if (!(await hasMigration(client, "yeongi-presidents-profiles-v3"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "2nd-mkryu-01"],
+      ["yeongi", "3rd-ctgeum-01"],
+      ["yeongi", "4th-djheo-01"],
+      ["yeongi", "5th-jmryu-01"],
+      ["yeongi", "6th-bgkim-01"],
+      ["yeongi", "7th-dgkim-01"],
+      ["yeongi", "8th-sbmoon-01"],
+      ["yeongi", "9th-dspak-01"],
+    ]);
+    await markMigration(client, "yeongi-presidents-profiles-v3");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

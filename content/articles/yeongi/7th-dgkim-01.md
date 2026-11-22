@@ -234,8 +234,7 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/07.jpg" alt="7대 김계동 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>7대 회장</strong> · 김계동<br>
-    임기 2017.5.27.~2020.6
+    <strong>7대 김계동 회장</strong>(2017.5.27.~2020.6)
   </div>
 </div>
 
@@ -249,7 +248,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>국내외 문화유적 탐방 및 전문가 초청 특강으로 회원 단합과 문화 활동 실시</p>
 </div>
@@ -270,7 +268,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">7대 회장</div>
 <h2>김계동 회장은</h2>
 <p>2017년 5월26일 프레지던트호텔에서 김계동 상임부회장을 회장으로 선임</p>
 <p>영가회 총무를 시작으로 20여년간 영가회 활동</p>

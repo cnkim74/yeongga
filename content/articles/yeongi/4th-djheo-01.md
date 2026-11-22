@@ -234,29 +234,25 @@ html[data-theme="dark"] {
 <div class="ygcl-profile-wrap">
   <img src="/presidents/04.jpg" alt="4대 허동진 회장" class="ygcl-photo">
   <div class="ygcl-intro">
-    <strong>4대 회장</strong> · 허동진<br>
-    임기 2007.1.10.~2010.12.31.
+    <strong>4대 허동진 회장</strong>(2007.1.10.~2010.12.31.)
   </div>
 </div>
 
 <div class="ygcl-timeline">
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>영가회 기금 적립으로 재정 활성화 도모</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>30주년 기념행사 겸 첫 해외문화유적 탐방 행사 실시</p>
 </div>
 </div>
 
 <div class="ygcl-item">
-<div class="ygcl-pill">임기 중</div>
 <div class="ygcl-card">
 <p>영가회를 안동출향인의 명실상부한 구심체로 위상 강화</p>
 </div>
@@ -277,7 +273,6 @@ html[data-theme="dark"] {
 </div>
 
 <div class="ygcl-final">
-<div class="ygcl-flabel">4대 회장</div>
 <h2>허동진 회장은</h2>
 <p>프레지던트 호텔 신세계홀에서 2007년 1월10일 정기총회 및 신년하례회에서 선임</p>
 <p>영남일보 기자 및 코오롱그룹에 입사후 풍림산업 대표이사 회장으로 활동</p>
