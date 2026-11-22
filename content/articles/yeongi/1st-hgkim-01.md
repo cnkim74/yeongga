@@ -42,6 +42,7 @@ html[data-theme="dark"] {
   height: auto;
   flex-shrink: 0;
   border-radius: 8px;
+  margin: 0;
 }
 @media (max-width: 520px) {
   .ygcl-profile-wrap { flex-direction: column; align-items: center; }
