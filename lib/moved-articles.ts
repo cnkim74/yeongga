@@ -70,6 +70,28 @@ export const MOVED_ARTICLES: Record<string, string> = {
   "jachui/hoebo-9-5-hanil-jeongsang-andong": "hyang",
   "jachui/hoebo-9-5-minsokju-jeungryuju-daesang": "hyang",
   "jachui/hoebo-9-5-yeongnam-manin-so": "hyang",
+  // 2026-11-23 자취 정리 ②: 행사·기고 장의 요약글 자리를 자취 원문 글로, 겹치던 기고 사본은 자취로
+  "moim/hoebo-8-11-wonro-hoewon-gandam": "jachui",
+  "moim/hoebo-8-13-2024-wonro-gandam": "jachui",
+  "geul/hoebo-8-13-cheongyangsan-meok-but": "jachui",
+  "moim/hoebo-8-13-jeonggi-chonghoe-yego": "jachui",
+  "geul/hoebo-9-1-bak-daeseop-9dae": "jachui",
+  "geul/hoebo-9-1-beopin-jagchu": "jachui",
+  "geul/hoebo-9-1-cheongyangsan-ha": "jachui",
+  "geul/hoebo-9-1-sanbul-seongkeum": "jachui",
+  "geul/hoebo-9-1-yeongga-sosik": "jachui",
+  "geul/hoebo-9-1-yeongga-tambang-hanil-gi": "jachui",
+  "geul/hoebo-9-4-bak-daeseop-sinnyeonsa": "jachui",
+  "geul/hoebo-9-4-hoewon-dongjeong": "jachui",
+  "geul/hoebo-9-4-jang-wonseok-sarangbang": "jachui",
+  "geul/hoebo-9-4-myeongye-hoewon": "jachui",
+  "moim/hoebo-9-5-1cha-isahoe": "jachui",
+  "moim/hoebo-9-5-bundang-moim": "jachui",
+  "geul/hoebo-9-5-hoewon-dongjeong": "jachui",
+  "geul/hoebo-9-5-im-daesik-munhwawon": "jachui",
+  "geul/hoebo-9-5-ryu-pilho-toigye": "jachui",
+  "moim/hoebo-9-5-wonro-gandam": "jachui",
+  "moim/hoebo-9-5-yeongga-cheongnyeon-chulbeom": "jachui",
 };
 
 export const JACHUI_TO_HYANG_2026_11 = Object.keys(MOVED_ARTICLES)

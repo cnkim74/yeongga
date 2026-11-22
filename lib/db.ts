@@ -205,6 +205,52 @@ async function refreshArticlesFromFiles(
   }
 }
 
+/**
+ * 파일을 원본으로 글 한 편을 통째로 맞춘다 — 없으면 넣고, 있으면 제목·본문·태그·공개 상태에
+ * 더해 대표 이미지·날짜·필자까지 파일대로 덮어쓴다(refresh 는 이 셋을 건드리지 않는다).
+ * from 이 있으면 그 장에 있던 같은 slug 행을 이 장으로 옮긴 뒤 맞춘다(이 장에 이미 행이 있으면
+ * 옮기지 않고 옛 장의 행은 숨긴다).
+ */
+async function syncArticleFromFile(
+  client: Client,
+  chapter: string,
+  slug: string,
+  from?: string
+): Promise<void> {
+  const filePath = path.join(process.cwd(), "content", "articles", chapter, `${slug}.md`);
+  if (!fs.existsSync(filePath)) return;
+  if (from && from !== chapter) {
+    const here = await client.execute({
+      sql: "SELECT 1 FROM articles WHERE chapter = ? AND slug = ?",
+      args: [chapter, slug],
+    });
+    if (here.rows.length === 0) {
+      await client.execute({
+        sql: `UPDATE articles SET chapter = ?, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?`,
+        args: [chapter, from, slug],
+      });
+    } else {
+      await client.execute({
+        sql: `UPDATE articles SET hidden = 1, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?`,
+        args: [from, slug],
+      });
+    }
+  }
+  await restoreArticlesFromFiles(client, [[chapter, slug]]);
+  const { data } = matter(fs.readFileSync(filePath, "utf8"));
+  await client.execute({
+    sql: `UPDATE articles SET cover = ?, date = ?, author = ?, updated_at = CURRENT_TIMESTAMP
+          WHERE chapter = ? AND slug = ?`,
+    args: [
+      data.cover ? String(data.cover) : null,
+      toIsoDate(data.date),
+      data.author ? String(data.author) : null,
+      chapter,
+      slug,
+    ],
+  });
+}
+
 async function init(client: Client) {
   await client.executeMultiple(`
     CREATE TABLE IF NOT EXISTS migrations_log (
@@ -5595,6 +5641,102 @@ async function init(client: Client) {
       });
     }
     await markMigration(client, "jachui-to-hyang-2026-11-v1");
+  }
+  // 자취 정리 ② (2026-11-23) — 《영가회보》 8-11~9-5호 영가회·회원 기사를 지면 원문으로 복원하고(요약글 대체),
+  // 《40년사》에서 행사 장에 없던 회원 취임 축하·방문·화보 기록을 자취 새 글로. 무이산 탐방은 행사 장.
+  // from 이 있는 글은 그 장의 같은 slug 행을 옮긴 것(옛 주소는 lib/moved-articles.ts 가 넘긴다).
+  if (!(await hasMigration(client, "jachui-restore-2026-11-v1"))) {
+    const items: [string, string, string | null][] = [
+      ["jachui", "jachui-1999-geum-changtae-joongang", null],
+      ["jachui", "jachui-2001-kwon-jeongdal-jayu", null],
+      ["jachui", "jachui-2002-kim-gwangrim-teukheo", null],
+      ["jachui", "jachui-2002-lee-yutaek-kim-hwidong", null],
+      ["jachui", "jachui-2002-pungsan-angang", null],
+      ["jachui", "jachui-2004-lee-huibeom-sanjabu", null],
+      ["jachui", "jachui-2008-uljin-wonjaryeok", null],
+      ["jachui", "jachui-2013-andong-nal", null],
+      ["jachui", "jachui-2016-gyeongbuk-sincheongsa", null],
+      ["jachui", "jachui-2018-40nyeonsa-pyeonchan", null],
+      ["jachui", "jachui-2018-bakyakhoe-academy", null],
+      ["jachui", "jachui-geum-changtae-bangbuk", null],
+      ["jachui", "jachui-geum-changtae-godae-gyeongjein", null],
+      ["jachui", "jachui-jaegyeong-9gaegyo-hwabo", null],
+      ["jachui", "jachui-jaegyeong-hyangwoohoe-hwabo", null],
+      ["jachui", "hoebo-8-11-hoewon-dongjeong", null],
+      ["jachui", "hoebo-8-11-kwon-jeongdal-interview", null],
+      ["jachui", "hoebo-8-11-lee-huibeom-bimangnok", null],
+      ["jachui", "hoebo-8-11-wonro-hoewon-gandam", "moim"],
+      ["jachui", "hoebo-8-11-yeongga-sosik", null],
+      ["jachui", "hoebo-8-12-hoewon-dongjeong", null],
+      ["jachui", "hoebo-8-12-lee-jonghun-wonjeon", null],
+      ["jachui", "hoebo-8-12-yeongga-sosik", null],
+      ["jachui", "hoebo-8-13-2024-munhwasang-seonhaengsang", null],
+      ["jachui", "hoebo-8-13-2024-wonro-gandam", "moim"],
+      ["jachui", "hoebo-8-13-cheongyangsan-meok-but", "geul"],
+      ["jachui", "hoebo-8-13-eulsa-saehae-hwiho", null],
+      ["jachui", "hoebo-8-13-heungkuk-50nyeon", null],
+      ["jachui", "hoebo-8-13-hoewon-dongjeong-musical-jingyo", null],
+      ["jachui", "hoebo-8-13-jeonggi-chonghoe-yego", "moim"],
+      ["jachui", "hoebo-8-13-yeongga-sosik", null],
+      ["jachui", "hoebo-9-1-bak-daeseop-9dae", null],
+      ["jachui", "hoebo-9-1-beopin-jagchu", null],
+      ["jachui", "hoebo-9-1-cheongyangsan-ha", "geul"],
+      ["jachui", "hoebo-9-1-ecopapa", null],
+      ["jachui", "hoebo-9-1-hoewon-dongjeong", null],
+      ["jachui", "hoebo-9-1-sanbul-seongkeum", null],
+      ["jachui", "hoebo-9-1-yeongga-sosik", null],
+      ["jachui", "hoebo-9-1-yeongga-tambang-hanil-gi", null],
+      ["jachui", "hoebo-9-2-3eok-8000-jeondal", null],
+      ["jachui", "hoebo-9-2-buhoejang-4myeong", null],
+      ["jachui", "hoebo-9-2-hoewon-dongjeong", null],
+      ["jachui", "hoebo-9-2-lee-daehyeong-network", null],
+      ["jachui", "hoebo-9-2-sanbul-geukbok-hanmaeum", null],
+      ["jachui", "hoebo-9-2-yeongga-sosik", null],
+      ["jachui", "hoebo-9-3-48nyeon-beopinhwa", null],
+      ["jachui", "hoebo-9-3-donghoon-50nyeon", null],
+      ["jachui", "hoebo-9-3-hoewon-jarang-kim-gwangsoo", null],
+      ["jachui", "hoebo-9-3-wonro-gandam", null],
+      ["jachui", "hoebo-9-3-yeongga-sosik-saechulbal", null],
+      ["jachui", "hoebo-9-3-yeongga-sosik", null],
+      ["jachui", "hoebo-9-4-andong-myeongga-kimchi", null],
+      ["jachui", "hoebo-9-4-bak-daeseop-sinnyeonsa", "geul"],
+      ["jachui", "hoebo-9-4-gilju-yoyang", null],
+      ["jachui", "hoebo-9-4-hoewon-dongjeong", "geul"],
+      ["jachui", "hoebo-9-4-jang-wonseok-sarangbang", "geul"],
+      ["jachui", "hoebo-9-4-moms-career", null],
+      ["jachui", "hoebo-9-4-myeongye-hoewon", "geul"],
+      ["jachui", "hoebo-9-4-promatch-korea", null],
+      ["jachui", "hoebo-9-4-wonro-gandam", null],
+      ["jachui", "hoebo-9-4-yeongga-sosik", null],
+      ["jachui", "seohwa-lee-dongik", null],
+      ["jachui", "hoebo-9-5-1cha-isahoe", "moim"],
+      ["jachui", "hoebo-9-5-bundang-moim", "moim"],
+      ["jachui", "hoebo-9-5-haseum", null],
+      ["jachui", "hoebo-9-5-hoewon-dongjeong", "geul"],
+      ["jachui", "hoebo-9-5-im-daesik-munhwawon", "geul"],
+      ["jachui", "hoebo-9-5-max-gyoyuk", null],
+      ["jachui", "hoebo-9-5-movi-mochaseobiseu", null],
+      ["moim", "hoebo-9-5-mui-san-bonghang", null],
+      ["jachui", "hoebo-9-5-pungan", null],
+      ["jachui", "hoebo-9-5-ryu-pilho-toigye", "geul"],
+      ["jachui", "hoebo-9-5-wonro-gandam", "moim"],
+      ["jachui", "hoebo-9-5-yeongga-cheongnyeon-chulbeom", "moim"],
+      ["jachui", "hoebo-9-5-yeongga-sosik", null],
+    ];
+    for (const [chapter, slug, from] of items) await syncArticleFromFile(client, chapter, slug, from ?? undefined);
+    const hide: [string, string][] = [
+      ["geul", "hoebo-9-1-bak-daeseop-9dae"],
+      ["geul", "hoebo-9-1-beopin-jagchu"],
+      ["geul", "hoebo-9-1-sanbul-seongkeum"],
+      ["geul", "hoebo-9-1-yeongga-sosik"],
+      ["geul", "hoebo-9-1-yeongga-tambang-hanil-gi"],
+      ["jachui", "hoebo-9-3-sanbul-teukbeopbeop"],
+      ["jachui", "hoebo-9-3-soju-jjimdak-hanil"],
+    ];
+    for (const [chapter, slug] of hide) {
+      await client.execute({ sql: "UPDATE articles SET hidden = 1, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?", args: [chapter, slug] });
+    }
+    await markMigration(client, "jachui-restore-2026-11-v1");
   }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
