@@ -1,4 +1,5 @@
 import "server-only";
+import { countEventCards } from "@/lib/event-layout";
 import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
 import { listArticlesFromFiles, getArticleFromFiles } from "./articles-files";
@@ -410,8 +411,10 @@ export async function setArticlesHidden(ids: number[], hidden: boolean): Promise
   return r.rowsAffected;
 }
 
-// 본문 안 카드 틀(역대 회장 페이지 등) 개수 — 편집기에서 틀이 남아 있는 버전을 고르는 단서
-function countLayoutBlocks(body: string): number {
+// 본문 안 카드 틀(역대 회장 페이지 등) 개수 — 편집기에서 틀이 남아 있는 버전을 고르는 단서.
+// 행사 글은 틀 없이 소제목마다 카드로 보이므로 소제목 수를 센다.
+function countLayoutBlocks(body: string, chapter?: string): number {
+  if (chapter === "moim") return countEventCards(body);
   return (body.match(/<div class="(ygpr|ygcl)-/g) ?? []).length;
 }
 
@@ -420,7 +423,7 @@ export type ArticleRevisionMeta = { id: number; savedAt: string; length: number;
 export async function listArticleRevisions(articleId: number): Promise<ArticleRevisionMeta[]> {
   const db = await getDb();
   const r = await db.execute({
-    sql: "SELECT id, saved_at, body FROM article_revisions WHERE article_id = ? ORDER BY id DESC",
+    sql: "SELECT r.id, r.saved_at, r.body, a.chapter FROM article_revisions r JOIN articles a ON a.id = r.article_id WHERE r.article_id = ? ORDER BY r.id DESC",
     args: [articleId],
   });
   return r.rows.map((row) => {
@@ -429,7 +432,7 @@ export async function listArticleRevisions(articleId: number): Promise<ArticleRe
       id: Number(row.id),
       savedAt: String(row.saved_at),
       length: body.length,
-      layoutBlocks: countLayoutBlocks(body),
+      layoutBlocks: countLayoutBlocks(body, String(row.chapter)),
     };
   });
 }
@@ -458,7 +461,7 @@ export async function getArticleFileOriginal(
   if (!a) return null;
   // 파일 시드와 같은 방식(마크다운 렌더)으로 만든다
   const html = looksLikeWrappedMarkdown(a.body) ? (a.html ?? "") : await renderMarkdown(a.body);
-  return { html, layoutBlocks: countLayoutBlocks(html) };
+  return { html, layoutBlocks: countLayoutBlocks(html, String(r.rows[0].chapter)) };
 }
 
 export async function listChapterArticles(chapter: string): Promise<ArticleMeta[]> {

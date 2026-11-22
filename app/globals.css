@@ -1423,3 +1423,19 @@ html[data-theme="dark"] .form-input {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* 집무실 편집기 — 행사 글의 카드 경계(소제목 H2)를 보여 준다. 공개 화면 모양은 .ygev-* */
+.editor-event .tiptap > h2 {
+  border-top: 3px solid var(--ygpr-green);
+  border-bottom: none;
+  padding-top: 0.7em;
+  margin-top: 2.4em;
+  position: relative;
+}
+.editor-event .tiptap > h2:first-child { margin-top: 0.4em; }
+.editor-event .tiptap > h2::before {
+  content: '카드';
+  position: absolute; top: -0.9em; right: 0;
+  font-size: 11px; font-weight: 700; letter-spacing: .05em; line-height: 1;
+  background: var(--ygpr-green); color: #fff; padding: 4px 8px; border-radius: 10px;
+}

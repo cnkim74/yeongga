@@ -23,6 +23,8 @@ export function ArticleForm({
   const [bodyHTML, setBodyHTML] = useState(article?.html ?? article?.body ?? "");
   // 이전 버전을 불러오면 편집기를 새 내용으로 다시 띄운다
   const [editorKey, setEditorKey] = useState(0);
+  // 행사(moim) 글은 공개 화면에서 소제목마다 카드로 보인다 — 편집기에도 그 경계를 보여 준다
+  const [chapter, setChapter] = useState(article?.chapter ?? chapters[0].slug);
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tagInput, setTagInput] = useState("");
   const tagRef = useRef<HTMLInputElement>(null);
@@ -116,6 +118,7 @@ export function ArticleForm({
             name="chapter"
             required
             defaultValue={article?.chapter ?? chapters[0].slug}
+            onChange={(e) => setChapter(e.target.value)}
             className="notion-input w-full border border-[var(--color-notion-rule)] focus:border-[var(--color-notion-accent)]"
           >
             {chapters.map((c) => (
@@ -317,6 +320,7 @@ export function ArticleForm({
         {article && (
           <RevisionPanel
             articleId={article.id}
+            chapter={chapter}
             currentHTML={bodyHTML}
             onLoad={(html) => {
               setBodyHTML(html);
@@ -324,7 +328,16 @@ export function ArticleForm({
             }}
           />
         )}
-        <ArticleEditor key={editorKey} initialHTML={bodyHTML} onChange={setBodyHTML} />
+        {chapter === "moim" && (
+          <div className="mb-2 text-xs rounded-md px-3 py-2 bg-[var(--color-notion-hover)] leading-relaxed">
+            행사 글은 사이트에서 <b>소제목(H2)마다 카드 한 장</b>으로 보입니다. 편집기에서 녹색 줄이 그어진 소제목이
+            카드의 시작입니다. 소제목을 지우거나 일반 글로 바꾸면 그 카드는 앞 카드와 합쳐집니다. 첫 소제목 앞의
+            글·사진은 카드 위에, 맨 끝의 &ldquo;출처:&rdquo;·&ldquo;인물:&rdquo; 줄은 카드 아래 상자로 보입니다.
+          </div>
+        )}
+        <div className={chapter === "moim" ? "editor-event" : undefined}>
+          <ArticleEditor key={editorKey} initialHTML={bodyHTML} onChange={setBodyHTML} />
+        </div>
         <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">
           이미지: 끌어다 놓거나 붙여넣기(Cmd/Ctrl+V) — 자동 업로드. 선택하면
           정렬·크기·캡션 변경 가능. YouTube: ▶ 버튼에 URL 붙여넣기.

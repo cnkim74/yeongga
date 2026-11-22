@@ -46,6 +46,12 @@ function splitTrailingNotes(chunk: string): [string, string] {
   return [body, notes.join("\n")];
 }
 
+/** 행사 글이 공개 화면에서 몇 장의 카드로 보이는지 (소제목 수). 편집기 복원 패널에서도 쓴다. */
+export function countEventCards(html: string): number {
+  if (!html || /class="(?:ygpr|ygcl)-/.test(html)) return 0;
+  return topLevelH2Positions(html).length;
+}
+
 function h2Text(chunk: string): string {
   const m = chunk.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/);
   return m ? m[1].replace(/<[^>]+>/g, "").trim() : "";

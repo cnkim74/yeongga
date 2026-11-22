@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { listRevisionsAction, loadRevisionAction } from "./actions";
 import type { ArticleRevisionMeta } from "@/lib/articles-db";
+import { countEventCards } from "@/lib/event-layout";
 
-function countLayoutBlocks(html: string): number {
+// 행사 글은 틀 없이 소제목마다 카드로 보이므로 소제목 수를 센다
+function countLayoutBlocks(html: string, chapter: string): number {
+  if (chapter === "moim") return countEventCards(html);
   return (html.match(/<div class="(ygpr|ygcl)-/g) ?? []).length;
 }
 
@@ -24,10 +27,12 @@ function formatKST(savedAt: string): string {
 // 불러오기는 편집기 내용만 바꾸고, 사이트 반영은 [저장]을 눌러야 된다.
 export function RevisionPanel({
   articleId,
+  chapter,
   currentHTML,
   onLoad,
 }: {
   articleId: number;
+  chapter: string;
   currentHTML: string;
   onLoad: (html: string) => void;
 }) {
@@ -82,7 +87,7 @@ export function RevisionPanel({
     setNotice("불러오기 전 본문으로 되돌렸습니다.");
   }
 
-  const current = countLayoutBlocks(currentHTML);
+  const current = countLayoutBlocks(currentHTML, chapter);
 
   return (
     <div className="mb-2">
