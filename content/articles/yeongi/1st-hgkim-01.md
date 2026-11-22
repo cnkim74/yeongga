@@ -38,8 +38,8 @@ html[data-theme="dark"] {
 }
 .ygcl-photo-frame {
   display: grid;
-  width: 150px;
-  min-width: 150px;
+  width: 180px;
+  min-width: 180px;
   aspect-ratio: 3/4;
   border-radius: 10px;
   overflow: hidden;
@@ -52,7 +52,7 @@ html[data-theme="dark"] {
   width: 100%;
   min-height: 0;
   object-fit: cover;
-  object-position: center 60%;
+  object-position: center top;
 }
 @media (max-width: 520px) {
   .ygcl-profile-wrap { flex-direction: column; align-items: center; }
@@ -69,7 +69,7 @@ html[data-theme="dark"] {
   line-height: 1.9;
   color: var(--ygcl-fg);
   flex: 1;
-  min-height: calc(150px * 4 / 3);
+  min-height: calc(180px * 4 / 3);
   box-sizing: border-box;
 }
 .ygcl-intro strong { color: var(--ygcl-green); }
