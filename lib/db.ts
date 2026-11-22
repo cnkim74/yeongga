@@ -5434,6 +5434,11 @@ async function init(client: Client) {
     await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
     await markMigration(client, "yeongi-hgkim-profile-align-v12");
   }
+  // taedong-1-1976 카드 다크모드 — OS 미디어쿼리 제거, 사이트 토글([data-theme="dark"])만 사용
+  if (!(await hasMigration(client, "yeongi-taedong-darkmode-fix-v1"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "taedong-1-1976"]]);
+    await markMigration(client, "yeongi-taedong-darkmode-fix-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

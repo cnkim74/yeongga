@@ -266,22 +266,20 @@ visibility: public
   color: var(--fg, #1e1a14);
 }
 
-@media (prefers-color-scheme: dark) {
-  .ygcl-intro { border-color: #2e3d26; }
-  .ygcl-timeline::before { background: #2e3d26; }
-  .ygcl-item::before { border-color: #12180f; }
-  .ygcl-card { background: #1c2518; border-color: #2e3d26; }
-  .ygcl-att { background: #1e3323; color: #e8e4d8; }
-  .ygcl-rules li { border-color: #2e3d26; color: #e8e4d8; }
-  .ygcl-tag { background: #1e3323; }
-  .ygcl-note { color: #9aaa8e; }
-  .ygcl-intro .ygcl-byline { color: #9aaa8e; }
-  .ygcl-members-title { color: #9aaa8e; }
-  .ygcl-members-title::after { background: #2e3d26; }
-  .ygcl-members { color: #e8e4d8; }
-  .ygcl-card h2 { color: #e8e4d8; }
-  .ygcl-card p { color: #e8e4d8; }
-}
+html[data-theme="dark"] .ygcl-intro { border-color: #2e3d26; }
+html[data-theme="dark"] .ygcl-timeline::before { background: #2e3d26; }
+html[data-theme="dark"] .ygcl-item::before { border-color: #12180f; }
+html[data-theme="dark"] .ygcl-card { background: #1c2518; border-color: #2e3d26; }
+html[data-theme="dark"] .ygcl-att { background: #1e3323; color: #e8e4d8; }
+html[data-theme="dark"] .ygcl-rules li { border-color: #2e3d26; color: #e8e4d8; }
+html[data-theme="dark"] .ygcl-tag { background: #1e3323; }
+html[data-theme="dark"] .ygcl-note { color: #9aaa8e; }
+html[data-theme="dark"] .ygcl-intro .ygcl-byline { color: #9aaa8e; }
+html[data-theme="dark"] .ygcl-members-title { color: #9aaa8e; }
+html[data-theme="dark"] .ygcl-members-title::after { background: #2e3d26; }
+html[data-theme="dark"] .ygcl-members { color: #e8e4d8; }
+html[data-theme="dark"] .ygcl-card h2 { color: #e8e4d8; }
+html[data-theme="dark"] .ygcl-card p { color: #e8e4d8; }
 
 @media (max-width: 480px) {
   .ygcl-timeline { padding-left: 24px; }
