@@ -18,19 +18,7 @@ visibility: public
   --ygcl-green-pale: #d4ead9;
   --ygcl-bg-tint: #f8f6f1;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ygcl-surface: #1e1c18;
-    --ygcl-fg: #e8e3d8;
-    --ygcl-line: #3a3730;
-    --ygcl-muted: #9a9080;
-    --ygcl-green: #4a9660;
-    --ygcl-green-light: #6ab87a;
-    --ygcl-green-pale: #1e3a26;
-    --ygcl-bg-tint: #252320;
-  }
-}
-:root[data-theme="dark"] {
+html[data-theme="dark"] {
   --ygcl-surface: #1e1c18;
   --ygcl-fg: #e8e3d8;
   --ygcl-line: #3a3730;
