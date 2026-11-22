@@ -53,8 +53,7 @@ visibility: public
   min-width: 150px;
   border-radius: 10px;
   object-fit: cover;
-  aspect-ratio: 3 / 4;
-  align-self: flex-start;
+  object-position: center top;
   border: 1px solid var(--ygcl-line);
   box-shadow: 0 2px 10px rgba(0,0,0,.10);
 }
