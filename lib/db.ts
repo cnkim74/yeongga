@@ -323,6 +323,15 @@ async function init(client: Client) {
       PRIMARY KEY (chapter, slug)
     );
 
+    -- 집무실에서 글을 저장할 때마다 바로 전 본문을 남긴다(편집기에서 되돌리기용)
+    CREATE TABLE IF NOT EXISTS article_revisions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      article_id INTEGER NOT NULL,
+      body TEXT NOT NULL,
+      saved_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE INDEX IF NOT EXISTS idx_article_revisions_article ON article_revisions(article_id, id);
+
     CREATE TABLE IF NOT EXISTS photo_categories (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,

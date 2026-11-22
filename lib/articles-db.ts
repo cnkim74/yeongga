@@ -310,6 +310,18 @@ export async function updateArticle(
   if (dup.rows.length > 0) {
     return { ok: false, error: "이미 같은 슬러그의 글이 있습니다." };
   }
+  // 덮어쓰기 전 본문을 버전 기록에 남긴다(본문이 바뀔 때만). 글마다 최근 30개만 둔다.
+  await db.execute({
+    sql: `INSERT INTO article_revisions (article_id, body)
+          SELECT id, body FROM articles WHERE id = ? AND body != ?`,
+    args: [id, input.body],
+  });
+  await db.execute({
+    sql: `DELETE FROM article_revisions
+          WHERE article_id = ? AND id NOT IN
+            (SELECT id FROM article_revisions WHERE article_id = ? ORDER BY id DESC LIMIT 30)`,
+    args: [id, id],
+  });
   await db.execute({
     sql: `UPDATE articles
           SET chapter = ?, slug = ?, title = ?, subtitle = ?, author = ?,
@@ -385,6 +397,68 @@ export async function setArticleHidden(id: number, hidden: boolean): Promise<voi
     sql: "UPDATE articles SET hidden = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
     args: [hidden ? 1 : 0, id],
   });
+}
+
+export async function setArticlesHidden(ids: number[], hidden: boolean): Promise<number> {
+  if (ids.length === 0) return 0;
+  const db = await getDb();
+  const r = await db.execute({
+    sql: `UPDATE articles SET hidden = ?, updated_at = CURRENT_TIMESTAMP
+          WHERE id IN (${ids.map(() => "?").join(",")})`,
+    args: [hidden ? 1 : 0, ...ids],
+  });
+  return r.rowsAffected;
+}
+
+// 본문 안 카드 틀(역대 회장 페이지 등) 개수 — 편집기에서 틀이 남아 있는 버전을 고르는 단서
+function countLayoutBlocks(body: string): number {
+  return (body.match(/<div class="(ygpr|ygcl)-/g) ?? []).length;
+}
+
+export type ArticleRevisionMeta = { id: number; savedAt: string; length: number; layoutBlocks: number };
+
+export async function listArticleRevisions(articleId: number): Promise<ArticleRevisionMeta[]> {
+  const db = await getDb();
+  const r = await db.execute({
+    sql: "SELECT id, saved_at, body FROM article_revisions WHERE article_id = ? ORDER BY id DESC",
+    args: [articleId],
+  });
+  return r.rows.map((row) => {
+    const body = String(row.body);
+    return {
+      id: Number(row.id),
+      savedAt: String(row.saved_at),
+      length: body.length,
+      layoutBlocks: countLayoutBlocks(body),
+    };
+  });
+}
+
+export async function getArticleRevisionHTML(articleId: number, revisionId: number): Promise<string | null> {
+  const db = await getDb();
+  const r = await db.execute({
+    sql: "SELECT body FROM article_revisions WHERE id = ? AND article_id = ?",
+    args: [revisionId, articleId],
+  });
+  if (r.rows.length === 0) return null;
+  return bodyToHTML(String(r.rows[0].body));
+}
+
+/** 처음 파일로 올린 모양 — content/articles/<장>/<슬러그>.md. 파일이 없는 글(집무실에서 쓴 글)은 null. */
+export async function getArticleFileOriginal(
+  articleId: number
+): Promise<{ html: string; layoutBlocks: number } | null> {
+  const db = await getDb();
+  const r = await db.execute({
+    sql: "SELECT chapter, slug FROM articles WHERE id = ?",
+    args: [articleId],
+  });
+  if (r.rows.length === 0) return null;
+  const a = await getArticleFromFiles(String(r.rows[0].chapter), String(r.rows[0].slug));
+  if (!a) return null;
+  // 파일 시드와 같은 방식(마크다운 렌더)으로 만든다
+  const html = looksLikeWrappedMarkdown(a.body) ? (a.html ?? "") : await renderMarkdown(a.body);
+  return { html, layoutBlocks: countLayoutBlocks(html) };
 }
 
 export async function listChapterArticles(chapter: string): Promise<ArticleMeta[]> {

@@ -5,6 +5,7 @@ import { saveArticleAction, type ArticleFormState } from "./actions";
 import { chapters } from "@/lib/chapters";
 import type { Article } from "@/lib/articles-db";
 import { ArticleEditor } from "./ArticleEditor";
+import { RevisionPanel } from "./RevisionPanel";
 
 export function ArticleForm({
   article,
@@ -20,6 +21,8 @@ export function ArticleForm({
   // 파일에서 시드된 글은 body 가 마크다운이다. 편집기(TipTap)는 HTML 만
   // 이해하므로, 읽을 때 만들어 둔 html 을 넣어 준다. 저장하면 HTML 로 바뀐다.
   const [bodyHTML, setBodyHTML] = useState(article?.html ?? article?.body ?? "");
+  // 이전 버전을 불러오면 편집기를 새 내용으로 다시 띄운다
+  const [editorKey, setEditorKey] = useState(0);
   const [tags, setTags] = useState<string[]>(initialTags);
   const [tagInput, setTagInput] = useState("");
   const tagRef = useRef<HTMLInputElement>(null);
@@ -311,7 +314,17 @@ export function ArticleForm({
       <div>
         <Label>본문</Label>
         <input type="hidden" name="body" value={bodyHTML} />
-        <ArticleEditor initialHTML={bodyHTML} onChange={setBodyHTML} />
+        {article && (
+          <RevisionPanel
+            articleId={article.id}
+            currentHTML={bodyHTML}
+            onLoad={(html) => {
+              setBodyHTML(html);
+              setEditorKey((k) => k + 1);
+            }}
+          />
+        )}
+        <ArticleEditor key={editorKey} initialHTML={bodyHTML} onChange={setBodyHTML} />
         <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">
           이미지: 끌어다 놓거나 붙여넣기(Cmd/Ctrl+V) — 자동 업로드. 선택하면
           정렬·크기·캡션 변경 가능. YouTube: ▶ 버튼에 URL 붙여넣기.

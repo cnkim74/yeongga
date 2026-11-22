@@ -4,6 +4,7 @@ import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
 import { listAllArticlesAdmin } from "@/lib/articles-db";
 import { chapters, getChapter } from "@/lib/chapters";
 import { deleteArticleAction, setArticleHiddenAction } from "./actions";
+import { BulkActionBar, ChapterSelectAll, SelectBox } from "./BulkSelect";
 
 export const dynamic = "force-dynamic";
 
@@ -107,8 +108,11 @@ export default async function AdminArticles() {
                 id={`chapter-${c.slug}`}
                 className="scroll-mt-24"
               >
-                <h2 className="text-xs font-mono uppercase tracking-wider text-[var(--color-notion-mute)] mb-3">
-                  {c.number}. {c.title} · {items.length}편
+                <h2 className="text-xs font-mono uppercase tracking-wider text-[var(--color-notion-mute)] mb-3 flex items-center gap-4">
+                  <span>
+                    {c.number}. {c.title} · {items.length}편
+                  </span>
+                  {items.length > 0 && <ChapterSelectAll chapter={c.slug} />}
                 </h2>
                 {items.length === 0 ? (
                   <div className="text-sm text-[var(--color-notion-mute)] border border-dashed border-[var(--color-notion-rule)] rounded-md px-4 py-6">
@@ -123,6 +127,7 @@ export default async function AdminArticles() {
                           a.hidden ? "bg-[var(--color-notion-hover)]" : ""
                         }`}
                       >
+                        <SelectBox id={a.id} chapter={a.chapter} title={a.title} />
                         <div className="flex-1 min-w-0">
                           <div className={`flex items-center gap-2 mb-1 ${a.hidden ? "opacity-60" : ""}`}>
                             {a.hidden && (
@@ -206,6 +211,7 @@ export default async function AdminArticles() {
           </div>
         )}
       </div>
+      <BulkActionBar />
     </>
   );
 }

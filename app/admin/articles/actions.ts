@@ -6,9 +6,14 @@ import { requireAdmin } from "@/lib/auth";
 import {
   createArticle,
   deleteArticle,
+  getArticleFileOriginal,
+  getArticleRevisionHTML,
+  listArticleRevisions,
   setArticleHidden,
+  setArticlesHidden,
   updateArticle,
   type ArticleInput,
+  type ArticleRevisionMeta,
   type Visibility,
 } from "@/lib/articles-db";
 import { setTagsForArticle } from "@/lib/tags-db";
@@ -130,4 +135,39 @@ export async function setArticleHiddenAction(formData: FormData) {
   refresh(chapter, slug);
   revalidatePath("/search");
   revalidatePath("/sitemap.xml");
+}
+
+/** 글 관리 — 체크한 글 여러 편을 한꺼번에 비공개/다시 공개. */
+export async function setArticlesHiddenBulkAction(formData: FormData) {
+  await requireAdmin();
+  const ids = formData
+    .getAll("ids")
+    .map((v) => Number(v))
+    .filter((n) => Number.isInteger(n) && n > 0);
+  const hide = String(formData.get("hide") ?? "") === "1";
+  await setArticlesHidden(ids, hide);
+  revalidatePath("/", "layout");
+  revalidateTag("articles", "max");
+}
+
+/** 편집기 — 이 글의 이전 버전 목록과 파일 원본 유무. */
+export async function listRevisionsAction(
+  articleId: number
+): Promise<{ revisions: ArticleRevisionMeta[]; fileLayoutBlocks: number | null }> {
+  await requireAdmin();
+  const [revisions, file] = await Promise.all([
+    listArticleRevisions(articleId),
+    getArticleFileOriginal(articleId),
+  ]);
+  return { revisions, fileLayoutBlocks: file ? file.layoutBlocks : null };
+}
+
+/** 편집기 — 고른 버전(이전 저장본 또는 파일 원본)의 본문 HTML. 불러오기만 하고 저장은 편집자가 한다. */
+export async function loadRevisionAction(
+  articleId: number,
+  revisionId: number | "file"
+): Promise<string | null> {
+  await requireAdmin();
+  if (revisionId === "file") return (await getArticleFileOriginal(articleId))?.html ?? null;
+  return getArticleRevisionHTML(articleId, revisionId);
 }
