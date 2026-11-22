@@ -4988,6 +4988,35 @@ async function init(client: Client) {
     await markMigration(client, "refresh-articles-content-v2");
   }
 
+  // 일회성 v3: visibility: hidden MD 파일 → DB hidden = 1 반영
+  if (!(await hasMigration(client, "refresh-articles-content-v3"))) {
+    try {
+      const articlesDir = path.join(process.cwd(), "content", "articles");
+      if (fs.existsSync(articlesDir)) {
+        for (const chapterSlug of fs.readdirSync(articlesDir)) {
+          const chapterDir = path.join(articlesDir, chapterSlug);
+          if (!fs.statSync(chapterDir).isDirectory()) continue;
+          for (const file of fs.readdirSync(chapterDir)) {
+            if (!file.endsWith(".md") || file.startsWith("._")) continue;
+            const slug = file.replace(/\.md$/, "");
+            const raw = fs.readFileSync(path.join(chapterDir, file), "utf8");
+            const { data } = matter(raw);
+            const v = String(data.visibility ?? "public").toLowerCase();
+            if (v === "hidden" || v === "draft") {
+              await client.execute({
+                sql: `UPDATE articles SET hidden = 1, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?`,
+                args: [chapterSlug, slug],
+              });
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("[refresh-articles-content-v3] 실패:", e);
+    }
+    await markMigration(client, "refresh-articles-content-v3");
+  }
+
   // 마이그레이션: 마크다운 본문 → HTML (한 번만, 전체 스캔 부담 큼)
   if (!(await hasMigration(client, "markdown-to-html-v1"))) {
     const mdRows = await client.execute("SELECT id, body FROM articles");
