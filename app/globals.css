@@ -509,6 +509,18 @@ html[data-theme="dark"] {
 .prose-body .ygev-card tbody td { border-bottom-color: var(--ygpr-line); color: var(--ygpr-fg); }
 .prose-body .ygev-card tbody tr:hover { background: var(--ygpr-bg-tint); }
 .prose-body .ygev-card a { color: var(--ygpr-green); }
+/* 출처가 인용 상자에 들어 있던 글 — 아래 상자 안에서는 테두리를 겹치지 않는다 */
+.prose-body .ygev-foot blockquote { margin: 0; padding: 0; border: 0; color: inherit; }
+
+/* 기고 글 사진 — 본문(카드) 폭을 꽉 채우고 설명은 캡션으로 (lib/event-layout.ts figureImages) */
+.prose-body .ygge-fig { margin: 18px 0 22px; display: flex; flex-direction: column; gap: 10px; }
+.prose-body .ygge-fig img { width: 100%; max-width: 100%; height: auto; margin: 0; border-radius: 6px; display: block; }
+.prose-body .ygge-fig figcaption {
+  font-family: var(--font-sans); font-size: 14px; line-height: 1.6; color: var(--ygpr-muted);
+  text-align: center; padding: 0 8px;
+}
+.prose-body .ygev-card > .ygge-fig:first-child { margin-top: 0; }
+
 @media (max-width: 520px) {
   .prose-body .ygev-timeline { padding-left: 22px; }
   .prose-body .ygev-timeline::before { left: 5px; }

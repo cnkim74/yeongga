@@ -1,5 +1,5 @@
 import "server-only";
-import { countEventCards } from "@/lib/event-layout";
+import { CARD_CHAPTERS, countEventCards } from "@/lib/event-layout";
 import { unstable_cache } from "next/cache";
 import { getDb } from "./db";
 import { listArticlesFromFiles, getArticleFromFiles } from "./articles-files";
@@ -14,7 +14,7 @@ import {
 // 길게 잡아도 편집 반영은 즉시. 봇 크롤링 등으로 인한 전체 글 풀스캔 재조회 폭증을 막는다.
 const CACHE_TTL = 1800;
 // 데이터 캐시는 재배포로 지워지지 않는다. 내용을 일괄로 고친 뒤에는 이 값을 올린다.
-const CACHE_VER = "v55";
+const CACHE_VER = "v56";
 
 export type Visibility = "public" | "members-only";
 
@@ -412,9 +412,9 @@ export async function setArticlesHidden(ids: number[], hidden: boolean): Promise
 }
 
 // 본문 안 카드 틀(역대 회장 페이지 등) 개수 — 편집기에서 틀이 남아 있는 버전을 고르는 단서.
-// 행사 글은 틀 없이 소제목마다 카드로 보이므로 소제목 수를 센다.
+// 행사·기고 글은 틀 없이 화면에서 카드로 묶이므로 그 카드 수를 센다.
 function countLayoutBlocks(body: string, chapter?: string): number {
-  if (chapter === "moim") return countEventCards(body);
+  if (chapter && CARD_CHAPTERS.has(chapter)) return countEventCards(body, chapter);
   return (body.match(/<div class="(ygpr|ygcl)-/g) ?? []).length;
 }
 

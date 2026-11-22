@@ -17,7 +17,7 @@ import { GAEventOnMount } from "@/components/GAEventOnMount";
 import { parseByline } from "@/lib/byline";
 import { getRelatedAlbums } from "@/lib/yeongi-albums";
 import { HIDDEN_ARTICLE_PAGES } from "@/lib/hidden-article-pages";
-import { layoutEventArticle } from "@/lib/event-layout";
+import { layoutArticleForChapter } from "@/lib/event-layout";
 
 /**
  * 캐시 전략:
@@ -222,8 +222,8 @@ export default async function ArticlePage({
             <div
               className="prose-body"
               dangerouslySetInnerHTML={{
-                // 행사 글은 화면에서만 카드 틀을 입힌다 (저장 본문은 그대로)
-                __html: chapter === "moim" ? layoutEventArticle(article.html) : article.html,
+                // 행사·기고 글은 화면에서만 카드 틀을 입힌다 (저장 본문은 그대로)
+                __html: layoutArticleForChapter(chapter, article.html),
               }}
             />
           )}

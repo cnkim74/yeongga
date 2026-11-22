@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { listRevisionsAction, loadRevisionAction } from "./actions";
 import type { ArticleRevisionMeta } from "@/lib/articles-db";
-import { countEventCards } from "@/lib/event-layout";
+import { CARD_CHAPTERS, countEventCards } from "@/lib/event-layout";
 
-// 행사 글은 틀 없이 소제목마다 카드로 보이므로 소제목 수를 센다
+// 행사·기고 글은 틀 없이 화면에서 카드로 묶이므로 그 카드 수를 센다
 function countLayoutBlocks(html: string, chapter: string): number {
-  if (chapter === "moim") return countEventCards(html);
+  if (CARD_CHAPTERS.has(chapter)) return countEventCards(html, chapter);
   return (html.match(/<div class="(ygpr|ygcl)-/g) ?? []).length;
 }
 

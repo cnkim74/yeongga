@@ -335,7 +335,14 @@ export function ArticleForm({
             글·사진은 카드 위에, 맨 끝의 &ldquo;출처:&rdquo;·&ldquo;인물:&rdquo; 줄은 카드 아래 상자로 보입니다.
           </div>
         )}
-        <div className={chapter === "moim" ? "editor-event" : undefined}>
+        {chapter === "geul" && (
+          <div className="mb-2 text-xs rounded-md px-3 py-2 bg-[var(--color-notion-hover)] leading-relaxed">
+            기고 글은 사이트에서 카드로 묶여 보입니다. 맨 앞 &ldquo;편집실 안내&rdquo; 상자 다음의 본문이 첫 카드이고,
+            <b>소제목(H2)</b>이 나올 때마다 새 카드가 시작됩니다(녹색 줄). 사진은 본문 폭을 꽉 채우고, 사진 바로 밑의
+            기울임 글(없으면 사진 설명)이 캡션이 됩니다. 맨 끝 &ldquo;출처:&rdquo; 줄은 카드 아래 상자로 보입니다.
+          </div>
+        )}
+        <div className={chapter === "moim" || chapter === "geul" ? "editor-event" : undefined}>
           <ArticleEditor key={editorKey} initialHTML={bodyHTML} onChange={setBodyHTML} />
         </div>
         <div className="text-xs text-[var(--color-notion-mute)] mt-2 leading-relaxed">

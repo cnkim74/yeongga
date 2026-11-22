@@ -5547,6 +5547,38 @@ async function init(client: Client) {
     await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
     await markMigration(client, "yeongi-hgkim-editor-restore-v1");
   }
+  // 기고 정리 (2026-11-22) — ① 원문 없이 요약·목차만 있는 글 20편 비공개(삭제 아님, 집무실에서 다시 공개 가능).
+  // 원본 파일도 visibility: draft 로 맞춰 두어 파일 다시 읽기(refresh)가 되살리지 않는다.
+  // ② 대표 이미지가 비어 있고 본문에 사진이 있는 글은 본문 첫 사진을 대표 이미지로.
+  if (!(await hasMigration(client, "geul-tidy-2026-11-v1"))) {
+    const thin = [
+      "hoebo-9-4-hoewon-dongjeong", "hoebo-9-5-hoewon-dongjeong", "hoebo-9-4-myeongye-hoewon",
+      "hoebo-9-5-im-daesik-munhwawon", "hoebo-9-4-saturi-bumonim", "hoebo-9-4-jang-wonseok-sarangbang",
+      "hoebo-9-4-iy-saryong-seoae", "hoebo-9-5-singan-hwang-hyeondeuk", "hoebo-9-4-iy-saryong-100junyeon",
+      "hoebo-9-5-ryu-pilho-toigye", "hoebo-9-4-lee-sang-hyeok-eomma", "hoebo-9-5-kim-eun-han-cheongnyeon",
+      "hoebo-8-13-andong-saturi-yeoga", "hoebo-8-11-andong-chunchu-mosk-yeon",
+      "hoebo-8-13-keum-gyeongsu-andong-nongsanmul", "hoebo-9-2-andong-sanbul-ihu-jaegeon",
+      "hoebo-8-11-glil-bae-chul", "hoebo-8-13-bittweo-jin-gachigwan", "hoebo-9-4-kemu-gyeongsu-baljaeon",
+      "hoebo-8-8-kim-yeongsik-kwon-yeongsik-interview",
+    ];
+    await client.execute({
+      sql: `UPDATE articles SET hidden = 1, updated_at = CURRENT_TIMESTAMP
+            WHERE chapter = 'geul' AND slug IN (${thin.map(() => "?").join(",")})`,
+      args: thin,
+    });
+    const noCover = await client.execute(
+      `SELECT id, body FROM articles WHERE chapter = 'geul' AND (cover IS NULL OR cover = '')`
+    );
+    for (const row of noCover.rows) {
+      const src = String(row.body).match(/<img\b[^>]*\bsrc="([^"]+)"/)?.[1] ?? String(row.body).match(/!\[[^\]]*\]\(([^)\s]+)/)?.[1];
+      if (!src) continue;
+      await client.execute({
+        sql: `UPDATE articles SET cover = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+        args: [src, Number(row.id)],
+      });
+    }
+    await markMigration(client, "geul-tidy-2026-11-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
