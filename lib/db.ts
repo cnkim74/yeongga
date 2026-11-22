@@ -5482,6 +5482,41 @@ async function init(client: Client) {
     ]);
     await markMigration(client, "yeongi-presidents-profiles-v3");
   }
+  // 2~9대 회장 — 같은 제목의 예전 글(2dae-hoejang-sidae, 3dae~9dae-chuim)에 카드 디자인을 입히고
+  // 중복으로 생긴 *-01 8편은 내린다(회장별 검색·기존 링크가 예전 주소를 가리킨다)
+  if (!(await hasMigration(client, "yeongi-presidents-profiles-v4"))) {
+    await refreshArticlesFromFiles(client, [
+      ["yeongi", "2dae-hoejang-sidae"],
+      ["yeongi", "3dae-chuim"],
+      ["yeongi", "4dae-chuim"],
+      ["yeongi", "5dae-chuim"],
+      ["yeongi", "6dae-chuim"],
+      ["yeongi", "7dae-chuim"],
+      ["yeongi", "8dae-chuim"],
+      ["yeongi", "9dae-chuim"],
+    ]);
+    for (const slug of [
+      "2nd-mkryu-01",
+      "3rd-ctgeum-01",
+      "4th-djheo-01",
+      "5th-jmryu-01",
+      "6th-bgkim-01",
+      "7th-dgkim-01",
+      "8th-sbmoon-01",
+      "9th-dspak-01",
+    ]) {
+      await client.execute({
+        sql: `DELETE FROM article_tags
+              WHERE article_id = (SELECT id FROM articles WHERE chapter = ? AND slug = ?)`,
+        args: ["yeongi", slug],
+      });
+      await client.execute({
+        sql: "DELETE FROM articles WHERE chapter = ? AND slug = ?",
+        args: ["yeongi", slug],
+      });
+    }
+    await markMigration(client, "yeongi-presidents-profiles-v4");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
