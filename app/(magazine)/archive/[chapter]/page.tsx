@@ -291,9 +291,10 @@ export default async function ChapterPage({
               </nav>
               {eraGroups.map((g) => (
                 <section key={g.era.dae} id={g.era.id} className="scroll-mt-28">
-                  <div className="mb-8 flex items-end gap-5 border-b-2 border-[var(--color-ink)] pb-4">
+                  {/* 회장 카드 — 이 회장기의 글을 내려 보는 동안 화면 위에 붙어 있다 (다음 회장기에서 바뀜) */}
+                  <div className="sticky top-[100px] z-20 mb-8 flex items-end gap-5 border-b-2 border-[var(--color-ink)] bg-[var(--color-bg)] pb-4 pt-3 shadow-[0_-40px_0_0_var(--color-bg)]">
                     {PRESIDENT_BY_DAE.get(g.era.dae)?.photo && (
-                      <div className="relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-md border border-[var(--color-rule)] bg-[var(--color-bg-soft)] shadow-sm sm:w-24">
+                      <div className="relative aspect-[3/4] w-16 shrink-0 overflow-hidden rounded-md border border-[var(--color-rule)] bg-[var(--color-bg-soft)] shadow-sm sm:w-24">
                         <Image
                           src={PRESIDENT_BY_DAE.get(g.era.dae)!.photo!}
                           alt={`제${g.era.dae}대 ${g.era.name} 회장`}
