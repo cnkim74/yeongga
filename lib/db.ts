@@ -5397,6 +5397,12 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-hgkim-profile-align-v5");
   }
 
+  // 1st-hgkim-01 프로필 사진 — position:absolute/inset:0 으로 프레임 꽉 채움
+  if (!(await hasMigration(client, "yeongi-hgkim-profile-align-v6"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
+    await markMigration(client, "yeongi-hgkim-profile-align-v6");
+  }
+
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
   // 새 콘텐츠 파일이 추가됐을 때만 SEED_FROM_FILES=1 환경변수로 재실행
