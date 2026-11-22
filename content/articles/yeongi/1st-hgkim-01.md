@@ -36,27 +36,15 @@ html[data-theme="dark"] {
   align-items: flex-start;
   margin-bottom: 36px;
 }
-.ygcl-photo-frame {
-  display: grid;
-  width: 180px;
-  min-width: 180px;
-  aspect-ratio: 3/4;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid var(--ygcl-line);
-  box-shadow: 0 2px 10px rgba(0,0,0,.10);
-  flex-shrink: 0;
-}
 .ygcl-photo {
   display: block;
-  width: 100%;
-  min-height: 0;
-  object-fit: cover;
-  object-position: center top;
+  width: 160px;
+  height: auto;
+  flex-shrink: 0;
 }
 @media (max-width: 520px) {
   .ygcl-profile-wrap { flex-direction: column; align-items: center; }
-  .ygcl-photo-frame { width: 100%; max-width: 200px; min-width: unset; min-height: 240px; }
+  .ygcl-photo { width: 100%; max-width: 200px; }
 }
 
 .ygcl-intro {
@@ -69,7 +57,7 @@ html[data-theme="dark"] {
   line-height: 1.9;
   color: var(--ygcl-fg);
   flex: 1;
-  min-height: calc(180px * 4 / 3);
+  min-height: calc(160px * 4 / 3);
   box-sizing: border-box;
 }
 .ygcl-intro strong { color: var(--ygcl-green); }
@@ -242,9 +230,7 @@ html[data-theme="dark"] {
 </style>
 
 <div class="ygcl-profile-wrap">
-  <div class="ygcl-photo-frame">
-    <img src="/presidents/01.jpg" alt="초대 김해길 회장" class="ygcl-photo">
-  </div>
+  <img src="/presidents/01.jpg" alt="초대 김해길 회장" class="ygcl-photo">
   <div class="ygcl-intro">
     <strong>초대 회장</strong> · 김해길 (안동농림 출신)<br>
     임기 1977년 3월 26일 ~ 1998년 10월 23일 · 22년 재임
