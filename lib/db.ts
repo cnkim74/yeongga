@@ -5364,6 +5364,12 @@ async function init(client: Client) {
     await markMigration(client, "yeongi-taedong-timeline-v3");
   }
 
+  // 1st-hgkim-01 본문 갱신 — 사진 프로필 카드 + 영가문화 표지 정보(21주년, 편집위원회, 출판사)
+  if (!(await hasMigration(client, "yeongi-1st-hgkim-refresh-v1"))) {
+    await refreshArticlesFromFiles(client, [["yeongi", "1st-hgkim-01"]]);
+    await markMigration(client, "yeongi-1st-hgkim-refresh-v1");
+  }
+
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
   // 새 콘텐츠 파일이 추가됐을 때만 SEED_FROM_FILES=1 환경변수로 재실행
