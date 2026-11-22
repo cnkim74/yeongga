@@ -2,47 +2,288 @@
 title: "초대 김해길 회장(1977.3.26~1998.10.23)"
 date: "1977-03-26"
 author: "편집실"
-excerpt: "△ 영가상록회 명칭을 영가회로 변경"
+excerpt: "초대 김해길 회장은 영가상록회 창립총회에서 초대 회장으로 선임돼 22년간 재임했다. 영가상록회를 영가회로 개칭하고, 회원 문집 『영가문화』 제1·2집을 발간했다."
 tags: "영가회, 永嘉會, 연혁, 회장취임, 1대, 김해길, 1977, 1982, 1998, 덕수빌딩, 영가상록회, 영가문화, 그단새스무해가, 계미자, 티피에스, 역대회장"
 visibility: public
 ---
 
-△ 영가상록회 명칭을 영가회로 변경
+<style>
+:root {
+  --ygcl-surface: #fff;
+  --ygcl-fg: #1e1a14;
+  --ygcl-line: #e0ddd4;
+  --ygcl-muted: #6b6354;
+  --ygcl-green: #2e6b3e;
+  --ygcl-green-light: #4a9660;
+  --ygcl-green-pale: #d4ead9;
+  --ygcl-bg-tint: #f8f6f1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ygcl-surface: #1e1c18;
+    --ygcl-fg: #e8e3d8;
+    --ygcl-line: #3a3730;
+    --ygcl-muted: #9a9080;
+    --ygcl-green: #4a9660;
+    --ygcl-green-light: #6ab87a;
+    --ygcl-green-pale: #1e3a26;
+    --ygcl-bg-tint: #252320;
+  }
+}
+:root[data-theme="dark"] {
+  --ygcl-surface: #1e1c18;
+  --ygcl-fg: #e8e3d8;
+  --ygcl-line: #3a3730;
+  --ygcl-muted: #9a9080;
+  --ygcl-green: #4a9660;
+  --ygcl-green-light: #6ab87a;
+  --ygcl-green-pale: #1e3a26;
+  --ygcl-bg-tint: #252320;
+}
 
-△ 회원 문집 『영가문화』 제1, 2집 발간
+.ygcl-intro {
+  background: var(--ygcl-surface);
+  border: 1px solid var(--ygcl-line);
+  border-left: 4px solid var(--ygcl-green);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 36px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ygcl-fg);
+}
+.ygcl-intro .ygcl-byline {
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--ygcl-muted);
+  font-style: italic;
+}
 
-△ 활발한 성품과 인품으로 회원 친목과 단합 및 영가회 초창기 기반 조성에 기여
+.ygcl-timeline {
+  position: relative;
+  padding-left: 32px;
+  margin-bottom: 36px;
+}
+.ygcl-timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  bottom: 0;
+  width: 2px;
+  background: var(--ygcl-line);
+}
 
-△ 1982년 3월 당시 회원수는 117명
+.ygcl-item {
+  position: relative;
+  margin-bottom: 36px;
+}
+.ygcl-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ygcl-green);
+  border: 2.5px solid var(--ygcl-bg-tint);
+  box-shadow: 0 0 0 2px var(--ygcl-green-light);
+}
+.ygcl-item.ygcl-hl::before {
+  width: 16px;
+  height: 16px;
+  left: -28px;
+  top: 12px;
+  box-shadow: 0 0 0 3px var(--ygcl-green-light), 0 0 0 5px var(--ygcl-green-pale);
+}
 
-◇ 『영가문화』 제1집 발간
+.ygcl-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--ygcl-green);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
 
-- 발간연도 : 1982년 3월
+.ygcl-card {
+  background: var(--ygcl-surface);
+  border: 1px solid var(--ygcl-line);
+  border-radius: 10px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 10px rgba(46,107,62,.07);
+}
+.ygcl-item.ygcl-hl .ygcl-card {
+  border-left: 4px solid var(--ygcl-green);
+}
+.ygcl-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ygcl-fg);
+  margin-bottom: 10px;
+  margin-top: 0;
+  line-height: 1.4;
+}
+.ygcl-card h3 {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ygcl-green-light);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin: 16px 0 6px;
+}
+.ygcl-card p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ygcl-fg);
+  margin-bottom: 8px;
+}
+.ygcl-card p:last-child { margin-bottom: 0; }
 
-- 발간취지 : 영가상록회의 취지인 ‘서울의 각계에서 활약중인 안동인들이 향토를 생각하고 배우며, 상부상조하자’는 뜻에 따라 회원들의 문집 발간
+.ygcl-att {
+  background: var(--ygcl-green-pale);
+  border-radius: 7px;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ygcl-fg);
+  margin-top: 10px;
+}
+.ygcl-att strong { color: var(--ygcl-green); }
 
-- 게재내용
+.ygcl-rules {
+  list-style: none;
+  margin-top: 10px;
+  padding: 0;
+}
+.ygcl-rules li {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--ygcl-fg);
+  padding: 7px 0 7px 22px;
+  position: relative;
+  border-bottom: 1px dashed var(--ygcl-line);
+}
+.ygcl-rules li:last-child { border-bottom: none; }
+.ygcl-rules li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--ygcl-green-light);
+  font-size: 12px;
+  top: 10px;
+}
 
-· 안동의 전통·문화·환경관련 논문 및 이야기
+.ygcl-note {
+  font-size: 13.5px;
+  color: var(--ygcl-muted);
+  font-style: italic;
+  margin-top: 6px;
+  line-height: 1.7;
+}
 
-· 회원 각 개인의 사회활동 과정에서 소회
+.ygcl-final {
+  background: var(--ygcl-green);
+  color: #fff;
+  border-radius: 12px;
+  padding: 28px 24px;
+  margin-bottom: 36px;
+}
+.ygcl-final .ygcl-flabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  opacity: .75;
+  margin-bottom: 8px;
+}
+.ygcl-final h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  margin-top: 0;
+  line-height: 1.4;
+  color: #fff;
+}
+.ygcl-final p {
+  font-size: 14.5px;
+  line-height: 1.8;
+  opacity: .9;
+  margin-bottom: 6px;
+}
+.ygcl-final p:last-child { margin-bottom: 0; }
+</style>
 
-· 수필, 회원들의 소식, 회원 명단 등을 게재한 200여쪽 책자
+<div class="ygcl-intro">
+  <strong>초대 회장</strong> · 김해길 (안동농림 출신)<br>
+  임기 1977년 3월 26일 ~ 1998년 10월 23일 · 22년 재임
+  <div class="ygcl-byline">후임 회장 희망자가 없어 당초 2년 임기를 훨씬 넘겨 22년간 초대 회장직을 유지했다.</div>
+</div>
 
-※ 참고 : 『영가문화』 및 『영가회보』 제자의 유래를 『영가문화』에서 따옴. 『영가문화』 제자는 조선조 태종3년 계미(1403)년에 주조된 동활자인 계미자(癸未字)로 현제 국립중앙도서관이 소장하고 있는 국보 148호이다.
+<div class="ygcl-timeline">
 
-◇ 영가문화 제2집 『그단새 스무해가』 발간
+<div class="ygcl-item ygcl-hl">
+<div class="ygcl-pill">1977년 3월 26일</div>
+<div class="ygcl-card">
+<h2>창립총회 · 초대 회장 선임</h2>
+<p>덕수빌딩 지하 1층 연회장(서울 종로구 견지동)에서 열린 영가상록회 창립총회에서 초대 회장으로 선임됐다.</p>
+<ul class="ygcl-rules">
+  <li>명칭 : <strong>영가상록회(永嘉常綠會)</strong> 창립</li>
+  <li>창립 참석인원 : 61명</li>
+  <li>총무 : 권화섭(안동중고 출신)</li>
+</ul>
+</div>
+</div>
 
-- 발간연도 : 1998년 7월
+<div class="ygcl-item">
+<div class="ygcl-pill">임기 중</div>
+<div class="ygcl-card">
+<h2>영가상록회 → 영가회 개칭</h2>
+<p>영가상록회(永嘉常綠會)에서 <strong>영가회(永嘉會)</strong>로 명칭을 변경, 오늘에 이르고 있다.</p>
+</div>
+</div>
 
-- 게재내용
+<div class="ygcl-item ygcl-hl">
+<div class="ygcl-pill">1982년 3월</div>
+<div class="ygcl-card">
+<h2>회원 문집 『영가문화』 제1집 발간</h2>
+<h3>발간취지</h3>
+<p>영가상록회의 취지인 '서울의 각계에서 활약중인 안동인들이 향토를 생각하고 배우며, 상부상조하자'는 뜻에 따라 회원들의 문집을 발간했다.</p>
+<h3>게재내용</h3>
+<ul class="ygcl-rules">
+  <li>안동의 전통·문화·환경 관련 논문 및 이야기</li>
+  <li>회원 각 개인의 사회활동 과정에서의 소회</li>
+  <li>수필, 회원 소식, 회원 명단 등 · 200여 쪽</li>
+</ul>
+<div class="ygcl-att">
+  <strong>당시 회원수 117명</strong> (1982년 3월 기준)
+</div>
+<p class="ygcl-note">※ 『영가문화』 제자(題字)는 조선 태종 3년 계미(1403)년에 주조된 동활자 <strong>계미자(癸未字)</strong>를 사용했다. 계미자는 현재 국립중앙도서관 소장 국보 148호이며, 『영가회보』 제자의 유래도 여기서 비롯됐다.</p>
+</div>
+</div>
 
-· 안동관련 글과 일상생활에서 얻은 수필
+<div class="ygcl-item ygcl-hl">
+<div class="ygcl-pill">1998년 7월</div>
+<div class="ygcl-card">
+<h2>회원 문집 제2집 『그단새 스무해가』 발간</h2>
+<p>영가회 창립 20주년을 기념해 제2집을 발간했다. 제목 '그단새 스무해가'는 창립 이후 20년을 되돌아보는 뜻을 담았다.</p>
+<ul class="ygcl-rules">
+  <li>안동 관련 글과 일상생활에서 얻은 수필</li>
+  <li>전문분야 시론, 시</li>
+</ul>
+</div>
+</div>
 
-· 전문분야 시론, 시
+</div>
 
-◇ 김해길 회장은
-
-- 전 ㈜티피에스 회장(안동농림 출신)
-
-- 당초 회장 임기는 2년이었으나 후임 회장 희망자가 없어 22년간 회장으로 재임
+<div class="ygcl-final">
+<div class="ygcl-flabel">초대 회장 약력</div>
+<h2>김해길 회장</h2>
+<p>안동농림 출신 · 전 ㈜티피에스 회장</p>
+<p>당초 회장 임기는 2년이었으나 후임 회장 희망자가 없어 22년간 회장으로 재임, 영가회 초창기의 기반을 조성했다.</p>
+</div>
