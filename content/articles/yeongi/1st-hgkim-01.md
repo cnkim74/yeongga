@@ -45,7 +45,7 @@ visibility: public
 .ygcl-profile-wrap {
   display: flex;
   gap: 20px;
-  align-items: flex-start;
+  align-items: stretch;
   margin-bottom: 36px;
 }
 .ygcl-photo {
@@ -54,6 +54,7 @@ visibility: public
   border-radius: 10px;
   object-fit: cover;
   aspect-ratio: 3 / 4;
+  align-self: flex-start;
   border: 1px solid var(--ygcl-line);
   box-shadow: 0 2px 10px rgba(0,0,0,.10);
 }
