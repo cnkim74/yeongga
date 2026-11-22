@@ -4902,6 +4902,7 @@ async function init(client: Client) {
             const { data, content } = matter(raw);
             const html = await renderMarkdown(content);
             const v = String(data.visibility ?? "public").toLowerCase();
+            const mdHidden = v === "hidden" || v === "draft" ? 1 : 0;
             const visibility =
               v === "members-only" || v === "members" || v === "private"
                 ? "members-only"
@@ -4910,6 +4911,7 @@ async function init(client: Client) {
               sql: `UPDATE articles SET
                       title = ?, subtitle = ?, author = ?, excerpt = ?,
                       cover = ?, date = ?, visibility = ?, body = ?,
+                      hidden = CASE WHEN ? = 1 THEN 1 ELSE hidden END,
                       updated_at = CURRENT_TIMESTAMP
                     WHERE chapter = ? AND slug = ?`,
               args: [
@@ -4921,6 +4923,7 @@ async function init(client: Client) {
                 toIsoDate(data.date),
                 visibility,
                 html,
+                mdHidden,
                 chapterSlug,
                 slug,
               ],
@@ -4950,6 +4953,7 @@ async function init(client: Client) {
             const { data, content } = matter(raw);
             const html = await renderMarkdown(content);
             const v = String(data.visibility ?? "public").toLowerCase();
+            const mdHidden = v === "hidden" || v === "draft" ? 1 : 0;
             const visibility =
               v === "members-only" || v === "members" || v === "private"
                 ? "members-only"
@@ -4958,6 +4962,7 @@ async function init(client: Client) {
               sql: `UPDATE articles SET
                       title = ?, subtitle = ?, author = ?, excerpt = ?,
                       cover = ?, date = ?, visibility = ?, body = ?,
+                      hidden = CASE WHEN ? = 1 THEN 1 ELSE hidden END,
                       updated_at = CURRENT_TIMESTAMP
                     WHERE chapter = ? AND slug = ?`,
               args: [
@@ -4969,6 +4974,7 @@ async function init(client: Client) {
                 toIsoDate(data.date),
                 visibility,
                 html,
+                mdHidden,
                 chapterSlug,
                 slug,
               ],
