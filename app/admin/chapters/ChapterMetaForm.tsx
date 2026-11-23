@@ -108,6 +108,14 @@ export function ChapterMetaForm({
         <h3 className="font-serif text-xl text-[var(--admin-ink)]">
           {chapter.number}. {chapter.title}
         </h3>
+        {chapter.blinded && (
+          <span
+            className="self-center text-[11px] rounded px-1.5 py-0.5 border border-[#e3b9b4] bg-[#fdf0ee] text-[#b04a40] shrink-0"
+            title="공개 사이트 전체(메인·아카이브·메뉴·검색·글 주소)에서 가려져 있습니다. lib/chapters.ts 의 blinded 줄을 지우면 다시 열립니다."
+          >
+            🙈 공개 화면 숨김
+          </span>
+        )}
         <span className="text-xs text-[var(--admin-mute)] tracking-widest">
           {chapter.subtitle}
         </span>

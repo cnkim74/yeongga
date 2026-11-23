@@ -111,6 +111,14 @@ export default async function AdminArticles() {
                     </span>
                     <span className="text-xs text-[var(--color-notion-mute)]">편</span>
                   </div>
+                  {c.blinded && (
+                    <div
+                      className="text-[10px] text-[#b04a40] mt-1"
+                      title="공개 사이트 전체에서 가려진 장입니다. 이 장의 글은 '공개'여도 사이트에 보이지 않습니다."
+                    >
+                      🙈 공개 화면 숨김
+                    </div>
+                  )}
                   {c.comingSoon && (
                     <div className="text-[10px] text-[var(--color-notion-mute)] mt-1">
                       준비 중
@@ -136,6 +144,11 @@ export default async function AdminArticles() {
                   <span>
                     {c.number}. {c.title} · {items.length}편
                   </span>
+                  {c.blinded && (
+                    <span className="normal-case tracking-normal font-sans text-[11px] rounded px-1.5 py-0.5 border border-[#e3b9b4] bg-[#fdf0ee] text-[#b04a40]">
+                      🙈 장 전체가 공개 화면에서 숨겨져 있습니다 — 아래 글은 &lsquo;공개&rsquo;로 표시돼도 사이트에 보이지 않습니다
+                    </span>
+                  )}
                   {items.length > 0 && <ChapterSelectAll chapter={c.slug} />}
                 </h2>
                 {items.length === 0 ? (
@@ -191,7 +204,7 @@ export default async function AdminArticles() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                          {!a.hidden && (
+                          {!a.hidden && !c.blinded && (
                             <Link
                               href={`/archive/${a.chapter}/${a.slug}`}
                               target="_blank"

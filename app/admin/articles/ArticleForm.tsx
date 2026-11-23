@@ -124,6 +124,7 @@ export function ArticleForm({
             {chapters.map((c) => (
               <option key={c.slug} value={c.slug}>
                 {c.number}. {c.title}
+                {c.blinded ? " — 🙈 공개 화면 숨김" : ""}
               </option>
             ))}
           </select>
