@@ -1,4 +1,4 @@
-// 소개 전환 탭 — 회장 인사말 · 역대회장 · 회칙 · 상생지원위원회 · 영가회 소개
+// 소개 전환 탭 — 회장 인사말 · 역대회장 · 회칙 · 상생지원위원회 · 아카이브 사용방법
 import Link from "next/link";
 
 const TABS = [
@@ -6,7 +6,7 @@ const TABS = [
   { key: "presidents", href: "/about/presidents", label: "역대회장" },
   { key: "hoechik", href: "/about/hoechik", label: "회칙" },
   { key: "sangsaeng", href: "/about/sangsaeng", label: "상생지원위원회" },
-  { key: "about", href: "/about", label: "영가회 소개" },
+  { key: "about", href: "/about", label: "아카이브 사용방법" },
 ] as const;
 
 export function AboutTabs({

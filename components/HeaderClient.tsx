@@ -33,7 +33,7 @@ const NAV: NavItem[] = [
       { href: "/about/presidents", label: "역대회장" },
       { href: "/about/hoechik", label: "회칙" },
       { href: "/about/sangsaeng", label: "상생지원위원회" },
-      { href: "/about", label: "영가회 소개" },
+      { href: "/about", label: "아카이브 사용방법" },
     ],
   },
   { href: "/archive", label: "아카이브", dropdown: "chapters" },

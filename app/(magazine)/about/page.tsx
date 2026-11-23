@@ -7,7 +7,7 @@ import { chapters, CHAPTER_COUNT_KO } from "@/lib/chapters";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "영가회 소개 — 영가회",
+  title: "아카이브 사용방법 — 영가회",
 };
 
 export default async function AboutPage() {

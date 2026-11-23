@@ -86,7 +86,7 @@ export default async function GreetingPage() {
 
           <div className="mt-16 flex flex-wrap gap-3">
             <Link href="/about" className="btn-pill ghost">
-              ← 영가회 소개
+              ← 아카이브 사용방법
             </Link>
             <Link href="/about/presidents" className="btn-pill">
               역대회장 →
