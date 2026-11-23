@@ -120,7 +120,7 @@ export default function HoechikPage() {
             ))}
           </ul>
 
-          <p className="mb-12 text-sm leading-relaxed text-[var(--color-ink-mute)]">
+          <p className="text-sm leading-relaxed text-[var(--color-ink-mute)]">
             위 본문에서 조문 옆의 표시는 그 조문이 바뀐 날입니다. 원문에는
             장 번호가 제5장으로 두 번(특별기구 등·사무처), 조 번호가 제21조로 두 번
             (지출·시행세칙) 매겨져 있는데, 원문 그대로 두었습니다.{" "}
@@ -131,15 +131,6 @@ export default function HoechikPage() {
               원문 PDF 내려받기
             </Link>
           </p>
-
-          <div className="flex flex-wrap gap-3">
-            <Link href="/about/presidents" className="btn-pill ghost">
-              ← 역대회장
-            </Link>
-            <Link href="/archive/yeongi" className="btn-pill">
-              회칙이 바뀌어 온 기록 보기 →
-            </Link>
-          </div>
         </div>
       </section>
     </>
