@@ -21,6 +21,8 @@ export type President = {
   slugPrefix?: string;
   keyword?: string;
   current?: boolean;
+  // late: 작고한 회장 — 사진 위에 '故' 표기(2026-11-23 사무국 요청: 1대·3대).
+  late?: boolean;
   // 액자 사진 — public/presidents/NN.jpg (3:4, 480×640).
   // 1~8대는 《영가회 회원수첩》 역대회장 면(8~10쪽)의 이름 붙은 증명사진,
   // 9대는 사무국이 준 공식 사진(public/brand/president-9dae.jpg)을 잘라 썼다.
@@ -28,9 +30,9 @@ export type President = {
 };
 
 export const presidents: President[] = [
-  { id: "1dae", dae: 1, name: "김해길", hanja: "金海吉", term: "1977~1998", slugPrefix: "1dae-", photo: "/presidents/01.jpg" },
+  { id: "1dae", dae: 1, name: "김해길", hanja: "金海吉", term: "1977~1998", slugPrefix: "1dae-", late: true, photo: "/presidents/01.jpg" },
   { id: "2dae", dae: 2, name: "류목기", hanja: "柳穆基", term: "1998~2002", slugPrefix: "2dae-", photo: "/presidents/02.jpg" },
-  { id: "3dae", dae: 3, name: "금창태", hanja: "琴昌泰", term: "2003~2006", slugPrefix: "3dae-", photo: "/presidents/03.jpg" },
+  { id: "3dae", dae: 3, name: "금창태", hanja: "琴昌泰", term: "2003~2006", slugPrefix: "3dae-", late: true, photo: "/presidents/03.jpg" },
   { id: "4dae", dae: 4, name: "허동진", hanja: "許東珍", term: "2007~2010", slugPrefix: "4dae-", photo: "/presidents/04.jpg" },
   { id: "5dae", dae: 5, name: "류종묵", hanja: "柳鍾默", term: "2011~2014", slugPrefix: "5dae-", photo: "/presidents/05.jpg" },
   { id: "6dae", dae: 6, name: "김봉구", hanja: "金鳳求", term: "2014~2017", slugPrefix: "6dae-", photo: "/presidents/06.jpg" },

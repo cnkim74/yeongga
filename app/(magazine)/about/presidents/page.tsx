@@ -43,7 +43,7 @@ export default async function PresidentsPage() {
                     {p.photo ? (
                       <Image
                         src={p.photo}
-                        alt={`제${p.dae}대 회장 ${p.name}`}
+                        alt={`${p.late ? "故 " : ""}제${p.dae}대 회장 ${p.name}`}
                         fill
                         sizes="(min-width: 1024px) 280px, (min-width: 640px) 30vw, 45vw"
                         className="object-cover object-top"
@@ -55,6 +55,15 @@ export default async function PresidentsPage() {
                         className="absolute inset-0 flex items-center justify-center text-5xl text-[#9A8E78]"
                       >
                         {p.hanja ? p.hanja.slice(0, 1) : p.name.slice(0, 1)}
+                      </span>
+                    )}
+                    {/* 작고한 회장 — 사진 위 왼쪽 위에 '故' (2026-11-23 요청) */}
+                    {p.late && (
+                      <span
+                        className="absolute left-2.5 top-2.5 flex h-9 w-9 items-center justify-center rounded-full text-lg font-semibold text-white shadow-sm"
+                        style={{ backgroundColor: "rgba(30, 27, 23, 0.85)" }}
+                      >
+                        故
                       </span>
                     )}
                   </div>
