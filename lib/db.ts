@@ -5772,6 +5772,26 @@ async function init(client: Client) {
     }
     await markMigration(client, "jachui-restore-2026-11-v1");
   }
+  // 기고 '알맹이' 채우기 (2026-11-24) — 사용자가 제목에 '----알맹이----'를 붙여 둔 기고문 37편을
+  // 《영가회보》 8-11~9-5호 지면·《40년사》 책 그대로 다시 옮기고(필자·제목 정정, 사진·대표 이미지),
+  // 제목의 '알맹이' 표시는 파일 제목으로 덮어 없앤다.
+  if (!(await hasMigration(client, "geul-almaeng-2026-11-v1"))) {
+    const slugs = [
+      "geul-andong-brand", "geul-saibi-noblesse", "geul-saraganeun-geosida", "geul-ungbu-eoneo", "geul-yangtaek-eumtaek",
+      "hoebo-8-11-20segi-andong-ha", "hoebo-8-11-andong-chunchu-mosk-yeon", "hoebo-8-11-chunwoo-sewi", "hoebo-8-11-glil-bae-chul",
+      "hoebo-8-11-ham-eunchang-daebeopwon", "hoebo-8-11-saeae-chumo-munhwajae", "hoebo-8-11-toigye-hyeonpan-2", "hoebo-8-11-yecheon-bongwhang",
+      "hoebo-8-12-andong-chunchu-bukpung", "hoebo-8-12-andong-kim-myeongmunjip", "hoebo-8-12-hwang-mansu-jedohwa",
+      "hoebo-8-12-kim-jasook-jibang-somyeol", "hoebo-8-12-lee-huibeom-gukje-jilseo", "hoebo-8-12-yeoneo-bonneung",
+      "hoebo-8-13-andong-chunchu-gulgomanju", "hoebo-8-13-boicha-haengbok", "hoebo-8-13-keum-gyeongsu-andong-nongsanmul",
+      "hoebo-8-13-kim-gwangho-gyoman", "hoebo-8-13-leeyuksa-baekma-chooin",
+      "hoebo-9-2-andong-sanbul-ihu-jaegeon", "hoebo-9-2-kim-jisook-namgin-geot", "hoebo-9-2-lee-ilyeong-gongjun", "hoebo-9-2-seoyunhui-yesul-misul",
+      "hoebo-9-3-andong-chunchu-cheoldo-yukro", "hoebo-9-3-andong-gije-myoje", "hoebo-9-3-jeontong-bareu-ihae", "hoebo-9-3-kwon-minyeong-uidae",
+      "hoebo-9-5-bukbukwon-simjang", "hoebo-9-5-jinyeo-jeungyeo", "hoebo-9-5-nongji-jeongchaek-iyong-sang", "hoebo-9-5-nosa-sangsikjeok-ihae",
+      "hoebo-9-5-toigye-mui-san-tambang-sang",
+    ];
+    for (const slug of slugs) await syncArticleFromFile(client, "geul", slug);
+    await markMigration(client, "geul-almaeng-2026-11-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
