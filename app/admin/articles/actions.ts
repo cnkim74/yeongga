@@ -17,7 +17,7 @@ import {
   type Visibility,
 } from "@/lib/articles-db";
 import { setTagsForArticle } from "@/lib/tags-db";
-import { chapters } from "@/lib/chapters";
+import { allChapters as chapters } from "@/lib/chapters";
 
 export type ArticleFormState = { error?: string };
 

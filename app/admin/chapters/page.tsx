@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/auth";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { IconHome, IconSlides } from "@/components/admin/AdminIcons";
-import { chapters } from "@/lib/chapters";
+import { allChapters as chapters } from "@/lib/chapters";
 import { listChapterMetas } from "@/lib/chapter-meta-db";
 import { listAllArticles } from "@/lib/articles-db";
 import { ChapterMetaForm } from "./ChapterMetaForm";

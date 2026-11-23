@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
 import { listAllArticlesAdmin } from "@/lib/articles-db";
-import { chapters, getChapter } from "@/lib/chapters";
+import { allChapters as chapters, getAnyChapter as getChapter } from "@/lib/chapters";
 import { deleteArticleAction, setArticleHiddenAction } from "./actions";
 import { BulkActionBar, ChapterSelectAll, SelectBox } from "./BulkSelect";
 

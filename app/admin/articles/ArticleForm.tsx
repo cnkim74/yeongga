@@ -2,7 +2,7 @@
 
 import { useActionState, useRef, useState } from "react";
 import { saveArticleAction, type ArticleFormState } from "./actions";
-import { chapters } from "@/lib/chapters";
+import { allChapters as chapters } from "@/lib/chapters";
 import type { Article } from "@/lib/articles-db";
 import { ArticleEditor } from "./ArticleEditor";
 import { RevisionPanel } from "./RevisionPanel";

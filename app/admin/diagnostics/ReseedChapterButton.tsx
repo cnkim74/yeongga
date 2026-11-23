@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { forceReseedChapterAction } from "./actions";
-import { getChapter } from "@/lib/chapters";
+import { getAnyChapter as getChapter } from "@/lib/chapters";
 
 export function ReseedChapterButton({ chapter }: { chapter: string }) {
   const [result, setResult] = useState<string | null>(null);

@@ -7,6 +7,7 @@ import {
   RELATED,
   type AwardRow,
 } from "@/lib/awards";
+import { getChapter, isBlindedHref } from "@/lib/chapters";
 
 export const metadata = {
   title: "영가상 — 영가회 아카이브",
@@ -15,6 +16,9 @@ export const metadata = {
 };
 
 // 데이터베이스를 쓰지 않는 정적 페이지 — 빌드 때 만들어 CDN 이 곧바로 내준다.
+
+// 가린 장(자취·향)의 글로 가는 링크는 보이지 않게 한다
+const open = (href: string) => !isBlindedHref(href);
 
 const SECTIONS = [
   { id: "munhwa", label: "영가문화상", count: CULTURE_ROWS.length },
@@ -79,10 +83,12 @@ function AwardTable({ rows }: { rows: AwardRow[] }) {
                 </td>
                 <td className="py-4 pr-4 text-xs text-[var(--color-ink-mute)]">{r.source}</td>
                 <td className="py-4">
-                  <Link href={r.href} className="underline underline-offset-4 hover:text-[var(--color-ink)] text-[var(--color-ink-soft)]">
-                    기록 보기
-                  </Link>
-                  {r.more?.map((m) => (
+                  {open(r.href) && (
+                    <Link href={r.href} className="underline underline-offset-4 hover:text-[var(--color-ink)] text-[var(--color-ink-soft)]">
+                      기록 보기
+                    </Link>
+                  )}
+                  {r.more?.filter((m) => open(m.href)).map((m) => (
                     <div key={m.href} className="mt-1">
                       <Link href={m.href} className="text-xs text-[var(--color-ink-mute)] hover:text-[var(--color-ink)]">
                         {m.label} →
@@ -110,8 +116,10 @@ function AwardTable({ rows }: { rows: AwardRow[] }) {
             {r.note && <div className="text-xs text-[var(--color-ink-mute)] mt-1">{r.note}</div>}
             <div className="text-xs text-[var(--color-ink-mute)] mt-2">출처 · {r.source}</div>
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-              <Link href={r.href} className="underline underline-offset-4">기록 보기</Link>
-              {r.more?.map((m) => (
+              {open(r.href) && (
+                <Link href={r.href} className="underline underline-offset-4">기록 보기</Link>
+              )}
+              {r.more?.filter((m) => open(m.href)).map((m) => (
                 <Link key={m.href} href={m.href} className="text-[var(--color-ink-mute)]">
                   {m.label} →
                 </Link>
@@ -129,7 +137,9 @@ export default function AwardsPage() {
     <>
       <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-20">
         <div className="relative mx-auto max-w-6xl px-6">
-          <div className="kicker text-[var(--color-ink-mute)] mb-5">九 · 永嘉賞</div>
+          <div className="kicker text-[var(--color-ink-mute)] mb-5">
+            {getChapter("munhwasang")?.number ?? "九"} · 永嘉賞
+          </div>
           <h1 className="display text-5xl sm:text-7xl mb-6 max-w-3xl">영가상</h1>
           <p className="text-base sm:text-lg text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
             영가회가 드려 온 상의 기록입니다. 2006년부터 고장의 문화를 지켜 온
@@ -210,10 +220,12 @@ export default function AwardsPage() {
                   <div className="text-xs text-[var(--color-ink-mute)] mt-2">출처 · {m.source}</div>
                 </div>
                 <div className="md:col-span-2 text-sm">
-                  <Link href={m.href} className="underline underline-offset-4 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">
-                    기록 보기
-                  </Link>
-                  {m.more?.map((l) => (
+                  {open(m.href) && (
+                    <Link href={m.href} className="underline underline-offset-4 text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]">
+                      기록 보기
+                    </Link>
+                  )}
+                  {m.more?.filter((l) => open(l.href)).map((l) => (
                     <div key={l.href} className="mt-1">
                       <Link href={l.href} className="text-xs text-[var(--color-ink-mute)] hover:text-[var(--color-ink)]">
                         {l.label} →
@@ -247,7 +259,7 @@ export default function AwardsPage() {
                 <div className="font-serif text-sm text-[var(--color-ink-mute)] tabular-nums mb-1">
                   {h.when}
                 </div>
-                {h.href ? (
+                {h.href && open(h.href) ? (
                   <Link href={h.href} className="hover:underline underline-offset-4">
                     {h.what}
                   </Link>
@@ -265,7 +277,7 @@ export default function AwardsPage() {
         <div className="mx-auto max-w-6xl px-6">
           <h2 className="kicker text-[var(--color-ink-mute)] mb-5">함께 보는 자료</h2>
           <ul className="grid sm:grid-cols-2 gap-x-10 gap-y-3">
-            {RELATED.map((r) => (
+            {RELATED.filter((r) => open(r.href)).map((r) => (
               <li key={r.href}>
                 <Link href={r.href} className="hover:underline underline-offset-4">
                   {r.label} →

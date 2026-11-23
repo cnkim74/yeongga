@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
-import { chapters } from "@/lib/chapters";
+import { chapters, CHAPTER_COUNT_KO } from "@/lib/chapters";
 import { listAllArticles, type ArticleMeta } from "@/lib/articles-db";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
@@ -46,7 +46,7 @@ export default async function ArchiveIndex() {
             장(章)으로 읽는<br />영가회
           </h1>
           <p className="text-base sm:text-lg text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
-            글들은 아홉 개의 장으로 나누어 갈무리해 두었습니다. 장을
+            글들은 {CHAPTER_COUNT_KO} 개의 장으로 나누어 갈무리해 두었습니다. 장을
             골라 들어가시면 해당 장에 모인 글들을 한눈에 보실 수 있습니다.
           </p>
         </div>

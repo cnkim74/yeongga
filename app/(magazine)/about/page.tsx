@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { AboutTabs } from "@/components/AboutTabs";
+import { chapters, CHAPTER_COUNT_KO } from "@/lib/chapters";
 
 // 빌드 타임 정적 생성 비활성화 (PageHeroBg DB 호출 timeout 회피)
 export const dynamic = "force-dynamic";
@@ -49,8 +50,11 @@ export default async function AboutPage() {
             <h2>아카이브 사용법</h2>
             <ul>
               <li>
-                글은 아홉 개의 장(章)으로 나누어 두었습니다 — <strong>연혁,
-                행사, 기고, 자취, 향, 사진, 영상, 회원, 영가문화상.</strong> 위쪽의 <em>아카이브</em>
+                글은 {CHAPTER_COUNT_KO} 개의 장(章)으로 나누어 두었습니다 —{" "}
+                <strong>
+                  {chapters.map((c) => c.title.replace(/\(.*\)$/, "")).join(", ")}.
+                </strong>{" "}
+                위쪽의 <em>아카이브</em>
                 메뉴에서 장을 골라 들어가실 수 있습니다.
               </li>
               <li>

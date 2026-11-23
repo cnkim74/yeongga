@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { listAllArticles } from "@/lib/articles-db";
-import { chapters } from "@/lib/chapters";
+import { chapters, isPublicChapter } from "@/lib/chapters";
 
 const BASE = "https://yeongga.com";
 
@@ -28,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const articles = await listAllArticles();
     for (const a of articles) {
+      if (!isPublicChapter(a.chapter)) continue; // 가린 장(자취·향)
       urls.push({
         url: `${BASE}/archive/${a.chapter}/${a.slug}`,
         lastModified: a.updated_at || a.created_at || undefined,

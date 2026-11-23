@@ -11,7 +11,7 @@ import {
   type ArticleMeta,
 } from "@/lib/articles-db";
 import { presidents, getPresident } from "@/lib/presidents";
-import { chapters } from "@/lib/chapters";
+import { chapters, isPublicChapter } from "@/lib/chapters";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { GAEventOnMount } from "@/components/GAEventOnMount";
 import { LiveSearch } from "@/components/LiveSearch";
@@ -67,6 +67,8 @@ export default async function SearchPage({
     browseArticles = await listArticlesByTag(tag).catch(() => []);
     browseLabel = `# ${tag}`;
   }
+  // 가린 장(자취·향)의 글은 둘러보기 결과에서도 뺀다
+  browseArticles = browseArticles.filter((a) => isPublicChapter(a.chapter));
   const hasBrowse = Boolean(president || year || tag);
 
   const chapterMap = Object.fromEntries(chapters.map((c) => [c.slug, c]));

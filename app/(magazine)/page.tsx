@@ -3,7 +3,7 @@ import Image from "next/image";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { FeaturedVideo } from "@/components/FeaturedVideo";
-import { chapters } from "@/lib/chapters";
+import { chapters, CHAPTER_COUNT_KO, isBlindedHref } from "@/lib/chapters";
 import { listActiveSlides } from "@/lib/slides-db";
 import { getFeaturedVideo } from "@/lib/videos-db";
 import { listHomeChapterDisplays } from "@/lib/chapter-meta-db";
@@ -28,14 +28,18 @@ async function orEmpty<T>(p: Promise<T>, fallback: T, what: string): Promise<T> 
 }
 
 export default async function HomePage() {
-  const [dbSlides, featuredVideo, chapterDisplays, banners] = await Promise.all([
+  const [dbSlides, featuredVideo, chapterDisplays, allBanners] = await Promise.all([
     orEmpty(listActiveSlides(), [], "슬라이드"),
     orEmpty(getFeaturedVideo(), null, "대표 영상"),
     orEmpty(listHomeChapterDisplays(), [], "장 소개"),
     orEmpty(listActiveBanners(), [], "배너"),
   ]);
 
-  const slides: HeroSlide[] = dbSlides.map((s) => ({
+  // 가린 장(자취·향)으로 가는 슬라이드·배너는 빼고 보여 준다
+  const banners = allBanners.filter((b) => !b.link_url || !isBlindedHref(b.link_url));
+  const slides: HeroSlide[] = dbSlides
+    .filter((s) => !s.href || !isBlindedHref(s.href))
+    .map((s) => ({
     id: `db-${s.id}`,
     kicker: s.kicker ?? "",
     title: s.title,
@@ -69,7 +73,7 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-6xl px-6">
           <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
             <h2 className="display-md text-3xl sm:text-5xl">
-              영가회의 아홉 장
+              영가회의 {CHAPTER_COUNT_KO} 장
             </h2>
             <Link
               href="/archive"
@@ -79,9 +83,11 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <ul className="grid grid-cols-3 gap-1 sm:gap-4">
+          {/* 장 수가 3의 배수가 아니어도 마지막 줄이 가운데 오도록 flex 로 놓는다
+              (좁은 화면 3칸, 넓은 화면 4칸 — 7장이면 4+3) */}
+          <ul className="flex flex-wrap justify-center gap-y-1 sm:gap-y-4">
             {chapters.map((c) => (
-              <li key={c.slug}>
+              <li key={c.slug} className="w-1/3 px-0.5 sm:px-2 lg:w-1/4">
                 {c.comingSoon ? (
                   <div className="flex flex-col items-center text-center px-2 py-5 sm:p-8 rounded-2xl opacity-40 cursor-default">
                     <ChapterIcon

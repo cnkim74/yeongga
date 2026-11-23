@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
-import { getChapter } from "@/lib/chapters";
+import { getChapter, isPublicChapter, unlinkBlindedChapters } from "@/lib/chapters";
 import {
   getArticleBySlug,
   listChapterArticles,
@@ -62,7 +62,8 @@ export default async function ArticlePage({
     }
     // 다른 장으로 옮긴 글은 새 주소로
     const moved = MOVED_ARTICLES[`${chapter}/${slug}`];
-    if (moved) redirect(`/archive/${moved}/${slug}`);
+    // (옮겨 간 장이 가려져 있으면 넘기지 않고 404)
+    if (moved && isPublicChapter(moved)) redirect(`/archive/${moved}/${slug}`);
   }
   if (!meta || !article) notFound();
 
@@ -227,7 +228,8 @@ export default async function ArticlePage({
               className="prose-body"
               dangerouslySetInnerHTML={{
                 // 행사·기고 글은 화면에서만 카드 틀을 입힌다 (저장 본문은 그대로)
-                __html: layoutArticleForChapter(chapter, article.html),
+                // 가린 장(자취·향)으로 가는 본문 링크는 글자만 남긴다
+                __html: unlinkBlindedChapters(layoutArticleForChapter(chapter, article.html)),
               }}
             />
           )}

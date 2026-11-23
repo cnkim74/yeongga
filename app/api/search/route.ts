@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { searchArticles } from "@/lib/tags-db";
-import { chapters } from "@/lib/chapters";
+import { chapters, isPublicChapter } from "@/lib/chapters";
 
 // 실시간 자동검색용 — 검색창에 글자를 칠 때마다 호출된다.
 // searchArticles 자체가 질의별 캐시 + 2자 미만 가드를 갖고 있어 풀스캔 폭증은 없다.
@@ -18,7 +18,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ q, results: [] });
   }
 
-  const articles = await searchArticles(q);
+  // 가린 장(자취·향)의 글은 검색에 내보이지 않는다
+  const articles = (await searchArticles(q)).filter((a) => isPublicChapter(a.chapter));
   const results = articles.slice(0, 30).map((a) => ({
     chapter: a.chapter,
     chapterTitle: chapterTitle[a.chapter] ?? a.chapter,

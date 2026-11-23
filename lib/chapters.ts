@@ -11,9 +11,13 @@ export type Chapter = {
   href?: string;
   // 아카이브 페이지에서 연결 버튼에 쓰는 문구 (예: "영상 보러 가기").
   linkLabel?: string;
+  // blinded: 공개 화면 전체에서 가린다(메인·아카이브·메뉴·검색·사이트맵·글 주소).
+  // 관리자 화면과 DB·원고 파일은 그대로 둔다. 다시 열려면 이 줄만 지우면 된다.
+  blinded?: boolean;
 };
 
-export const chapters: Chapter[] = [
+// 모든 장 — 관리자 화면·원고 동기화용. 공개 화면은 아래 chapters 를 쓴다.
+export const allChapters: Chapter[] = [
   {
     slug: "yeongi",
     number: "一",
@@ -42,6 +46,7 @@ export const chapters: Chapter[] = [
     title: "자취",
     subtitle: "사진과 자료",
     description: "행사 사진, 문서, 서화 모음. 한 모임이 남긴 발자취.",
+    blinded: true, // 2026-11-23 요청 — 자취·향 전체 블라인드
   },
   {
     slug: "hyang",
@@ -49,6 +54,7 @@ export const chapters: Chapter[] = [
     title: "향(鄕)",
     subtitle: "안동, 회의 뿌리",
     description: "영가회의 고향 안동을 기록합니다. 정신·문화·사람의 뿌리.",
+    blinded: true, // 2026-11-23 요청 — 자취·향 전체 블라인드
   },
   {
     slug: "yeongsang",
@@ -90,6 +96,47 @@ export const chapters: Chapter[] = [
   },
 ];
 
+const HANJA_NUMBERS = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+
+// 공개 장 — 가린 장을 빼고 번호(一, 二, …)를 빈칸 없이 다시 매긴다.
+export const chapters: Chapter[] = allChapters
+  .filter((c) => !c.blinded)
+  .map((c, i) => ({ ...c, number: HANJA_NUMBERS[i] ?? c.number }));
+
+// 공개 장 수를 우리말로 — "일곱 장", "일곱 개의 장"
+const KO_COUNTS = ["", "한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉", "열"];
+export const CHAPTER_COUNT_KO: string = KO_COUNTS[chapters.length] ?? String(chapters.length);
+
+export const BLINDED_CHAPTER_SLUGS: string[] = allChapters
+  .filter((c) => c.blinded)
+  .map((c) => c.slug);
+
+/** 공개 장만 찾는다 — 가린 장은 undefined (글·목록 주소가 404 가 된다). */
 export function getChapter(slug: string): Chapter | undefined {
   return chapters.find((c) => c.slug === slug);
+}
+
+/** 관리자용 — 가린 장도 찾는다. */
+export function getAnyChapter(slug: string): Chapter | undefined {
+  return allChapters.find((c) => c.slug === slug);
+}
+
+export function isPublicChapter(slug: string): boolean {
+  return !BLINDED_CHAPTER_SLUGS.includes(slug);
+}
+
+/** /archive/<가린 장>/… 로 가는 주소인지 */
+export function isBlindedHref(href: string): boolean {
+  const m = href.match(/^\/archive\/([^/?#]+)/);
+  return !!m && BLINDED_CHAPTER_SLUGS.includes(m[1]);
+}
+
+/** 본문 HTML 속 가린 장으로 가는 링크를 글자만 남기고 푼다. */
+export function unlinkBlindedChapters(html: string): string {
+  if (BLINDED_CHAPTER_SLUGS.length === 0) return html;
+  const re = new RegExp(
+    `<a\\b[^>]*href="(?:https?://(?:www\\.)?yeongga\\.com)?/archive/(?:${BLINDED_CHAPTER_SLUGS.join("|")})(?:[/?#][^"]*)?"[^>]*>([\\s\\S]*?)</a>`,
+    "gi",
+  );
+  return html.replace(re, "$1");
 }

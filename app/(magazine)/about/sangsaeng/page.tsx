@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PageHeroBg } from "@/components/PageHeroBg";
 import { AboutTabs } from "@/components/AboutTabs";
 import { getArticleBySlug } from "@/lib/articles-db";
+import { isPublicChapter, unlinkBlindedChapters } from "@/lib/chapters";
 import {
   SANGSAENG_BASE_DATE,
   SANGSAENG_GROUPS,
@@ -159,8 +160,10 @@ export default async function SangsaengPage() {
             <>
               <div
                 className="prose-body mb-6"
-                dangerouslySetInnerHTML={{ __html: roster.html }}
+                dangerouslySetInnerHTML={{ __html: unlinkBlindedChapters(roster.html) }}
               />
+              {/* 편성표 글이 든 장(자취)이 가려져 있으면 따로 보기 링크는 감춘다 */}
+              {isPublicChapter(SANGSAENG_ROSTER.chapter) ? (
               <p className="mb-12 text-sm text-[var(--color-ink-mute)]">
                 <Link
                   href={`/archive/${SANGSAENG_ROSTER.chapter}/${SANGSAENG_ROSTER.slug}`}
@@ -169,6 +172,9 @@ export default async function SangsaengPage() {
                   편성표만 따로 보기
                 </Link>
               </p>
+              ) : (
+                <div className="mb-12" />
+              )}
             </>
           ) : (
             <p className="mb-12 rounded-lg border border-[var(--color-rule)] bg-[var(--color-bg-soft)] px-5 py-4 text-base leading-relaxed text-[var(--color-ink-soft)]">
