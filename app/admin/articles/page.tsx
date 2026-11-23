@@ -3,16 +3,25 @@ import { AdminTopbar } from "@/components/admin/AdminTopbar";
 import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
 import { listAllArticlesAdmin } from "@/lib/articles-db";
 import { allChapters as chapters, getAnyChapter as getChapter } from "@/lib/chapters";
-import { deleteArticleAction, setArticleHiddenAction } from "./actions";
+import { cookies } from "next/headers";
+import {
+  deleteArticleAction,
+  setAdminHideHiddenAction,
+  setArticleHiddenAction,
+} from "./actions";
 import { BulkActionBar, ChapterSelectAll, SelectBox } from "./BulkSelect";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminArticles() {
   const articles = await listAllArticlesAdmin();
+  // '비공개 글 숨기기' 설정 — actions.ts 의 setAdminHideHiddenAction 이 쿠키로 기억한다.
+  const hideHidden = (await cookies()).get("admin_hide_hidden")?.value === "1";
+  const hiddenCount = articles.filter((a) => a.hidden).length;
+  const shown = hideHidden ? articles.filter((a) => !a.hidden) : articles;
   const byChapter = chapters.map((c) => ({
     chapter: c,
-    items: articles.filter((a) => a.chapter === c.slug),
+    items: shown.filter((a) => a.chapter === c.slug),
   }));
 
   return (
@@ -51,10 +60,25 @@ export default async function AdminArticles() {
               articles.filter((a) => a.visibility === "members-only" && !a.hidden).length
             }편`}
           />
-          <Prop
-            k="🚫 비공개"
-            v={`${articles.filter((a) => a.hidden).length}편`}
-          />
+          <Prop k="🚫 비공개" v={`${hiddenCount}편`} />
+          <form action={setAdminHideHiddenAction} className="ml-auto">
+            <input type="hidden" name="on" value={hideHidden ? "0" : "1"} />
+            <button
+              type="submit"
+              className={`notion-icon-btn text-xs border ${
+                hideHidden
+                  ? "border-[var(--color-notion-accent)] text-[var(--color-notion-accent)]"
+                  : "border-[var(--color-notion-rule)]"
+              }`}
+              title={
+                hideHidden
+                  ? "숨긴 비공개 글을 목록에 다시 보입니다"
+                  : "비공개 글을 이 목록에서 빼고 봅니다(글은 그대로 남습니다)"
+              }
+            >
+              {hideHidden ? `🚫 비공개 글 숨김 중 · ${hiddenCount}편 보이기` : "🚫 비공개 글 숨기기"}
+            </button>
+          </form>
         </div>
 
         {/* 챕터별 카드 그리드 — 한눈에 들어오는 분포 + 섹션 점프 앵커 */}
@@ -116,7 +140,9 @@ export default async function AdminArticles() {
                 </h2>
                 {items.length === 0 ? (
                   <div className="text-sm text-[var(--color-notion-mute)] border border-dashed border-[var(--color-notion-rule)] rounded-md px-4 py-6">
-                    이 장에는 아직 글이 없습니다.
+                    {hideHidden && articles.some((a) => a.chapter === c.slug)
+                      ? "이 장의 글은 모두 비공개라 숨겨져 있습니다."
+                      : "이 장에는 아직 글이 없습니다."}
                   </div>
                 ) : (
                   <ul className="border border-[var(--color-notion-rule)] rounded-lg divide-y divide-[var(--color-notion-rule)]">

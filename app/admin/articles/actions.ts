@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { requireAdmin } from "@/lib/auth";
 import {
   createArticle,
@@ -135,6 +136,26 @@ export async function setArticleHiddenAction(formData: FormData) {
   refresh(chapter, slug);
   revalidatePath("/search");
   revalidatePath("/sitemap.xml");
+}
+
+/** 글 관리 목록 — '비공개 글 숨기기' 설정(쿠키로 기억, 다음에 들어와도 유지). */
+// "use server" 파일은 async 함수만 내보낼 수 있어 이름은 page.tsx 에도 같은 값으로 적는다.
+const ADMIN_HIDE_HIDDEN_COOKIE = "admin_hide_hidden";
+export async function setAdminHideHiddenAction(formData: FormData) {
+  await requireAdmin();
+  const on = String(formData.get("on") ?? "") === "1";
+  const jar = await cookies();
+  if (on) {
+    jar.set(ADMIN_HIDE_HIDDEN_COOKIE, "1", {
+      path: "/admin",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+      httpOnly: true,
+    });
+  } else {
+    jar.delete({ name: ADMIN_HIDE_HIDDEN_COOKIE, path: "/admin" });
+  }
+  revalidatePath("/admin/articles");
 }
 
 /** 글 관리 — 체크한 글 여러 편을 한꺼번에 비공개/다시 공개. */
