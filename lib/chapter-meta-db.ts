@@ -162,9 +162,12 @@ export async function listHomeChapterDisplays(): Promise<ChapterDisplay[]> {
   const metas = await listChapterMetas();
   const metaMap = new Map(metas.map((m) => [m.chapter_slug, m]));
 
-  // 2) chapters.ts 의 순서대로 메타 정합 + comingSoon·외부연결(href) 제외
+  // 2) chapters.ts 의 순서대로 메타 정합 + comingSoon 제외.
+  //    다른 페이지로 연결되는 장(사진·영상·회원·영가상)은 글이 없으므로
+  //    집무실에서 메인 쇼케이스 이미지를 등록해 둔 경우에만 넣는다.
   const candidates = chapters
-    .filter((c) => !c.comingSoon && !c.href)
+    .filter((c) => !c.comingSoon)
+    .filter((c) => !c.href || !!metaMap.get(c.slug)?.cover_image)
     .map((c) => {
       const meta = metaMap.get(c.slug) ?? {
         chapter_slug: c.slug,

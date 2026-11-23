@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { getChapterMeta } from "@/lib/chapter-meta-db";
 import {
   CULTURE_ROWS,
   GOOD_ROWS,
@@ -15,7 +17,9 @@ export const metadata = {
     "영가회가 드려 온 상의 기록 — 영가문화상, 영가선행상, 공로상(공로패·감사패).",
 };
 
-// 데이터베이스를 쓰지 않는 정적 페이지 — 빌드 때 만들어 CDN 이 곧바로 내준다.
+// 미리 만들어 CDN 이 곧바로 내준다. 데이터베이스에서는 집무실 '챕터 표지'에 등록한
+// 영가상 장의 hero 이미지만 읽는다(못 읽으면 이미지 없이). 저장하면 곧바로 새로 만든다.
+export const revalidate = 600;
 
 // 가린 장(자취·향)의 글로 가는 링크는 보이지 않게 한다
 const open = (href: string) => !isBlindedHref(href);
@@ -132,16 +136,30 @@ function AwardTable({ rows }: { rows: AwardRow[] }) {
   );
 }
 
-export default function AwardsPage() {
+export default async function AwardsPage() {
+  // 챕터 표지의 hero 이미지(없으면 메인 쇼케이스 이미지)를 머리 배경으로
+  const chapterMeta = await getChapterMeta("munhwasang").catch(() => null);
+  const heroImage = chapterMeta?.hero_image ?? chapterMeta?.cover_image ?? null;
+
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--color-bg-soft)] pt-40 pb-20">
-        <div className="relative mx-auto max-w-6xl px-6">
-          <div className="kicker text-[var(--color-ink-mute)] mb-5">
+      <section
+        className={`relative overflow-hidden pt-40 pb-20 ${
+          heroImage ? "text-white" : "bg-[var(--color-bg-soft)]"
+        }`}
+      >
+        {heroImage && (
+          <div className="absolute inset-0 z-0" aria-hidden="true">
+            <Image src={heroImage} alt="" fill sizes="100vw" priority className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/75" />
+          </div>
+        )}
+        <div className="relative z-10 mx-auto max-w-6xl px-6">
+          <div className={`kicker mb-5 ${heroImage ? "text-white/70" : "text-[var(--color-ink-mute)]"}`}>
             {getChapter("munhwasang")?.number ?? "九"} · 永嘉賞
           </div>
           <h1 className="display text-5xl sm:text-7xl mb-6 max-w-3xl">영가상</h1>
-          <p className="text-base sm:text-lg text-[var(--color-ink-soft)] max-w-2xl leading-relaxed">
+          <p className={`text-base sm:text-lg max-w-2xl leading-relaxed ${heroImage ? "text-white/85" : "text-[var(--color-ink-soft)]"}`}>
             영가회가 드려 온 상의 기록입니다. 2006년부터 고장의 문화를 지켜 온
             사람과 단체에 영가문화상을, 2022년부터 이웃을 위해 애써 온 분께
             영가선행상을 드렸습니다. 회에 공을 세운 분께 드린 공로패와 감사패는

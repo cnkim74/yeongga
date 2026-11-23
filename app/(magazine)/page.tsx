@@ -51,16 +51,17 @@ export default async function HomePage() {
 
   // 메타에 visible=true 이지만 articles이 없는 챕터는 자동으로 빼고,
   // article 있는 챕터만 쇼케이스로 노출
+  // 다른 페이지로 연결되는 장(영가상 등)은 글 없이 장 소개와 연결 단추로 보인다.
   const showcases = chapterDisplays
-    .filter((d) => d.article != null)
-    .map((d) => {
-      const chapter = chapters.find((c) => c.slug === d.meta.chapter_slug)!;
-      return {
-        chapter,
-        meta: d.meta,
-        latest: d.article!,
-      };
-    });
+    .map((d) => ({
+      chapter: chapters.find((c) => c.slug === d.meta.chapter_slug),
+      meta: d.meta,
+      latest: d.article,
+    }))
+    .filter(
+      (s): s is typeof s & { chapter: NonNullable<typeof s.chapter> } =>
+        !!s.chapter && (s.latest != null || !!s.chapter.href),
+    );
 
   return (
     <>
@@ -168,12 +169,14 @@ export default async function HomePage() {
         const reversed = i % 2 === 1;
         const bg = i % 2 === 0 ? "bg-[var(--color-bg-soft)]" : "bg-white";
         // cover 우선순위: chapter_meta.cover_image > article.cover > 챕터 아이콘 placeholder
-        const coverSrc = meta.cover_image || latest.cover || null;
-        // 비공개 글은 글 주소가 열리지 않으므로 전용 페이지(회장 인사말 등)로 보낸다
-        const articleHref = latest.hidden
-          ? HIDDEN_ARTICLE_PAGES[`${chapter.slug}/${latest.slug}`] ??
-            `/archive/${chapter.slug}`
-          : `/archive/${chapter.slug}/${latest.slug}`;
+        const coverSrc = meta.cover_image || latest?.cover || null;
+        // 글 없는 장(영가상 등)은 그 장의 페이지로, 비공개 글은 전용 페이지(회장 인사말 등)로
+        const chapterHref = chapter.href ?? `/archive/${chapter.slug}`;
+        const articleHref = !latest
+          ? chapterHref
+          : latest.hidden
+            ? HIDDEN_ARTICLE_PAGES[`${chapter.slug}/${latest.slug}`] ?? chapterHref
+            : `/archive/${chapter.slug}/${latest.slug}`;
         return (
           <section key={chapter.slug} className={`${bg} py-24 sm:py-32`}>
             <div
@@ -217,31 +220,36 @@ export default async function HomePage() {
                   className="group block"
                 >
                   <h3 className="display-md text-3xl sm:text-5xl mb-5 group-hover:text-[var(--color-accent)] transition">
-                    {latest.title}
+                    {latest ? latest.title : chapter.subtitle}
                   </h3>
                 </Link>
-                {latest.excerpt && (
+                {(latest ? latest.excerpt : chapter.description) && (
                   <p className="text-base sm:text-lg leading-relaxed text-[var(--color-ink-soft)] mb-8">
-                    {latest.excerpt}
+                    {latest ? latest.excerpt : chapter.description}
                   </p>
                 )}
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-ink-mute)] mb-8">
-                  <span>{formatDate(latest.date)}</span>
-                  {latest.author && <span>글 · {latest.author}</span>}
-                </div>
+                {latest && (
+                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-ink-mute)] mb-8">
+                    <span>{formatDate(latest.date)}</span>
+                    {latest.author && <span>글 · {latest.author}</span>}
+                  </div>
+                )}
                 <div className="flex gap-3 flex-wrap">
-                  <Link
-                    href={articleHref}
-                    className="btn-pill"
-                  >
-                    글 읽기 <span aria-hidden="true">→</span>
-                  </Link>
-                  <Link
-                    href={`/archive/${chapter.slug}`}
-                    className="btn-pill ghost"
-                  >
-                    {chapter.title} 더 보기
-                  </Link>
+                  {latest ? (
+                    <>
+                      <Link href={articleHref} className="btn-pill">
+                        글 읽기 <span aria-hidden="true">→</span>
+                      </Link>
+                      <Link href={chapterHref} className="btn-pill ghost">
+                        {chapter.title} 더 보기
+                      </Link>
+                    </>
+                  ) : (
+                    <Link href={chapterHref} className="btn-pill">
+                      {chapter.linkLabel ?? `${chapter.title} 보기`}{" "}
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

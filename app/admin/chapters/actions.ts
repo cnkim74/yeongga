@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { upsertChapterMeta, type DisplayMode } from "@/lib/chapter-meta-db";
+import { getAnyChapter } from "@/lib/chapters";
 
 export async function saveChapterMetaAction(formData: FormData) {
   await requireAdmin();
@@ -42,5 +43,8 @@ export async function saveChapterMetaAction(formData: FormData) {
   revalidatePath("/admin/chapters");
   revalidatePath("/");
   revalidatePath(`/archive/${chapter_slug}`);
+  // 다른 페이지로 연결되는 장(영가상 → /awards 등)은 그 페이지도 새로 만든다
+  const href = getAnyChapter(chapter_slug)?.href;
+  if (href) revalidatePath(href);
   return { ok: true };
 }
