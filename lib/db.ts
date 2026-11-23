@@ -5792,6 +5792,24 @@ async function init(client: Client) {
     for (const slug of slugs) await syncArticleFromFile(client, "geul", slug);
     await markMigration(client, "geul-almaeng-2026-11-v1");
   }
+  // 대표 이미지 채우기 (2026-11-24 요청) — 대표 이미지가 비어 있고 본문에 사진이 있는 글은
+  // 본문의 첫 사진을 대표 이미지로 넣는다. 본문에 사진이 없는 글은 그대로 두고,
+  // 집무실 글 관리에서 '사진 란에서 고르기'로 지정한다.
+  if (!(await hasMigration(client, "cover-from-body-2026-11-v1"))) {
+    const { firstBodyImage } = await import("./cover-from-body");
+    const rows = await client.execute(
+      "SELECT id, body FROM articles WHERE cover IS NULL OR TRIM(cover) = ''"
+    );
+    for (const r of rows.rows) {
+      const src = firstBodyImage(String(r.body ?? ""));
+      if (!src) continue;
+      await client.execute({
+        sql: "UPDATE articles SET cover = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND (cover IS NULL OR TRIM(cover) = '')",
+        args: [src, Number(r.id)],
+      });
+    }
+    await markMigration(client, "cover-from-body-2026-11-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

@@ -1,6 +1,8 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useMemo, useRef, useState } from "react";
+import { allBodyImages } from "@/lib/cover-from-body";
+import { GalleryPhotoPicker } from "./GalleryPhotoPicker";
 import { saveArticleAction, type ArticleFormState } from "./actions";
 import { allChapters as chapters } from "@/lib/chapters";
 import type { Article } from "@/lib/articles-db";
@@ -32,6 +34,8 @@ export function ArticleForm({
   const [coverPath, setCoverPath] = useState<string>(article?.cover ?? "");
   const [coverUploading, setCoverUploading] = useState(false);
   const [coverError, setCoverError] = useState("");
+  const [coverPickerOpen, setCoverPickerOpen] = useState(false);
+  const bodyImages = useMemo(() => allBodyImages(bodyHTML), [bodyHTML]);
 
   async function uploadCover(file: File) {
     setCoverUploading(true);
@@ -227,10 +231,51 @@ export function ArticleForm({
           >
             {coverUploading ? "업로드 중…" : coverPath ? "이미지 교체" : "이미지 업로드"}
           </button>
+          <button
+            type="button"
+            onClick={() => setCoverPickerOpen(true)}
+            className="notion-input px-4 py-1.5 border border-[var(--color-notion-rule)] hover:border-[var(--color-notion-accent)] text-sm cursor-pointer"
+          >
+            🖼 사진 란에서 고르기
+          </button>
           {coverPath && (
             <span className="text-xs text-[var(--color-notion-mute)] truncate max-w-xs">{coverPath}</span>
           )}
         </div>
+        {/* 본문에 든 사진 — 눌러서 대표 이미지로 */}
+        {bodyImages.length > 0 && (
+          <div className="mt-3">
+            <div className="text-xs text-[var(--color-notion-mute)] mb-1.5">
+              본문 사진에서 고르기 ({bodyImages.length}장)
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {bodyImages.map((src) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setCoverPath(src)}
+                  className={`w-16 h-16 shrink-0 rounded overflow-hidden border-2 ${
+                    src === coverPath
+                      ? "border-[var(--color-notion-accent)]"
+                      : "border-transparent hover:border-[var(--color-notion-rule)]"
+                  }`}
+                  title={src === coverPath ? "지금 대표 이미지" : "이 사진을 대표 이미지로"}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="" loading="lazy" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        <GalleryPhotoPicker
+          open={coverPickerOpen}
+          mode="cover"
+          onClose={() => setCoverPickerOpen(false)}
+          onInsert={(photos) => {
+            if (photos[0]) setCoverPath(photos[0].src);
+          }}
+        />
         <input
           ref={coverFileRef}
           type="file"

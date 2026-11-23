@@ -29,11 +29,15 @@ export function GalleryPhotoPicker({
   open,
   onClose,
   onInsert,
+  mode = "insert",
 }: {
   open: boolean;
   onClose: () => void;
   onInsert: (photos: PickedPhoto[]) => void;
+  /** "cover" — 대표 이미지로 쓸 사진 한 장만 고른다 */
+  mode?: "insert" | "cover";
 }) {
+  const single = mode === "cover";
   const [albums, setAlbums] = useState<AlbumItem[] | null>(null);
   const [query, setQuery] = useState("");
   const [album, setAlbum] = useState<AlbumItem | null>(null);
@@ -74,7 +78,9 @@ export function GalleryPhotoPicker({
   if (!open) return null;
 
   const toggle = (id: number) =>
-    setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+    setPicked((p) =>
+      p.includes(id) ? p.filter((x) => x !== id) : single ? [id] : [...p, id]
+    );
 
   function insert() {
     if (!photos || picked.length === 0) return;
@@ -85,7 +91,9 @@ export function GalleryPhotoPicker({
     if (
       chosen.some((p) => p.visibility === "members-only") &&
       !window.confirm(
-        "회원 전용으로 올린 사진이 포함되어 있습니다.\n글이 공개되면 누구나 볼 수 있게 됩니다. 그래도 넣을까요?"
+        single
+          ? "회원 전용으로 올린 사진입니다.\n대표 이미지는 글 목록·메인에서 누구나 볼 수 있습니다. 그래도 쓸까요?"
+          : "회원 전용으로 올린 사진이 포함되어 있습니다.\n글이 공개되면 누구나 볼 수 있게 됩니다. 그래도 넣을까요?"
       )
     ) {
       return;
@@ -121,7 +129,11 @@ export function GalleryPhotoPicker({
             </button>
           )}
           <div className="font-semibold text-sm flex-1 truncate">
-            {album ? album.name : "사진 란에서 가져오기"}
+            {album
+              ? album.name
+              : single
+                ? "사진 란에서 대표 이미지 고르기"
+                : "사진 란에서 가져오기"}
           </div>
           <button
             type="button"
@@ -143,6 +155,10 @@ export function GalleryPhotoPicker({
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                // 글 편집 폼 안에서 열려도 Enter 가 글 저장으로 넘어가지 않게
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.preventDefault();
+                }}
                 placeholder="앨범 이름·연도로 찾기 (예: 2011, 취임)"
                 className="w-full border border-[var(--color-notion-rule)] rounded px-3 py-2 text-sm mb-3"
               />
@@ -212,7 +228,7 @@ export function GalleryPhotoPicker({
                         loading="lazy"
                         className="w-full h-full object-cover"
                       />
-                      {order >= 0 && (
+                      {order >= 0 && !single && (
                         <span className="absolute top-1 left-1 bg-[var(--color-notion-accent)] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                           {order + 1}
                         </span>
@@ -233,13 +249,17 @@ export function GalleryPhotoPicker({
         {album && (
           <div className="flex items-center gap-2 px-4 py-3 border-t border-[var(--color-notion-rule)]">
             <span className="text-sm text-[var(--color-notion-mute)] flex-1">
-              {picked.length > 0
-                ? `${picked.length}장 선택 — ${
-                    picked.length === 1 ? "사진 1장" : "사진 묶음(갤러리)"
-                  }으로 들어갑니다`
-                : "넣을 사진을 눌러 선택하세요 (여러 장 가능)"}
+              {single
+                ? picked.length > 0
+                  ? "이 사진을 대표 이미지로 씁니다"
+                  : "대표 이미지로 쓸 사진 한 장을 누르세요"
+                : picked.length > 0
+                  ? `${picked.length}장 선택 — ${
+                      picked.length === 1 ? "사진 1장" : "사진 묶음(갤러리)"
+                    }으로 들어갑니다`
+                  : "넣을 사진을 눌러 선택하세요 (여러 장 가능)"}
             </span>
-            {photos && photos.length > 0 && (
+            {!single && photos && photos.length > 0 && (
               <button
                 type="button"
                 onClick={() =>
@@ -256,7 +276,7 @@ export function GalleryPhotoPicker({
               disabled={picked.length === 0}
               className="text-sm px-3 py-1.5 rounded bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] disabled:opacity-40"
             >
-              본문에 넣기
+              {single ? "대표 이미지로 지정" : "본문에 넣기"}
             </button>
           </div>
         )}

@@ -10,6 +10,7 @@ import {
   setArticleHiddenAction,
 } from "./actions";
 import { BulkActionBar, ChapterSelectAll, SelectBox } from "./BulkSelect";
+import { CoverCell } from "./CoverCell";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,10 @@ export default async function AdminArticles() {
             }편`}
           />
           <Prop k="🚫 비공개" v={`${hiddenCount}편`} />
+          <Prop
+            k="🖼 대표 이미지 없음"
+            v={`${articles.filter((a) => !a.cover?.trim()).length}편`}
+          />
           <form action={setAdminHideHiddenAction} className="ml-auto">
             <input type="hidden" name="on" value={hideHidden ? "0" : "1"} />
             <button
@@ -167,6 +172,7 @@ export default async function AdminArticles() {
                         }`}
                       >
                         <SelectBox id={a.id} chapter={a.chapter} title={a.title} />
+                        <CoverCell id={a.id} chapter={a.chapter} slug={a.slug} cover={a.cover} />
                         <div className="flex-1 min-w-0">
                           <div className={`flex items-center gap-2 mb-1 ${a.hidden ? "opacity-60" : ""}`}>
                             {a.hidden && (

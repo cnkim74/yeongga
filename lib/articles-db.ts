@@ -400,6 +400,15 @@ export async function setArticleHidden(id: number, hidden: boolean): Promise<voi
   });
 }
 
+/** 대표 이미지만 바꾼다(빈 문자열이면 지운다). */
+export async function setArticleCover(id: number, cover: string): Promise<void> {
+  const db = await getDb();
+  await db.execute({
+    sql: "UPDATE articles SET cover = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+    args: [cover.trim() || null, id],
+  });
+}
+
 export async function setArticlesHidden(ids: number[], hidden: boolean): Promise<number> {
   if (ids.length === 0) return 0;
   const db = await getDb();

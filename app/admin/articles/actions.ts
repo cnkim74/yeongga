@@ -10,6 +10,7 @@ import {
   getArticleFileOriginal,
   getArticleRevisionHTML,
   listArticleRevisions,
+  setArticleCover,
   setArticleHidden,
   setArticlesHidden,
   updateArticle,
@@ -136,6 +137,25 @@ export async function setArticleHiddenAction(formData: FormData) {
   refresh(chapter, slug);
   revalidatePath("/search");
   revalidatePath("/sitemap.xml");
+}
+
+/** 글 관리 목록 — 대표 이미지만 바로 지정(사진 란에서 고른 사진). */
+export async function setArticleCoverAction(input: {
+  id: number;
+  chapter: string;
+  slug: string;
+  cover: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  await requireAdmin();
+  const { id, chapter, slug } = input;
+  const cover = String(input.cover ?? "").trim();
+  if (!Number.isInteger(id) || id <= 0) return { ok: false, error: "글을 찾지 못했습니다." };
+  if (cover && !(cover.startsWith("/") || /^https?:\/\//i.test(cover))) {
+    return { ok: false, error: "사진 주소가 올바르지 않습니다." };
+  }
+  await setArticleCover(id, cover);
+  refresh(chapter, slug);
+  return { ok: true };
 }
 
 /** 글 관리 목록 — '비공개 글 숨기기' 설정(쿠키로 기억, 다음에 들어와도 유지). */
