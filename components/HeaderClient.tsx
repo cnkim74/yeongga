@@ -29,11 +29,11 @@ const NAV: NavItem[] = [
     href: "/about",
     label: "소개",
     items: [
-      { href: "/about", label: "영가회 소개" },
       { href: "/about/greeting", label: "회장 인사말" },
       { href: "/about/presidents", label: "역대회장" },
       { href: "/about/hoechik", label: "회칙" },
       { href: "/about/sangsaeng", label: "상생지원위원회" },
+      { href: "/about", label: "영가회 소개" },
     ],
   },
   { href: "/archive", label: "아카이브", dropdown: "chapters" },
