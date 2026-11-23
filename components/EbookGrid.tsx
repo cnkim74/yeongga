@@ -1,4 +1,4 @@
-// 이북 카드 그리드 — 《40년사 책자》·《영가회보》 두 페이지가 함께 쓴다.
+// eBook 카드 그리드 — 《40년사 책자》·《영가회보》 두 페이지가 함께 쓴다.
 import Link from "next/link";
 import Image from "next/image";
 
@@ -14,7 +14,7 @@ export function EbookGrid({
   ebooks,
   isLoggedIn,
   loginNext,
-  emptyText = "아직 등록된 이북이 없습니다.",
+  emptyText = "아직 등록된 eBook이 없습니다.",
 }: {
   ebooks: EbookCardData[];
   isLoggedIn: boolean;
@@ -41,7 +41,7 @@ export function EbookGrid({
         <div className="mt-12 rounded-2xl border border-[var(--color-rule)] p-8 text-center">
           <div className="text-3xl mb-3">🔒</div>
           <p className="text-[var(--color-ink-soft)] text-sm">
-            회원 전용 이북이 있습니다.{" "}
+            회원 전용 eBook이 있습니다.{" "}
             <Link
               href={`/login?next=${loginNext}`}
               className="text-[var(--color-accent)] underline"

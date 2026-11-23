@@ -39,7 +39,7 @@ const NAV: NavItem[] = [
   { href: "/archive", label: "아카이브", dropdown: "chapters" },
   {
     href: "/ebooks",
-    label: "이북",
+    label: "eBook",
     items: [
       { href: "/ebooks", label: "40년사 책자" },
       { href: "/ebooks/hoebo", label: "영가회보" },
@@ -422,7 +422,7 @@ export function HeaderClient() {
                       ))}
                     </ul>
                   )}
-                  {/* 이북·소개 등 하위 항목 인라인 표시 */}
+                  {/* eBook·소개 등 하위 항목 인라인 표시 */}
                   {n.items && (
                     <ul className="pl-8 pb-2">
                       {n.items.map((it) => (

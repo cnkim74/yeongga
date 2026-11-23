@@ -376,7 +376,7 @@ const EVENT_META: Record<string, { label: string; category: string }> = {
   login_attempt: { label: "로그인 시도", category: "영가회 · 회원" },
   share_click: { label: "공유 버튼 클릭", category: "영가회 · 공유" },
   site_search: { label: "사이트 내 검색", category: "영가회 · 검색" },
-  ebook_open: { label: "이북 열기", category: "영가회 · 이북" },
+  ebook_open: { label: "eBook 열기", category: "영가회 · eBook" },
   // GA4 자동 수집
   page_view: { label: "페이지 조회", category: "GA 기본" },
   session_start: { label: "세션 시작", category: "GA 기본" },

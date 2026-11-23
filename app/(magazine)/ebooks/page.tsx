@@ -9,8 +9,8 @@ import { EbookTabs } from "@/components/EbookTabs";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "40년사 책자 — 영가회 이북",
-  description: "영가회 40년사 책자를 이북으로 열람하세요.",
+  title: "40년사 책자 — 영가회 eBook",
+  description: "영가회 40년사 책자를 eBook으로 열람하세요.",
 };
 
 export default async function EbooksPage() {
@@ -28,10 +28,10 @@ export default async function EbooksPage() {
       <section className="relative pt-40 pb-16 sm:pb-20 overflow-hidden bg-[var(--color-bg-soft)]">
         <PageHeroBg page="ebooks" />
         <div className="mx-auto max-w-6xl px-6">
-          <div className="kicker text-[var(--color-ink-mute)] mb-4">서재 · e-Book</div>
+          <div className="kicker text-[var(--color-ink-mute)] mb-4">서재 · eBook</div>
           <h1 className="display text-5xl sm:text-7xl mb-6">40년사 책자</h1>
           <p className="text-base sm:text-lg text-[var(--color-ink-soft)] leading-relaxed max-w-xl">
-            영가회 40년사와 역대 회장 약사, 회원 기고문을 이북으로 열람하세요.
+            영가회 40년사와 역대 회장 약사, 회원 기고문을 eBook으로 열람하세요.
             {!user && (
               <span className="block mt-2 text-sm text-[var(--color-ink-mute)]">
                 🔒 회원 전용 자료는{" "}

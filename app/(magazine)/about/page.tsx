@@ -68,7 +68,7 @@ export default async function AboutPage() {
                 글자 크기를 다섯 단계로 조절하실 수 있습니다.
               </li>
               <li>
-                지난 《영가회보》와 40년사 책자는 <em>이북</em> 메뉴에서
+                지난 《영가회보》와 40년사 책자는 <em>eBook</em> 메뉴에서
                 넘겨 보실 수 있습니다.
               </li>
             </ul>

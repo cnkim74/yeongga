@@ -74,7 +74,7 @@ export const IconGallery = (p: IconProps) => (
   </Svg>
 );
 
-/* 이북 — 펼친 책 */
+/* eBook — 펼친 책 */
 export const IconEbook = (p: IconProps) => (
   <Svg {...p}>
     <path d="M3 5.5C5 5 8 5 12 6.5 16 5 19 5 21 5.5v12c-2-.5-5-.5-9 1-4-1.5-7-1.5-9-1z" />

@@ -14,13 +14,13 @@ export default async function AdminEbooksPage() {
       <AdminTopbar
         crumbs={[
           { label: "집무실 홈", href: "/admin" },
-          { label: "📚 이북 관리" },
+          { label: "📚 eBook 관리" },
         ]}
       />
 
       <div className="px-12 pt-12 pb-24 max-w-[1080px] mx-auto">
         <div className="text-7xl mb-3 leading-none select-none">📚</div>
-        <h1 className="text-4xl font-bold tracking-tight mb-2">이북 관리</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-2">eBook 관리</h1>
         <p className="text-[var(--color-notion-mute)] text-base mb-6 max-w-2xl">
           PDF 파일을 업로드하고 공개 서재에서 열람할 수 있도록 관리합니다.
         </p>

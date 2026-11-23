@@ -25,7 +25,7 @@ export async function importDirectory(
   if (!hasFile && !url) {
     return {
       ok: false,
-      message: "수첩 PDF 파일을 고르거나, 이북 PDF 주소를 넣어 주세요.",
+      message: "수첩 PDF 파일을 고르거나, eBook PDF 주소를 넣어 주세요.",
     };
   }
   if (!label) {
@@ -37,7 +37,7 @@ export async function importDirectory(
     if (hasFile) {
       buf = await (file as File).arrayBuffer();
     } else {
-      // 주소로 가져오는 경우는 우리 이북 저장소만 허용한다
+      // 주소로 가져오는 경우는 우리 eBook 저장소만 허용한다
       let host = "";
       try {
         host = new URL(url).hostname;

@@ -9,8 +9,8 @@ import { EbookTabs } from "@/components/EbookTabs";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "영가회보 — 영가회 이북",
-  description: "《영가회보》 지난 호를 이북으로 열람하세요.",
+  title: "영가회보 — 영가회 eBook",
+  description: "《영가회보》 지난 호를 eBook으로 열람하세요.",
 };
 
 export default async function HoeboPage() {

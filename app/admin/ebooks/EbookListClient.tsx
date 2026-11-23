@@ -12,20 +12,20 @@ export function EbookListClient({ ebooks }: { ebooks: Ebook[] }) {
 
   return (
     <div>
-      {/* 새 이북 추가 버튼 */}
+      {/* 새 eBook 추가 버튼 */}
       {!showNew && (
         <button
           onClick={() => setShowNew(true)}
           className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] mb-8"
         >
-          + 새 이북 추가
+          + 새 eBook 추가
         </button>
       )}
 
-      {/* 새 이북 폼 */}
+      {/* 새 eBook 폼 */}
       {showNew && (
         <div className="mb-8 rounded-xl border border-[var(--color-notion-rule)] p-6 bg-[var(--color-notion-hover)]">
-          <h2 className="text-base font-semibold mb-4">새 이북 추가</h2>
+          <h2 className="text-base font-semibold mb-4">새 eBook 추가</h2>
           <EbookForm onDone={() => setShowNew(false)} />
         </div>
       )}
@@ -34,9 +34,9 @@ export function EbookListClient({ ebooks }: { ebooks: Ebook[] }) {
       {ebooks.length === 0 ? (
         <div className="border border-dashed border-[var(--color-notion-rule)] rounded-md p-12 text-center">
           <div className="text-5xl mb-3">📚</div>
-          <div className="text-base font-medium mb-1">아직 이북이 없습니다</div>
+          <div className="text-base font-medium mb-1">아직 eBook이 없습니다</div>
           <div className="text-sm text-[var(--color-notion-mute)]">
-            위의 &quot;새 이북 추가&quot; 버튼을 눌러 첫 번째 이북을 등록해 보세요.
+            위의 &quot;새 eBook 추가&quot; 버튼을 눌러 첫 번째 eBook을 등록해 보세요.
           </div>
         </div>
       ) : (
@@ -102,7 +102,7 @@ export function EbookListClient({ ebooks }: { ebooks: Ebook[] }) {
                     <form
                       action={deleteEbookAction}
                       onSubmit={(e) => {
-                        if (!confirm(`"${eb.title}" 이북을 삭제할까요? 되돌릴 수 없습니다.`)) {
+                        if (!confirm(`"${eb.title}" eBook을 삭제할까요? 되돌릴 수 없습니다.`)) {
                           e.preventDefault();
                         }
                       }}

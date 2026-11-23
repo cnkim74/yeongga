@@ -16,7 +16,7 @@ export async function generateMetadata({
   const ebook = await getEbook(Number(id));
   if (!ebook) return {};
   return {
-    title: `${ebook.title} — 영가회 이북`,
+    title: `${ebook.title} — 영가회 eBook`,
     description: ebook.description ?? undefined,
   };
 }
@@ -46,7 +46,7 @@ export default async function EbookPage({
         <div className="rounded-3xl border border-[var(--color-rule)] bg-white p-10 sm:p-14 text-center max-w-md w-full">
           <div className="text-5xl mb-4 select-none">🔒</div>
           <h1 className="text-2xl sm:text-3xl font-bold mb-3">
-            회원만 볼 수 있는 이북입니다
+            회원만 볼 수 있는 eBook입니다
           </h1>
           <p className="text-[var(--color-ink-soft)] leading-relaxed mb-8">
             {ebook.description ? (
@@ -54,10 +54,10 @@ export default async function EbookPage({
                 <span className="block mb-3 italic text-[var(--color-ink-mute)]">
                   &ldquo;{ebook.description}&rdquo;
                 </span>
-                이 이북은 영가회 회원으로 로그인하셔야 볼 수 있습니다.
+                이 eBook은 영가회 회원으로 로그인하셔야 볼 수 있습니다.
               </>
             ) : (
-              <>이 이북은 영가회 회원만 볼 수 있도록 설정되어 있습니다.</>
+              <>이 eBook은 영가회 회원만 볼 수 있도록 설정되어 있습니다.</>
             )}
           </p>
           <div className="flex gap-2 justify-center flex-wrap">
@@ -71,7 +71,7 @@ export default async function EbookPage({
               href="/ebooks"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-[var(--color-rule)] text-sm font-medium hover:bg-[var(--color-bg-soft)] transition"
             >
-              이북 서재로 돌아가기
+              eBook 서재로 돌아가기
             </Link>
           </div>
         </div>

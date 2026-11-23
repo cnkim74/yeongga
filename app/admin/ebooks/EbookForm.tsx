@@ -162,7 +162,7 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
           defaultValue={ebook?.title}
           required
           className="notion-input w-full"
-          placeholder="이북 제목"
+          placeholder="eBook 제목"
         />
       </div>
 
@@ -295,7 +295,7 @@ export function EbookForm({ ebook, onDone }: EbookFormProps) {
           disabled={isPending || pdfUploading || coverUploading || !pdfUrl}
           className="notion-icon-btn bg-[var(--color-notion-accent)] text-white hover:bg-[#1a6dbf] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2"
         >
-          {isPending ? "저장 중..." : isEdit ? "수정 저장" : "이북 추가"}
+          {isPending ? "저장 중..." : isEdit ? "수정 저장" : "eBook 추가"}
         </button>
         {onDone && (
           <button

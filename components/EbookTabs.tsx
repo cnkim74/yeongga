@@ -1,4 +1,4 @@
-// 이북 서재 두 갈래 전환 탭 — 40년사 책자 | 영가회보
+// eBook 서재 두 갈래 전환 탭 — 40년사 책자 | 영가회보
 import Link from "next/link";
 
 const TABS = [
@@ -9,7 +9,7 @@ const TABS = [
 export function EbookTabs({ current }: { current: "book" | "hoebo" }) {
   return (
     <nav
-      aria-label="이북 분류"
+      aria-label="eBook 분류"
       className="border-y border-[var(--color-rule)] bg-[var(--color-bg-soft)]"
     >
       <div className="mx-auto max-w-6xl px-6 flex gap-2">

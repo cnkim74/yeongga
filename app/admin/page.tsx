@@ -127,7 +127,7 @@ export default async function AdminHome() {
                   stat={`${totalArticles}편`} sub="장(章)별 분류" />
           <DbCard href="/admin/gallery"     Icon={IconGallery}    title="사진 갤러리"
                   stat={`${photoCount}장`} sub={`카테고리 ${categories.length}개`} />
-          <DbCard href="/admin/ebooks"      Icon={IconEbook}      title="이북"
+          <DbCard href="/admin/ebooks"      Icon={IconEbook}      title="eBook"
                   stat={`${ebookStats.total}권`}
                   sub={ebookStats.membersOnly > 0 ? `회원전용 ${ebookStats.membersOnly}권` : "PDF 자료"} />
           <DbCard href="/admin/members"     Icon={IconMembers}    title="회원 명부"
