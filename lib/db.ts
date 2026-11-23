@@ -219,36 +219,64 @@ async function syncArticleFromFile(
 ): Promise<void> {
   const filePath = path.join(process.cwd(), "content", "articles", chapter, `${slug}.md`);
   if (!fs.existsSync(filePath)) return;
+  // 배포 빌드의 60초 제한 안에 끝나도록 글 한 편을 왕복 한두 번(batch)으로 맞춘다.
+  type Stmt = { sql: string; args: (string | number | null)[] };
+  const stmts: Stmt[] = [];
   if (from && from !== chapter) {
     const here = await client.execute({
       sql: "SELECT 1 FROM articles WHERE chapter = ? AND slug = ?",
       args: [chapter, slug],
     });
-    if (here.rows.length === 0) {
-      await client.execute({
-        sql: `UPDATE articles SET chapter = ?, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?`,
-        args: [chapter, from, slug],
-      });
-    } else {
-      await client.execute({
-        sql: `UPDATE articles SET hidden = 1, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?`,
-        args: [from, slug],
+    stmts.push(
+      here.rows.length === 0
+        ? {
+            sql: `UPDATE articles SET chapter = ?, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?`,
+            args: [chapter, from, slug],
+          }
+        : {
+            sql: `UPDATE articles SET hidden = 1, updated_at = CURRENT_TIMESTAMP WHERE chapter = ? AND slug = ?`,
+            args: [from, slug],
+          }
+    );
+  }
+  const { data, content } = matter(fs.readFileSync(filePath, "utf8"));
+  const v = String(data.visibility ?? "public").toLowerCase();
+  const visibility = v === "members-only" || v === "members" || v === "private" ? "members-only" : "public";
+  const hidden = v === "draft" || v === "hidden" ? 1 : 0;
+  const title = String(data.title ?? slug);
+  const subtitle = data.subtitle ? String(data.subtitle) : null;
+  const author = data.author ? String(data.author) : null;
+  const excerpt = data.excerpt ? String(data.excerpt) : null;
+  const cover = data.cover ? String(data.cover) : null;
+  const date = toIsoDate(data.date);
+  stmts.push(
+    { sql: "DELETE FROM seeded_deletions WHERE chapter = ? AND slug = ?", args: [chapter, slug] },
+    {
+      sql: `INSERT OR IGNORE INTO articles
+              (chapter, slug, title, subtitle, author, excerpt, cover, date, visibility, body)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '')`,
+      args: [chapter, slug, title, subtitle, author, excerpt, cover, date, visibility],
+    },
+    {
+      sql: `UPDATE articles SET title = ?, subtitle = ?, author = ?, excerpt = ?, cover = ?, date = ?,
+              body = ?, visibility = ?, hidden = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE chapter = ? AND slug = ?`,
+      args: [title, subtitle, author, excerpt, cover, date, await renderMarkdown(content), visibility, hidden, chapter, slug],
+    }
+  );
+  if (data.tags) {
+    stmts.push({
+      sql: `DELETE FROM article_tags WHERE article_id = (SELECT id FROM articles WHERE chapter = ? AND slug = ?)`,
+      args: [chapter, slug],
+    });
+    for (const tag of String(data.tags).split(",").map((t) => t.trim()).filter(Boolean)) {
+      stmts.push({
+        sql: `INSERT OR IGNORE INTO article_tags (article_id, tag) SELECT id, ? FROM articles WHERE chapter = ? AND slug = ?`,
+        args: [tag, chapter, slug],
       });
     }
   }
-  await restoreArticlesFromFiles(client, [[chapter, slug]]);
-  const { data } = matter(fs.readFileSync(filePath, "utf8"));
-  await client.execute({
-    sql: `UPDATE articles SET cover = ?, date = ?, author = ?, updated_at = CURRENT_TIMESTAMP
-          WHERE chapter = ? AND slug = ?`,
-    args: [
-      data.cover ? String(data.cover) : null,
-      toIsoDate(data.date),
-      data.author ? String(data.author) : null,
-      chapter,
-      slug,
-    ],
-  });
+  await client.batch(stmts, "write");
 }
 
 async function init(client: Client) {
@@ -5723,7 +5751,13 @@ async function init(client: Client) {
       ["jachui", "hoebo-9-5-yeongga-cheongnyeon-chulbeom", "moim"],
       ["jachui", "hoebo-9-5-yeongga-sosik", null],
     ];
-    for (const [chapter, slug, from] of items) await syncArticleFromFile(client, chapter, slug, from ?? undefined);
+    // 한 편씩 끝날 때마다 표시해 두어, 빌드가 중간에 끊겨도 다음 시도는 남은 글부터 한다.
+    for (const [chapter, slug, from] of items) {
+      const key = `jachui-restore-2026-11-v1:${chapter}/${slug}`;
+      if (await hasMigration(client, key)) continue;
+      await syncArticleFromFile(client, chapter, slug, from ?? undefined);
+      await markMigration(client, key);
+    }
     const hide: [string, string][] = [
       ["geul", "hoebo-9-1-bak-daeseop-9dae"],
       ["geul", "hoebo-9-1-beopin-jagchu"],
