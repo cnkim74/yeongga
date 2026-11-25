@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { ChapterNavStrip } from "@/components/ChapterNavStrip";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
-import { getChapter, chapters } from "@/lib/chapters";
+import { getChapter, chapters, isLongChapterTitle } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
@@ -230,7 +230,11 @@ export default async function ChapterPage({
               <div className="kicker text-white/70 mb-3">
                 {meta.number} · {meta.subtitle}
               </div>
-              <h1 className="display text-5xl sm:text-7xl mb-5">
+              <h1
+                className={`display [word-break:keep-all] mb-5 ${
+                  isLongChapterTitle(meta.title) ? "text-4xl sm:text-6xl" : "text-5xl sm:text-7xl"
+                }`}
+              >
                 {meta.title}
               </h1>
               <p className="text-base sm:text-lg text-white/85 leading-relaxed max-w-xl">

@@ -52,7 +52,7 @@ export default async function AboutPage() {
               <li>
                 글은 {CHAPTER_COUNT_KO} 개의 장(章)으로 나누어 두었습니다 —{" "}
                 <strong>
-                  {chapters.map((c) => c.title.replace(/\(.*\)$/, "")).join(", ")}.
+                  {chapters.map((c) => c.title).join(", ")}.
                 </strong>{" "}
                 위쪽의 <em>아카이브</em>
                 메뉴에서 장을 골라 들어가실 수 있습니다.

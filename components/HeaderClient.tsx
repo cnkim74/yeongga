@@ -178,7 +178,7 @@ export function HeaderClient() {
                           <span className="font-serif text-white/40 w-5 text-center mr-2">
                             {c.number}
                           </span>
-                          <span className="flex-1 whitespace-nowrap">{c.menuLabel ?? c.title}</span>
+                          <span className="flex-1 whitespace-nowrap">{c.title}</span>
                           {c.comingSoon && (
                             <span className="text-[10px] text-white/30 tracking-wider ml-2">
                               準備中
@@ -413,7 +413,7 @@ export function HeaderClient() {
                             <span className="font-serif text-[var(--color-ink-mute)] w-6 inline-block">
                               {c.number}
                             </span>
-                            {c.menuLabel ?? c.title}
+                            {c.title}
                             {c.comingSoon && (
                               <span className="ml-2 text-xs">準備中</span>
                             )}

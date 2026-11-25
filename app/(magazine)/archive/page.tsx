@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChapterIcon } from "@/components/ChapterIcon";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
-import { chapters, CHAPTER_COUNT_KO } from "@/lib/chapters";
+import { chapters, CHAPTER_COUNT_KO, isLongChapterTitle } from "@/lib/chapters";
 import { listAllArticles, type ArticleMeta } from "@/lib/articles-db";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { PageHeroBg } from "@/components/PageHeroBg";
@@ -67,13 +67,13 @@ export default async function ArchiveIndex() {
                       {c.number} · {c.subtitle}
                     </div>
                     {c.comingSoon ? (
-                      <span className="display-md text-3xl sm:text-4xl text-[var(--color-ink-mute)]">
+                      <span className={`display-md [word-break:keep-all] ${isLongChapterTitle(c.title) ? "text-2xl" : "text-3xl sm:text-4xl"} text-[var(--color-ink-mute)]`}>
                         {c.title}
                       </span>
                     ) : (
                       <Link
                         href={c.href ?? `/archive/${c.slug}`}
-                        className="display-md text-3xl sm:text-4xl hover:text-[var(--color-accent)] transition"
+                        className={`display-md [word-break:keep-all] ${isLongChapterTitle(c.title) ? "text-2xl" : "text-3xl sm:text-4xl"} hover:text-[var(--color-accent)] transition`}
                       >
                         {c.title}
                       </Link>

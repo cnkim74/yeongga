@@ -98,7 +98,7 @@ export default async function HomePage() {
                     <div className="text-xs text-[var(--color-ink-mute)] mb-1 font-mono">
                       {c.number}
                     </div>
-                    <div className="display-md text-lg sm:text-xl mb-1">
+                    <div className="display-md text-lg sm:text-xl mb-1 [word-break:keep-all]">
                       {c.title}
                     </div>
                     <div className="text-xs text-[var(--color-ink-mute)]">
@@ -117,7 +117,7 @@ export default async function HomePage() {
                     <div className="text-xs text-[var(--color-ink-mute)] mb-1 font-mono">
                       {c.number}
                     </div>
-                    <div className="display-md text-lg sm:text-xl mb-1">
+                    <div className="display-md text-lg sm:text-xl mb-1 [word-break:keep-all]">
                       {c.title}
                     </div>
                     <div className="text-xs text-[var(--color-ink-mute)]">
