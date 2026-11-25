@@ -157,7 +157,7 @@ export function HeaderClient() {
                     className="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-has-[:focus-visible]:opacity-100 group-has-[:focus-visible]:visible transition-opacity duration-150"
                     role="menu"
                   >
-                    <div className="archive-dropdown-panel min-w-[220px] rounded-2xl shadow-2xl py-2">
+                    <div className="archive-dropdown-panel min-w-[220px] w-max rounded-2xl shadow-2xl py-2">
                       <Link
                         href="/archive"
                         className="archive-drop-item archive-drop-all"
@@ -178,7 +178,7 @@ export function HeaderClient() {
                           <span className="font-serif text-white/40 w-5 text-center mr-2">
                             {c.number}
                           </span>
-                          <span className="flex-1">{c.title}</span>
+                          <span className="flex-1 whitespace-nowrap">{c.menuLabel ?? c.title}</span>
                           {c.comingSoon && (
                             <span className="text-[10px] text-white/30 tracking-wider ml-2">
                               準備中
@@ -413,7 +413,7 @@ export function HeaderClient() {
                             <span className="font-serif text-[var(--color-ink-mute)] w-6 inline-block">
                               {c.number}
                             </span>
-                            {c.title}
+                            {c.menuLabel ?? c.title}
                             {c.comingSoon && (
                               <span className="ml-2 text-xs">準備中</span>
                             )}

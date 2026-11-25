@@ -2,6 +2,9 @@ export type Chapter = {
   slug: string;
   number: string; // 한자 표기 — "一", "二" 등
   title: string;
+  // 상단 메뉴(아카이브 드롭다운·모바일 메뉴)에만 쓰는 이름. 없으면 title.
+  // 2026-11-26 클라이언트 요청 문구 — 페이지 제목·카드는 짧은 title 을 그대로 쓴다.
+  menuLabel?: string;
   subtitle: string;
   description: string;
   comingSoon?: boolean;
@@ -22,6 +25,7 @@ export const allChapters: Chapter[] = [
     slug: "yeongi",
     number: "一",
     title: "연혁(沿革)",
+    menuLabel: "연혁",
     subtitle: "영가회의 발자취",
     description: "회(會)의 발자취와 첫 모임의 기록. 창립의 인연과 정체성을 담았습니다.",
   },
@@ -29,6 +33,7 @@ export const allChapters: Chapter[] = [
     slug: "moim",
     number: "二",
     title: "행사",
+    menuLabel: "행사",
     subtitle: "회장별·정기 행사 기록",
     description: "정기 모임, 신년하례, 탐방, 시상식 — 함께 모인 자리의 기록.",
   },
@@ -36,6 +41,7 @@ export const allChapters: Chapter[] = [
     slug: "geul",
     number: "三",
     title: "기고",
+    menuLabel: "기고문(연사, 영가회보)",
     subtitle: "회원이 남긴 글과 인물 기록",
     description:
       "회원들이 남긴 수필과 기고문, 그리고 역대 회장과 명사들의 인물 기록을 함께 담았습니다.",
@@ -60,6 +66,7 @@ export const allChapters: Chapter[] = [
     slug: "yeongsang",
     number: "六",
     title: "사진(寫眞)",
+    menuLabel: "사진",
     subtitle: "사진 아카이브",
     description: "회의 사진을 모아 둔 갤러리입니다.",
     href: "/gallery",
@@ -69,6 +76,7 @@ export const allChapters: Chapter[] = [
     slug: "dongyeong",
     number: "七",
     title: "영상(映像)",
+    menuLabel: "영상",
     subtitle: "영상 아카이브",
     description: "회의 영상을 모아 둔 자리입니다.",
     href: "/videos",
@@ -78,6 +86,7 @@ export const allChapters: Chapter[] = [
     slug: "hoewon",
     number: "八",
     title: "회원(會員)",
+    menuLabel: "회원",
     subtitle: "회원 명단",
     description:
       "회원수첩에 오른 회원들입니다. 성명과 직장·직위만 실었고 주소와 연락처는 공개하지 않습니다.",
@@ -88,6 +97,7 @@ export const allChapters: Chapter[] = [
     slug: "munhwasang",
     number: "九",
     title: "영가상",
+    menuLabel: "역대 영가문화상·선행상·공로상 수상자",
     subtitle: "영가문화상 · 선행상 · 공로상",
     description:
       "영가회가 드린 상의 기록입니다. 영가문화상, 영가선행상, 그리고 회에 공을 세운 분께 드린 공로패·감사패를 모았습니다.",
