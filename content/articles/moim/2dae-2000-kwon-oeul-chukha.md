@@ -5,8 +5,12 @@ date: "2000-06-02"
 author: "편집실"
 excerpt: "2000년 6월 2일 아침 조선호텔 2층 코스모스 룸에서 권오을 의원의 국회의원 당선을 축하하는 조찬회를 열었습니다. 회원 79명이 참석했고 신입회원 다섯 명이 가입했습니다."
 tags: "영가회, 永嘉會, 모임, 2대, 류목기, 2000, 2000년대, 조찬회, 조선호텔, 권오을, 축하"
+cover: "/archive-photos/40y/moim/2dae-2000-kwon-oeul-chukha-1.webp"
 visibility: public
 ---
+
+![권오을의원 재선 축하 조찬회](/archive-photos/40y/moim/2dae-2000-kwon-oeul-chukha-1.webp)
+*권오을의원 재선 축하 조찬회*
 
 ## 개요
 

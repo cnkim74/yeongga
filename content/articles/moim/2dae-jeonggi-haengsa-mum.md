@@ -5,8 +5,24 @@ date: "2002-12-31"
 author: "편집실"
 excerpt: "류목기 2대 회장 재임(1998~2002)의 주요 행사입니다. 1998년 말 이사회에서 《영가회보》를 발행하기로 정하고, 1999년부터 편집회의를 이어 갔습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 2대, 류목기, 1998, 1999, 2000, 2001, 2002, 2000년대, 정기총회, 신년하례회, 재경향우회"
+cover: "/archive-photos/40y/moim/2dae-jeonggi-haengsa-mum-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/2dae-jeonggi-haengsa-mum-1.webp)
+
+![권오을의원 재선 축하 조찬회](/archive-photos/40y/moim/2dae-jeonggi-haengsa-mum-2.webp)
+*권오을의원 재선 축하 조찬회*
+
+![김호진 노사정위원장, 김경한 법무부 차관 취임 축하 조찬회](/archive-photos/40y/moim/2dae-jeonggi-haengsa-mum-3.webp)
+*김호진 노사정위원장, 김경한 법무부 차관 취임 축하 조찬회*
+
+![](/archive-photos/40y/moim/2dae-jeonggi-haengsa-mum-4.webp)
+
+![신입회원 소개](/archive-photos/40y/moim/2dae-jeonggi-haengsa-mum-5.webp)
+*신입회원 소개*
+
+![](/archive-photos/40y/moim/2dae-jeonggi-haengsa-mum-6.webp)
 
 ## 개요
 

@@ -5,8 +5,25 @@ date: "2006-12-31"
 author: "편집실"
 excerpt: "금창태 3대 회장 재임 4년(2003~2006)의 주요 행사입니다. 영가문화상을 제정하고 문화유적탐방을 봄·가을 두 차례로 정례화했습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 3대, 금창태, 2003, 2004, 2005, 2006, 2000년대, 정기총회, 신년하례회, 문화유적탐방, 영가문화상, 재경향우회"
+cover: "/archive-photos/40y/moim/3dae-jeonggi-haengsa-mum-1.webp"
 visibility: public
 ---
+
+![금창태 회장 취임사](/archive-photos/40y/moim/3dae-jeonggi-haengsa-mum-1.webp)
+*금창태 회장 취임사*
+
+![](/archive-photos/40y/moim/3dae-jeonggi-haengsa-mum-2.webp)
+
+![영월 장릉(단종능)](/archive-photos/40y/moim/3dae-jeonggi-haengsa-mum-3.webp)
+*영월 장릉(단종능)*
+
+![](/archive-photos/40y/moim/3dae-jeonggi-haengsa-mum-4.webp)
+
+![하동군수의 영접](/archive-photos/40y/moim/3dae-jeonggi-haengsa-mum-5.webp)
+*하동군수의 영접*
+
+![하동시장과 기독교 차문화협회원들](/archive-photos/40y/moim/3dae-jeonggi-haengsa-mum-6.webp)
+*하동시장과 기독교 차문화협회원들*
 
 ## 개요
 

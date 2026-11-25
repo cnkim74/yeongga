@@ -5,8 +5,15 @@ date: "2014-04-17"
 author: "편집실"
 excerpt: "2014년 4월 17일부터 21일까지 4박 5일 동안 영가회가 중국 강남 지역을 다녀왔습니다. 남경·무석·소주·항주·상해를 둘러보고 무석 한국학교를 방문했습니다."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2014, 2010년대, 해외문화유적탐방, 중국, 항저우, 쑤저우, 상하이, 무석한국학교"
+cover: "/archive-photos/40y/moim/5dae-2014-haeoe-jiangnan-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2014-haeoe-jiangnan-1.webp)
+
+![](/archive-photos/40y/moim/5dae-2014-haeoe-jiangnan-2.webp)
+
+![](/archive-photos/40y/moim/5dae-2014-haeoe-jiangnan-3.webp)
 
 ## 개요
 

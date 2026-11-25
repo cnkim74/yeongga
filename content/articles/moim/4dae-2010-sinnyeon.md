@@ -5,8 +5,21 @@ date: "2010-01-13"
 author: "편집실"
 excerpt: "2010년 1월 13일 저녁 6시 30분, 영가회는 프레지던트호텔 19층 신세계홀에서 신년하례회와 정기총회를 가졌습니다. 130여 회원 참석. 영가문화상 제3회 시상(안동문화원), 박세환 88대 재향군인회장 축하, 손준석 사장 공로패까지 — 허동진 회장기의 마지막 신년 자리."
 tags: "영가회, 永嘉會, 모임, 4대, 허동진, 2010, 2010년대, 신년하례회, 정기총회, 영가문화상, 안동문화원, 김준식, 박세환, 재향군인회, 손준석"
+cover: "/archive-photos/40y/moim/4dae-2010-sinnyeon-1.webp"
 visibility: public
 ---
+
+![박세환 회원](/archive-photos/40y/moim/4dae-2010-sinnyeon-1.webp)
+*박세환 회원*
+
+![](/archive-photos/40y/moim/4dae-2010-sinnyeon-2.webp)
+
+![김준식 전 안동문화원장](/archive-photos/40y/moim/4dae-2010-sinnyeon-3.webp)
+*김준식 전 안동문화원장*
+
+![](/archive-photos/40y/moim/4dae-2010-sinnyeon-4.webp)
+
+![](/archive-photos/40y/moim/4dae-2010-sinnyeon-5.webp)
 
 ## 130여 회원의 한 자리
 

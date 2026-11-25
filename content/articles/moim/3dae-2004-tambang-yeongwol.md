@@ -5,8 +5,12 @@ date: "2004-06-12"
 author: "편집실"
 excerpt: "2004년 6월 12일, 영가회 회원 60여 명이 관광버스 두 대에 나누어 타고 영월로 떠났습니다. 김삿갓 유적지, 난고 문학관, 그리고 동강 어라연에서의 송어회 ― 류종묵 부회장이 전액을 부담한 첫 본격 문화유적탐방."
 tags: "영가회, 永嘉會, 모임, 3대, 금창태, 2004, 2000년대, 문화유적탐방, 영월, 김삿갓, 난고문학관, 동강, 어라연, 류종묵"
+cover: "/archive-photos/40y/moim/3dae-2004-tambang-yeongwol-1.webp"
 visibility: public
 ---
+
+![영월 장릉(단종능)](/archive-photos/40y/moim/3dae-2004-tambang-yeongwol-1.webp)
+*영월 장릉(단종능)*
 
 ## 60명 회원이 함께 떠난 자리
 

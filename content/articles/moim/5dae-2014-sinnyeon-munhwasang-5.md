@@ -5,8 +5,14 @@ date: "2014-01-10"
 author: "편집실"
 excerpt: "2014년 1월 10일 프레지던트호텔 브람스홀에서 영가회 신년하례회와 정기총회가 마련됐습니다. 회원 120여 명 참석, 이날의 영가문화상(5회)은 안동독립기념관장이자 안동대학교 교수인 김희곤 박사에게 — 평생을 안동의 항일투쟁과 독립운동사 연구에 바친 학자."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2014, 2010년대, 신년하례회, 정기총회, 영가문화상, 5회, 김희곤, 안동독립기념관, 안동대학교"
+cover: "/archive-photos/40y/moim/5dae-2014-sinnyeon-munhwasang-5-1.webp"
 visibility: public
 ---
+
+![김희곤 교수](/archive-photos/40y/moim/5dae-2014-sinnyeon-munhwasang-5-1.webp)
+*김희곤 교수*
+
+![](/archive-photos/40y/moim/5dae-2014-sinnyeon-munhwasang-5-2.webp)
 
 ## 5대 회장기의 마지막 새해 자리
 

@@ -5,8 +5,11 @@ date: "2008-05-01"
 author: "편집실"
 excerpt: "2008년 상반기 영가회가 중국 산동성 일대를 다녀왔습니다. 5월 1일 인천에서 배로 떠나 이튿날 청도에 닿았고, 태산 등을 둘러봤습니다. 회원 김만연이 일기 형식의 기고문으로 기록을 남겼습니다."
 tags: "영가회, 永嘉會, 모임, 4대, 허동진, 2008, 2000년대, 해외문화유적탐방, 중국, 산동성, 청도, 태산, 김만연"
+cover: "/archive-photos/40y/moim/4dae-2008-haeoe-tambang-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/4dae-2008-haeoe-tambang-1.webp)
 
 ## 개요
 

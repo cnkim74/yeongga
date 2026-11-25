@@ -5,8 +5,19 @@ date: "2014-06-12"
 author: "편집실"
 excerpt: "2014년 6월 12일 프레지던트호텔에서 영가회 상반기 분기회를 열고, 6·4 지방선거에서 당선된 두 회원 — 권영진 대구광역시장과 권영세 안동시장의 취임을 함께 축하했습니다. 같은 날, 안동에서 한 사람, 대구에서 한 사람."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2014, 2010년대, 분기회, 권영진, 권영세, 대구광역시장, 안동시장, 지방선거"
+cover: "/archive-photos/40y/moim/5dae-2014-gwon-yeongjin-chukha-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2014-gwon-yeongjin-chukha-1.webp)
+
+![권영세 안동시장](/archive-photos/40y/moim/5dae-2014-gwon-yeongjin-chukha-2.webp)
+*권영세 안동시장*
+
+![](/archive-photos/40y/moim/5dae-2014-gwon-yeongjin-chukha-3.webp)
+
+![권영진 대구시장](/archive-photos/40y/moim/5dae-2014-gwon-yeongjin-chukha-4.webp)
+*권영진 대구시장*
 
 ## 같은 날의 두 영광
 

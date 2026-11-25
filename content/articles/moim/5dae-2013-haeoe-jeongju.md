@@ -5,8 +5,13 @@ date: "2013-10-22"
 author: "편집실"
 excerpt: "2013년 10월 22일부터 26일까지 영가회 회원 20여 명이 중국 중원 지역으로 해외문화유적 탐방을 다녀왔습니다. 정주·낙양·소림사·운대산을 둘러봤습니다."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2013, 2010년대, 해외문화유적탐방, 중국, 정주, 낙양, 소림사, 운대산"
+cover: "/archive-photos/40y/moim/5dae-2013-haeoe-jeongju-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2013-haeoe-jeongju-1.webp)
+
+![](/archive-photos/40y/moim/5dae-2013-haeoe-jeongju-2.webp)
 
 ## 개요
 

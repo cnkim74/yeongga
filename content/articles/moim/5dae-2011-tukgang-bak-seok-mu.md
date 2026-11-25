@@ -5,8 +5,11 @@ date: "2011-01-07"
 author: "편집실"
 excerpt: "2011년 1월 7일 프레지던트호텔 모차르트 홀에서 열린 임시총회 겸 특강입니다. 다산연구소 박석무 이사장이 강사로 나섰습니다. 주제는 〈안동의 사림정신〉. 추로지향(鄒魯之鄕)에서 한국국학진흥원까지, 안동이라는 도시의 정신적 두께를 풀어낸 한 자리."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2011, 2010년대, 임시총회, 명사특강, 박석무, 다산연구소, 안동학, 사림정신"
+cover: "/archive-photos/40y/moim/5dae-2011-tukgang-bak-seok-mu-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2011-tukgang-bak-seok-mu-1.webp)
 
 ## 임시총회의 자리
 

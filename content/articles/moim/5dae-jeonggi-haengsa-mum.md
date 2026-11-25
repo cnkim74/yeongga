@@ -5,8 +5,22 @@ date: "2014-12-31"
 author: "편집실"
 excerpt: "류종묵 5대 회장 재임 4년(2011~2014)의 주요 행사입니다. 명사 초청 특강이 정례화되고 해외 문화탐방을 두 차례 실시했습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 5대, 류종묵, 2011, 2012, 2013, 2014, 2010년대, 정기총회, 신년하례회, 명사특강, 해외탐방, 재경향우회"
+cover: "/archive-photos/40y/moim/5dae-jeonggi-haengsa-mum-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-jeonggi-haengsa-mum-1.webp)
+
+![](/archive-photos/40y/moim/5dae-jeonggi-haengsa-mum-2.webp)
+
+![](/archive-photos/40y/moim/5dae-jeonggi-haengsa-mum-3.webp)
+
+![2012년 신입회원(당당한 모습)](/archive-photos/40y/moim/5dae-jeonggi-haengsa-mum-4.webp)
+*2012년 신입회원(당당한 모습)*
+
+![](/archive-photos/40y/moim/5dae-jeonggi-haengsa-mum-5.webp)
+
+![](/archive-photos/40y/moim/5dae-jeonggi-haengsa-mum-6.webp)
 
 ## 개요
 

@@ -5,8 +5,15 @@ date: "2016-01-08"
 author: "편집실"
 excerpt: "2016년 1월 8일 프레지던트호텔에서 영가회 신년하례회와 정기총회가 마련됐습니다. 김봉구 회장이 직접 강의한 〈세계경제의 저성장과 양극화 문제〉에 이어, 안동 내방가사 보존회(회장 이선자)에 영가문화상 6회 시상."
 tags: "영가회, 永嘉會, 모임, 6대, 김봉구, 2016, 2010년대, 신년하례회, 정기총회, 영가문화상, 6회, 안동내방가사보존회, 이선자, 세계경제"
+cover: "/archive-photos/40y/moim/6dae-2016-sinnyeon-munhwasang-6-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/6dae-2016-sinnyeon-munhwasang-6-1.webp)
+
+![](/archive-photos/40y/moim/6dae-2016-sinnyeon-munhwasang-6-2.webp)
+
+![](/archive-photos/40y/moim/6dae-2016-sinnyeon-munhwasang-6-3.webp)
 
 ## 6대 회장기의 두 번째 새해 자리
 

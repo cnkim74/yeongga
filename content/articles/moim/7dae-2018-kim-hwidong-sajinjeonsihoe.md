@@ -5,8 +5,11 @@ date: "2018-04-24"
 author: "편집실"
 excerpt: "2018년 4월 24일, 사진작가로도 유명한 김휘동 전 안동시장(영가회 회원)이 서울 예술의전당 3층 전시실에서 〈솔바위〉 사진전시회를 개최했습니다. 영가회원들이 축하 자리에 함께했고, 허동진 4대 명예회장이 서초동 근방에서 축하객들에게 만찬을 제공했습니다."
 tags: "영가회, 永嘉會, 모임, 7대, 김계동, 2018, 2010년대, 회원작품, 김휘동, 솔바위, 사진전시회, 예술의전당, 허동진, 안동시장"
+cover: "/archive-photos/40y/moim/7dae-2018-kim-hwidong-sajinjeonsihoe-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/7dae-2018-kim-hwidong-sajinjeonsihoe-1.webp)
 
 ## 영가회 회원의 한 자리
 

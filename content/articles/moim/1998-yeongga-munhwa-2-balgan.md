@@ -5,10 +5,13 @@ date: "1998-07-10"
 author: "편집실"
 excerpt: "1998년 7월 10일 《영가문화》 제2집 《그 단새 스무해가》를 펴냈습니다. 회보 《영가회소식》에 여러 해 실어 온 회원들의 글을 모은 책으로, 1982년 제1집과 열여섯 해 터울입니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 1대, 1998, 1990년대, 영가문화, 회보, 재경향우회"
+cover: "/archive-photos/40y/moim/1998-yeongga-munhwa-2-balgan-1.webp"
 visibility: public
 ---
 
 > *편집실 안내 — 《영가회 40년사》 15쪽(출판물 목록), 43~44쪽, 51~53쪽을 근거로 정리했습니다.*
+
+![](/archive-photos/40y/moim/1998-yeongga-munhwa-2-balgan-1.webp)
 
 ## 발간 개요
 

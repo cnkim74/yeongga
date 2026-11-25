@@ -5,8 +5,12 @@ date: "2000-01-27"
 author: "편집실"
 excerpt: "2000년 1월 27일 저녁 6시 30분 엠버서더호텔 2층 동궁에서 정기총회와 신년하례회를 함께 열었습니다. 회원 103명이 참석했고 이시형 박사가 특강을 했습니다."
 tags: "영가회, 永嘉會, 모임, 2대, 류목기, 2000, 2000년대, 정기총회, 신년하례회, 엠버서더호텔, 이시형"
+cover: "/archive-photos/40y/moim/2dae-2000-jeongi-isihyeong-1.webp"
 visibility: public
 ---
+
+![이시형 박사](/archive-photos/40y/moim/2dae-2000-jeongi-isihyeong-1.webp)
+*이시형 박사*
 
 ## 개요
 

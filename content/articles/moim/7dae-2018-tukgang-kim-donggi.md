@@ -5,8 +5,17 @@ date: "2018-08-30"
 author: "편집실"
 excerpt: "2018년 8월 30일 프레지던트호텔 19층 브람스 홀에서 영가회 임시총회가 마련됐습니다. 김봉구 전 회장에게 감사패를 수여하고, 13명의 신입회원을 한자리에서 소개. 그리고 4월 1일부터 대한민국학술원 회장으로 취임한 김동기 회원의 특강 〈4차 산업혁명시대가 요구하는 바람직한 한국기업의 대응전략〉을 들었습니다."
 tags: "영가회, 永嘉會, 모임, 7대, 김계동, 2018, 2010년대, 임시총회, 김동기, 대한민국학술원, 김봉구, 감사패, 신입회원, 4차산업혁명, 명사특강"
+cover: "/archive-photos/40y/moim/7dae-2018-tukgang-kim-donggi-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/7dae-2018-tukgang-kim-donggi-1.webp)
+
+![](/archive-photos/40y/moim/7dae-2018-tukgang-kim-donggi-2.webp)
+
+![](/archive-photos/40y/moim/7dae-2018-tukgang-kim-donggi-3.webp)
+
+![](/archive-photos/40y/moim/7dae-2018-tukgang-kim-donggi-4.webp)
 
 ## 8월 30일, 임시총회의 한 자리
 

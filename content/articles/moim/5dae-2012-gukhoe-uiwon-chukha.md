@@ -5,8 +5,20 @@ date: "2012-04-24"
 author: "편집실"
 excerpt: "2012년 4월 24일 프레지던트호텔 브람스홀에서 상반기 분기회를 열고, 4월 11일 19대 국회의원 선거에서 당선된 두 회원의 축하 자리를 가졌습니다. 안동에서 재선한 김광림 의원과 대구 동구 갑에서 초선한 류성걸 의원 — 같은 4월의 같은 영광."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2012, 2010년대, 분기회, 김광림, 류성걸, 19대국회의원, 새누리당"
+cover: "/archive-photos/40y/moim/5dae-2012-gukhoe-uiwon-chukha-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2012-gukhoe-uiwon-chukha-1.webp)
+
+![2012년 신입회원(당당한 모습)](/archive-photos/40y/moim/5dae-2012-gukhoe-uiwon-chukha-2.webp)
+*2012년 신입회원(당당한 모습)*
+
+![김광림 국회의원](/archive-photos/40y/moim/5dae-2012-gukhoe-uiwon-chukha-3.webp)
+*김광림 국회의원*
+
+![류성걸 국회의원](/archive-photos/40y/moim/5dae-2012-gukhoe-uiwon-chukha-4.webp)
+*류성걸 국회의원*
 
 ## 분기회의 자리
 

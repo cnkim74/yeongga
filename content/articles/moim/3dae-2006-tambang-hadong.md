@@ -5,8 +5,28 @@ date: "2006-04-15"
 author: "편집실"
 excerpt: "2006년 4월 15일, 영가회는 처음으로 1박 2일 장거리 문화유적탐방에 나섰습니다. 하동 차 문화 ― 화개장터, 하동 차 시음회관, 야생차 체험. 지리산 자락에서 시작된 우리나라 차 문화의 뿌리를 찾아갔습니다."
 tags: "영가회, 永嘉會, 모임, 3대, 금창태, 2006, 2000년대, 문화유적탐방, 하동, 차문화, 화개장터, 지리산, 야생차, 1박2일"
+cover: "/archive-photos/40y/moim/3dae-2006-tambang-hadong-1.webp"
 visibility: public
 ---
+
+![하동군수의 영접](/archive-photos/40y/moim/3dae-2006-tambang-hadong-1.webp)
+*하동군수의 영접*
+
+![차도시법현장](/archive-photos/40y/moim/3dae-2006-tambang-hadong-2.webp)
+*차도시법현장*
+
+![하동시장과 기독교 차문화협회원들](/archive-photos/40y/moim/3dae-2006-tambang-hadong-3.webp)
+*하동시장과 기독교 차문화협회원들*
+
+![](/archive-photos/40y/moim/3dae-2006-tambang-hadong-4.webp)
+
+![2006. 4. 15 기독교 차 문화연구회와 함께](/archive-photos/40y/moim/3dae-2006-tambang-hadong-5.webp)
+*2006. 4. 15 기독교 차 문화연구회와 함께*
+
+![](/archive-photos/40y/moim/3dae-2006-tambang-hadong-6.webp)
+
+![2006년 기독교차문화연구회](/archive-photos/40y/moim/3dae-2006-tambang-hadong-7.webp)
+*2006년 기독교차문화연구회*
 
 ## 첫 1박 2일 탐방
 

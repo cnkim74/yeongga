@@ -5,8 +5,12 @@ date: "2017-01-01"
 author: "편집실"
 excerpt: "김봉구 회장 임기 중, 영가회는 국방대학교 김병렬 교수를 초청해 〈독도문제에 대한 올바른 이해〉를 들었습니다. 30년 가까이 독도 문제를 연구해 온 국내 최고 독도 전문가가 풀어낸, 일본 측 주장의 빈틈과 우리가 준비해야 할 자리."
 tags: "영가회, 永嘉會, 모임, 6대, 김봉구, 2017, 2010년대, 명사특강, 김병렬, 국방대학교, 독도, 안용복, 샌프란시스코강화조약"
+cover: "/archive-photos/40y/moim/6dae-2017-tukgang-dokdo-kim-byeongryeol-1.webp"
 visibility: public
 ---
+
+![김병렬 교수](/archive-photos/40y/moim/6dae-2017-tukgang-dokdo-kim-byeongryeol-1.webp)
+*김병렬 교수*
 
 ## 영가회에 모신 독도 전문가
 

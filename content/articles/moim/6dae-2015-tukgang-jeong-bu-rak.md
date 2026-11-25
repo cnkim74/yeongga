@@ -5,8 +5,11 @@ date: "2015-09-17"
 author: "편집실"
 excerpt: "2015년 9월 17일 프레지던트호텔에서 영가회 하반기 임시총회를 열고, 정부락 교수의 특강 〈북한정세와 남북관계 전망〉을 들었습니다. 8·25 남북합의 직후의 자리에서, 주변 국제정세부터 김정은 체제의 실상, 그리고 한반도 통일의 방향까지를 한 시간에 풀어낸 강의."
 tags: "영가회, 永嘉會, 모임, 6대, 김봉구, 2015, 2010년대, 임시총회, 명사특강, 정부락, 북한, 남북관계, 통일"
+cover: "/archive-photos/40y/moim/6dae-2015-tukgang-jeong-bu-rak-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/6dae-2015-tukgang-jeong-bu-rak-1.webp)
 
 ## 하반기 임시총회의 자리
 

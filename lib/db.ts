@@ -5810,6 +5810,46 @@ async function init(client: Client) {
     }
     await markMigration(client, "cover-from-body-2026-11-v1");
   }
+  // 행사 글에 《영가회 40년사》 사진 넣기 (2026-11-26 요청) — 사진이 없던 행사 글에, 글 끝 출처의
+  // 40년사 쪽(과 화보)에서 오려 낸 그 행사 사진을 본문 첫 소제목 앞에 넣는다. 캡션은 책에 찍힌
+  // 글자만(없으면 캡션 없음). 운영에서 제목 등을 손본 글이라 파일로 덮지 않고 사진만 끼워 넣는다.
+  // 이미 그 사진이 본문에 있으면 건너뛰고, 대표 이미지는 비어 있을 때만 첫 사진으로 채운다.
+  if (!(await hasMigration(client, "moim-40y-photos-2026-11-v1"))) {
+    const { MOIM_40Y_PHOTOS } = await import("./moim40-photos");
+    for (const [slug, photos] of Object.entries(MOIM_40Y_PHOTOS)) {
+      if (photos.length === 0) continue;
+      const r = await client.execute({
+        sql: "SELECT id, body, cover FROM articles WHERE chapter = 'moim' AND slug = ?",
+        args: [slug],
+      });
+      const row = r.rows[0];
+      if (!row) continue;
+      let body = String(row.body ?? "");
+      if (!body.includes(photos[0].src)) {
+        const md = photos
+          .map(
+            (p) =>
+              `![${(p.caption ?? "").replace(/[[\]]/g, "")}](${p.src})` +
+              (p.caption ? `\n*${p.caption.replace(/\*/g, "\\*")}*` : "")
+          )
+          .join("\n\n");
+        if (looksLikeHTML(body) || body.trim() === "") {
+          const block = await renderMarkdown(md);
+          const at = body.search(/<h2\b/i);
+          body = at >= 0 ? `${body.slice(0, at)}${block}\n${body.slice(at)}` : `${block}\n${body}`;
+        } else {
+          const at = body.search(/^## /m);
+          body = at >= 0 ? `${body.slice(0, at)}${md}\n\n${body.slice(at)}` : `${md}\n\n${body}`;
+        }
+      }
+      const cover = String(row.cover ?? "").trim() || photos[0].src;
+      await client.execute({
+        sql: "UPDATE articles SET body = ?, cover = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        args: [body, cover, Number(row.id)],
+      });
+    }
+    await markMigration(client, "moim-40y-photos-2026-11-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

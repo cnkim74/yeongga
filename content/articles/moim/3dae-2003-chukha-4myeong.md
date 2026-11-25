@@ -5,8 +5,29 @@ date: "2003-04-15"
 author: "편집실"
 excerpt: "2003년 4월 15일 엠버서더호텔에서 김원·김광림·이희범·권영건 네 회원의 취임과 연임을 축하했습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 3대, 2003, 2000년대, 금창태, 축하연, 김광림, 김원중, 이재범, 권영건, 재경향우회"
+cover: "/archive-photos/40y/moim/3dae-2003-chukha-4myeong-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-1.webp)
+
+![김 원 도시계획위원장](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-2.webp)
+*김 원 도시계획위원장*
+
+![김광림 재경부 차관](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-3.webp)
+*김광림 재경부 차관*
+
+![권영건 안동대 총장](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-4.webp)
+*권영건 안동대 총장*
+
+![](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-5.webp)
+
+![2003. 4. 15 4회원 취임 · 당선을 축하합니다.](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-6.webp)
+*2003. 4. 15 4회원 취임 · 당선을 축하합니다.*
+
+![](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-7.webp)
+
+![](/archive-photos/40y/moim/3dae-2003-chukha-4myeong-8.webp)
 
 ## 개요
 

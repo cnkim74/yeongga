@@ -5,8 +5,23 @@ date: "2011-01-07"
 author: "편집실"
 excerpt: "2011년 1월 7일 저녁 6시 30분, 프레지던트호텔 31층 모차르트 홀에서 영가회 신년하례회와 정기총회가 마련됐습니다. 류종묵 5대 회장 취임, 이희범 경총회장·권오을 국회사무총장 취임 축하 — 회원 120여 명이 한자리에 모인 5대 회장기의 시작."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2011, 2010년대, 신년하례회, 정기총회, 프레지던트호텔, 이희범, 권오을, 허동진, 권영복"
+cover: "/archive-photos/40y/moim/5dae-2011-sinnyeon-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2011-sinnyeon-1.webp)
+
+![이희범 경총회장](/archive-photos/40y/moim/5dae-2011-sinnyeon-2.webp)
+*이희범 경총회장*
+
+![](/archive-photos/40y/moim/5dae-2011-sinnyeon-3.webp)
+
+![](/archive-photos/40y/moim/5dae-2011-sinnyeon-4.webp)
+
+![권오을 사무총장](/archive-photos/40y/moim/5dae-2011-sinnyeon-5.webp)
+*권오을 사무총장*
+
+![](/archive-photos/40y/moim/5dae-2011-sinnyeon-6.webp)
 
 ## 새 회장기의 첫 자리
 

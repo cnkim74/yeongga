@@ -5,8 +5,13 @@ date: "2011-10-10"
 author: "편집실"
 excerpt: "2011년 10월 10일 프레지던트호텔 모차르트홀에서 4/4분기 특강을 가졌습니다. 강사는 한반도 선진화재단 박세일 이사장. 산업화·민주화를 지나 선진 일류국가로 가는 길, 그리고 그 길을 가로막는 〈반(反)선진화 사상〉에 대한 진단."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2011, 2010년대, 분기회, 명사특강, 박세일, 한반도선진화재단, 선진국"
+cover: "/archive-photos/40y/moim/5dae-2011-tukgang-bak-seil-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2011-tukgang-bak-seil-1.webp)
+
+![](/archive-photos/40y/moim/5dae-2011-tukgang-bak-seil-2.webp)
 
 ## 4/4분기 특강
 

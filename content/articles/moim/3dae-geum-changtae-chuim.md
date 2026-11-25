@@ -5,11 +5,15 @@ date: "2003-01-15"
 author: "편집실"
 excerpt: "2003년 1월 15일 서울 장충동 소피텔 앰배서더 호텔에서 금창태 3대 회장이 취임했습니다. 회원 85명이 참석했고, 영가문화상 제정이 이 회장기에 추진됐습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 3대, 2003, 2000년대, 금창태, 회장취임, 영가문화상, 재경향우회"
+cover: "/archive-photos/40y/moim/3dae-geum-changtae-chuim-1.webp"
 visibility: public
 ---
 
 ![금창태 회장](https://cdn.yeongga.com/articles/munwv0am-afcbc4aedd9b.png)
 *영가회 제3대 회장 금창태*
+
+![금창태 회장 취임사](/archive-photos/40y/moim/3dae-geum-changtae-chuim-1.webp)
+*금창태 회장 취임사*
 
 ## 개요
 

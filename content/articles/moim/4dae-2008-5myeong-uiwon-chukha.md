@@ -5,8 +5,17 @@ date: "2008-05-23"
 author: "편집실"
 excerpt: "2008년 5월 23일, 영가회 회원 다섯 분이 국회의원에 당선되고 한 분이 법무부 장관에 취임한 큰 영광을 함께 축하했습니다. 시·군 단위 지자체 한 곳에서 국회의원 5명을 한꺼번에 배출한 것은 안동이 처음. 100여 회원이 프레지던트호텔에 모인 영가회 최대 규모의 축하 행사였습니다."
 tags: "영가회, 永嘉會, 모임, 4대, 허동진, 2008, 2000년대, 축하연, 김경한, 김광림, 김노식, 김용구, 권영진, 권택기, 18대총선, 국회의원"
+cover: "/archive-photos/40y/moim/4dae-2008-5myeong-uiwon-chukha-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/4dae-2008-5myeong-uiwon-chukha-1.webp)
+
+![](/archive-photos/40y/moim/4dae-2008-5myeong-uiwon-chukha-2.webp)
+
+![](/archive-photos/40y/moim/4dae-2008-5myeong-uiwon-chukha-3.webp)
+
+![](/archive-photos/40y/moim/4dae-2008-5myeong-uiwon-chukha-4.webp)
 
 ## 영가회 최대 규모의 축하 행사
 

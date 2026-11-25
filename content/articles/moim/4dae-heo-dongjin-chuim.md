@@ -5,8 +5,12 @@ date: "2007-01-10"
 author: "편집실"
 excerpt: "2007년 1월 10일 서울 프레지던트호텔에서 허동진 4대 회장이 취임했습니다. 신년하례회와 함께 열렸습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 4대, 2007, 2000년대, 허동진, 회장취임, 신년하례회, 재경향우회"
+cover: "/archive-photos/40y/moim/4dae-heo-dongjin-chuim-1.webp"
 visibility: public
 ---
+
+![허동진 회장](/archive-photos/40y/moim/4dae-heo-dongjin-chuim-1.webp)
+*허동진 회장*
 
 ## 개요
 

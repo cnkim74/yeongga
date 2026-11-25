@@ -5,8 +5,14 @@ date: "2012-11-13"
 author: "편집실"
 excerpt: "2012년 11월 13일 프레지던트호텔 브람스홀에서 하반기 분기회를 열고 김경동 서울대학교 명예교수의 특강을 들었습니다. 주제는 〈선진한국의 꿈과 현실〉. 한국이 선진국 문턱에서 멈춰선 까닭을 사회학자의 눈으로 풀고, 동방사상에서 길을 찾았습니다."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2012, 2010년대, 분기회, 명사특강, 김경동, 사회학"
+cover: "/archive-photos/40y/moim/5dae-2012-tukgang-kim-gyeongdong-1.webp"
 visibility: public
 ---
+
+![김경동 교수](/archive-photos/40y/moim/5dae-2012-tukgang-kim-gyeongdong-1.webp)
+*김경동 교수*
+
+![](/archive-photos/40y/moim/5dae-2012-tukgang-kim-gyeongdong-2.webp)
 
 ## 분기회의 자리
 

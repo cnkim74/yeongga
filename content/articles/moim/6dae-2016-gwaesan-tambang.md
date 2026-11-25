@@ -5,8 +5,19 @@ date: "2016-06-04"
 author: "편집실"
 excerpt: "2016년 6월 4일 영가회가 충북 괴산군 산막이옛길과 괴산호 일원으로 상반기 국내 탐방을 다녀왔습니다. 앞서 3월 10일에는 안동에서 열린 경상북도청 신청사 개청식에 참석했습니다."
 tags: "영가회, 永嘉會, 모임, 6대, 김봉구, 2016, 2010년대, 국내문화탐방, 괴산, 산막이옛길, 괴산호, 경북도청"
+cover: "/archive-photos/40y/moim/6dae-2016-gwaesan-tambang-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/6dae-2016-gwaesan-tambang-1.webp)
+
+![](/archive-photos/40y/moim/6dae-2016-gwaesan-tambang-2.webp)
+
+![](/archive-photos/40y/moim/6dae-2016-gwaesan-tambang-3.webp)
+
+![](/archive-photos/40y/moim/6dae-2016-gwaesan-tambang-4.webp)
+
+![](/archive-photos/40y/moim/6dae-2016-gwaesan-tambang-5.webp)
 
 ## 2016년 상반기 두 행사
 

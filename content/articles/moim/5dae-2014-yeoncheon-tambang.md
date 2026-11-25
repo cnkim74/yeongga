@@ -5,10 +5,15 @@ date: "2014-10-29"
 author: "편집실"
 excerpt: "2014년 10월 29일 영가회는 하반기 문화유적 탐방으로 한탄강과 연천 일원을 다녀왔습니다. 재인폭포와 고석정을 둘러봤습니다."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2014, 2010년대, 문화유적탐방, 연천, 재인폭포, 고석정, 한탄강, 철원"
+cover: "/archive-photos/40y/moim/5dae-2014-yeoncheon-tambang-1.webp"
 visibility: public
 ---
 
 > *편집실 안내 — 《영가회 40년사》 234~237쪽을 근거로 정리했습니다.*
+
+![](/archive-photos/40y/moim/5dae-2014-yeoncheon-tambang-1.webp)
+
+![](/archive-photos/40y/moim/5dae-2014-yeoncheon-tambang-2.webp)
 
 ## 개요
 

@@ -5,8 +5,14 @@ date: "1982-03-25"
 author: "편집실"
 excerpt: "창립 5주년인 1982년 3월 25일 영가회의 첫 간행물 《영가문화》 제1집를 발간했습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 1대, 1982, 1980년대, 영가문화, 회보, 재경향우회"
+cover: "/archive-photos/40y/moim/1982-yeongga-munhwa-1-balgan-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/1982-yeongga-munhwa-1-balgan-1.webp)
+
+![▶영가회(회장 김해길)는 1982년 3월 25일 영가문화 제1집을 발간하였다.](/archive-photos/40y/moim/1982-yeongga-munhwa-1-balgan-2.webp)
+*▶영가회(회장 김해길)는 1982년 3월 25일 영가문화 제1집을 발간하였다.*
 
 ## 발간 개요
 

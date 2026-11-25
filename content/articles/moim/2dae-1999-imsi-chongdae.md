@@ -5,8 +5,18 @@ date: "1999-06-06"
 author: "편집실"
 excerpt: "1999년 6월 6일 일요일, 안동병원 대강당에서 회원 57명이 모였습니다. 임재해 안동대 교수의 조찬특강, 하회마을과 하회 탈춤장 참관, 그리고 봉정사 참배까지 ― 류목기 회장기의 첫 큰 자리."
 tags: "영가회, 永嘉會, 모임, 2대, 류목기, 1999, 1990년대, 임시총회, 안동병원, 하회마을, 봉정사, 강보영, 임재해, 재경향우회"
+cover: "/archive-photos/40y/moim/2dae-1999-imsi-chongdae-1.webp"
 visibility: public
 ---
+
+![임재해 안동대교수](/archive-photos/40y/moim/2dae-1999-imsi-chongdae-1.webp)
+*임재해 안동대교수*
+
+![안동하회마을 전경](/archive-photos/40y/moim/2dae-1999-imsi-chongdae-2.webp)
+*안동하회마을 전경*
+
+![봉정사 대웅전](/archive-photos/40y/moim/2dae-1999-imsi-chongdae-3.webp)
+*봉정사 대웅전*
 
 ## 안동에서 마련된 자리
 

@@ -5,8 +5,15 @@ date: "2000-08-29"
 author: "편집실"
 excerpt: "영가회가 김호진 노동부 장관과 이유택 송파구청장의 취임을 축하하는 조찬회를 열었습니다. 8월 29일 이사회를 거쳐 마련했습니다."
 tags: "영가회, 永嘉會, 모임, 2대, 류목기, 2000, 2000년대, 조찬회, 축하, 김호진, 이유택"
+cover: "/archive-photos/40y/moim/2dae-1999-3jang-chukha-1.webp"
 visibility: public
 ---
+
+![김호진 노동부장관](/archive-photos/40y/moim/2dae-1999-3jang-chukha-1.webp)
+*김호진 노동부장관*
+
+![이유택 송파구청장](/archive-photos/40y/moim/2dae-1999-3jang-chukha-2.webp)
+*이유택 송파구청장*
 
 ## 개요
 

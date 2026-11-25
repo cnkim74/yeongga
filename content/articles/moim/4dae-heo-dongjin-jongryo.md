@@ -5,8 +5,12 @@ date: "2010-12-31"
 author: "편집실"
 excerpt: "허동진 4대 회장이 2010년 12월 31일 4년 임기를 마쳤습니다. 창립 30주년을 맞아 첫 해외 문화탐방을 시작하고 회칙 3차 개정을 거친 시기입니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 4대, 2010, 2010년대, 허동진, 회장, 재경향우회"
+cover: "/archive-photos/40y/moim/4dae-heo-dongjin-jongryo-1.webp"
 visibility: public
 ---
+
+![허동진 회장](/archive-photos/40y/moim/4dae-heo-dongjin-jongryo-1.webp)
+*허동진 회장*
 
 ## 개요
 

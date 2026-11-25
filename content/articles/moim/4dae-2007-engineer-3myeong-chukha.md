@@ -5,8 +5,18 @@ date: "2007-01-01"
 author: "편집실"
 excerpt: "2006년 12월 서울대 공대 개교 60주년에 한국공학한림원이 선정한 '한국을 일으킨 엔지니어 60인'에 영가회원 세 분 — 이용태·이종훈·권익부가 함께 올랐습니다. 영가회는 2007년 신년하례회에서 세 회원의 영광을 축하했습니다."
 tags: "영가회, 永嘉會, 모임, 4대, 허동진, 2007, 2000년대, 축하연, 이용태, 이종훈, 권익부, 한국공학한림원, 서울대공대, 엔지니어60인"
+cover: "/archive-photos/40y/moim/4dae-2007-engineer-3myeong-chukha-1.webp"
 visibility: public
 ---
+
+![이용태 박약회 회장](/archive-photos/40y/moim/4dae-2007-engineer-3myeong-chukha-1.webp)
+*이용태 박약회 회장*
+
+![이종훈 전 한전 사장](/archive-photos/40y/moim/4dae-2007-engineer-3myeong-chukha-2.webp)
+*이종훈 전 한전 사장*
+
+![권익부 전 롯데 중앙연구소장](/archive-photos/40y/moim/4dae-2007-engineer-3myeong-chukha-3.webp)
+*권익부 전 롯데 중앙연구소장*
 
 ## 안동의 자랑
 

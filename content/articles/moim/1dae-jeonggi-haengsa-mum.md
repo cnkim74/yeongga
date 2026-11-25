@@ -5,8 +5,12 @@ date: "1998-10-23"
 author: "편집실"
 excerpt: "김해길 초대 회장 재임 22년(1977~1998) 동안의 주요 행사를 한자리에 모았습니다. 봄·가을 정기 모임과 신년하례회를 매년 이어 갔습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 1대, 1977, 1970년대, 1980년대, 1990년대, 김해길, 정기총회, 신년하례회, 재경향우회"
+cover: "/archive-photos/40y/moim/1dae-jeonggi-haengsa-mum-1.webp"
 visibility: public
 ---
+
+![▶영가회(회장 김해길)는 1982년 3월 25일 영가문화 제1집을 발간하였다.](/archive-photos/40y/moim/1dae-jeonggi-haengsa-mum-1.webp)
+*▶영가회(회장 김해길)는 1982년 3월 25일 영가문화 제1집을 발간하였다.*
 
 ## 개요
 

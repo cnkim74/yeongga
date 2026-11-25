@@ -5,10 +5,17 @@ date: "2017-11-14"
 author: "편집실"
 excerpt: "2017년 11월 14일부터 3박 5일 동안 영가회가 베트남 다낭으로 해외 문화탐방을 다녀왔습니다. 김계동 7대 회장기의 첫 해외 탐방입니다."
 tags: "영가회, 永嘉會, 모임, 7대, 김계동, 2017, 2010년대, 해외문화탐방, 베트남, 다낭, 바나힐"
+cover: "/archive-photos/40y/moim/7dae-2017-haeoe-danang-1.webp"
 visibility: public
 ---
 
 > *편집실 안내 — 《영가회 40년사》 301~306쪽을 근거로 정리했습니다.*
+
+![](/archive-photos/40y/moim/7dae-2017-haeoe-danang-1.webp)
+
+![](/archive-photos/40y/moim/7dae-2017-haeoe-danang-2.webp)
+
+![](/archive-photos/40y/moim/7dae-2017-haeoe-danang-3.webp)
 
 ## 개요
 

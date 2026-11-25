@@ -5,10 +5,14 @@ date: "2014-12-31"
 author: "편집실"
 excerpt: "류종묵 5대 회장은 2011년 1월 7일 취임해 2014년 12월 31일까지 연임했습니다. 두 차례 회칙 개정과 두 차례 해외 문화탐방, 영가문화상 시상이 이 시기에 있었습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 5대, 2014, 2010년대, 류종묵, 회장종료, 재경향우회"
+cover: "/archive-photos/40y/moim/5dae-ryu-jongmuk-jongryo-1.webp"
 visibility: public
 ---
 
 > *편집실 안내 — 《영가회 40년사》 179~181쪽을 중심으로 정리했습니다. 회장기의 행사는 〈[2011~2014 5대 회장기 주요 행사](/archive/moim/5dae-jeonggi-haengsa-mum)〉에 모아 두었습니다.*
+
+![류종묵 회장](/archive-photos/40y/moim/5dae-ryu-jongmuk-jongryo-1.webp)
+*류종묵 회장*
 
 ## 개요
 

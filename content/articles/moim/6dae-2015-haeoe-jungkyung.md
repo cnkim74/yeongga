@@ -5,8 +5,17 @@ date: "2015-05-16"
 author: "편집실"
 excerpt: "2015년 5월 16일부터 20일까지 영가회 회원 20여 명이 중국 사천성 중경과 양자강 일원으로 해외 문화탐방을 다녀왔습니다. 6대 김봉구 회장기의 첫 해외 탐방입니다."
 tags: "영가회, 永嘉會, 모임, 6대, 김봉구, 2015, 2010년대, 해외문화탐방, 중국, 중경, 충칭, 양자강, 조천문, 임시정부"
+cover: "/archive-photos/40y/moim/6dae-2015-haeoe-jungkyung-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/6dae-2015-haeoe-jungkyung-1.webp)
+
+![](/archive-photos/40y/moim/6dae-2015-haeoe-jungkyung-2.webp)
+
+![](/archive-photos/40y/moim/6dae-2015-haeoe-jungkyung-3.webp)
+
+![](/archive-photos/40y/moim/6dae-2015-haeoe-jungkyung-4.webp)
 
 ## 개요
 

@@ -5,8 +5,16 @@ date: "2011-01-07"
 author: "편집실"
 excerpt: "2011년 1월 7일 서울 프레지던트호텔에서 류종묵 5대 회장이 취임했습니다. 회원 120여 명이 참석했고 같은 자리에서 회칙 4차 개정이 이뤄졌습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 5대, 2011, 2010년대, 류종묵, 회장취임, 재경향우회"
+cover: "/archive-photos/40y/moim/5dae-ryu-jongmuk-chuim-1.webp"
 visibility: public
 ---
+
+![류종묵 회장](/archive-photos/40y/moim/5dae-ryu-jongmuk-chuim-1.webp)
+*류종묵 회장*
+
+![](/archive-photos/40y/moim/5dae-ryu-jongmuk-chuim-2.webp)
+
+![](/archive-photos/40y/moim/5dae-ryu-jongmuk-chuim-3.webp)
 
 ## 개요
 

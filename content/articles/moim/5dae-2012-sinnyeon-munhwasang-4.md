@@ -5,8 +5,14 @@ date: "2012-01-09"
 author: "편집실"
 excerpt: "2012년 1월 9일 저녁 6시 30분, 영가회는 프레지던트호텔 31층 모차르트 홀에서 신년하례회와 정기총회를 가졌습니다. 회원 127명 참석. 영가문화상 제4회 시상(한국예총 안동시 지부, 상금 3백만 원), 새 회원수첩 발간(남상덕 회원 9백만 원 협찬), 이규혁·권영규 새 부회장 선임."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2012, 2010년대, 신년하례회, 정기총회, 영가문화상, 한국예총, 안동, 남상덕, 이규혁, 권영규, 김영일"
+cover: "/archive-photos/40y/moim/5dae-2012-sinnyeon-munhwasang-4-1.webp"
 visibility: public
 ---
+
+![류윤형 회장](/archive-photos/40y/moim/5dae-2012-sinnyeon-munhwasang-4-1.webp)
+*류윤형 회장*
+
+![](/archive-photos/40y/moim/5dae-2012-sinnyeon-munhwasang-4-2.webp)
 
 ## 127명의 두 번째 자리
 

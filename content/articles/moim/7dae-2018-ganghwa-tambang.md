@@ -5,8 +5,18 @@ date: "2018-05-17"
 author: "편집실"
 excerpt: "2018년 5월 17일 영가회가 7대 회장기 두 번째 국내 문화탐방으로 강화도 일원을 다녀왔습니다. 평화전망대와 고인돌, 고려궁지, 용흥궁, 광성보, 전등사를 차례로 둘러봤습니다."
 tags: "영가회, 永嘉會, 모임, 7대, 김계동, 2018, 2010년대, 국내문화탐방, 강화도, 고려궁지, 전등사, 광성보, 용흥궁, 평화전망대, 고인돌"
+cover: "/archive-photos/40y/moim/7dae-2018-ganghwa-tambang-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/7dae-2018-ganghwa-tambang-1.webp)
+
+![](/archive-photos/40y/moim/7dae-2018-ganghwa-tambang-2.webp)
+
+![매화마름](/archive-photos/40y/moim/7dae-2018-ganghwa-tambang-3.webp)
+*매화마름*
+
+![](/archive-photos/40y/moim/7dae-2018-ganghwa-tambang-4.webp)
 
 ## 개요
 

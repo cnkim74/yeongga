@@ -5,8 +5,18 @@ date: "2012-10-18"
 author: "편집실"
 excerpt: "2012년 10월 18일 영가회가 충남 서산·아산만 일원으로 하반기 문화유적 탐방을 다녀왔습니다. 해미읍성·수덕사·개심사를 둘러보고 귀로에 류종묵 회장이 경영하는 (주)흥국 공장을 견학했습니다. 비용은 류 회장이 전액 부담했습니다."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2012, 2010년대, 문화유적탐방, 서산, 아산만, 해미읍성, 수덕사, 개심사, 흥국"
+cover: "/archive-photos/40y/moim/5dae-2012-haeoe-seosan-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2012-haeoe-seosan-1.webp)
+
+![](/archive-photos/40y/moim/5dae-2012-haeoe-seosan-2.webp)
+
+![마애삼존불상](/archive-photos/40y/moim/5dae-2012-haeoe-seosan-3.webp)
+*마애삼존불상*
+
+![](/archive-photos/40y/moim/5dae-2012-haeoe-seosan-4.webp)
 
 ## 개요
 

@@ -5,8 +5,16 @@ date: "2015-10-23"
 author: "편집실"
 excerpt: "2015년 10월 23일 영가회 회원 60여 명이 백두대간 협곡열차를 타고 영월 청령포를 다녀왔습니다. 6대 김봉구 회장기의 첫 국내 탐방입니다."
 tags: "영가회, 永嘉會, 모임, 6대, 김봉구, 2015, 2010년대, 문화탐방, 백두대간협곡열차, 영월, 청령포, 단종, 관음송, 구문소"
+cover: "/archive-photos/40y/moim/6dae-2015-tambang-cheongryeongpo-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/6dae-2015-tambang-cheongryeongpo-1.webp)
+
+![](/archive-photos/40y/moim/6dae-2015-tambang-cheongryeongpo-2.webp)
+
+![영월 청룡포](/archive-photos/40y/moim/6dae-2015-tambang-cheongryeongpo-3.webp)
+*영월 청룡포*
 
 ## 개요
 

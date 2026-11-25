@@ -5,8 +5,11 @@ date: "2017-09-12"
 author: "편집실"
 excerpt: "2017년 9월 12일 영가회가 7대 회장기 첫 국내 문화탐방으로 강원도 정선 5일장을 다녀왔습니다."
 tags: "영가회, 永嘉會, 모임, 7대, 김계동, 2017, 2010년대, 국내문화탐방, 정선, 정선5일장, 정선아리랑, 강원도"
+cover: "/archive-photos/40y/moim/7dae-2017-jeongseon-tambang-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/7dae-2017-jeongseon-tambang-1.webp)
 
 ## 개요
 

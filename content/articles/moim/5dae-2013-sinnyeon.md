@@ -5,8 +5,11 @@ date: "2013-01-11"
 author: "편집실"
 excerpt: "2013년 1월 11일, 프레지던트호텔 신세계홀에서 영가회 신년하례회와 정기총회가 마련됐습니다. 회원 120여 명 참석, 류종묵 회장이 흥국 기념품 130세트를 협찬, 안동 간고등어를 선물로 — 5대 회장기의 세 번째 새해 자리."
 tags: "영가회, 永嘉會, 모임, 5대, 류종묵, 2013, 2010년대, 신년하례회, 정기총회, 프레지던트호텔"
+cover: "/archive-photos/40y/moim/5dae-2013-sinnyeon-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/5dae-2013-sinnyeon-1.webp)
 
 ## 세 번째 새해 자리
 

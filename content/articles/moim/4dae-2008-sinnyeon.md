@@ -5,8 +5,28 @@ date: "2008-01-09"
 author: "편집실"
 excerpt: "2008년 1월 9일 수요일, 영가회는 프레지던트호텔 신세계홀에서 신년하례회와 정기총회를 가졌습니다. 영가문화상 시상식과 함께 이희재 안동대 총장·김종갑 하이닉스 사장 취임 축하연, 그리고 강보영 안동병원 이사장에게 특별 공로패를 증정한 자리."
 tags: "영가회, 永嘉會, 모임, 4대, 허동진, 2008, 2000년대, 신년하례회, 정기총회, 프레지던트호텔, 강보영, 안동병원, 이희재, 안동대학교, 김종갑, 하이닉스"
+cover: "/archive-photos/40y/moim/4dae-2008-sinnyeon-1.webp"
 visibility: public
 ---
+
+![](/archive-photos/40y/moim/4dae-2008-sinnyeon-1.webp)
+
+![](/archive-photos/40y/moim/4dae-2008-sinnyeon-2.webp)
+
+![강보영 안동병원 이사장](/archive-photos/40y/moim/4dae-2008-sinnyeon-3.webp)
+*강보영 안동병원 이사장*
+
+![](/archive-photos/40y/moim/4dae-2008-sinnyeon-4.webp)
+
+![](/archive-photos/40y/moim/4dae-2008-sinnyeon-5.webp)
+
+![이희재 전 안동대 총장](/archive-photos/40y/moim/4dae-2008-sinnyeon-6.webp)
+*이희재 전 안동대 총장*
+
+![김종갑 하이닉스 사장](/archive-photos/40y/moim/4dae-2008-sinnyeon-7.webp)
+*김종갑 하이닉스 사장*
+
+![](/archive-photos/40y/moim/4dae-2008-sinnyeon-8.webp)
 
 ## 200여 회원의 새해 자리
 

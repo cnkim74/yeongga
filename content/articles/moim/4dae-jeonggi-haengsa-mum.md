@@ -5,8 +5,22 @@ date: "2010-12-31"
 author: "편집실"
 excerpt: "허동진 4대 회장 재임 4년(2007~2010)의 주요 행사입니다. 창립 30주년 기념행사를 열고, 그 기념으로 첫 해외 문화탐방(2007년 11월 베트남)을 시작했습니다."
 tags: "영가회, 永嘉會, 모임, 정기행사, 4대, 허동진, 2007, 2008, 2009, 2010, 2000년대, 2010년대, 정기총회, 신년하례회, 해외탐방, 재경향우회"
+cover: "/archive-photos/40y/moim/4dae-jeonggi-haengsa-mum-1.webp"
 visibility: public
 ---
+
+![베트남 하롱베이의 티톱섬](/archive-photos/40y/moim/4dae-jeonggi-haengsa-mum-1.webp)
+*베트남 하롱베이의 티톱섬*
+
+![](/archive-photos/40y/moim/4dae-jeonggi-haengsa-mum-2.webp)
+
+![](/archive-photos/40y/moim/4dae-jeonggi-haengsa-mum-3.webp)
+
+![](/archive-photos/40y/moim/4dae-jeonggi-haengsa-mum-4.webp)
+
+![](/archive-photos/40y/moim/4dae-jeonggi-haengsa-mum-5.webp)
+
+![](/archive-photos/40y/moim/4dae-jeonggi-haengsa-mum-6.webp)
 
 ## 개요
 
