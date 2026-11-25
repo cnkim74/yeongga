@@ -5850,6 +5850,25 @@ async function init(client: Client) {
     }
     await markMigration(client, "moim-40y-photos-2026-11-v1");
   }
+  // 영가회보 9-7호 (2026년 가을호, 2026-11-26) — eBook 으로만 올라 있던 호를 지면 원문으로:
+  // 행사 6건(1면 국회 영가포럼은 관련기사 6·7면까지)·기고 6건.
+  if (!(await hasMigration(client, "hoebo-9-7-restore-v1"))) {
+    await restoreArticlesFromFiles(client, [
+      ["moim", "hoebo-9-7-yeongga-forum-gukhoe-goryeo"],
+      ["moim", "hoebo-9-7-myeongye-jeondang"],
+      ["moim", "hoebo-9-7-changrip-50junyeon-junbi"],
+      ["moim", "hoebo-9-7-myeongye-hoewon-wichok"],
+      ["moim", "hoebo-9-7-wonro-gandam-forum-7cha"],
+      ["moim", "hoebo-9-7-kwon-inso-gamsapae"],
+      ["geul", "hoebo-9-7-suchul-1jo-dalleo"],
+      ["geul", "hoebo-9-7-andong-gwangwang-gyeongjaengnyeok"],
+      ["geul", "hoebo-9-7-andong-chunchu-gapsul-suhae"],
+      ["geul", "hoebo-9-7-robot-gyeongheom"],
+      ["geul", "hoebo-9-7-uiseong-kimssi"],
+      ["geul", "hoebo-9-7-semu-yangdo-janggigeoju"],
+    ]);
+    await markMigration(client, "hoebo-9-7-restore-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
