@@ -7,6 +7,7 @@ import { ChapterNavStrip } from "@/components/ChapterNavStrip";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { getChapter, chapters, isLongChapterTitle } from "@/lib/chapters";
 import { listChapterArticles } from "@/lib/articles-db";
+import { sortGeulByIssue } from "@/lib/geul-order";
 import { listAuthorAvatars } from "@/lib/users-db";
 import { getChapterMeta } from "@/lib/chapter-meta-db";
 import { groupByEra } from "@/lib/president-era";
@@ -65,7 +66,9 @@ export default async function ChapterPage({
   // 기고 장은 기고글을 앞에, 인물 소개(명사·역대 회장)는 뒤에 따로 모은다
   const isProfile = (slug: string) =>
     /^myungsa-|^\d+dae-|^hoejang-yeonbo$|^wonro-chamsuk-gieok$/.test(slug);
-  const geulMain = chapter === "geul" ? ordered.filter((a) => !isProfile(a.slug)) : null;
+  // 기고글은 《영가회보》 최근 호 → 지난 호 → 《영가회 40년사》 순 (lib/geul-order.ts)
+  const geulMain =
+    chapter === "geul" ? sortGeulByIssue(ordered.filter((a) => !isProfile(a.slug))) : null;
   const geulPeople = chapter === "geul" ? ordered.filter((a) => isProfile(a.slug)) : null;
   const avatarByName = new Map(Object.entries(avatars));
 
