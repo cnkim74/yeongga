@@ -5869,6 +5869,11 @@ async function init(client: Client) {
     ]);
     await markMigration(client, "hoebo-9-7-restore-v1");
   }
+  // 3차 역대회장 간담회 (2026-11-24) — 자료실 〈2026-3차 역대회장간담회〉 첨부 PDF 를 행사 글로.
+  if (!(await hasMigration(client, "yeokdae-hoejang-3cha-2026-v1"))) {
+    await restoreArticlesFromFiles(client, [["moim", "9dae-2026-yeokdae-hoejang-3cha"]]);
+    await markMigration(client, "yeokdae-hoejang-3cha-2026-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
