@@ -62,6 +62,19 @@ export default async function HomePage() {
       (s): s is typeof s & { chapter: NonNullable<typeof s.chapter> } =>
         !!s.chapter && (s.latest != null || !!s.chapter.href),
     );
+  // 추천 영상은 '영상' 장 소개 자리에 넣는다 — 그 장이 쇼케이스에 없으면(표지 이미지 미등록 등) 장 순서 자리에 끼운다
+  const videoChapter = chapters.find((c) => c.href === "/videos");
+  if (featuredVideo && videoChapter && !showcases.some((s) => s.chapter.slug === videoChapter.slug)) {
+    const at = showcases.findIndex(
+      (s) => chapters.indexOf(s.chapter) > chapters.indexOf(videoChapter)
+    );
+    const entry = {
+      chapter: videoChapter,
+      meta: { chapter_slug: videoChapter.slug, cover_image: null } as (typeof showcases)[number]["meta"],
+      latest: null,
+    } as (typeof showcases)[number];
+    showcases.splice(at < 0 ? showcases.length : at, 0, entry);
+  }
 
   return (
     <>
@@ -131,38 +144,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2.5 FEATURED VIDEO — 메인 추천 영상 */}
-      {featuredVideo && (
-        <section className="surface-tone py-24 sm:py-32">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-              <div className="lg:col-span-7">
-                <FeaturedVideo
-                  embedUrl={featuredVideo.embed_url}
-                  thumbnail={featuredVideo.thumbnail_url}
-                  title={featuredVideo.title}
-                />
-              </div>
-              <div className="lg:col-span-5">
-                <div className="kicker surface-mute mb-4">
-                  {featuredVideo.kicker ?? "VIDEO · 추천 영상"}
-                </div>
-                <h2 className="display text-3xl sm:text-5xl mb-5">
-                  {featuredVideo.title}
-                </h2>
-                {featuredVideo.description && (
-                  <p className="text-base sm:text-lg surface-soft leading-relaxed mb-8">
-                    {featuredVideo.description}
-                  </p>
-                )}
-                <Link href="/videos" className="btn-pill paper">
-                  영상 아카이브 →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
+      {/* 2.5 추천 영상은 따로 두지 않고 아래 '영상' 장 소개 자리에 넣는다 (2026-11-26, 중복 정리) */}
 
       {/* 3. ALTERNATING SHOWCASES — chapter_meta 의 cover_image 우선, 글 cover 차순위 */}
       {showcases.map(({ chapter, meta, latest }, i) => {
@@ -172,6 +154,8 @@ export default async function HomePage() {
         const coverSrc = meta.cover_image || latest?.cover || null;
         // 글 없는 장(영가상 등)은 그 장의 페이지로, 비공개 글은 전용 페이지(회장 인사말 등)로
         const chapterHref = chapter.href ?? `/archive/${chapter.slug}`;
+        // '영상' 장(→ /videos)에는 메인 추천 영상을 그 자리에서 바로 보여 준다
+        const video = chapter.href === "/videos" ? featuredVideo : null;
         const articleHref = !latest
           ? chapterHref
           : latest.hidden
@@ -185,6 +169,13 @@ export default async function HomePage() {
               }`}
             >
               <div className={reversed ? "lg:[direction:ltr]" : ""}>
+                {video ? (
+                  <FeaturedVideo
+                    embedUrl={video.embed_url}
+                    thumbnail={video.thumbnail_url}
+                    title={video.title}
+                  />
+                ) : (
                 <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-[var(--color-bg-deep)]">
                   {coverSrc ? (
                     <Image
@@ -210,22 +201,24 @@ export default async function HomePage() {
                     </div>
                   )}
                 </div>
+                )}
               </div>
               <div className={`max-w-lg ${reversed ? "lg:[direction:ltr]" : ""}`}>
                 <div className="kicker text-[var(--color-ink-mute)] mb-4">
                   {chapter.number}. {chapter.title}
+                  {video?.kicker ? ` · ${video.kicker}` : ""}
                 </div>
                 <Link
                   href={articleHref}
                   className="group block"
                 >
                   <h3 className="display-md text-3xl sm:text-5xl mb-5 group-hover:text-[var(--color-accent)] transition">
-                    {latest ? latest.title : chapter.subtitle}
+                    {video ? video.title : latest ? latest.title : chapter.subtitle}
                   </h3>
                 </Link>
-                {(latest ? latest.excerpt : chapter.description) && (
+                {(video ? video.description : latest ? latest.excerpt : chapter.description) && (
                   <p className="text-base sm:text-lg leading-relaxed text-[var(--color-ink-soft)] mb-8">
-                    {latest ? latest.excerpt : chapter.description}
+                    {video ? video.description : latest ? latest.excerpt : chapter.description}
                   </p>
                 )}
                 {latest && (
