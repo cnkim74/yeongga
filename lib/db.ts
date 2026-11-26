@@ -5923,6 +5923,11 @@ async function init(client: Client) {
     ]);
     await markMigration(client, "geul-split-2026-11-v1");
   }
+  // 행사 — 영가회 발전 유공 회원 방문 감사패 전달 (2026-11-24, 사용자가 준 글·사진 그대로)
+  if (!(await hasMigration(client, "yugong-gamsapae-2026-11-v1"))) {
+    await restoreArticlesFromFiles(client, [["moim", "9dae-2026-yugong-hoewon-gamsapae"]]);
+    await markMigration(client, "yugong-gamsapae-2026-11-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
