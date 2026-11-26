@@ -271,45 +271,7 @@ export default async function ArticlePage({
             </section>
           )}
 
-          {!isLocked && related && related.others.length > 0 && (
-            <section className="mt-14 pt-10 border-t border-[var(--color-rule)]">
-              <h2 className="display-md text-xl mb-4">이 시기의 행사 사진</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {related.others.map((al) => (
-                  <Link
-                    key={al.slug}
-                    href={`/gallery?category=${al.slug}`}
-                    className="group flex flex-col overflow-hidden rounded-xl border border-[var(--color-rule)] bg-white hover:shadow-md transition-shadow"
-                  >
-                    <div className="relative aspect-[4/3] bg-[var(--color-bg-soft)] overflow-hidden">
-                      {al.cover && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={al.cover}
-                          alt={al.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                        />
-                      )}
-                      <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/55 text-white text-xs">
-                        사진 {al.count}
-                      </span>
-                    </div>
-                    <div className="p-3">
-                      <div className="text-xs text-[var(--color-ink-mute)] mb-0.5">
-                        {al.eventDate
-                          ? al.eventDate.replace(/-/g, ".")
-                          : al.year ?? ""}
-                      </div>
-                      <div className="text-sm leading-snug line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
-                        {al.name}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
+          {/* '이 시기의 행사 사진' 앨범 링크는 뺐다 (2026-11-26 요청 — 사진 장에 있으므로) */}
 
           {/* 공유 */}
           {!isLocked && (

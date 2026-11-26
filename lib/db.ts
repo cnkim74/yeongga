@@ -5874,6 +5874,34 @@ async function init(client: Client) {
     await restoreArticlesFromFiles(client, [["moim", "9dae-2026-yeokdae-hoejang-3cha"]]);
     await markMigration(client, "yeokdae-hoejang-3cha-2026-v1");
   }
+  // 연혁 역대 회장 글 (2026-11-26 요청) — 9대 글처럼 카드(ygpr-card) 맨 앞 제목 줄을 문단(p)에서 H2 로.
+  // 글자는 그대로 두고 태그만 바꾼다. 운영에서 손본 본문이라 파일이 아닌 DB 본문을 고친다.
+  if (!(await hasMigration(client, "yeongi-card-title-h2-2026-11-v1"))) {
+    const slugs = [
+      "2dae-hoejang-sidae", "3dae-chuim", "4dae-chuim", "5dae-chuim",
+      "6dae-chuim", "7dae-chuim", "8dae-chuim",
+    ];
+    for (const slug of slugs) {
+      const r = await client.execute({
+        sql: "SELECT id, body FROM articles WHERE chapter = 'yeongi' AND slug = ?",
+        args: [slug],
+      });
+      const row = r.rows[0];
+      if (!row) continue;
+      const body = String(row.body ?? "");
+      const next = body.replace(
+        /(<div class="ygpr-card">\s*)<p>([\s\S]*?)<\/p>/g,
+        (_m, open: string, inner: string) => `${open}<h2>${inner}</h2>`
+      );
+      if (next !== body) {
+        await client.execute({
+          sql: "UPDATE articles SET body = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+          args: [next, Number(row.id)],
+        });
+      }
+    }
+    await markMigration(client, "yeongi-card-title-h2-2026-11-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
