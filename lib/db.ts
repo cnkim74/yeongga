@@ -5902,6 +5902,27 @@ async function init(client: Client) {
     }
     await markMigration(client, "yeongi-card-title-h2-2026-11-v1");
   }
+  // 기고 — 지면 두 꼭지를 한 글로 묶었던 5편을 꼭지별로 나눈다 (2026-11-26 요청, 목록 번호 146·147·135·130·78).
+  // 원래 글은 앞 꼭지만 남기고(파일대로 덮음), 뒤 꼭지는 새 글로 넣는다. 본문 글자는 그대로.
+  if (!(await hasMigration(client, "geul-split-2026-11-v1"))) {
+    for (const slug of [
+      "hoebo-9-2-seoyunhui-yesul-misul",
+      "hoebo-9-2-lee-ilyeong-gongjun",
+      "hoebo-8-13-keum-gyeongsu-andong-nongsanmul",
+      "hoebo-8-12-kim-jasook-jibang-somyeol",
+      "hoebo-8-6-bom-yeokdong-baeksu-tetbat",
+    ]) {
+      await syncArticleFromFile(client, "geul", slug);
+    }
+    await restoreArticlesFromFiles(client, [
+      ["geul", "hoebo-9-2-andong-jangssi"],
+      ["geul", "hoebo-9-2-haengpa-yeongjeon"],
+      ["geul", "hoebo-8-13-eonchong-yecheon"],
+      ["geul", "hoebo-8-12-kkolgap"],
+      ["geul", "hoebo-8-6-baeksu-tetbat"],
+    ]);
+    await markMigration(client, "geul-split-2026-11-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드
