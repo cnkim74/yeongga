@@ -106,10 +106,10 @@ export default async function ChapterPage({
                         {a.title}
                       </h2>
                       {chapter === "geul" ? (
-                        // 기고 — 기고글 제목 / 회원 이름 · 직함 / 소제목 / 갈래 · 출처
+                        // 기고 — 기고글 제목 / 회원 이름 · 직함 / 소제목 / 출처
                         (() => {
                           const by = parseByline(a.subtitle, a.author);
-                          const meta = [by.label, by.source].filter(Boolean).join(" · ");
+                          const meta = by.source ?? "";
                           return (
                             <div className="mb-3 space-y-1">
                               {by.name && (

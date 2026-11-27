@@ -5928,6 +5928,74 @@ async function init(client: Client) {
     await restoreArticlesFromFiles(client, [["moim", "9dae-2026-yugong-hoewon-gamsapae"]]);
     await markMigration(client, "yugong-gamsapae-2026-11-v1");
   }
+  // 기고 손질 (2026-11-27 요청) — ① 두 꼭지를 한 글로 묶었던 3편(목록 157·156·153)을 꼭지별로 나눔
+  // ② 149번 필자 직함 ③ 8-6호 7면 두 글(77·71)의 필자 사진이 서로 바뀌어 있던 것 바로잡음
+  // ④ 출처가 빠진 68편에 출처 덧붙임 ⑤ 제목에 적어 두신 '------(40년사 NNN쪽)' 표시는 출처로 옮기고 지움.
+  // 운영에서 손본 글이 많아 ①의 3편 말고는 파일로 덮지 않고 해당 칸만 고친다.
+  if (!(await hasMigration(client, "geul-fix-2026-11-27-v1"))) {
+    // ① 원래 글은 앞 꼭지만 남기고(파일대로 덮음), 뒤 꼭지는 새 글로 넣는다. 본문 글자는 그대로.
+    for (const slug of [
+      "hoebo-9-3-andong-chunchu-cheoldo-yukro",
+      "hoebo-9-3-jeontong-bareu-ihae",
+      "hoebo-9-2-kim-jisook-namgin-geot",
+    ]) {
+      await syncArticleFromFile(client, "geul", slug);
+    }
+    await restoreArticlesFromFiles(client, [
+      ["geul", "hoebo-9-3-andong-chunchu-9-cheoldo-yukro"],
+      ["geul", "hoebo-9-3-andong-sangnak-kimssi"],
+      ["geul", "hoebo-9-2-gwanse-jeonjaeng"],
+    ]);
+    // ② 김병일 도산서원 원장 겸 선비문화수련원 이사장
+    await client.execute({
+      sql: `UPDATE articles SET subtitle = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE chapter = 'geul' AND slug = 'hoebo-9-2-haengpa-yeongjeon'
+              AND (subtitle IS NULL OR subtitle NOT LIKE '%도산서원 원장%')`,
+      args: ["김병일 도산서원 원장 겸 선비문화수련원 이사장 · 《영가회보》 9-2호 11면"],
+    });
+    // ③ 지면: 류을하 = 안경 쓴 사진(p07-2), 정윤호 = p07-1. 본문·대표 이미지·갤러리 이름표를 맞바꾼다.
+    const P1 = "/archive-photos/hoebo/8-6/p07-1.webp";
+    const P2 = "/archive-photos/hoebo/8-6/p07-2.webp";
+    for (const [slug, from, to] of [
+      ["hoebo-8-6-yeongga-saramdeul-6-lee-jeongseok", P2, P1],
+      ["hoebo-8-6-andong-seupsok-sejo-seongjong", P1, P2],
+    ]) {
+      await client.execute({
+        sql: `UPDATE articles SET body = REPLACE(body, ?, ?), cover = REPLACE(cover, ?, ?), updated_at = CURRENT_TIMESTAMP
+              WHERE chapter = 'geul' AND slug = ?`,
+        args: [from, to, from, to, slug],
+      });
+    }
+    await client.execute({ sql: "UPDATE photos SET title = ? WHERE image_url = ?", args: ["정윤호 전 안동MBC 보도국장", P1] });
+    await client.execute({ sql: "UPDATE photos SET title = ? WHERE image_url = ?", args: ["류을하 서애기념사업회 사무국장", P2] });
+    // ④ 부제 끝에 출처를 덧붙인다 — 이미 출처가 든 부제는 건드리지 않는다.
+    const { GEUL_SOURCES } = await import("./geul-sources");
+    for (const [slug, source] of GEUL_SOURCES) {
+      await client.execute({
+        sql: `UPDATE articles
+              SET subtitle = CASE WHEN subtitle IS NULL OR TRIM(subtitle) = '' THEN ? ELSE subtitle || ' · ' || ? END,
+                  updated_at = CURRENT_TIMESTAMP
+              WHERE chapter = 'geul' AND slug = ?
+                AND (subtitle IS NULL OR (subtitle NOT LIKE '%영가회보%' AND subtitle NOT LIKE '%40년사%'))`,
+        args: [source, source, slug],
+      });
+    }
+    // 김원 〈내가 만난 은사 두 분〉은 책 348쪽까지 이어진다 — 편집실 안내의 쪽도 맞춘다.
+    await client.execute({
+      sql: `UPDATE articles SET body = REPLACE(body, '345~347쪽', '345~348쪽'), updated_at = CURRENT_TIMESTAMP
+            WHERE chapter = 'geul' AND slug = 'geul-eunsa-dubun'`,
+      args: [],
+    });
+    // ⑤ "아! 그날이 오면------(40년사 408쪽)" → "아! 그날이 오면"
+    await client.execute({
+      sql: `UPDATE articles
+            SET title = RTRIM(SUBSTR(title, 1, INSTR(title, '(40년사') - 1), '- '), updated_at = CURRENT_TIMESTAMP
+            WHERE chapter = 'geul' AND slug IN ('geul-geunariomyeon', 'geul-dongnipundong', 'geul-andong-hyanggi')
+              AND INSTR(title, '(40년사') > 1`,
+      args: [],
+    });
+    await markMigration(client, "geul-fix-2026-11-27-v1");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

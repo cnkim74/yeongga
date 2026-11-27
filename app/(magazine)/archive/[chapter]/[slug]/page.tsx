@@ -141,10 +141,10 @@ export default async function ArticlePage({
             {article.title}
           </h1>
           {chapter === "geul" ? (
-            // 기고 — 회원 이름 · 직함 / 소제목 / 갈래 · 출처
+            // 기고 — 회원 이름 · 직함 / 소제목 / 출처
             (() => {
               const by = parseByline(article.subtitle, article.author);
-              const meta = [by.label, by.source].filter(Boolean).join(" · ");
+              const meta = by.source ?? "";
               return (
                 <div className={`mb-6 space-y-1.5 ${article.cover ? "text-white/80" : "text-[var(--color-ink-soft)]"}`}>
                   {by.name && (
