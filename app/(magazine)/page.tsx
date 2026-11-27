@@ -204,43 +204,56 @@ export default async function HomePage() {
                 )}
               </div>
               <div className={`max-w-lg ${reversed ? "lg:[direction:ltr]" : ""}`}>
+                {/* 2026-11-27 요청 — 먼저 장 안내문, 그 아래 이 장에 실린 글(영상) 한 편을 '참고'로 소개 */}
                 <div className="kicker text-[var(--color-ink-mute)] mb-4">
                   {chapter.number}. {chapter.title}
-                  {video?.kicker ? ` · ${video.kicker}` : ""}
                 </div>
-                <Link
-                  href={articleHref}
-                  className="group block"
-                >
-                  <h3 className="display-md text-3xl sm:text-5xl mb-5 group-hover:text-[var(--color-accent)] transition">
-                    {video ? video.title : latest ? latest.title : chapter.subtitle}
+                <Link href={chapterHref} className="group block">
+                  <h3 className="display-md text-3xl sm:text-5xl mb-5 [word-break:keep-all] group-hover:text-[var(--color-accent)] transition">
+                    {chapter.subtitle}
                   </h3>
                 </Link>
-                {(video ? video.description : latest ? latest.excerpt : chapter.description) && (
-                  <p className="text-base sm:text-lg leading-relaxed text-[var(--color-ink-soft)] mb-8">
-                    {video ? video.description : latest ? latest.excerpt : chapter.description}
-                  </p>
-                )}
-                {latest && (
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--color-ink-mute)] mb-8">
-                    <span>{formatDate(latest.date)}</span>
-                    {latest.author && <span>글 · {latest.author}</span>}
-                  </div>
+                <p className="text-base sm:text-lg leading-relaxed text-[var(--color-ink-soft)] mb-8 [word-break:keep-all]">
+                  {chapter.description}
+                </p>
+                {(video || latest) && (
+                  <Link
+                    href={video ? chapterHref : articleHref}
+                    className={`group block rounded-2xl border border-[var(--color-rule)] p-5 sm:p-6 mb-8 hover:border-[var(--color-ink-mute)] transition ${
+                      i % 2 === 0 ? "bg-white" : "bg-[var(--color-bg-soft)]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-3 text-sm text-[var(--color-ink-mute)]">
+                      <span className="rounded-full bg-[var(--color-ink)] px-3 py-0.5 text-sm font-medium text-white">
+                        참고
+                      </span>
+                      <span>{video ? "추천 영상" : "이 장에 실린 글"}</span>
+                      {video?.kicker && <span>· {video.kicker}</span>}
+                    </div>
+                    <div className="text-xl sm:text-2xl font-medium leading-snug mb-2 [word-break:keep-all] group-hover:text-[var(--color-accent)] transition">
+                      {video ? video.title : latest!.title}
+                    </div>
+                    {(video ? video.description : latest!.excerpt) && (
+                      <p className="text-base leading-relaxed text-[var(--color-ink-soft)] line-clamp-3">
+                        {video ? video.description : latest!.excerpt}
+                      </p>
+                    )}
+                    {latest && !video && (
+                      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-[var(--color-ink-mute)] mt-3">
+                        <span>{formatDate(latest.date)}</span>
+                        {latest.author && <span>글 · {latest.author}</span>}
+                      </div>
+                    )}
+                  </Link>
                 )}
                 <div className="flex gap-3 flex-wrap">
-                  {latest ? (
-                    <>
-                      <Link href={articleHref} className="btn-pill">
-                        글 읽기 <span aria-hidden="true">→</span>
-                      </Link>
-                      <Link href={chapterHref} className="btn-pill ghost">
-                        {chapter.title} 더 보기
-                      </Link>
-                    </>
-                  ) : (
-                    <Link href={chapterHref} className="btn-pill">
-                      {chapter.linkLabel ?? `${chapter.title} 보기`}{" "}
-                      <span aria-hidden="true">→</span>
+                  <Link href={chapterHref} className="btn-pill">
+                    {chapter.linkLabel ?? `${chapter.title} 보기`}{" "}
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                  {latest && !video && (
+                    <Link href={articleHref} className="btn-pill ghost">
+                      참고 글 읽기
                     </Link>
                   )}
                 </div>
