@@ -224,7 +224,7 @@ export default async function HomePage() {
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-3 text-sm text-[var(--color-ink-mute)]">
-                      <span className="rounded-full bg-[var(--color-ink)] px-3 py-0.5 text-sm font-medium text-white">
+                      <span className="rounded-full bg-[var(--color-ink)] px-3 py-0.5 text-sm font-medium text-[var(--color-bg)]">
                         참고
                       </span>
                       <span>{video ? "추천 영상" : "이 장에 실린 글"}</span>
