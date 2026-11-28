@@ -5,7 +5,7 @@ date: "2024-10-15"
 author: "정윤호"
 excerpt: "정윤호 前 안동MBC 보도국장의 연재 〈安東春秋 100년 저항과 협력의 경계에서〉 다섯 번째 글. 1923년 출범한 풍산소작인회와 1924년 풍산소작 쟁의, 서원의 소작인 태형사건과 서원철폐운동을 당시 신문 기사와 함께 적었다."
 tags: "영가회, 永嘉會, 기고, 정윤호, 安東春秋 100년, 풍산소작인회, 소작쟁의, 김재봉, 이준태, 서원철폐운동, 영가회보 8-12호, 2024, 연재"
-cover: "/archive-photos/hoebo/8-12/p09-1.webp"
+cover: "/archive-photos/unsplash/d3TRzEjJ9X8.webp"
 visibility: public
 ---
 

@@ -5,7 +5,7 @@ date: "2022-04-15"
 author: "정윤호"
 excerpt: "1928년 경안양조를 세운 윤좌형(1890년 생)·윤세형 형제. 안동국자·안동식산·동신상회에 참여한 안동 굴지의 대부호로, 1934년 갑술년 대수해 등 재해 때마다 이재민 구제와 학교 운영에 거금을 내놓았다."
 tags: "영가회, 永嘉會, 인물, 영가사람들, 안동의경제인, 윤좌형, 윤세형, 경안양조, 안동국자, 안동식산, 동신상회, 권태연, 갑술년대수해, 정윤호, 안동MBC, 영가회보 8-2호"
-cover: "/archive-photos/hoebo/8-2/p10-2.webp"
+cover: "/archive-photos/unsplash/FwMOXyz93po.webp"
 visibility: public
 ---
 

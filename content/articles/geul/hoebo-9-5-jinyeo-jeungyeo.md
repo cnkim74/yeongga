@@ -5,7 +5,7 @@ date: "2026-04-15"
 author: "마숙룡"
 excerpt: "마숙룡 세무법인 센트릭 대표가 증여재산공제, 혼인·출산 공제, 차용 방식, 증여세 신고·납부와 무신고의 위험성을 문답으로 정리한 글이다."
 tags: "영가회, 永嘉會, 기고, 마숙룡, 세무법인 센트릭, 증여세, 증여재산공제, 혼인 공제, 출산 공제, 영가회보 9-5호, 2026"
-cover: "/archive-photos/hoebo/9-5/p12-2.webp"
+cover: "/archive-photos/unsplash/8vaQKYnawHw.webp"
 visibility: public
 ---
 

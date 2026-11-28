@@ -5,7 +5,7 @@ date: "2025-10-15"
 author: "정윤호"
 excerpt: "정윤호 前 안동MBC 보도국장이 일제강점기 철도와 자동차 운수망이 일제 자본에 장악된 과정을 당시 신문 기사와 함께 짚은 〈安東春秋 100년〉 아홉 번째 글이다."
 tags: "영가회, 永嘉會, 기고, 정윤호, 安東春秋 100년, 저항과 협력의 경계에서, 일제강점기, 철도, 조선 자동차회사, 영가회보 9-3호, 2025"
-cover: "/archive-photos/hoebo/9-3/p09-1.webp"
+cover: "/archive-photos/unsplash/krsmsfjjGgg.webp"
 visibility: public
 ---
 

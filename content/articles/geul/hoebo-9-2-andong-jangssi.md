@@ -5,7 +5,7 @@ date: "2025-07-15"
 author: "남승섭"
 excerpt: "남승섭 한국국학진흥 자문위원이 시조 장태사에서 경당 장흥효, 정부인 안동장씨로 이어지는 안동장씨의 내력을 적은 〈안동문화 산책〉 열 번째 글이다."
 tags: "영가회, 永嘉會, 기고, 남승섭, 안동문화 산책, 명문가의 뿌리찾기, 안동장씨, 安東張氏, 장태사, 장흥효, 정부인 안동장씨, 음식디미방, 영가회보 9-2호, 2025"
-cover: "/archive-photos/hoebo/9-2/p10-3.webp"
+cover: "/archive-photos/unsplash/zyVdO6dQufQ.webp"
 visibility: public
 ---
 

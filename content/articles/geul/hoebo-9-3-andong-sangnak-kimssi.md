@@ -5,7 +5,7 @@ date: "2025-10-15"
 author: "남승섭"
 excerpt: "남승섭 한국국학진흥 자문위원이 충렬공 김방경의 후손인 상락김씨(先 안동김씨)의 내력과 음수재를 적은 〈안동문화 산책〉 열한 번째 글이다."
 tags: "영가회, 永嘉會, 기고, 남승섭, 안동문화 산책, 명문가의 뿌리찾기, 상락김씨, 先 안동김씨, 김방경, 음수재, 飮水思源, 영가회보 9-3호, 2025"
-cover: "/archive-photos/hoebo/9-3/p10-2.webp"
+cover: "/archive-photos/unsplash/LPFiAZV8eSk.webp"
 visibility: public
 ---
 

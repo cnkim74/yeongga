@@ -5,7 +5,7 @@ date: "2024-10-15"
 author: "남승섭"
 excerpt: "남승섭 한국국학진흥 자문위원의 연재 〈안동문화 산책〉 여덟 번째 글. 삼태사 중 한 분인 김선평을 시조로 하는 안동김씨의 파별 계거지와, 조선조에서 시호를 받은 이 50명·영의정 8명 등을 배출한 가문의 유훈을 적었다."
 tags: "영가회, 永嘉會, 기고, 남승섭, 안동문화 산책, 안동김씨, 김선평, 삼태사, 보백당, 소산, 영가회보 8-12호, 2024, 연재"
-cover: "/archive-photos/hoebo/8-12/p10-4.webp"
+cover: "/archive-photos/unsplash/tJRIRlsb1Oo.webp"
 visibility: public
 ---
 

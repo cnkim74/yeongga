@@ -5,7 +5,7 @@ date: "2024-07-15"
 author: "정윤호"
 excerpt: "1922년 1월 모스크바에서 만났던 안동의 김시현·김지섭·김재봉과 권애라가 걸은 서로 다른 길을, 정윤호 전 안동MBC 보도국장이 세 장면으로 그렸다."
 tags: "영가회, 永嘉會, 기고, 정윤호, 安東春秋 100년, 김시현, 김지섭, 김재봉, 권애라, 의열단, 영가회보 8-11호, 2024"
-cover: "/archive-photos/hoebo/8-11/p09-1.webp"
+cover: "/archive-photos/unsplash/L4jrg4c7928.webp"
 visibility: public
 ---
 

@@ -5,7 +5,7 @@ date: "2024-07-15"
 author: "남승섭"
 excerpt: "남승섭 한국국학진흥 자문위원이 조선시대 과거제도와 안동의 소과·문과 급제자 수, 부자·형제 급제자와 성씨별 급제자를 정리한 〈안동문화 산책〉 일곱 번째 글이다."
 tags: "영가회, 永嘉會, 기고, 남승섭, 안동문화 산책, 과거, 급제자, 인재 배출, 인다안동, 영가회보 8-11호, 2024"
-cover: "/archive-photos/hoebo/8-11/p11-4.webp"
+cover: "/archive-photos/unsplash/Ro3sITZLI98.webp"
 visibility: public
 ---
 

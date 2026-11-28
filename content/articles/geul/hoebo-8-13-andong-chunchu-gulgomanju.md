@@ -5,7 +5,7 @@ date: "2025-01-15"
 author: "정윤호"
 excerpt: "前 안동MBC 보도국장 정윤호의 연재 〈安東春秋 100년 저항과 협력의 경계에서〉 여섯째 글로, 1928년 가뭄과 소작인의 참상 속에 만주로 떠난 안동 사람들과 화성회·풍산소작인회, 권오설·김남수를 다뤘다."
 tags: "영가회, 永嘉會, 기고, 정윤호, 安東春秋 100년, 저항과 협력의 경계에서, 소작인, 만주, 화성회, 풍산소작인회, 권오설, 김남수, 영가회보 8-13호, 2025"
-cover: "/archive-photos/hoebo/8-13/p09-1.webp"
+cover: "/archive-photos/unsplash/8EFA86nI6yg.webp"
 visibility: public
 ---
 

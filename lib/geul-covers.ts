@@ -1,0 +1,22 @@
+/** 기고 장 — 같은 필자 얼굴이 되풀이되던 대표 이미지를 Unsplash 무료 사진으로 바꾼 목록(2026-11-28 요청). [slug, 옛 cover, 새 cover] — 본문의 필자 사진은 그대로 둔다. 출처는 public/archive-photos/unsplash/CREDITS.md */
+export const GEUL_COVER_SWAPS: [slug: string, from: string, to: string][] = [
+  ["hoebo-9-3-andong-chunchu-9-cheoldo-yukro", "/archive-photos/hoebo/9-3/p09-1.webp", "/archive-photos/unsplash/krsmsfjjGgg.webp"],
+  ["hoebo-8-13-andong-chunchu-gulgomanju", "/archive-photos/hoebo/8-13/p09-1.webp", "/archive-photos/unsplash/8EFA86nI6yg.webp"],
+  ["hoebo-8-12-andong-chunchu-bukpung", "/archive-photos/hoebo/8-12/p09-1.webp", "/archive-photos/unsplash/d3TRzEjJ9X8.webp"],
+  ["hoebo-8-11-andong-chunchu-mosk-yeon", "/archive-photos/hoebo/8-11/p09-1.webp", "/archive-photos/unsplash/L4jrg4c7928.webp"],
+  ["hoebo-8-10-andong-chunchu-makseur-mosk", "/archive-photos/hoebo/8-10/p09-1.webp", "/archive-photos/unsplash/r29MqadgE28.webp"],
+  ["hoebo-8-9-andong-chunchu-3-1", "/archive-photos/hoebo/8-9/p10-5.webp", "/archive-photos/unsplash/esZfaAZIffo.webp"],
+  ["hoebo-8-8-andong-chunchu-gukmang-sanha", "/archive-photos/hoebo/8-8/p08-2.webp", "/archive-photos/unsplash/nVWaWc0hfIs.webp"],
+  ["hoebo-8-5-yeongga-saramdeul-5-jeong-hyeonseop", "/archive-photos/hoebo/8-5/p07-1.webp", "/archive-photos/unsplash/D8PSaH0o7kk.webp"],
+  ["hoebo-8-3-yeongga-saramdeul-3-kim-heunghak", "/archive-photos/hoebo/8-3/p07-1.webp", "/archive-photos/unsplash/jm3tjLxg-sU.webp"],
+  ["hoebo-8-2-yeongga-saramdeul-2-un-seo-hyeongje", "/archive-photos/hoebo/8-2/p10-2.webp", "/archive-photos/unsplash/FwMOXyz93po.webp"],
+  ["hoebo-9-6-yean-yissi-chunghyo", "/archive-photos/hoebo/9-6/p11-1.webp", "/archive-photos/unsplash/f2eWsuA7pm4.webp"],
+  ["hoebo-9-3-andong-sangnak-kimssi", "/archive-photos/hoebo/9-3/p10-2.webp", "/archive-photos/unsplash/LPFiAZV8eSk.webp"],
+  ["hoebo-9-2-andong-jangssi", "/archive-photos/hoebo/9-2/p10-3.webp", "/archive-photos/unsplash/zyVdO6dQufQ.webp"],
+  ["hoebo-8-12-andong-kim-myeongmunjip", "/archive-photos/hoebo/8-12/p10-4.webp", "/archive-photos/unsplash/tJRIRlsb1Oo.webp"],
+  ["hoebo-8-11-glil-bae-chul", "/archive-photos/hoebo/8-11/p11-4.webp", "/archive-photos/unsplash/Ro3sITZLI98.webp"],
+  ["hoebo-8-9-toigye-yeoseongdeul", "/archive-photos/hoebo/8-9/p09-4.webp", "/archive-photos/unsplash/04SIVgtU_AE.webp"],
+  ["hoebo-8-3-andong-palgyeong", "/archive-photos/hoebo/8-3/p10-3.webp", "/archive-photos/unsplash/7druT4NYdjU.webp"],
+  ["hoebo-9-6-sangsok-1gagu2jutaek", "/archive-photos/hoebo/9-6/p12-1.webp", "/archive-photos/unsplash/rgJ1J8SDEAY.webp"],
+  ["hoebo-9-5-jinyeo-jeungyeo", "/archive-photos/hoebo/9-5/p12-2.webp", "/archive-photos/unsplash/8vaQKYnawHw.webp"],
+];
