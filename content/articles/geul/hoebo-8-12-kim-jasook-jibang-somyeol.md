@@ -5,7 +5,7 @@ date: "2024-10-15"
 author: "김의승"
 excerpt: "김의승 한국여행엑스포 조직위원회 위원장이 지방소멸 극복을 위한 지역관광 활성화를 이야기한 8면 영가칼럼."
 tags: "영가회, 永嘉會, 기고, 김의승, 지방소멸, 지역관광, 한국여행엑스포, 영가회보 8-12호, 2024"
-cover: "/archive-photos/hoebo/8-12/p08-2.webp"
+cover: "/archive-photos/unsplash/g3yMMf3DSrU.webp"
 visibility: public
 ---
 

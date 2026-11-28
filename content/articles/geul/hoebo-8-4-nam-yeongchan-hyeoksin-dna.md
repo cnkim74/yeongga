@@ -5,7 +5,7 @@ date: "2022-10-15"
 author: "남영찬"
 excerpt: "안동댐에 잠긴 월곡면 도곡2리에서 자란 필자가 고향에서 받은 두 가지 — 삶의 전범인 '염치'와 풀지 못한 화두인 '옛것'에 대한 성찰. 강남농법으로 서원혁명을 일으킨 퇴계처럼 안동 선비들에게는 혁신의 DNA가 있었다고 말한다."
 tags: "영가회, 永嘉會, 글, 특별기고, 남영찬, 법무법인클라스, 재경안동향우회, 월곡면, 도곡리, 안동댐, 수몰, 염치, 선비정신, 혁신DNA, 퇴계, 강남농법, 이인화, 2022, 영가회보 8-4호"
-cover: "/archive-photos/hoebo/8-4/p02-1.webp"
+cover: "/archive-photos/unsplash/j7XCmN81UtI.webp"
 visibility: public
 ---
 

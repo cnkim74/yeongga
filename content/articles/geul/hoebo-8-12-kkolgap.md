@@ -5,7 +5,7 @@ date: "2024-10-15"
 author: "권원오"
 excerpt: "권원오 사단법인 전통문화연구회 상임부회장이 사는 대로 생기는 인상과 '꼴값'을 이야기한 8면 영가칼럼."
 tags: "영가회, 永嘉會, 기고, 권원오, 박약회, 전통문화연구회, 인상, 영가회보 8-12호, 2024"
-cover: "/archive-photos/hoebo/8-12/p08-1.webp"
+cover: "/archive-photos/unsplash/j3CjZYckM88.webp"
 visibility: public
 ---
 

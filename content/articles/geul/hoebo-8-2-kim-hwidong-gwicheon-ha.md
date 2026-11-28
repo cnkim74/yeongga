@@ -5,7 +5,7 @@ date: "2022-04-15"
 author: "김휘동"
 excerpt: "2010년 10월 27일 고향으로 돌아온 열다섯 사람이 모여 만든 귀천회(歸川會). 김원·김대원·남정순·김도련·이상호·김연대·김준한·이목·남재락·신영균 — 고향을 지키는 회원들의 이야기."
 tags: "영가회, 永嘉會, 기고, 영가칼럼, 김휘동, 귀천회, 김원, 김대원, 김대원미술관, 김연대, 상인일기, 김준한, 이목, 온계종택, 신영균, 솔바위, 귀향, 2022, 영가회보 8-2호"
-cover: "/archive-photos/hoebo/8-2/p08-2.webp"
+cover: "/archive-photos/unsplash/xGeDc_fv-GM.webp"
 visibility: public
 ---
 

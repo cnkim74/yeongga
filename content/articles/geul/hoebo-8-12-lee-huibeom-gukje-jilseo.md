@@ -5,7 +5,7 @@ date: "2024-10-15"
 author: "이희범"
 excerpt: "이희범 한국정신문화재단 이사장·안동시 투자유치위원장이 급변하는 글로벌 경제·안보 질서 속 우리나라의 선택과, 관광·교육·산업의 도시로 다시 태어나려는 안동의 과제를 적은 칼럼."
 tags: "영가회, 永嘉會, 기고, 이희범, 칼럼, 국제질서, 한국정신문화재단, 인문가치포럼, 영가회보 8-12호, 2024"
-cover: "/archive-photos/hoebo/8-12/p05-1.webp"
+cover: "/archive-photos/unsplash/nXt5HtLmlgE.webp"
 visibility: public
 ---
 

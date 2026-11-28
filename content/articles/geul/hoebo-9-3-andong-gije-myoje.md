@@ -5,7 +5,7 @@ date: "2025-10-15"
 author: "장의한"
 excerpt: "장의한 안동향교 사무국장이 제사의 유래와 종류, 안동지방 전래 기제사의 절차와 묘제를 설명하고, 안동향교가 매년 봄 기제 시연, 가을 묘제시연을 하고 있다고 적은 글이다."
 tags: "영가회, 永嘉會, 기고, 장의한, 안동향교, 기제, 忌祭, 묘제, 墓祭, 제사, 불천위, 제사상 차림, 영가회보 9-3호, 2025"
-cover: "/archive-photos/hoebo/9-3/p11-1.webp"
+cover: "/archive-photos/unsplash/YuhDx1TY5oE.webp"
 visibility: public
 ---
 

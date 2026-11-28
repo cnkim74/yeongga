@@ -5,7 +5,7 @@ date: "2023-07-15"
 author: "권원오"
 excerpt: "권원오 박약회 상임부회장의 칼럼. 간절한 소망이 우리 안의 힘을 깨운다며 소망을 적고 상상하고 명상으로 자신을 바라보자고 권하고, 매월 둘째 주 목요일 뚝섬역 앞 안동회관에서 열리는 박약회 '행복 아카데미' 인생강의에 영가회원의 참여를 청했다."
 tags: "영가회, 永嘉會, 글, 영가칼럼, 권원오, 박약회, 행복아카데미, 이용태, 인생강의, 소망, 명상, 안동회관, 2023, 영가회보 8-7호"
-cover: "/archive-photos/hoebo/8-7/p10-2.webp"
+cover: "/archive-photos/unsplash/xG8IQMqMITM.webp"
 visibility: public
 ---
 

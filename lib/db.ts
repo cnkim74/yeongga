@@ -6010,6 +6010,17 @@ async function init(client: Client) {
     }
     await markMigration(client, "geul-cover-unsplash-2026-11-28-v1");
   }
+  if (!(await hasMigration(client, "geul-cover-unsplash-2026-11-28-v2"))) {
+    const { GEUL_COVER_SWAPS_2 } = await import("./geul-covers");
+    for (const [slug, from, to] of GEUL_COVER_SWAPS_2) {
+      await client.execute({
+        sql: `UPDATE articles SET cover = ?, updated_at = CURRENT_TIMESTAMP
+              WHERE chapter = 'geul' AND slug = ? AND cover = ?`,
+        args: [to, slug, from],
+      });
+    }
+    await markMigration(client, "geul-cover-unsplash-2026-11-28-v2");
+  }
 
   // 시드: 글 (content/articles/<chapter>/*.md → DB 업서트)
   // 한 번 시드된 후에는 cold-start 마다 다시 디스크 스캔하지 않도록 가드

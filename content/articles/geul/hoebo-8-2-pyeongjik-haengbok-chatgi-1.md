@@ -5,7 +5,7 @@ date: "2022-04-15"
 author: "권영규"
 excerpt: "30년 공직 끝에 갑작스레 서울시청을 떠난 권영규 전 부시장. KOICA 자문관으로 2015년 2월 파라과이 아순시온행 비행기에 오르며 시작한 해외 봉사 이야기의 첫 회."
 tags: "영가회, 永嘉會, 기고, 연재, 권영규, 서울부시장, 퇴직공무원, 행복찾기, KOICA, 한국국제협력단, 파라과이, 해외봉사, 서울시자원봉사센터, 2022, 영가회보 8-2호"
-cover: "/archive-photos/hoebo/8-2/p11-2.webp"
+cover: "/archive-photos/unsplash/KB9r_hTzyeQ.webp"
 visibility: public
 ---
 

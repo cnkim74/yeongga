@@ -20,3 +20,31 @@ export const GEUL_COVER_SWAPS: [slug: string, from: string, to: string][] = [
   ["hoebo-9-6-sangsok-1gagu2jutaek", "/archive-photos/hoebo/9-6/p12-1.webp", "/archive-photos/unsplash/rgJ1J8SDEAY.webp"],
   ["hoebo-9-5-jinyeo-jeungyeo", "/archive-photos/hoebo/9-5/p12-2.webp", "/archive-photos/unsplash/8vaQKYnawHw.webp"],
 ];
+
+/** 둘째 묶음(2026-11-28) — 권원오·권세준·김휘동·이희범·김의승·금경수·김균식·남영찬·문상부·권영규·장의한·김봉구·권기성. 필자마다 최신 글 한 편은 얼굴 사진을 남겼다. */
+export const GEUL_COVER_SWAPS_2: [slug: string, from: string, to: string][] = [
+  ["hoebo-8-12-kkolgap", "/archive-photos/hoebo/8-12/p08-1.webp", "/archive-photos/unsplash/j3CjZYckM88.webp"],
+  ["hoebo-8-7-kwon-wono-bakyak-academy", "/archive-photos/hoebo/8-7/p10-2.webp", "/archive-photos/unsplash/xG8IQMqMITM.webp"],
+  ["hoebo-8-4-kwon-wono-haengbok-academy", "/archive-photos/hoebo/8-4/p09-1.webp", "/archive-photos/unsplash/2o8a64Gznlo.webp"],
+  ["hoebo-8-10-kwon-hyeoksu-jeontong-munhwa", "/archive-photos/hoebo/8-10/p06-1.webp", "/archive-photos/unsplash/ExEQVwNmvP4.webp"],
+  ["hoebo-8-8-kwon-sejun-yecheon-doyak", "/archive-photos/hoebo/8-8/p08-1.webp", "/archive-photos/unsplash/fi7IgYuRWOQ.webp"],
+  ["hoebo-8-6-jin-sejun-yuyeonhan-jihye", "/archive-photos/hoebo/8-6/p08-1.webp", "/archive-photos/unsplash/a_jliisLBmU.webp"],
+  ["hoebo-8-3-kim-huidong-jeongsin-munhwa-brand", "/archive-photos/hoebo/8-3/p08-1.webp", "/archive-photos/unsplash/gy8MkoUKIdU.webp"],
+  ["hoebo-8-2-kim-hwidong-gwicheon-ha", "/archive-photos/hoebo/8-2/p08-2.webp", "/archive-photos/unsplash/xGeDc_fv-GM.webp"],
+  ["hoebo-8-12-lee-huibeom-gukje-jilseo", "/archive-photos/hoebo/8-12/p05-1.webp", "/archive-photos/unsplash/nXt5HtLmlgE.webp"],
+  ["hoebo-8-9-lee-jaebeom-gieop-saraya", "/archive-photos/hoebo/8-9/p05-1.webp", "/archive-photos/unsplash/pwcKF7L4-no.webp"],
+  ["hoebo-8-12-kim-jasook-jibang-somyeol", "/archive-photos/hoebo/8-12/p08-2.webp", "/archive-photos/unsplash/g3yMMf3DSrU.webp"],
+  ["hoebo-8-9-park-jaebeom-jeongsin-munhwa", "/archive-photos/hoebo/8-9/p06-1.webp", "/archive-photos/unsplash/MIzv29B7ktM.webp"],
+  ["hoebo-8-7-jeong-jaeseok-jeongsin-munhwa", "/archive-photos/hoebo/8-7/p11-2.webp", "/archive-photos/unsplash/07-aolXLWyU.webp"],
+  ["hoebo-8-9-kim-gwangsik-gugu-saemyeong", "/archive-photos/hoebo/8-9/p09-1.webp", "/archive-photos/unsplash/bU6Uhc7n6Nw.webp"],
+  ["hoebo-8-7-kim-gyosik-ireobeorin-munhwa-yusan", "/archive-photos/hoebo/8-7/p10-1.webp", "/archive-photos/unsplash/CubXw3jYZPc.webp"],
+  ["hoebo-8-4-nam-yeongchan-hyeoksin-dna", "/archive-photos/hoebo/8-4/p02-1.webp", "/archive-photos/unsplash/j7XCmN81UtI.webp"],
+  ["hoebo-8-5-yunsangbu-sinnyeonsa", "/archive-photos/hoebo/8-5/p02-11.webp", "/archive-photos/unsplash/8NoU6O2YvpM.webp"],
+  ["hoebo-8-4-pyeongjik-haengbok-chatgi-3", "/archive-photos/hoebo/8-4/p10-8.webp", "/archive-photos/unsplash/GkacI-_mGlg.webp"],
+  ["hoebo-8-3-pyeongjik-haengbok-chatgi-2", "/archive-photos/hoebo/8-3/p10-2.webp", "/archive-photos/unsplash/oDyNiheZ41U.webp"],
+  ["hoebo-8-2-pyeongjik-haengbok-chatgi-1", "/archive-photos/hoebo/8-2/p11-2.webp", "/archive-photos/unsplash/KB9r_hTzyeQ.webp"],
+  ["hoebo-9-3-andong-gije-myoje", "/archive-photos/hoebo/9-3/p11-1.webp", "/archive-photos/unsplash/YuhDx1TY5oE.webp"],
+  ["hoebo-8-10-andong-hyanggyo", "/archive-photos/hoebo/8-10/p10-9.webp", "/archive-photos/unsplash/9IrpsblY6Mc.webp"],
+  ["hoebo-8-7-kim-huigu-yeoseong-gasanjeom", "/archive-photos/hoebo/8-7/p09-2.webp", "/archive-photos/unsplash/vTknj2OxDVg.webp"],
+  ["hoebo-8-3-kwon-giseong-gilsangji-sang", "/archive-photos/hoebo/8-3/p11-1.webp", "/archive-photos/unsplash/mrTp7ivEMq0.webp"],
+];

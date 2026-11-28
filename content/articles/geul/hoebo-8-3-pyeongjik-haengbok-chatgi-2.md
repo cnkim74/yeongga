@@ -5,7 +5,7 @@ date: "2022-07-15"
 author: "권영규"
 excerpt: "KOICA 자문관으로 간 파라과이. 현지 공부와 사람 만나기로 시작해 고용노동부 직원 서비스 상황극, 간부 역량강화 과정, 전국 57개 직업훈련센터 순회까지 — 가르치러 갔다가 오히려 깨우치고 배웠다는 두 번째 이야기."
 tags: "영가회, 永嘉會, 글, 퇴직공무원의행복찾기, 권영규, 서울부시장, 파라과이, 아순시온, KOICA, 한국국제협력단, 해외봉사, 직업훈련, 역량강화, 서울시자원봉사센터, 시리즈, 2022, 영가회보 8-3호"
-cover: "/archive-photos/hoebo/8-3/p10-2.webp"
+cover: "/archive-photos/unsplash/oDyNiheZ41U.webp"
 visibility: public
 ---
 

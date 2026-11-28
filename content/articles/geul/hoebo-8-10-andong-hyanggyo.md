@@ -5,7 +5,7 @@ date: "2024-04-17"
 author: "장의한"
 excerpt: "장의한 안동향교 교무부장이 안동향교·예안향교 두 곳의 내력과 시설, 대성전 27위 배향, 해마다 음력 2월·8월 초정에 올리는 석전대제, 1986년 문을 연 '명륜교실'의 평생교육 강좌를 소개했다."
 tags: "영가회, 永嘉會, 글, 안동알기, 장의한, 안동향교, 예안향교, 향교, 대성전, 명륜당, 석전대제, 명륜교실, 영가지, 복주향교, 2024, 영가회보 8-10호"
-cover: "/archive-photos/hoebo/8-10/p10-9.webp"
+cover: "/archive-photos/unsplash/9IrpsblY6Mc.webp"
 visibility: public
 ---
 
